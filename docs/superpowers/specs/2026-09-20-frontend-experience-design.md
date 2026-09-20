@@ -16,6 +16,8 @@
 2. **UI 嵌入插画**：界面元素不是独立浮层，而是融入背景插画叙事（对话框 = 漫画气泡、通知 = 弹幕）。
 3. **微交互即反馈**：每个操作都有视觉 + 听觉的即时回应。
 
+> **v1 优先级**：先跑通「解析 → 选清晰度 → 下载」功能闭环（后端 + 前端基本流程）；视觉氛围与角色互动分层实现——功能先行，动效不阻塞下载。角色互动、换角色留待后续（见 §9）。
+
 ---
 
 ## 2. 视觉语言
@@ -55,19 +57,19 @@
 
 | 层 | 选型 | 说明 |
 | --- | --- | --- |
-| 背景场景 | Three.js（WebGL 全屏） | 渐变/极光/粒子/樱花/气泡/星星/光尘/旋流、进度粒子 |
-| 引导角色 | PIXI.js + pixi-live2d-display | 渲染 Cubism 3 Live2D 模型 |
+| 渲染引擎 | **PIXI.js（单一 WebGL 管线）** | 背景场景 + Live2D 角色同处一个 PIXI Stage |
+| 背景场景 | PIXI（渐变/极光/粒子/樱花/气泡/星星/光尘/旋流/进度粒子） | shader + filter + particle emitter 实现 |
+| 引导角色 | pixi-live2d-display | 渲染 Cubism 3 Live2D 模型，与背景同管线 |
 | Live2D 运行时 | Cubism Core（`live2dcubismcore.min.js`） | 生产环境**自托管**，不依赖外链 |
 | UI 层 | React + DOM/CSS | 卡片、气泡、按钮、弹幕、镭射边框 |
 | 音频 | Web Audio API / HTML5 Audio | SFX + BGM（详见 §7） |
 | 构建 | Vite（同 design.md） | — |
 
-**分层渲染架构**（自底向上三层）：
-1. **背景层**：Three.js `<canvas>`，全屏，负责所有背景渐变/粒子/动效。
-2. **角色层**：PIXI.js `<canvas>`（透明）叠加在背景之上，只渲染 Live2D 角色。
-3. **UI 层**：DOM/CSS 元素（React），负责可交互控件、气泡、弹幕、卡片。
+**单一渲染管线**（两「层」同一 Stage，UI 层为 DOM 叠加）：
+1. **场景层（PIXI Stage）**：背景渐变/粒子/动效 与 Live2D 角色同处一个场景图——角色可与背景粒子互动、后续可加角色互动与换角色。
+2. **UI 层**：DOM/CSS 元素（React）叠加在最上，负责文本类/可交互控件、气泡、弹幕、卡片。
 
-Three.js 与 PIXI.js 各自持有独立 WebGL 上下文，通过「场景状态」同步（而非直接共享渲染管线），降低耦合。
+> **选型理由**：pixi-live2d-display 基于 PIXI.js，Live2D 生态没有成熟的 Three.js 渲染器；要在「同一管线」里统一背景与角色，PIXI.js 是唯一干净的选择——背景所需的渐变/极光/RGB 分离/粒子全部可由 PIXI 的 shader + filter + particle emitter 承担。统一到一个 Scene Graph 后，角色互动、换角色、角色与背景联动的扩展成本最低。
 
 ---
 
@@ -97,7 +99,7 @@ POST /api/download 中      →  downloading(下载中)       → 进度粒子�
 - 模型：初音未来 Live2D，**Cubism 3.0**（`miku.model3.json` + `miku.moc3` + 6 张 4096 纹理 + `miku.physics3.json` + `miku.cdi3.json`）。
 - 资源位置：开发期从 `D:\QAQ\miku\miku\miku\` 复制进项目（建议 `frontend/public/live2d/miku/`）。
 - **授权**：已获作者许可使用。出处注明：人物绘制 玄宝酱 / 建模 怂怂koe（保留在 README / 关于页）。
-- 水印：`水印.exp3.json` 为默认开启表达式；经许可后可在初始化时不置为默认表情（出处注明仍保留）。
+- 水印：`水印.exp3.json` 默认开启；**经授权关闭**（初始化时不置为默认表情，水印不显示）。
 
 ### 5.2 状态 → 动作/表情映射
 
@@ -182,7 +184,7 @@ POST /api/download 中      →  downloading(下载中)       → 进度粒子�
 
 - **接口契约**：完全复用 `design.md §4`（`POST /api/parse`、`POST /api/download`、`GET /api/job/{id}`、`GET /api/file/{id}`）与 `§5`（直链/服务端切换）。本文档只决定「这些状态如何被视觉化」。
 - **核心约束不变**：`ytdlp_service.py` 仍是唯一接触 yt-dlp 的层；前端不感知下载核心。
-- **预留**：主题切换（多套氛围）、更多角色动作/服装、SSE 替代轮询（后续可加）。
+- **预留**：Live2D 角色互动（点击/拖拽/角色与背景粒子联动）、换 Live2D 角色（模型可插拔）、主题切换（多套氛围）、更多角色动作/服装、SSE 替代轮询（后续可加）。统一 PIXI 管线使这些扩展成本最低。
 
 ---
 
