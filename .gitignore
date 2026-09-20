@@ -35,3 +35,6 @@ backend/tmp/
 
 # Visual companion mockups
 .superpowers/
+
+# SQLite (init_db 会生成 jobs.db)
+*.db

@@ -1,0 +1,47 @@
+# backend/tests/test_parse_route.py
+from fastapi.testclient import TestClient
+
+from app.main import app  # Task 1 已建最小 app，此处挂载 router
+
+from app.services import ytdlp_service
+
+client = TestClient(app)
+
+
+def test_parse_ok(monkeypatch):
+    def fake_extract(url):
+        return {
+            "title": "测试标题",
+            "thumbnail": "https://i.example/t.jpg",
+            "duration": 30.0,
+            "formats": [
+                {"format_id": "18", "height": 360, "vcodec": "avc1",
+                 "acodec": "mp4a", "url": "https://cdn/18.mp4", "ext": "mp4"},
+            ],
+        }
+
+    monkeypatch.setattr(ytdlp_service, "extract_info", fake_extract)
+    r = client.post("/api/parse", json={"url": "https://example.com/v"})
+    assert r.status_code == 200
+    data = r.json()
+    assert data["title"] == "测试标题"
+    assert data["formats"][0]["label"] == "360p"
+    assert data["formats"][0]["direct"] is True
+
+
+def test_parse_invalid_url():
+    r = client.post("/api/parse", json={"url": "not a url"})
+    assert r.status_code == 400
+    assert r.json()["detail"]["error_type"] == "invalid_url"
+
+
+def test_parse_unsupported(monkeypatch):
+    def fake_extract(url):
+        from yt_dlp.utils import UnsupportedError
+
+        raise UnsupportedError("unsupported")
+
+    monkeypatch.setattr(ytdlp_service, "extract_info", fake_extract)
+    r = client.post("/api/parse", json={"url": "https://example.com/v"})
+    assert r.status_code == 422
+    assert r.json()["detail"]["error_type"] == "unsupported_site"
