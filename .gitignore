@@ -32,3 +32,6 @@ Thumbs.db
 # Runtime temp (server-side downloads)
 backend/tmp/
 *.log
+
+# SQLite (init_db 会生成 jobs.db)
+*.db
