@@ -17,7 +17,10 @@ router = APIRouter()
 def download(req: DownloadRequest, session: Session = Depends(get_session)) -> DownloadResponse:
     job_manager.cleanup_expired()  # 懒触发 TTL 清理
     if not req.force_server:
-        direct, headers = ytdlp_service.get_direct_url(req.url, req.format_id)
+        try:
+            direct, headers = ytdlp_service.get_direct_url(req.url, req.format_id)
+        except Exception:  # 直链探测失败（无效/过期/网络）→ 落到服务端下载
+            direct = None
         if direct:
             return DownloadResponse(mode="direct", url=direct, headers=headers)
 

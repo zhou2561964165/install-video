@@ -53,6 +53,22 @@ def test_download_direct_mode_returns_url(monkeypatch):
     assert data["headers"]["User-Agent"] == "test"
 
 
+def test_download_falls_back_to_server_when_direct_fails(monkeypatch):
+    from app.services import jobs as jobs_module
+
+    def _boom(url, fid):
+        raise RuntimeError("extraction failed")
+
+    monkeypatch.setattr(ytdlp_service, "get_direct_url", _boom)
+    monkeypatch.setattr(jobs_module, "_run_download", lambda job_id, url, fid: None)
+    r = client.post(
+        "/api/download",
+        json={"url": "https://example.com/v", "format_id": "18"},
+    )
+    assert r.status_code == 200
+    assert r.json()["mode"] == "server"
+
+
 def test_get_job_returns_status():
     init_db()
     with Session(engine) as s:
