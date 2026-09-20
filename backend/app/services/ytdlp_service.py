@@ -54,3 +54,67 @@ def classify_error(exc: Exception) -> str:
         if pattern.search(msg):
             return error_type
     return ERROR_NETWORK
+
+
+HEIGHT_TIERS = [2160, 1440, 1080, 720, 480, 360]
+
+
+def _is_video(fmt: dict) -> bool:
+    return bool(fmt.get("height")) and fmt.get("vcodec") not in (None, "none")
+
+
+def _progressive_direct(formats: list[dict], height: int) -> dict | None:
+    for f in formats:
+        if (
+            f.get("height") == height
+            and f.get("vcodec") not in (None, "none")
+            and f.get("acodec") not in (None, "none")
+        ):
+            url = f.get("url")
+            if url and str(url).startswith("http"):
+                return f
+    return None
+
+
+def build_format_options(info: dict) -> list[dict]:
+    formats = info.get("formats") or []
+    heights = sorted({f["height"] for f in formats if _is_video(f)}, reverse=True)
+    options: list[dict] = []
+    seen: set[int] = set()
+    for tier in HEIGHT_TIERS:
+        h = next((x for x in heights if x <= tier), None)
+        if h is None or h in seen:
+            continue
+        seen.add(h)
+        direct_fmt = _progressive_direct(formats, h)
+        if direct_fmt:
+            options.append({
+                "format_id": str(direct_fmt["format_id"]),
+                "label": f"{h}p",
+                "height": h,
+                "ext": direct_fmt.get("ext") or "mp4",
+                "filesize": direct_fmt.get("filesize"),
+                "direct": True,
+                "note": direct_fmt.get("format_note"),
+            })
+        else:
+            options.append({
+                "format_id": f"bestvideo[height<={h}]+bestaudio/best[height<={h}]",
+                "label": f"{h}p",
+                "height": h,
+                "ext": "mp4",
+                "filesize": None,
+                "direct": False,
+                "note": None,
+            })
+    if not options:
+        options.append({
+            "format_id": "best",
+            "label": "best",
+            "height": None,
+            "ext": "mp4",
+            "filesize": None,
+            "direct": False,
+            "note": None,
+        })
+    return options
