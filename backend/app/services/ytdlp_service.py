@@ -1,3 +1,4 @@
+import os
 import re
 from urllib.parse import urlparse
 
@@ -129,3 +130,38 @@ def parse_video(url: str) -> tuple[dict, list[dict]]:
     }
     options = build_format_options(info)
     return meta, options
+
+
+def get_direct_url(url: str, format_id: str) -> tuple[str | None, dict]:
+    opts = {"quiet": True, "no_warnings": True, "skip_download": True, "noplaylist": True}
+    with yt_dlp.YoutubeDL(opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+        for f in info.get("formats") or []:
+            if str(f.get("format_id")) == str(format_id):
+                direct = f.get("url")
+                if direct and str(direct).startswith("http"):
+                    return str(direct), f.get("http_headers") or {}
+    return None, {}
+
+
+def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
+    opts = {
+        "quiet": True,
+        "no_warnings": True,
+        "noplaylist": True,
+        "format": format_id,
+        "outtmpl": outtmpl,
+        "progress_hooks": [progress_hook],
+        "merge_output_format": "mp4",
+        "noprogress": True,
+    }
+    with yt_dlp.YoutubeDL(opts) as ydl:
+        info = ydl.extract_info(url, download=True)
+    filename = ydl.prepare_filename(info)
+    # 合并后扩展名可能变化（如 .webm → .mp4）；取目录下最新文件作为产物
+    out_dir = os.path.dirname(outtmpl)
+    files = [os.path.join(out_dir, f) for f in os.listdir(out_dir)]
+    files = [f for f in files if os.path.isfile(f)]
+    if not files:
+        raise FileNotFoundError("下载产物缺失")
+    return max(files, key=os.path.getmtime)
