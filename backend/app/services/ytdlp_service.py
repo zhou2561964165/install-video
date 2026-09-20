@@ -118,3 +118,14 @@ def build_format_options(info: dict) -> list[dict]:
             "note": None,
         })
     return options
+
+
+def parse_video(url: str) -> tuple[dict, list[dict]]:
+    info = extract_info(url)
+    meta = {
+        "title": info.get("title") or "",
+        "thumbnail": info.get("thumbnail"),
+        "duration": info.get("duration"),
+    }
+    options = build_format_options(info)
+    return meta, options
