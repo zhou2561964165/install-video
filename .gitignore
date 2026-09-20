@@ -32,3 +32,6 @@ Thumbs.db
 # Runtime temp (server-side downloads)
 backend/tmp/
 *.log
+
+# Visual companion mockups
+.superpowers/
