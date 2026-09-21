@@ -3,6 +3,7 @@ import { reduce, initialState, SCENE } from './state/sceneMachine.js';
 import { parseVideo, startDownload, getJob, fileUrl } from './api.js';
 import { initStage, destroyStage, webglSupported } from './pixi/stage.js';
 import { createBackground, intensityForScene } from './pixi/background.js';
+import { createMascot } from './pixi/mascot.js';
 import EntryScene from './components/EntryScene.jsx';
 import ParsingScene from './components/ParsingScene.jsx';
 import SelectingScene from './components/SelectingScene.jsx';
@@ -17,6 +18,7 @@ export default function App() {
 
   const stageRef = useRef(null);
   const bgRef = useRef(null);
+  const mascotRef = useRef(null);
   const [webgl] = useState(() => webglSupported());
 
   const handleSubmit = useCallback(async (url) => {
@@ -67,12 +69,21 @@ export default function App() {
     const app = initStage(stageRef.current);
     const bg = createBackground(app);
     bgRef.current = bg;
-    return () => { bg.destroy(); destroyStage(app); };
+    createMascot(app).then((m) => {
+      mascotRef.current = m;
+      m.setScene(state.scene);
+    });
+    return () => { mascotRef.current?.destroy(); bg.destroy(); destroyStage(app); };
   }, [webgl]);
 
   // 随 scene 切换粒子强度（安静/活跃）
   useEffect(() => {
     bgRef.current?.setIntensity(intensityForScene(state.scene));
+  }, [state.scene]);
+
+  // 随 scene 驱动 mascot 表情/动作
+  useEffect(() => {
+    mascotRef.current?.setScene(state.scene);
   }, [state.scene]);
 
   let scene;

@@ -5,6 +5,12 @@ import userEvent from '@testing-library/user-event';
 import App from './App.jsx';
 
 vi.mock('pixi.js', () => ({}));
+vi.mock('pixi-live2d-display', () => ({
+  Live2DModel: {
+    from: () => Promise.reject(new Error('no model in test')),
+    registerTicker: () => {},
+  },
+}));
 vi.mock('./pixi/stage.js', () => ({
   webglSupported: () => false,
   initStage: vi.fn(),
