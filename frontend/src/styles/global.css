@@ -26,3 +26,146 @@ body {
   color: #f5f6ff;
   overflow: hidden;
 }
+
+/* ── Task 5 视觉语言：变量 + 关键动画 ─────────────────────────────── */
+:root {
+  --neon-pink: #ff2d95;
+  --neon-blue: #22d3ee;
+  --neon-lime: #a3e635;
+  --amber: #fbbf24;
+  --bg-deep: #0b0f2a;
+}
+.laser-frame {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--bg-deep), var(--bg-deep)) padding-box,
+    linear-gradient(120deg, var(--neon-pink), var(--neon-blue), var(--neon-lime), var(--neon-pink)) border-box;
+  animation: laser-spin 6s linear infinite;
+}
+@keyframes laser-spin { to { filter: hue-rotate(360deg); } }
+.bubble { /* 漫画气泡 */ background: #fff; color: #111; border-radius: 18px; position: relative; }
+.bubble::after { content: ""; position: absolute; bottom: -12px; left: 24px; border: 10px solid transparent; border-top-color: #fff; }
+.float-on-hover { transition: transform .2s, box-shadow .2s; }
+.float-on-hover:hover { transform: translateY(-6px); box-shadow: 0 0 24px var(--neon-blue); }
+.danmaku { position: fixed; animation: danmaku-slide 3s linear forwards; }
+@keyframes danmaku-slide { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+.magic-circle { /* 入口魔法阵 */ border-radius: 50%; box-shadow: 0 0 40px var(--neon-blue), inset 0 0 20px var(--neon-pink); animation: breathe 3s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(1.04); } }
+
+/* ── Task 5 落地：场景 class 与补充动画 ───────────────────────────── */
+.burst { animation: burst .5s ease-out; }
+@keyframes burst {
+  from { box-shadow: 0 0 0 0 rgba(255,45,149,.7); }
+  to { box-shadow: 0 0 0 60px rgba(255,45,149,0); }
+}
+
+/* 能量条 */
+.energy-bar {
+  width: 100%;
+  max-width: 480px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  box-shadow: inset 0 0 8px rgba(0,0,0,.5);
+}
+.energy-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-lime));
+  box-shadow: 0 0 14px var(--neon-blue);
+  transition: width .3s ease;
+}
+
+/* 弹幕外观（叠加在定位/滑动动画之上） */
+.danmaku {
+  z-index: 2;
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 18px;
+  background: linear-gradient(90deg, rgba(255,45,149,.9), rgba(34,211,238,.9));
+  border-radius: 999px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* 场景布局 */
+.scene {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+}
+
+/* 入口魔法阵容器 */
+.entry-halo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 44px 52px;
+}
+.entry-scene form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.entry-scene input {
+  min-width: 280px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  color: #f5f6ff;
+  outline: none;
+}
+.entry-scene input:focus { border-color: var(--neon-blue); box-shadow: 0 0 12px var(--neon-blue); }
+
+/* 通用按钮 */
+button {
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 10px 18px;
+  border-radius: 999px;
+  color: #f5f6ff;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+  font-weight: 600;
+  transition: transform .2s, box-shadow .2s;
+}
+button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 16px var(--neon-blue); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+
+/* 清晰度选择卡片 */
+.format-card { padding: 24px 28px; max-width: 520px; width: 100%; }
+.format-list { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.format-list button { padding: 10px 18px; font-weight: 600; }
+.format-list button.selected {
+  box-shadow: 0 0 18px var(--neon-pink), inset 0 0 10px rgba(255,45,149,.3);
+  color: #fff;
+}
+.badge-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--neon-blue);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: box-shadow .2s;
+}
+.badge-switch:hover { box-shadow: 0 0 12px var(--neon-blue); }
+.badge-switch input { accent-color: var(--neon-pink); }
+
+/* 气泡容器内边距 */
+.done-bubble,
+.error-bubble {
+  padding: 22px 28px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+}
+.error-bubble h2 { margin-bottom: 8px; }
