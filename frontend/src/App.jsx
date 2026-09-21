@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useCallback, useRef, useState } from 'react';
 import { reduce, initialState, SCENE } from './state/sceneMachine.js';
 import { parseVideo, startDownload, getJob, fileUrl } from './api.js';
-import { initStage, destroyStage, webglSupported } from './pixi/stage.js';
+import { initStage, destroyStage, webglSupported, detectTier } from './pixi/stage.js';
 import { createBackground, intensityForScene } from './pixi/background.js';
 import { createMascot } from './pixi/mascot.js';
 import EntryScene from './components/EntryScene.jsx';
@@ -21,8 +21,11 @@ export default function App() {
   const bgRef = useRef(null);
   const mascotRef = useRef(null);
   const [webgl] = useState(() => webglSupported());
+  const [tier] = useState(() => detectTier());
+  const [lightMode, setLightMode] = useState(false);
   const [muted, setMuted] = useState(false);
 
+  const toggleLightMode = useCallback(() => setLightMode((m) => !m), []);
   const toggleMute = useCallback(() => setMuted((m) => !m), []);
 
   const handleSubmit = useCallback(async (url) => {
@@ -67,18 +70,27 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [state.scene, state.download]);
 
-  // PIXI 舞台：WebGL 可用时挂载，缺失时走 CSS 渐变兜底
+  // PIXI 舞台：WebGL 可用且非轻量模式时挂载，否则走 CSS 渐变兜底（global.css 里 .css-fallback）
   useEffect(() => {
-    if (!webgl) return;             // 无 WebGL → CSS 渐变兜底（global.css 里加 .css-fallback）
+    if (!webgl || lightMode) return;
     const app = initStage(stageRef.current);
-    const bg = createBackground(app);
+    const bg = createBackground(app, tier);
     bgRef.current = bg;
+    const onResize = () => bg.resize();
+    window.addEventListener('resize', onResize);
     createMascot(app).then((m) => {
       mascotRef.current = m;
       m.setScene(state.scene);
     });
-    return () => { mascotRef.current?.destroy(); bg.destroy(); destroyStage(app); };
-  }, [webgl]);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      mascotRef.current?.destroy();
+      bg.destroy();
+      destroyStage(app);
+      mascotRef.current = null;
+      bgRef.current = null;
+    };
+  }, [webgl, lightMode, tier]);
 
   // 随 scene 切换粒子强度（安静/活跃）
   useEffect(() => {
@@ -121,7 +133,7 @@ export default function App() {
 
   return (
     <>
-      <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'} />
+      <div ref={stageRef} className={webgl && !lightMode ? 'stage' : 'stage css-fallback'} />
       <div className="ui">{scene}</div>
       <button
         type="button"
@@ -131,6 +143,14 @@ export default function App() {
         style={{ position: 'fixed', top: 16, right: 16, zIndex: 10, ...(muted ? { opacity: 0.6 } : {}) }}
       >
         静音
+      </button>
+      <button
+        type="button"
+        className="lightmode-toggle"
+        aria-pressed={lightMode}
+        onClick={toggleLightMode}
+      >
+        轻量模式
       </button>
     </>
   );

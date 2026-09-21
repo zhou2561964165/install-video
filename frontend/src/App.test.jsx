@@ -13,6 +13,7 @@ vi.mock('pixi-live2d-display', () => ({
 }));
 vi.mock('./pixi/stage.js', () => ({
   webglSupported: () => false,
+  detectTier: () => 'none',
   initStage: vi.fn(),
   destroyStage: vi.fn(),
 }));

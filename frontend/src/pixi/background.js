@@ -26,21 +26,28 @@ function makeGradientTexture(w, h) {
   return PIXI.Texture.from(canvas);
 }
 
-export function createBackground(app) {
+export function createBackground(app, tier = 'high') {
+  const low = tier === 'low';
+
   const gradient = new PIXI.Sprite(makeGradientTexture(app.screen.width, app.screen.height));
   gradient.width = app.screen.width;
   gradient.height = app.screen.height;
   app.stage.addChild(gradient);
 
-  // 色相缓移（ColorMatrixFilter.hue 在 v6 的 pixi.js 中内置）
-  const hue = new PIXI.filters.ColorMatrixFilter();
-  gradient.filters = [hue];
+  // 色相缓移（ColorMatrixFilter.hue 在 v6 的 pixi.js 中内置）；低档去掉后处理以省 GPU
+  let hue = null;
+  if (low) {
+    gradient.filters = [];
+  } else {
+    hue = new PIXI.filters.ColorMatrixFilter();
+    gradient.filters = [hue];
+  }
 
   // 环境粒子：轻量 ParticleContainer
   const particles = new PIXI.ParticleContainer(500, { tint: true });
   app.stage.addChild(particles);
 
-  const MAX = 120;
+  const MAX = low ? 40 : 120;
   const items = [];
   for (let i = 0; i < MAX; i++) {
     const g = new PIXI.Graphics();
@@ -59,8 +66,10 @@ export function createBackground(app) {
   let hueVal = 0;
 
   app.ticker.add(() => {
-    hueVal = (hueVal + 0.02) % 360;
-    hue.hue(hueVal, false);
+    if (hue) {
+      hueVal = (hueVal + 0.02) % 360;
+      hue.hue(hueVal, false);
+    }
     const speed = 1 + intensity * 2.5;
     for (const p of items) {
       p.y += p.vy * speed;

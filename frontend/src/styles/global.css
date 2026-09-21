@@ -16,6 +16,16 @@
 .css-fallback {
   background: linear-gradient(135deg, #0b0f2a 0%, #3a1c71 50%, #0f3460 100%);
 }
+/* 轻量模式开关：与静音键同列（右上角），避免重叠 */
+.lightmode-toggle {
+  position: fixed;
+  top: 56px;
+  right: 16px;
+  z-index: 10;
+}
+.lightmode-toggle[aria-pressed='true'] {
+  opacity: 0.6;
+}
 
 :root { color-scheme: dark; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
