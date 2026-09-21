@@ -10,6 +10,7 @@ import SelectingScene from './components/SelectingScene.jsx';
 import DownloadingScene from './components/DownloadingScene.jsx';
 import DoneScene from './components/DoneScene.jsx';
 import ErrorScene from './components/ErrorScene.jsx';
+import About from './components/ui/About.jsx';
 import { setScene, setMuted as setAudioMuted } from './audio/audioManager.js';
 
 const POLL_MS = 3000; // 轮询间隔：须 ≥2s，后端 /api 限流 30/60s
@@ -152,6 +153,7 @@ export default function App() {
       >
         轻量模式
       </button>
+      <About />
     </>
   );
 }

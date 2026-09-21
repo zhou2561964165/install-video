@@ -76,4 +76,12 @@ describe('App 功能闭环', () => {
     expect(await screen.findByTestId('error-scene')).toBeInTheDocument();
     expect(screen.getByText('链接好像不对')).toBeInTheDocument();
   });
+
+  it.each(['invalid_url', 'geo_blocked', 'quota'])('渲染 %s 错误场景', async (type) => {
+    parseVideo.mockRejectedValue({ error_type: type, error: 'x' });
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://x');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    expect(await screen.findByTestId('error-scene')).toBeInTheDocument();
+  });
 });

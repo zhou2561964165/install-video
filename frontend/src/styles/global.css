@@ -179,3 +179,41 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   text-align: center;
 }
 .error-bubble h2 { margin-bottom: 8px; }
+
+/* ── Task 8 错误场景差异化视觉（≥3 种） ─────────────────────────── */
+/* err-invalid：抖动（链接/站点不合法） */
+.err-invalid .error-bubble { animation: err-shake .4s ease-in-out; }
+@keyframes err-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+/* err-quota：呼吸（临时/服务端繁忙，稍后再试） */
+.err-quota .error-bubble { animation: err-breathe 2s ease-in-out infinite; }
+@keyframes err-breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 12px var(--neon-blue); }
+  50% { transform: scale(1.03); box-shadow: 0 0 32px var(--amber); }
+}
+/* err-drm：灰暗（版权/年龄/地区等受限内容） */
+.err-drm .error-bubble { animation: err-dim 3s ease-in-out infinite; }
+@keyframes err-dim {
+  0%, 100% { filter: grayscale(.2) brightness(.9); }
+  50% { filter: grayscale(.8) brightness(.6); }
+}
+
+/* ── Task 8 关于/署名页脚 ───────────────────────────────────────── */
+.about {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(245, 246, 255, .55);
+  pointer-events: none;
+}
