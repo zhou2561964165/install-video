@@ -4,6 +4,13 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App.jsx';
 
+vi.mock('pixi.js', () => ({}));
+vi.mock('./pixi/stage.js', () => ({
+  webglSupported: () => false,
+  initStage: vi.fn(),
+  destroyStage: vi.fn(),
+}));
+
 vi.mock('./api.js', () => ({
   parseVideo: vi.fn(),
   startDownload: vi.fn(),

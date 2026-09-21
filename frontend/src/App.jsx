@@ -1,6 +1,8 @@
-import React, { useEffect, useReducer, useCallback } from 'react';
+import React, { useEffect, useReducer, useCallback, useRef, useState } from 'react';
 import { reduce, initialState, SCENE } from './state/sceneMachine.js';
 import { parseVideo, startDownload, getJob, fileUrl } from './api.js';
+import { initStage, destroyStage, webglSupported } from './pixi/stage.js';
+import { createBackground, intensityForScene } from './pixi/background.js';
 import EntryScene from './components/EntryScene.jsx';
 import ParsingScene from './components/ParsingScene.jsx';
 import SelectingScene from './components/SelectingScene.jsx';
@@ -12,6 +14,10 @@ const POLL_MS = 3000; // 轮询间隔：须 ≥2s，后端 /api 限流 30/60s
 
 export default function App() {
   const [state, dispatch] = useReducer(reduce, undefined, initialState);
+
+  const stageRef = useRef(null);
+  const bgRef = useRef(null);
+  const [webgl] = useState(() => webglSupported());
 
   const handleSubmit = useCallback(async (url) => {
     dispatch({ type: 'SUBMIT_URL', url });
@@ -55,9 +61,24 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [state.scene, state.download]);
 
+  // PIXI 舞台：WebGL 可用时挂载，缺失时走 CSS 渐变兜底
+  useEffect(() => {
+    if (!webgl) return;             // 无 WebGL → CSS 渐变兜底（global.css 里加 .css-fallback）
+    const app = initStage(stageRef.current);
+    const bg = createBackground(app);
+    bgRef.current = bg;
+    return () => { bg.destroy(); destroyStage(app); };
+  }, [webgl]);
+
+  // 随 scene 切换粒子强度（安静/活跃）
+  useEffect(() => {
+    bgRef.current?.setIntensity(intensityForScene(state.scene));
+  }, [state.scene]);
+
+  let scene;
   switch (state.scene) {
-    case SCENE.PARSING: return <ParsingScene />;
-    case SCENE.SELECTING: return (
+    case SCENE.PARSING: scene = <ParsingScene />; break;
+    case SCENE.SELECTING: scene = (
       <SelectingScene
         parseResult={state.parseResult}
         selectedFormat={state.selectedFormat}
@@ -65,11 +86,18 @@ export default function App() {
         onSelect={(format, forceServer) => dispatch({ type: 'SELECT_FORMAT', format, forceServer })}
         onDownload={handleDownload}
       />
-    );
-    case SCENE.DOWNLOADING: return <DownloadingScene job={state.job} mode={state.download?.mode} />;
-    case SCENE.DONE: return <DoneScene job={state.job} fileUrl={state.job && fileUrl(state.job.id)} onReset={() => dispatch({ type: 'RESET' })} />;
-    case SCENE.ERROR: return <ErrorScene error={state.error} onReset={() => dispatch({ type: 'RESET' })} />;
+    ); break;
+    case SCENE.DOWNLOADING: scene = <DownloadingScene job={state.job} mode={state.download?.mode} />; break;
+    case SCENE.DONE: scene = <DoneScene job={state.job} fileUrl={state.job && fileUrl(state.job.id)} onReset={() => dispatch({ type: 'RESET' })} />; break;
+    case SCENE.ERROR: scene = <ErrorScene error={state.error} onReset={() => dispatch({ type: 'RESET' })} />; break;
     case SCENE.ENTRY:
-    default: return <EntryScene onSubmit={handleSubmit} />;
+    default: scene = <EntryScene onSubmit={handleSubmit} />;
   }
+
+  return (
+    <>
+      <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'} />
+      <div className="ui">{scene}</div>
+    </>
+  );
 }

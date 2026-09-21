@@ -1,3 +1,22 @@
+/* PIXI 舞台：全屏固定层，位于 UI 之下 */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+.stage canvas {
+  pointer-events: none;
+}
+/* UI 层：位于舞台之上，接收交互 */
+.ui {
+  position: relative;
+  z-index: 1;
+}
+/* 无 WebGL 时的 CSS 渐变兜底，与 canvas 渐变同色 */
+.css-fallback {
+  background: linear-gradient(135deg, #0b0f2a 0%, #3a1c71 50%, #0f3460 100%);
+}
+
 :root { color-scheme: dark; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body, #root { height: 100%; }
