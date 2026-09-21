@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Bubble from './ui/Bubble.jsx';
+import { playSfx } from '../audio/audioManager.js';
 
 export default function DoneScene({ job, fileUrl, onReset }) {
+  useEffect(() => { playSfx('done'); }, []);
   return (
     <div data-testid="done-scene" className="scene done-scene">
       <Bubble className="done-bubble">

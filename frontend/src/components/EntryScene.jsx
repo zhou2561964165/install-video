@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { unlock, playSfx } from '../audio/audioManager.js';
 
 export default function EntryScene({ onSubmit }) {
   const [url, setUrl] = useState('');
@@ -7,6 +8,8 @@ export default function EntryScene({ onSubmit }) {
     e.preventDefault();
     if (!url.trim()) return;
     setJustSubmitted(true);
+    unlock();
+    playSfx('paste');
     onSubmit(url.trim());
   };
   return (

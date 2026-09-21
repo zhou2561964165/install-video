@@ -10,6 +10,7 @@ import SelectingScene from './components/SelectingScene.jsx';
 import DownloadingScene from './components/DownloadingScene.jsx';
 import DoneScene from './components/DoneScene.jsx';
 import ErrorScene from './components/ErrorScene.jsx';
+import { setScene, setMuted as setAudioMuted } from './audio/audioManager.js';
 
 const POLL_MS = 3000; // 轮询间隔：须 ≥2s，后端 /api 限流 30/60s
 
@@ -20,6 +21,9 @@ export default function App() {
   const bgRef = useRef(null);
   const mascotRef = useRef(null);
   const [webgl] = useState(() => webglSupported());
+  const [muted, setMuted] = useState(false);
+
+  const toggleMute = useCallback(() => setMuted((m) => !m), []);
 
   const handleSubmit = useCallback(async (url) => {
     dispatch({ type: 'SUBMIT_URL', url });
@@ -86,6 +90,16 @@ export default function App() {
     mascotRef.current?.setScene(state.scene);
   }, [state.scene]);
 
+  // 随 scene 驱动 BGM/SFX 场景
+  useEffect(() => {
+    setScene(state.scene);
+  }, [state.scene]);
+
+  // 静音状态同步到音频管理器
+  useEffect(() => {
+    setAudioMuted(muted);
+  }, [muted]);
+
   let scene;
   switch (state.scene) {
     case SCENE.PARSING: scene = <ParsingScene />; break;
@@ -109,6 +123,15 @@ export default function App() {
     <>
       <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'} />
       <div className="ui">{scene}</div>
+      <button
+        type="button"
+        className="mute-toggle"
+        aria-pressed={muted}
+        onClick={toggleMute}
+        style={{ position: 'fixed', top: 16, right: 16, zIndex: 10, ...(muted ? { opacity: 0.6 } : {}) }}
+      >
+        静音
+      </button>
     </>
   );
 }

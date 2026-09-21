@@ -1,4 +1,5 @@
 import React from 'react';
+import { playSfx } from '../audio/audioManager.js';
 
 function formatDuration(seconds) {
   if (seconds == null) return '';
@@ -21,14 +22,14 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
               key={f.format_id}
               className={`laser-frame float-on-hover${selectedFormat?.format_id === f.format_id ? ' selected' : ''}`}
               aria-pressed={selectedFormat?.format_id === f.format_id}
-              onClick={() => onSelect(f)}
+              onClick={() => { playSfx('select'); onSelect(f); }}
             >
               {f.label} · {f.ext}
             </button>
           ))}
         </div>
         <label className="badge-switch">
-          <input type="checkbox" checked={forceServer} onChange={(e) => onSelect(selectedFormat, e.target.checked)} />
+          <input type="checkbox" checked={forceServer} onChange={(e) => { playSfx('select'); onSelect(selectedFormat, e.target.checked); }} />
           强制走服务器
         </label>
         <button onClick={onDownload} disabled={!selectedFormat}>下载</button>
