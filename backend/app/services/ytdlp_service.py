@@ -5,6 +5,8 @@ from urllib.parse import urlparse
 import yt_dlp
 from yt_dlp.utils import GeoRestrictedError, UnsupportedError
 
+from ..config import settings
+
 ERROR_INVALID_URL = "invalid_url"
 ERROR_UNSUPPORTED = "unsupported_site"
 ERROR_AGE = "age_restricted"
@@ -155,6 +157,10 @@ def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
         "merge_output_format": "mp4",
         "noprogress": True,
     }
+    # ffmpeg 用于合并音视频流：默认 "ffmpeg" 表示在 PATH 上，交给 yt-dlp 自行查找；
+    # 仅当显式配置了非默认路径时才传 ffmpeg_location，避免把裸名 "ffmpeg" 误当相对路径。
+    if settings.ffmpeg_path and settings.ffmpeg_path != "ffmpeg":
+        opts["ffmpeg_location"] = settings.ffmpeg_path
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=True)
     filename = ydl.prepare_filename(info)

@@ -1,7 +1,9 @@
 import yt_dlp.utils
 
+from app.config import settings
 from app.services.ytdlp_service import (
     classify_error,
+    download,
     extract_info,
     is_valid_url,
 )
@@ -71,3 +73,51 @@ def test_extract_info_calls_ydl(monkeypatch):
     info = extract_info("https://example.com/v")
     assert calls == {"url": "https://example.com/v", "download": False}
     assert info["title"] == "t"
+
+
+class _FakeDownloadYDL:
+    def __init__(self, opts):
+        self.opts = opts
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def extract_info(self, url, download):
+        return {"id": "x"}
+
+    def prepare_filename(self, info):
+        return "out.mp4"
+
+
+def _run_download_capture(monkeypatch, tmp_path):
+    captured = {}
+    monkeypatch.setattr(
+        "app.services.ytdlp_service.yt_dlp.YoutubeDL",
+        lambda opts: _capturing(opts, captured),
+    )
+    out = tmp_path / "job"
+    out.mkdir()
+    (out / "out.mp4").write_bytes(b"x")
+    download("https://example.com/v", "best", str(out / "%(title)s.%(ext)s"), lambda d: None)
+    return captured
+
+
+class _capturing(_FakeDownloadYDL):
+    def __init__(self, opts, captured):
+        super().__init__(opts)
+        captured["opts"] = opts
+
+
+def test_download_passes_custom_ffmpeg_location(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "ffmpeg_path", "C:/ffmpeg/ffmpeg.exe")
+    captured = _run_download_capture(monkeypatch, tmp_path)
+    assert captured["opts"]["ffmpeg_location"] == "C:/ffmpeg/ffmpeg.exe"
+
+
+def test_download_default_ffmpeg_omits_location(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "ffmpeg_path", "ffmpeg")
+    captured = _run_download_capture(monkeypatch, tmp_path)
+    assert "ffmpeg_location" not in captured["opts"]
