@@ -26,8 +26,8 @@ npm run test:watch
 
 ## Live2D 模型署名与授权
 
-- **Live2D 角色「初音未来」—— 人物绘制：玄宝酱 · 建模：怂怂koe**
-- 模型遵循作者使用规则：**非商用、不二传二改。**
+- **Live2D 角色「初音未来」—— 人物绘制：玄宝酱 · 建模：怂怂koe**；遵循作者使用规则：**非商用、不二传二改**。
+- **Live2D 角色「白」—— 画师：煎果饼子txy · 建模：逐尾鲨（来源：b站工房，免费版）**。
 
 ## 如何新增 / 切换模型
 
@@ -36,10 +36,14 @@ npm run test:watch
 1. 把新模型整套文件放进 `public/live2d/<id>/`（`<id>` 为小写唯一标识，含 `.model3.json` / `.moc3` / 纹理等）。
 2. 在 `MODELS` 数组追加一条：`{ id, name, url: '/live2d/<id>/<name>.model3.json', scale, x, y }`。
    - `scale` 为缩放，`x` / `y` 为相对屏幕宽高的占比（0~1）定位角色。
-   - 若该模型的 expression / motion 名与共享默认（`SCENE_MASCOT`）不同，可在条目里加 `scene` 字段按场景覆盖。
+   - 若该模型的 expression / motion 名与共享默认（`SCENE_MASCOT`）不同，可在条目里加 `scene` 字段按场景覆盖；**无 expression/motion 的模型**用 `scene: { [SCENE.ENTRY]: { expression: null, motion: null } }` 关闭表情动作（`ENTRY` 作为全场景兜底）。
 3. 前端会自动在右上角显示「模型」下拉框（`MODELS.length > 1` 时出现），选中即切换。
 
 运行时切换走 `mascot.js` 暴露的 `switchModel(id)`（销毁旧模型 → 加载新模型 → 重放当前场景表情）；失败时保留旧模型，不中断。
+
+### 已知限制
+
+- **「白」模型纹理为 16384×16384（16K）**：超过多数移动端与部分桌面 GPU 的 WebGL `MAX_TEXTURE_SIZE`（常见 4096/8192，部分桌面 16384），可能在这些设备上渲染失败或黑屏。如需移动端兼容，需征得作者许可后压缩纹理分辨率（改动模型属于「二改」）。
 
 ## Cubism Core 说明
 

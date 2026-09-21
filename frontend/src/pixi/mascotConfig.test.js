@@ -37,4 +37,10 @@ describe('MODELS 模型注册表', () => {
   it('首模型是 miku（默认角色）', () => {
     expect(MODELS[0].id).toBe('miku');
   });
+  it('无 expression/motion 的模型用 scene 覆盖关闭表情动作，避免调用缺失资源', () => {
+    const bai = MODELS.find((m) => m.id === 'bai');
+    expect(bai).toBeTruthy();
+    expect(bai.scene[SCENE.ENTRY].expression).toBeNull();
+    expect(bai.scene[SCENE.ENTRY].motion).toBeNull();
+  });
 });

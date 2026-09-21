@@ -30,4 +30,17 @@ export const MODELS = [
     x: 0.82,
     y: 0.62,
   },
+  {
+    id: 'bai',
+    name: '白',
+    url: '/live2d/bai/白-免费版.model3.json',
+    scale: 0.28,
+    x: 0.82,
+    y: 0.62,
+    // 该模型无 expression/motion 文件（仅 moc3+纹理+物理）；用 ENTRY 覆盖关闭全部场景的
+    // 表情/动作（resolveCfg 以 ENTRY 为兜底），sway/run 位移仍按共享默认生效。
+    scene: {
+      [SCENE.ENTRY]: { expression: null, motion: null },
+    },
+  },
 ];
