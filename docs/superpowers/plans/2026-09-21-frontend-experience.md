@@ -502,6 +502,8 @@ import DownloadingScene from './components/DownloadingScene.jsx';
 import DoneScene from './components/DoneScene.jsx';
 import ErrorScene from './components/ErrorScene.jsx';
 
+const POLL_MS = 3000; // 轮询间隔：须 ≥2s，后端 /api 限流 30/60s（含 /api/job/{id}）
+
 export default function App() {
   const [state, dispatch] = useReducer(reduce, undefined, initialState);
 
@@ -538,12 +540,12 @@ export default function App() {
         const job = await getJob(state.download.job_id);
         dispatch({ type: 'DOWNLOAD_PROGRESS', job });
         if (job.status === 'done' || job.status === 'error') return;
-        timer = setTimeout(tick, 800);
+        timer = setTimeout(tick, POLL_MS);
       } catch (e) {
         dispatch({ type: 'DOWNLOAD_FAIL', error: e });
       }
     };
-    timer = setTimeout(tick, 800);
+    timer = setTimeout(tick, POLL_MS);
     return () => clearTimeout(timer);
   }, [state.scene, state.download]);
 
@@ -755,9 +757,9 @@ describe('App 功能闭环', () => {
     await userEvent.click(await screen.findByRole('button', { name: '1080p · mp4' }));
     await userEvent.click(screen.getByRole('button', { name: '下载' }));
 
-    expect(await screen.findByTestId('done-scene')).toBeInTheDocument();
+    expect(await screen.findByTestId('done-scene', {}, { timeout: 8000 })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /保存文件/ })).toHaveAttribute('href', '/api/file/j1');
-  });
+  }, 15000);
 
   it('解析失败进入错误场景', async () => {
     parseVideo.mockRejectedValue({ error_type: 'invalid_url', error: '无效链接' });
