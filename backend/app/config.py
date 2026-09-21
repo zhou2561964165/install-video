@@ -2,15 +2,19 @@ import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
+# 后端根目录（backend/）。默认路径锚定到这里，保证无论从哪个工作目录启动
+# uvicorn，temp_dir / db_url 都落在仓库内、且被 .gitignore 覆盖（backend/tmp/、*.db）。
+_BACKEND_DIR = Path(__file__).resolve().parent.parent
+
 
 @dataclass
 class Settings:
     ffmpeg_path: str = "ffmpeg"
     max_concurrent_downloads: int = 3
-    temp_dir: Path = field(default_factory=lambda: Path("backend/tmp"))
+    temp_dir: Path = field(default_factory=lambda: _BACKEND_DIR / "tmp")
     max_file_size: int = 2 * 1024 * 1024 * 1024  # 2 GB
     ttl_seconds: int = 3600
-    db_url: str = "sqlite:///./jobs.db"
+    db_url: str = field(default_factory=lambda: f"sqlite:///{(_BACKEND_DIR / 'jobs.db').as_posix()}")
     rate_limit_requests: int = 30
     rate_limit_window_seconds: int = 60
 
@@ -26,10 +30,10 @@ class Settings:
         return cls(
             ffmpeg_path=_str("FFMPEG_PATH", "ffmpeg"),
             max_concurrent_downloads=_int("MAX_CONCURRENT", 3),
-            temp_dir=Path(_str("TEMP_DIR", "backend/tmp")),
+            temp_dir=Path(_str("TEMP_DIR", str(_BACKEND_DIR / "tmp"))),
             max_file_size=_int("MAX_FILE_SIZE", 2 * 1024**3),
             ttl_seconds=_int("TTL_SECONDS", 3600),
-            db_url=_str("DB_URL", "sqlite:///./jobs.db"),
+            db_url=_str("DB_URL", f"sqlite:///{(_BACKEND_DIR / 'jobs.db').as_posix()}"),
             rate_limit_requests=_int("RATE_LIMIT", 30),
             rate_limit_window_seconds=_int("RATE_LIMIT_WINDOW", 60),
         )

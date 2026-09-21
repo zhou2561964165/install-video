@@ -20,3 +20,13 @@ def test_settings_from_env(monkeypatch):
 
 def test_global_settings_is_settings():
     assert isinstance(settings, Settings)
+
+
+def test_default_paths_are_anchored_not_cwd_relative():
+    s = Settings()
+    # temp_dir 默认是绝对路径（锚定到 backend/），而非相对启动 CWD 的 "backend/tmp"
+    assert s.temp_dir.is_absolute()
+    assert s.temp_dir.name == "tmp"
+    # db_url 默认不再指向相对 CWD 的 ./jobs.db，而是锚定到 backend/jobs.db
+    assert "jobs.db" in s.db_url
+    assert "./jobs.db" not in s.db_url
