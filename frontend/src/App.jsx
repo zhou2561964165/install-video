@@ -21,6 +21,7 @@ export default function App() {
   const stageRef = useRef(null);
   const bgRef = useRef(null);
   const mascotRef = useRef(null);
+  const sceneRef = useRef(state.scene);
   const [webgl] = useState(() => webglSupported());
   const [tier] = useState(() => detectTier());
   const [lightMode, setLightMode] = useState(false);
@@ -81,7 +82,7 @@ export default function App() {
     window.addEventListener('resize', onResize);
     createMascot(app).then((m) => {
       mascotRef.current = m;
-      m.setScene(state.scene);
+      m.setScene(sceneRef.current);
     });
     return () => {
       window.removeEventListener('resize', onResize);
@@ -100,6 +101,7 @@ export default function App() {
 
   // 随 scene 驱动 mascot 表情/动作
   useEffect(() => {
+    sceneRef.current = state.scene;
     mascotRef.current?.setScene(state.scene);
   }, [state.scene]);
 
