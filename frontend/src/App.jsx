@@ -4,6 +4,7 @@ import { parseVideo, startDownload, getJob, fileUrl } from './api.js';
 import { initStage, destroyStage, webglSupported, detectTier } from './pixi/stage.js';
 import { createBackground, intensityForScene } from './pixi/background.js';
 import { createMascot } from './pixi/mascot.js';
+import { MODELS } from './pixi/mascotConfig.js';
 import EntryScene from './components/EntryScene.jsx';
 import ParsingScene from './components/ParsingScene.jsx';
 import SelectingScene from './components/SelectingScene.jsx';
@@ -26,6 +27,7 @@ export default function App() {
   const [tier] = useState(() => detectTier());
   const [lightMode, setLightMode] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [modelId, setModelId] = useState(() => MODELS[0]?.id);
 
   const toggleLightMode = useCallback(() => setLightMode((m) => !m), []);
   const toggleMute = useCallback(() => setMuted((m) => !m), []);
@@ -80,7 +82,7 @@ export default function App() {
     bgRef.current = bg;
     const onResize = () => bg.resize();
     window.addEventListener('resize', onResize);
-    createMascot(app).then((m) => {
+    createMascot(app, modelId).then((m) => {
       mascotRef.current = m;
       m.setScene(sceneRef.current);
     });
@@ -104,6 +106,11 @@ export default function App() {
     sceneRef.current = state.scene;
     mascotRef.current?.setScene(state.scene);
   }, [state.scene]);
+
+  // 切换模型：仅对已就绪的 mascot 生效；初始挂载时 mascotRef 为空，首模型由创建阶段加载
+  useEffect(() => {
+    mascotRef.current?.switchModel(modelId);
+  }, [modelId]);
 
   // 随 scene 驱动 BGM/SFX 场景
   useEffect(() => {
@@ -155,6 +162,18 @@ export default function App() {
       >
         轻量模式
       </button>
+      {MODELS.length > 1 && (
+        <select
+          className="model-select"
+          value={modelId}
+          onChange={(e) => setModelId(e.target.value)}
+          aria-label="切换模型"
+        >
+          {MODELS.map((m) => (
+            <option key={m.id} value={m.id}>{m.name}</option>
+          ))}
+        </select>
+      )}
       <About />
     </>
   );

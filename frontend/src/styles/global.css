@@ -26,6 +26,23 @@
 .lightmode-toggle[aria-pressed='true'] {
   opacity: 0.6;
 }
+/* 模型切换下拉：右上角第三槽位（静音 16px → 轻量 56px → 模型 96px） */
+.model-select {
+  position: fixed;
+  top: 96px;
+  right: 16px;
+  z-index: 10;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+  color: #f5f6ff;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+.model-select:hover { border-color: var(--neon-blue); box-shadow: 0 0 12px var(--neon-blue); }
+.model-select option { background: #1a1f3d; color: #f5f6ff; }
 
 :root { color-scheme: dark; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
