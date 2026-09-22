@@ -159,7 +159,56 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 
 ## 12. 迭代路线图
 
-1. **v1**：核心下载闭环（解析/清晰度/下载）+ 二次元前端体验 + 直链/服务端切换 + 防滥用基础。
-2. **v2（候选）**：账号 + 每用户额度。
-3. **v3（候选）**：视频总结、字幕翻译（接入 LLM）。
-4. **v4（候选）**：付费能力。
+1. **v1（已完成）**：核心下载闭环（解析/清晰度/下载）+ 二次元前端体验 + 直链/服务端切换 + 防滥用基础。
+2. **第二阶段（前端电影感视觉升级，进行中）**：蒙版揭幕/虹膜转场/几何画框/章节台词/自定义光标/分段按钮/缠绕进度，见 §13 与 `docs/superpowers/plans/2026-09-22-phase2-cinematic-visual.md`。
+3. **v2（候选）**：账号 + 每用户额度。
+4. **v3（候选）**：视频总结、字幕翻译（接入 LLM）。
+5. **v4（候选）**：付费能力。
+
+## 13. 第二阶段：前端视觉表现层（fx）架构
+
+> 第二阶段把前端从「炫彩工具页」升级为「可交互的二次元短篇体验」。核心原则：视觉表现层**只读**场景状态，**绝不修改下载状态、绝不 import 下载核心**；下载核心也不依赖视觉层。
+
+### 13.1 分层
+
+沿用 v1 的「单一 PIXI 管线 + DOM UI 叠加」，新增一个 `frontend/src/fx/` 表现层：
+
+```
+frontend/src/
+├── state/
+│   ├── sceneMachine.js         # v1：场景状态机（不动）
+│   └── scriptConfig.js         # 新增：章节台词配置（数据驱动）
+├── pixi/                       # v1：背景 + Live2D 角色（不动）
+├── fx/                         # 新增：电影感表现层（纯配置/纯函数）
+│   ├── transitions.js          #   SCENE_TRANSITION + TRANSITION_TYPES + transitionForScene()
+│   └── cursor.js               #   SCENE_CURSOR + cursorForScene()
+└── components/
+    ├── ui/                     # 新增 UI 组件
+    │   ├── Subtitle.jsx         #   章节台词字幕条
+    │   ├── Frame.jsx            #   几何画框（四角括号）
+    │   ├── TransitionOverlay.jsx #  转场覆盖层（按 scene 播动画）
+    │   ├── Cursor.jsx           #   自定义动画光标
+    │   ├── SegmentedButton.jsx  #   分段分层主按钮
+    │   └── PathProgress.jsx     #   缠绕式进度（SVG path）
+    └── …（v1 场景组件不变）
+```
+
+### 13.2 预留扩展点（第二阶段 → 后续）
+
+| 未来能力 | 本阶段预留的接口 / 配置 | 扩展方式（改配置不改代码） |
+| --- | --- | --- |
+| 新场景 / 新错误类型 | `scriptConfig.js`（`SCENE_SCRIPT` / `ERROR_SCRIPT`）、`SCENE_TRANSITION`、`SCENE_CURSOR` | 各加一条配置 |
+| 视频总结 / 字幕翻译台词注入（v3） | `Subtitle` 只消费 `SCENE_SCRIPT[scene]` | v3 在台词来源前插一层，注入 LLM 文案 |
+| 字幕逐字动画 / 多行堆叠 | `Subtitle` 的台词配置 `{ line }` 可演进为 `{ lines[], anim }` | 后续阶段加字段 + CSS，对应参考站 `anim-letter` / `position_N`；本阶段 YAGNI 不实现 |
+| 主题切换（多套氛围） | `Frame` 用 CSS 变量驱动；配色集中在 `:root` | 换主题 = 换 CSS 变量表 |
+| 队列 / 批量 / 总结进度 | `PathProgress` 通用组件（`path` + `value` props） | 直接复用，业务层只喂 value |
+| 更多转场样式 | `transitions.js` 的 `TRANSITION_TYPES` | 新增类型 + 对应 CSS 动画 |
+
+**核心约束（与后端 §9 对齐）**：视觉表现层不得感知下载核心（不 import `api.js` 的下载逻辑、不改 `sceneMachine.reduce` 的下载状态）；下载核心不得依赖视觉层。二者通过「场景状态」单向解耦——视觉层消费 `scene`，仅此而已。
+
+### 13.3 降级策略
+
+- `prefers-reduced-motion`：转场/光标动画关闭，退化为无动画。
+- 「轻量模式」/ 低端机（`detectTier() === 'low'`）：跳过 canvas 光标、简化转场；画框/台词（纯 DOM）保留。
+- 移动端触摸：无鼠标，光标自动隐藏。
+- 任何视觉失效都不影响下载闭环。

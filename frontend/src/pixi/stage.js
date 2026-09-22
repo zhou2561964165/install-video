@@ -31,7 +31,7 @@ export function initStage(container) {
   container.appendChild(app.view);
   app.view.style.position = 'absolute';
   app.view.style.inset = '0';
-  app.view.style.pointerEvents = 'none'; // UI 层在上方接收交互
+  app.view.style.pointerEvents = 'auto'; // 角色点击切换需要 canvas 接收事件；UI 层通过 CSS 穿透（.ui pointer-events:none）
   return app;
 }
 

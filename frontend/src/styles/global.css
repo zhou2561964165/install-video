@@ -1,16 +1,26 @@
-/* PIXI 舞台：全屏固定层，位于 UI 之下 */
+/* PIXI 舞台：全屏固定层，位于 UI 之下。canvas 接收事件（角色点击切换） */
 .stage {
   position: fixed;
   inset: 0;
   z-index: 0;
 }
 .stage canvas {
-  pointer-events: none;
+  pointer-events: auto;
 }
-/* UI 层：位于舞台之上，接收交互 */
+/* UI 层：位于舞台之上。整体穿透，让点击落到下方 canvas（角色切换）；
+   仅交互控件（按钮/输入/链接/标签/下拉）恢复接收事件。 */
 .ui {
   position: relative;
   z-index: 1;
+  pointer-events: none;
+}
+.ui button,
+.ui input,
+.ui select,
+.ui textarea,
+.ui a,
+.ui label {
+  pointer-events: auto;
 }
 /* 无 WebGL 时的 CSS 渐变兜底，与 canvas 渐变同色 */
 .css-fallback {
@@ -26,23 +36,33 @@
 .lightmode-toggle[aria-pressed='true'] {
   opacity: 0.6;
 }
-/* 模型切换下拉：右上角第三槽位（静音 16px → 轻量 56px → 模型 96px） */
-.model-select {
+/* 模型切换提示：漫画气泡风，浮于角色附近（右侧） */
+.model-toast {
   position: fixed;
-  top: 96px;
-  right: 16px;
+  top: 20%;
+  right: 10%;
   z-index: 10;
-  padding: 8px 14px;
-  border: 1px solid rgba(255, 255, 255, .25);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .08);
-  color: #f5f6ff;
+  background: #fff;
+  color: #111;
+  padding: 10px 18px;
+  border-radius: 16px;
   font-weight: 600;
-  outline: none;
-  cursor: pointer;
+  box-shadow: 0 0 18px var(--neon-pink);
+  pointer-events: none;
+  animation: toast-pop .3s ease-out;
 }
-.model-select:hover { border-color: var(--neon-blue); box-shadow: 0 0 12px var(--neon-blue); }
-.model-select option { background: #1a1f3d; color: #f5f6ff; }
+.model-toast::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  right: 40px;
+  border: 9px solid transparent;
+  border-top-color: #fff;
+}
+@keyframes toast-pop {
+  from { opacity: 0; transform: translateY(10px) scale(.9); }
+  to { opacity: 1; transform: none; }
+}
 
 :root { color-scheme: dark; }
 * { box-sizing: border-box; margin: 0; padding: 0; }

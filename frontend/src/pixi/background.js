@@ -43,8 +43,8 @@ export function createBackground(app, tier = 'high') {
     gradient.filters = [hue];
   }
 
-  // 环境粒子：轻量 ParticleContainer
-  const particles = new PIXI.ParticleContainer(500, { tint: true });
+  // 环境粒子：普通 Container（ParticleContainer 仅支持 Sprite，Graphics 会触发渲染崩溃）
+  const particles = new PIXI.Container();
   app.stage.addChild(particles);
 
   const MAX = low ? 40 : 120;

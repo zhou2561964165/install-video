@@ -1,6 +1,6 @@
 # 万能视频下载网站
 
-粘贴任意平台视频链接 → 解析 → 选清晰度 → 下载到本地。依托 yt-dlp 覆盖数千站点，前端是日系二次元沉浸式体验（PIXI 舞台 + Live2D 初音未来角色），移动端可用。
+粘贴任意平台视频链接 → 解析 → 选清晰度 → 下载到本地。依托 yt-dlp 覆盖数千站点，前端是日系二次元沉浸式体验（PIXI 舞台 + Live2D 白角色），移动端可用。
 
 ## 架构
 
@@ -13,7 +13,7 @@
 - 后端：`backend/` — FastAPI + yt-dlp(Python API) + SQLModel/SQLite。直链下载与服务端下载自动切换，服务端产物 TTL 自动清理。
 - 前端：`frontend/` — React 18 + Vite + PIXI v6 + pixi-live2d-display。单一 PIXI 管线，场景状态机驱动，WebGL 缺失/低端机自动降级。
 
-详细设计见 `docs/design.md`，需求见 `docs/requirements.md`，后续扩展见 `docs/superpowers/plans/2026-09-21-extension-plan.md`。
+详细设计见 `docs/design.md`，需求见 `docs/requirements.md`，后续扩展见 `docs/superpowers/plans/2026-09-21-extension-plan.md`，第二阶段视觉升级见 `docs/superpowers/plans/2026-09-22-phase2-cinematic-visual.md`。
 
 ## 环境要求
 
@@ -73,7 +73,7 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 ### 自动化测试
 
 ```bash
-# 后端（pytest，30 项）
+# 后端（pytest，32 项）
 cd backend && .venv/Scripts/python -m pytest
 
 # 前端（vitest，32 项）
@@ -97,4 +97,4 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 
 ## 署名与授权
 
-Live2D 角色「初音未来」—— 人物绘制：玄宝酱 · 建模：怂怂koe。模型遵循作者使用规则：**非商用、不二传二改**（见 `frontend/README.md`）。
+Live2D 角色「白」—— 人物绘制：煎果饼子txy · 建模：逐尾鲨。模型遵循作者使用规则：**非商用、不二传二改**（见 `frontend/README.md`）。

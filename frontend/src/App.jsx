@@ -4,7 +4,8 @@ import { parseVideo, startDownload, getJob, fileUrl } from './api.js';
 import { initStage, destroyStage, webglSupported, detectTier } from './pixi/stage.js';
 import { createBackground, intensityForScene } from './pixi/background.js';
 import { createMascot } from './pixi/mascot.js';
-import { MODELS } from './pixi/mascotConfig.js';
+import { DEFAULT_MODEL_ID } from './pixi/mascotConfig.js';
+import { useModelSwitcher } from './hooks/useModelSwitcher.js';
 import EntryScene from './components/EntryScene.jsx';
 import ParsingScene from './components/ParsingScene.jsx';
 import SelectingScene from './components/SelectingScene.jsx';
@@ -22,12 +23,11 @@ export default function App() {
   const stageRef = useRef(null);
   const bgRef = useRef(null);
   const mascotRef = useRef(null);
-  const sceneRef = useRef(state.scene);
   const [webgl] = useState(() => webglSupported());
   const [tier] = useState(() => detectTier());
   const [lightMode, setLightMode] = useState(false);
   const [muted, setMuted] = useState(false);
-  const [modelId, setModelId] = useState(() => MODELS[0]?.id);
+  const { toast, onModelChange } = useModelSwitcher();
 
   const toggleLightMode = useCallback(() => setLightMode((m) => !m), []);
   const toggleMute = useCallback(() => setMuted((m) => !m), []);
@@ -80,11 +80,13 @@ export default function App() {
     const app = initStage(stageRef.current);
     const bg = createBackground(app, tier);
     bgRef.current = bg;
-    const onResize = () => bg.resize();
+    const onResize = () => {
+      bg.resize();
+      mascotRef.current?.resize();
+    };
     window.addEventListener('resize', onResize);
-    createMascot(app, modelId).then((m) => {
+    createMascot(app, DEFAULT_MODEL_ID, { onModelChange }).then((m) => {
       mascotRef.current = m;
-      m.setScene(sceneRef.current);
     });
     return () => {
       window.removeEventListener('resize', onResize);
@@ -94,25 +96,14 @@ export default function App() {
       mascotRef.current = null;
       bgRef.current = null;
     };
-  }, [webgl, lightMode, tier]);
+  }, [webgl, lightMode, tier, onModelChange]);
 
   // 随 scene 切换粒子强度（安静/活跃）
   useEffect(() => {
     bgRef.current?.setIntensity(intensityForScene(state.scene));
   }, [state.scene]);
 
-  // 随 scene 驱动 mascot 表情/动作
-  useEffect(() => {
-    sceneRef.current = state.scene;
-    mascotRef.current?.setScene(state.scene);
-  }, [state.scene]);
-
-  // 切换模型：仅对已就绪的 mascot 生效；初始挂载时 mascotRef 为空，首模型由创建阶段加载
-  useEffect(() => {
-    mascotRef.current?.switchModel(modelId);
-  }, [modelId]);
-
-  // 随 scene 驱动 BGM/SFX 场景
+  // 随 scene 驱动 BGM/SFX 场景（角色表情/动作已取消，状态反馈由粒子+音频承担）
   useEffect(() => {
     setScene(state.scene);
   }, [state.scene]);
@@ -162,18 +153,7 @@ export default function App() {
       >
         轻量模式
       </button>
-      {MODELS.length > 1 && (
-        <select
-          className="model-select"
-          value={modelId}
-          onChange={(e) => setModelId(e.target.value)}
-          aria-label="切换模型"
-        >
-          {MODELS.map((m) => (
-            <option key={m.id} value={m.id}>{m.name}</option>
-          ))}
-        </select>
-      )}
+      {toast && <div className="model-toast" role="status">{toast}</div>}
       <About />
     </>
   );

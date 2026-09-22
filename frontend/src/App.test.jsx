@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import App from './App.jsx';
 
 vi.mock('pixi.js', () => ({}));
-vi.mock('pixi-live2d-display', () => ({
+vi.mock('pixi-live2d-display/cubism4', () => ({
   Live2DModel: {
     from: () => Promise.reject(new Error('no model in test')),
     registerTicker: () => {},
