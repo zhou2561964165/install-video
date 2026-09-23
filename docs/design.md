@@ -258,7 +258,7 @@ CSS 与 PIXI 颜色单一来源 = `global.css` 的 `:root` 语义 token；`theme
 
 ### 14.6 待机动画（Task D，程序化驱动）
 
-「白」的 `model3.json` 无 `Motions` / `Breath` 字段（目录里的 `edle.motion3.json` 是星星/眼泪/生气这类装饰特效，不是呼吸动作），角色本身不会自动呼吸/摆动。因此用 `pixi/mascot.js` 的 `startIdle()`：`app.ticker` 逐帧正弦写 `coreModel.setParameterValueById`，驱动 `ParamAngleX/Y/Z` + `ParamBreath`（均为物理输入），头摆经物理级联出身体/头发摆动。驱动参数名/振幅/频率/相位全部在 `mascotConfig.js` 的 `IDLE` 配置（数据驱动）；运行时按 `coreModel.getParameterIndex` 过滤缺失参数，全缺失时退化为容器级 scale 呼吸。尊重 `prefers-reduced-motion`（完全静止）。
+「白」的 `model3.json` 的 `Motions` 只挂了 `edle` 装饰特效（星星/眼泪/生气，非呼吸/待机动作）、且无 `Breath` 字段，角色本身不会自动呼吸/摆动。因此用 `pixi/mascot.js` 的 `startIdle()`：`app.ticker` 逐帧正弦写 `coreModel.setParameterValueById`，驱动 `ParamAngleX/Y/Z` + `ParamBreath`（均为物理输入），头摆经物理级联出身体/头发摆动。驱动参数名/振幅/频率/相位全部在 `mascotConfig.js` 的 `IDLE` 配置（数据驱动）；运行时按 `coreModel.getParameterIndex` 过滤缺失参数，全缺失时退化为容器级 scale 呼吸。尊重 `prefers-reduced-motion`（完全静止）。
 
 ### 14.7 模型升级（完整版「白」）
 
@@ -266,14 +266,15 @@ CSS 与 PIXI 颜色单一来源 = `global.css` 的 `:root` 语义 token；`theme
 - `mascotConfig.js`：`url`/`fallback.url` 指向 `白.model3.json` / `白.16384/texture_00.png`。
 - 删除 `hideParts`（免费版水印隐藏）——完整版无水印 Part，且配置从未填 `hiddenParts`，属死代码。
 - 保留 `startIdle` 待机（完整版仍无呼吸动作）。
-- 表情（46 个）与 `edle.motion3.json` 已随模型拷入 `public/live2d/bai/`；表情/道具接入见 §14.8。
+- 表情（46 个）与 `edle.motion3.json` 已随模型拷入 `public/live2d/bai/`；表情/道具/装饰特效接入见 §14.8。
+- 16K 纹理（16384×16384）在开发机已正常上传（显卡显存充足）；移动端/低端 GPU 的 `MAX_TEXTURE_SIZE` 兼容风险仍保留（见 `frontend/README.md` 已知限制）。
 
 ### 14.8 表情 / 道具系统（46 表情接入）
 
 完整版「白」带 46 个 `.exp3.json`，每个 = 单参数 `{Id, Value:1, Blend:'Add'}`。标准 expression manager 是**单选**（一次一个 currentExpression），无法「换发型 + 换衣服 + 戴耳机」并存；因此走**直接写参数** `coreModel.setParameterValueById(paramId, 1/0)`，可任意多选并存，且与待机正弦驱动（`IDLE`）参数不重叠、互不冲突。参数名/分组/节奏全部进 `mascotConfig.js` 的 `EXPRESSIONS`（数据驱动）。
 
-- **阶段映射（`EXPRESSIONS.stage`）**：解析中→圈圈眼、选清晰度/下载中→煎蛋眼、完成→星星眼、出错→生气、入口→无。
-- **随机道具（`EXPRESSIONS.random`）**：拿手柄 / 拿话筒 / 戳脸，每 ~20s 随机展示 ~4s 收回。
-- **点击换装菜单（`EXPRESSIONS.menu`）**：发型（single）/ 衣服（single）/ 大小变（toggle）/ 配饰（multi），`ExpressionMenu.jsx` 只读配置渲染。
-- **未进菜单但可用的表情**：睫毛 / 眼镜颜色 / 头发颜色 / 头部装饰颜色 / 身体装饰颜色 / 创可贴×4 / 黑脸 / 血迹 / 哭 / 脸红 —— 往 `menu` 或 `random.pool` 加一行即暴露。
+- **阶段映射（`EXPRESSIONS.stage`）**：解析中→圈圈眼(Param40)、选清晰度/下载中→煎蛋眼(Param38)、完成→星星眼(Param41)、出错→生气(Param43)、入口→无。
+- **随机道具（`EXPRESSIONS.random`）**：拿手柄(Param35) / 拿话筒(Param32) / 戳脸(Param31)，每 ~20s 随机展示 ~4s 收回。
+- **点击换装菜单（`EXPRESSIONS.menu`，6 组 39 项）**：发型(9, single) / 衣服(4, single) / 大小变(1, toggle) / 配饰(16, multi，含创可贴×4) / 颜色(5, multi) / 情绪(4, multi：黑脸/血迹/哭/脸红)，`ExpressionMenu.jsx` 只读配置渲染。**46 个表情已全量暴露，无闲置。**
+- **装饰特效（`EXPRESSIONS.effect` → `edle.motion3.json`）**：星星/眼泪/生气/圈圈/小翅膀的循环装饰动作（`Meta.Loop=true`，~11.9s）。命中 `stages`（默认 `done`/`error`）时由 `setStageEffect` 调 `model.motion(group, index, MotionPriority.IDLE)` 循环播放，其余场景 `motionManager.stopAllMotions()` 停止。`edle` motion 已注册进 `白.model3.json` 的 `FileReferences.Motions`；motion 文件按需懒加载（首次触发 `motion()` 时才请求）。
 - **模型切换已删除**（`cycleModel` / 切换特效 / `useModelSwitcher` / toast）。

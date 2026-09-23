@@ -26,8 +26,8 @@ export const MODELS = [
 // 默认模型 id：切换状态、兜底、初始加载统一从这里取，避免在组件内写死 'bai'
 export const DEFAULT_MODEL_ID = MODELS[0].id;
 
-// 程序化待机动画配置：「白」的 model3.json 无 Motions / Breath 字段（目录里的 edle.motion3.json
-// 是星星/眼泪/生气这类装饰特效，不是呼吸动作），角色本身不会自动呼吸/摆动，故用正弦逐帧
+// 程序化待机动画配置：「白」的 model3.json 的 Motions 只挂了 edle 装饰特效（星星/眼泪/生气，
+// 无呼吸/待机动作），且无 Breath 字段，角色本身不会自动呼吸/摆动，故用正弦逐帧
 // 驱动 coreModel 参数补上「呼吸 + 头部轻微摆动」。参数名/振幅/频率/相位全部在此，渲染层不写死。
 //   params   —— 待驱动的 Live2D 参数列表：id 为参数名（运行时按模型真实参数过滤，缺失自动跳过）；
 //               base 为中性值，amplitude 为摆动幅度，frequency 为每秒周期数，phase 为相位
@@ -52,10 +52,8 @@ export const IDLE = {
 //   random  —— 随机道具：每 interval 毫秒从 pool 随机取一个展示 duration 毫秒后收回
 //   menu    —— 点击角色弹出的功能菜单分组
 //              mode: single = 组内互斥；toggle = 开关；multi = 独立复选
-//   未进 v1 菜单但可用的表情（往 menu 或 random.pool 加一行即暴露）：
-//   睫毛 Param76、眼镜颜色 Param70、头发颜色 Param71、头部装饰颜色 Param74、身体装饰颜色 Param75、
-//   创可贴（额 Param34 / 嘴 Param92 / 右腿 Param58 / 左腿 Param59）、黑脸 Param51、血迹 Param53、
-//   哭 Param42、脸红 Param52。
+//   46 个表情已全部暴露：睫毛/眼镜/头发/头部装饰/身体装饰颜色 →「颜色」组（multi）；
+//   创可贴×4 →「配饰」组；黑脸/血迹/哭/脸红 →「情绪」组（multi）。往 menu / random.pool 加一行即可继续扩展。
 export const EXPRESSIONS = {
   stage: {
     parsing: { paramId: 'Param40', name: '圈圈眼' },
@@ -72,6 +70,12 @@ export const EXPRESSIONS = {
     ],
     interval: 20000, // 每 ~20s 随机展示一次
     duration: 4000,  // 展示 ~4s 后收回
+  },
+  effect: {
+    // 装饰特效（edle.motion3.json，Loop=true）：星星/眼泪/生气/圈圈/小翅膀 循环。
+    // 命中 stages 的场景循环播放，其余场景 stopAllMotions。数据驱动，改 stages 即调整触发时机。
+    motion: { group: 'edle', index: 0 },
+    stages: ['done', 'error'],
   },
   menu: [
     {
@@ -124,6 +128,33 @@ export const EXPRESSIONS = {
         { name: '牌子', paramId: 'Param45' },
         { name: '左袖子爱心', paramId: 'Param55' },
         { name: '袖带', paramId: 'Param46' },
+        { name: '创可贴（额）', paramId: 'Param34' },
+        { name: '创可贴（嘴）', paramId: 'Param92' },
+        { name: '创可贴（右腿）', paramId: 'Param58' },
+        { name: '创可贴（左腿）', paramId: 'Param59' },
+      ],
+    },
+    {
+      key: 'color',
+      label: '颜色',
+      mode: 'multi',
+      options: [
+        { name: '睫毛颜色', paramId: 'Param76' },
+        { name: '眼镜颜色', paramId: 'Param70' },
+        { name: '头发颜色', paramId: 'Param71' },
+        { name: '头部装饰颜色', paramId: 'Param74' },
+        { name: '身体装饰颜色', paramId: 'Param75' },
+      ],
+    },
+    {
+      key: 'mood',
+      label: '情绪',
+      mode: 'multi',
+      options: [
+        { name: '脸红', paramId: 'Param52' },
+        { name: '哭', paramId: 'Param42' },
+        { name: '黑脸', paramId: 'Param51' },
+        { name: '血迹', paramId: 'Param53' },
       ],
     },
   ],

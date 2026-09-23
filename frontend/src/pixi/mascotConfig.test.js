@@ -57,4 +57,19 @@ describe('EXPRESSIONS 表情/道具配置', () => {
       }
     });
   });
+
+  it('effect 装饰特效：motion 定位合法且 stages 均为有效场景', () => {
+    const { motion, stages } = EXPRESSIONS.effect;
+    expect(motion.group).toBeTruthy();
+    expect(typeof motion.index).toBe('number');
+    expect(stages.length).toBeGreaterThan(0);
+    stages.forEach((s) => expect(EXPRESSIONS.stage[s]).toBeTruthy());
+  });
+
+  it('menu 覆盖 6 个分组，且全表 paramId 无重复（可多选并存）', () => {
+    const labels = EXPRESSIONS.menu.map((g) => g.label);
+    expect(labels).toEqual(expect.arrayContaining(['发型', '衣服', '大小变', '配饰', '颜色', '情绪']));
+    const all = EXPRESSIONS.menu.flatMap((g) => g.options.map((o) => o.paramId));
+    expect(new Set(all).size).toBe(all.length);
+  });
 });

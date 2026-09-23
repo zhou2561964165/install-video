@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Live2DModel } from 'pixi-live2d-display/cubism4';
+import { Live2DModel, MotionPriority } from 'pixi-live2d-display/cubism4';
 import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS } from './mascotConfig.js';
 
 // 创建 Live2D 角色并接入「拖动角色」+「点击角色 → onTap（React 弹换装菜单）」。
@@ -168,10 +168,25 @@ export async function createMascot(app, modelId, { onTap } = {}) {
   }
 
   // 下载阶段 → 情绪眼（单选）：先清空 stage 全部参数，再置目标为 1；scene 无映射则只清空。
+  // 顺带驱动装饰特效（setStageEffect）：完成/出错场景循环播放 edle 特效，其余停止。
   function setStageExpression(scene) {
     const target = EXPRESSIONS.stage[scene];
     Object.keys(EXPRESSIONS.stage).forEach((key) => setExpression(EXPRESSIONS.stage[key].paramId, 0));
     if (target) setExpression(target.paramId, 1);
+    setStageEffect(scene);
+  }
+
+  // 装饰特效（EXPRESSIONS.effect → edle.motion3.json，Loop=true）：命中 stages 的场景循环播放，
+  // 其余 stopAllMotions。motion() 返回 Promise<boolean>（未找到该 motion 时 resolve false），异常静默忽略。
+  function setStageEffect(scene) {
+    if (disposed || !current.model) return;
+    const { motion, stages } = EXPRESSIONS.effect;
+    if (stages.includes(scene)) {
+      current.model.motion(motion.group, motion.index, MotionPriority.IDLE).catch(() => {});
+    } else {
+      const mm = current.model.internalModel && current.model.internalModel.motionManager;
+      if (mm) mm.stopAllMotions();
+    }
   }
 
   // 随机道具：每 interval 毫秒从 pool 随机取一个展示 duration 毫秒后收回。
