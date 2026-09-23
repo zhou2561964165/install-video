@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { MODELS, DEFAULT_MODEL_ID, EXPRESSIONS } from './mascotConfig.js';
+import { MODELS, DEFAULT_MODEL_ID, EXPRESSIONS, SCALE } from './mascotConfig.js';
 
 describe('MODELS 模型注册表', () => {
   it('仅注册「白」一个模型', () => {
@@ -18,6 +18,14 @@ describe('MODELS 模型注册表', () => {
   });
   it('DEFAULT_MODEL_ID 指向唯一模型', () => {
     expect(DEFAULT_MODEL_ID).toBe('bai');
+  });
+});
+
+describe('SCALE 等比缩放配置', () => {
+  it('step/min/max 合法（step>1 可放大、min>0、max>min）', () => {
+    expect(SCALE.step).toBeGreaterThan(1);
+    expect(SCALE.min).toBeGreaterThan(0);
+    expect(SCALE.max).toBeGreaterThan(SCALE.min);
   });
 });
 

@@ -7,7 +7,7 @@ import { EXPRESSIONS } from '../../pixi/mascotConfig.js';
 //   onExpression  —— (paramId, value) 写参数：1 开 / 0 关（App 接到 mascot.setExpression）
 // 分组语义：single = 组内互斥；toggle = 开关；multi = 独立复选。选中态只靠 active 对象本地持有，
 // 视觉层不感知下载状态，只负责把「点了哪个」交给 onExpression。
-export default function ExpressionMenu({ open, onClose, onExpression }) {
+export default function ExpressionMenu({ open, onClose, onExpression, onScale }) {
   const [active, setActive] = useState({});   // paramId → true（当前激活的参数）
 
   // Escape 关闭
@@ -52,6 +52,13 @@ export default function ExpressionMenu({ open, onClose, onExpression }) {
         aria-hidden={!open}
       >
         <button type="button" className="expression-menu__close" onClick={onClose} aria-label="关闭菜单">×</button>
+        <section className="expression-menu__group">
+          <h3 className="expression-menu__label">尺寸</h3>
+          <div className="expression-menu__scale">
+            <button type="button" className="expression-menu__pill" onClick={() => onScale?.(1)}>变大</button>
+            <button type="button" className="expression-menu__pill" onClick={() => onScale?.(-1)}>变小</button>
+          </div>
+        </section>
         {EXPRESSIONS.menu.map((group) => (
           <section key={group.key} className="expression-menu__group">
             <h3 className="expression-menu__label">{group.label}</h3>

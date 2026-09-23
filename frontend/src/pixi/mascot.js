@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Live2DModel, MotionPriority } from 'pixi-live2d-display/cubism4';
-import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS } from './mascotConfig.js';
+import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE } from './mascotConfig.js';
 
 // 创建 Live2D 角色并接入「拖动角色」+「点击角色 → onTap（React 弹换装菜单）」。
 //   modelId   —— 初始模型 id（缺省/未命中回落 DEFAULT_MODEL_ID）
@@ -20,6 +20,7 @@ export async function createMascot(app, modelId, { onTap } = {}) {
   let detachDrag = null;                    // 当前模型的拖动清理句柄（destroy 时解除 window 监听）
   let idle = { cleanup() {}, refreshBase() {} };  // 待机动画句柄（初始为空，加载后替换）
   let randomPropsCleanup = null;            // 随机道具定时器清理句柄（destroy 时调用）
+  let scaleFactor = 1;                      // 等比缩放倍率（SCALE 配置，跨 resize 持久）
 
   const current = { model: null, cfg: null };
 
@@ -29,7 +30,7 @@ export async function createMascot(app, modelId, { onTap } = {}) {
     const w = app.screen.width;
     const h = app.screen.height;
     instance.anchor.set(0.5, 0.5);
-    instance.scale.set((h * cfg.heightRatio) / instance.getLocalBounds().height);
+    instance.scale.set((h * cfg.heightRatio * scaleFactor) / instance.getLocalBounds().height);
     instance.x = w * cfg.x;
     instance.y = h * cfg.y;
   }
@@ -213,6 +214,17 @@ export async function createMascot(app, modelId, { onTap } = {}) {
     };
   }
 
+  // 等比缩放：SCALE.step 累积，clamp 到 [SCALE.min, SCALE.max]，重放 place 保持锚点居中。
+  //   direction > 0 放大 / < 0 缩小；倍率持久（跨 resize 生效，place 统一乘 scaleFactor）。
+  //   只动模型 transform，不碰表情/下载状态。
+  function scaleBy(direction) {
+    if (disposed || !current.model || !current.cfg) return;
+    const factor = direction > 0 ? SCALE.step : 1 / SCALE.step;
+    scaleFactor = Math.min(SCALE.max, Math.max(SCALE.min, scaleFactor * factor));
+    place(current.model, current.cfg);
+    idle.refreshBase();   // 容器级呼吸回退时重设基准 scale
+  }
+
   // 初始加载；失败则整体降级为静态占位（与旧行为一致）
   const loaded = await loadModel(modelId);
   if (disposed || !app.stage) return noopMascot(); // app 已销毁：返回空句柄，不做任何渲染
@@ -227,6 +239,7 @@ export async function createMascot(app, modelId, { onTap } = {}) {
     setExpression,
     setStageExpression,
     startRandomProps,
+    scaleBy,
     resize() {
       if (!disposed && current.model && current.cfg) {
         place(current.model, current.cfg);
@@ -251,6 +264,7 @@ function noopMascot() {
     setExpression() {},
     setStageExpression() {},
     startRandomProps() {},
+    scaleBy() {},
     resize() {},
     destroy() {},
   };
@@ -282,6 +296,7 @@ async function createFallback(app, modelId) {
     setExpression() {},
     setStageExpression() {},
     startRandomProps() {},
+    scaleBy() {},
     resize() { lay(); },
     destroy() { app.stage.removeChild(sprite); sprite.destroy(); },
   };

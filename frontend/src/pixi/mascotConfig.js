@@ -45,6 +45,10 @@ export const IDLE = {
   fallback: { scale: 0.015, frequency: 0.3 },
 };
 
+// 模型等比缩放配置：菜单「变大/变小」按 step 倍率累积，clamp 到 [min,max]
+// （相对默认高度的倍率）。改这里调步长/边界，不改渲染逻辑。
+export const SCALE = { step: 1.2, min: 0.5, max: 2.0 };
+
 // 表情/道具配置：「白」完整版带 46 个 .exp3.json，每个 = 单参数 Value=1（Add 混合）。
 // 标准 expression manager 是单选（一次一个 currentExpression），无法「换发型+换衣服+戴耳机」并存，
 // 因此这里走「直接写参数」：paramId 置 1 开 / 0 关，可任意多选并存。参数名全部在此，渲染层不写死。

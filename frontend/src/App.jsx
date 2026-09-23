@@ -13,9 +13,17 @@ import DoneScene from './components/DoneScene.jsx';
 import ErrorScene from './components/ErrorScene.jsx';
 import About from './components/ui/About.jsx';
 import ExpressionMenu from './components/ui/ExpressionMenu.jsx';
+import Preloader from './components/ui/Preloader.jsx';
 import { setScene, setMuted as setAudioMuted } from './audio/audioManager.js';
 
 const POLL_MS = 3000; // 轮询间隔：须 ≥2s，后端 /api 限流 30/60s
+
+// 三档主题开关（数据驱动，加档只改这里）
+const THEMES = [
+  { v: 'light', label: '浅色' },
+  { v: 'dark', label: '深色' },
+  { v: 'auto', label: '自动' },
+];
 
 export default function App() {
   const [state, dispatch] = useReducer(reduce, undefined, initialState);
@@ -28,11 +36,13 @@ export default function App() {
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'light');
   const [muted, setMuted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [ready, setReady] = useState(false); // Live2D 模型加载完成才隐藏 preloader
 
-  const toggleTheme = useCallback(() => setTheme((t) => (t === 'dark' ? 'light' : 'dark')), []);
+  const setThemeTier = useCallback((t) => setTheme(t), []);
   const toggleMute = useCallback(() => setMuted((m) => !m), []);
 
-  // 主题切换：写 data-theme 属性，CSS token 随之切换（浅/深）
+  // 主题切换：写 data-theme 属性（light/dark/auto），CSS token 随之切换；
+  // auto 由 global.css 的 @media (prefers-color-scheme) 解析，无需 JS 监听系统
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
 
   const handleSubmit = useCallback(async (url) => {
@@ -88,11 +98,15 @@ export default function App() {
       mascotRef.current?.resize();
     };
     window.addEventListener('resize', onResize);
+    let stale = false; // StrictMode 双重挂载：旧挂载的 mascot 结果丢弃，不覆盖 ref / 不提前置 ready
     createMascot(app, DEFAULT_MODEL_ID, { onTap: () => setMenuOpen(true) }).then((m) => {
+      if (stale) { m.destroy(); return; }
       mascotRef.current = m;
       m.startRandomProps();
+      setReady(true);
     });
     return () => {
+      stale = true;
       window.removeEventListener('resize', onResize);
       mascotRef.current?.destroy();
       bg.destroy();
@@ -146,9 +160,22 @@ export default function App() {
       <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'} />
       <div className="ui">{scene}</div>
       <button type="button" className="mute-toggle" aria-pressed={muted} onClick={toggleMute}>静音</button>
-      <button type="button" className="theme-toggle" aria-pressed={theme === 'dark'} onClick={toggleTheme}>{theme === 'dark' ? '浅色' : '深色'}</button>
-      <ExpressionMenu open={menuOpen} onClose={() => setMenuOpen(false)} onExpression={(pid, v) => mascotRef.current?.setExpression(pid, v)} />
+      <div className="theme-switch" role="group" aria-label="主题模式">
+        {THEMES.map((t) => (
+          <button
+            key={t.v}
+            type="button"
+            className="theme-switch__opt"
+            aria-pressed={theme === t.v}
+            onClick={() => setThemeTier(t.v)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+      <ExpressionMenu open={menuOpen} onClose={() => setMenuOpen(false)} onExpression={(pid, v) => mascotRef.current?.setExpression(pid, v)} onScale={(dir) => mascotRef.current?.scaleBy(dir)} />
       <About />
+      {webgl && <Preloader done={ready} />}
     </>
   );
 }

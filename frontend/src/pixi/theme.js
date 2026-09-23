@@ -27,9 +27,9 @@ export function rgb(num) {
 
 // 语义 token（key 对齐 global.css :root；fallback 即当前值）
 export const palette = {
-  accent: cssVar('--accent', '#8b3dff'),
-  accentHover: cssVar('--accent-hover', '#6f31cc'),
-  accentSoft: cssVar('--accent-soft', '#d87cff'),
-  accentLilac: cssVar('--accent-lilac', '#9f8fff'),
-  accentPink: cssVar('--accent-pink', '#f0a6d0'),
+  accent: cssVar('--accent', '#d6336c'),
+  accentHover: cssVar('--accent-hover', '#bd2a5b'),
+  accentSoft: cssVar('--accent-soft', '#f8c3cd'),
+  accentLilac: cssVar('--accent-lilac', '#f5a6b8'),
+  accentPink: cssVar('--accent-pink', '#ffb3c1'),
 };

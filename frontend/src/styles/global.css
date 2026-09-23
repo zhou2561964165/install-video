@@ -1,63 +1,66 @@
 /* =====================================================================
-   global.css —— lolimeow 主题（紫罗兰 + 浅色默认/可切深色 + 玻璃拟态 + 圆角）
+   global.css —— 樱花粉主题（浅色默认 + 三档主题 浅/深/自动 + 玻璃拟态 + 圆角）
    三层 token：primitive（色板）→ semantic（--accent/--surface/--text-*）→ component
    颜色/字体/时长一律走 token，不散落硬编码（工程约定 §3）
    ===================================================================== */
 
-/* ── L1 Primitive 色板（紫罗兰阶 + slate 灰阶） / L2 Semantic / L3 Component ── */
+/* ── L1 Primitive 色板（樱花粉阶 + 中性灰阶） / L2 Semantic / L3 Component ── */
 :root {
-  /* primitive */
-  --violet-700: #5b2bb3;
-  --violet-600: #6f31cc;
-  --violet-500: #8b3dff;
-  --violet-400: #a86bff;
-  --lilac-300:  #d87cff;
-  --lilac-200:  #f59dff;
-  --periwinkle: #9f8fff;
-  --pink-200:   #f0a6d0;
+  /* primitive：樱花粉阶（深→浅） */
+  --sakura-700: #b2214f;
+  --sakura-600: #bd2a5b;
+  --sakura-500: #d6336c;   /* 主强调：深樱（白字对比 4.6:1；勿再浅，否则白字失读） */
+  --sakura-400: #ec6a8c;
+  --sakura-300: #f5a6b8;
+  --sakura-200: #f8c3cd;   /* 主色：浅樱（背景/光晕/装饰，配深字） */
+  --sakura-100: #ffb3c1;
+  --sakura-050: #fdf0f3;
 
-  --slate-900: #0f172a;
-  --slate-800: #1e293b;
-  --slate-600: #475569;
-  --slate-500: #64748b;
-  --slate-400: #94a3b8;
-  --slate-300: #cbd5e1;
-  --slate-200: #e2e8f0;
-  --slate-100: #f1f5f9;
+  /* primitive：中性灰阶（文字/边框） */
+  --gray-900: #333333;
+  --gray-600: #666666;
+  --gray-500: #999999;
+  --gray-300: #d9d9d9;
+  --gray-200: #e8e8e8;
+  --gray-100: #f6f7f7;
+  --cream: #fcfcfc;
 
   /* semantic */
-  --accent: var(--violet-500);
-  --accent-hover: var(--violet-600);
-  --accent-soft: var(--lilac-300);
-  --accent-lilac: var(--periwinkle);
-  --accent-pink: var(--pink-200);
-  --accent-tint: rgba(139, 61, 255, .12);
+  --accent: var(--sakura-500);
+  --accent-hover: var(--sakura-600);
+  --accent-soft: var(--sakura-200);      /* 浅樱：能量条渐变/光晕 */
+  --accent-lilac: var(--sakura-300);     /* PIXI 二级粉（极光/星尘） */
+  --accent-pink: var(--sakura-100);      /* PIXI 花瓣粉 */
+  --accent-tint: rgba(214, 51, 108, .12);
+  --grad-accent: linear-gradient(135deg, #ff9a9e, #fad0c4);  /* 装饰渐变（浅，仅供背景/光晕/花瓣） */
 
-  --surface: #ffffff;
+  --surface: var(--cream);
   --surface-raised: #ffffff;
   --surface-glass: rgba(255, 255, 255, .72);
 
-  --text-primary: var(--slate-900);
-  --text-secondary: var(--slate-600);
-  --text-muted: var(--slate-500);
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-muted: var(--gray-500);
 
-  --border: var(--slate-200);
-  --border-strong: var(--slate-300);
+  --border: var(--gray-200);
+  --border-strong: var(--gray-300);
 
-  --on-accent: #ffffff;
+  --on-accent: #ffffff;   /* 深樱底白字已达标；勿换成浅樱底 */
 
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06);
-  --shadow-md: 0 8px 24px rgba(15, 23, 42, .10);
+  --shadow-sm: 0 1px 2px rgba(51, 51, 51, .06);
+  --shadow-md: 0 8px 24px rgba(214, 51, 108, .12);
 
   /* component */
   --btn-bg: var(--accent);
   --btn-bg-hover: var(--accent-hover);
   --btn-fg: var(--on-accent);
-  --card-radius: 12px;
+  --card-radius: 14px;
   --pill-radius: 999px;
 
-  /* 字体 / 动效 token（换字体只改这里） */
-  --font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* 字体 / 动效 token（换字体只改这里）。
+     「阿里妈妈/普惠体」优先（本机装有则用），回落已由 index.html 从 Google Fonts 加载的
+     思源黑体（Noto Sans SC）；不另引阿里 CDN 字体，避免多 MB CJK 字体拖慢首屏。 */
+  --font-body: "Alibaba PuHuiTi", "Alimama ShuHeiTi", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace;
   --dur: .25s;
   --ease: cubic-bezier(.2, .7, .3, 1);
@@ -65,19 +68,37 @@
   color-scheme: light;
 }
 
-/* 深色主题：仅覆盖 surface/text/border 等少量 token（accent 两套一致） */
+/* 深色主题：仅覆盖 surface/text/border 等少量 token（accent 两套一致，粉点缀保留） */
 [data-theme='dark'] {
-  --surface: #0e0e0e;
-  --surface-raised: #18181b;
-  --surface-glass: rgba(24, 24, 27, .72);
+  --surface: #1e1e2e;
+  --surface-raised: #242434;
+  --surface-glass: rgba(36, 36, 52, .72);
   --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
   --border: rgba(255, 255, 255, .10);
   --border-strong: rgba(255, 255, 255, .18);
-  --accent-tint: rgba(139, 61, 255, .18);
+  --accent-tint: rgba(214, 51, 108, .22);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, .5);
   color-scheme: dark;
+}
+
+/* 自动主题：跟随系统（三档开关的「自动」）。token 与 [data-theme='dark'] 保持一致 */
+[data-theme='auto'] { color-scheme: light dark; }
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'] {
+    --surface: #1e1e2e;
+    --surface-raised: #242434;
+    --surface-glass: rgba(36, 36, 52, .72);
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --border: rgba(255, 255, 255, .10);
+    --border-strong: rgba(255, 255, 255, .18);
+    --accent-tint: rgba(214, 51, 108, .22);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, .5);
+    color-scheme: dark;
+  }
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -86,7 +107,7 @@ html, body, #root { height: 100%; }
 body {
   font-family: var(--font-body);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.7;
   color: var(--text-primary);
   background:
     radial-gradient(1200px 640px at 16% 10%, var(--accent-tint), transparent 60%),
@@ -125,7 +146,7 @@ body {
   outline-offset: 2px;
 }
 
-/* ── 通用按钮：紫罗兰胶囊 ── */
+/* ── 通用按钮：樱花胶囊 ── */
 button {
   cursor: pointer;
   border: 1px solid transparent;
@@ -147,11 +168,11 @@ button:hover:not(:disabled) {
 button:active:not(:disabled) { transform: translateY(0); }
 button:disabled { opacity: .45; cursor: not-allowed; }
 
-/* 右上角控制钮（静音 / 主题切换）：覆盖通用按钮，胶囊细边 + 玻璃拟态 */
-button.mute-toggle,
-button.theme-toggle {
+/* 右上角控制钮（静音）：覆盖通用按钮，胶囊细边 + 玻璃拟态 */
+button.mute-toggle {
   position: fixed;
   right: 16px;
+  top: 16px;
   z-index: 10;
   padding: 8px 16px;
   border: 1px solid var(--border);
@@ -164,16 +185,50 @@ button.theme-toggle {
   -webkit-backdrop-filter: blur(8px);
   transform: none;
 }
-button.mute-toggle { top: 16px; }
-button.theme-toggle { top: 56px; }
-button.mute-toggle:hover:not(:disabled),
-button.theme-toggle:hover:not(:disabled) {
+button.mute-toggle:hover:not(:disabled) {
   background: var(--surface-raised);
   box-shadow: var(--shadow-md);
   transform: none;
 }
-button.mute-toggle[aria-pressed='true'],
-button.theme-toggle[aria-pressed='true'] { opacity: .6; }
+button.mute-toggle[aria-pressed='true'] { opacity: .6; }
+
+/* 三档主题开关（浅色/深色/自动）：分段控件，选中段深樱填充 */
+.theme-switch {
+  position: fixed;
+  right: 16px;
+  top: 56px;
+  z-index: 10;
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--pill-radius);
+  background: var(--surface-glass);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.theme-switch__opt {
+  padding: 5px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  border-radius: var(--pill-radius);
+  box-shadow: none;
+  transform: none;
+}
+.theme-switch__opt:hover:not(:disabled) {
+  background: var(--accent-tint);
+  color: var(--accent);
+  transform: none;
+  box-shadow: none;
+}
+.theme-switch__opt[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
 
 /* ── 场景布局 ── */
 .scene {
@@ -202,7 +257,7 @@ button.theme-toggle[aria-pressed='true'] { opacity: .6; }
   -webkit-backdrop-filter: blur(12px);
 }
 .entry-halo h1 {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -266,7 +321,7 @@ button.theme-toggle[aria-pressed='true'] { opacity: .6; }
   letter-spacing: .04em;
 }
 
-/* 清晰度列表：胶囊单选（选中紫罗兰填充） */
+/* 清晰度列表：胶囊单选（选中樱花填充） */
 .format-list { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 .format-list button {
   padding: 8px 16px;
@@ -353,7 +408,7 @@ button.theme-toggle[aria-pressed='true'] { opacity: .6; }
   50% { transform: translateX(6px); }
   75% { transform: translateX(-3px); }
 }
-/* err-quota：紫罗兰呼吸光晕 */
+/* err-quota：樱花呼吸光晕 */
 .err-quota .error-bubble { animation: err-breathe 2.4s ease-in-out infinite; }
 @keyframes err-breathe {
   0%, 100% { box-shadow: var(--shadow-md); }
@@ -366,7 +421,7 @@ button.theme-toggle[aria-pressed='true'] { opacity: .6; }
   50% { filter: grayscale(.6) opacity(.75); }
 }
 
-/* 能量条：细圆角紫罗兰 */
+/* 能量条：细圆角樱花 */
 .energy-bar {
   width: 100%;
   max-width: 480px;
@@ -465,6 +520,11 @@ button.theme-toggle[aria-pressed='true'] { opacity: .6; }
   flex-wrap: wrap;
   gap: 8px;
 }
+.expression-menu__scale {
+  display: flex;
+  gap: 8px;
+}
+.expression-menu__scale .expression-menu__pill { flex: 1; }
 .expression-menu__pill {
   min-height: 34px;
   padding: 6px 14px;
@@ -490,10 +550,87 @@ button.theme-toggle[aria-pressed='true'] { opacity: .6; }
   font-weight: 700;
 }
 
+/* ── 樱花 Preloader（Live2D 加载期的全屏加载层） ── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(1100px 600px at 18% 12%, var(--accent-tint), transparent 60%),
+    radial-gradient(900px 640px at 84% 90%, var(--accent-tint), transparent 55%),
+    var(--surface);
+  transition: opacity var(--dur) var(--ease);
+}
+.preloader--hide { opacity: 0; pointer-events: none; }
+
+.preloader__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 0 24px;
+  text-align: center;
+}
+.preloader__mark {
+  width: 64px;
+  height: 64px;
+  color: var(--accent);
+  animation: preloader-pulse 1.8s ease-in-out infinite;
+}
+@keyframes preloader-pulse {
+  0%, 100% { transform: scale(1); opacity: .85; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+.preloader__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: .02em;
+}
+.preloader__spinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--accent-soft);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: preloader-spin .8s linear infinite;
+}
+@keyframes preloader-spin { to { transform: rotate(360deg); } }
+.preloader__hint { font-size: 13px; color: var(--text-muted); }
+
+.preloader__petals {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.preloader__petal {
+  position: absolute;
+  top: -4vh;
+  width: 12px;
+  height: 12px;
+  background: var(--grad-accent);
+  border-radius: 0 100% 0 100%;
+  opacity: .7;
+  animation: preloader-fall linear infinite;
+}
+@keyframes preloader-fall {
+  0% { transform: translate3d(0, -4vh, 0) rotate(0deg); }
+  100% { transform: translate3d(var(--sway, 30px), 108vh, 0) rotate(360deg); }
+}
+
 /* ── 无障碍：减少动态效果 ── */
 @media (prefers-reduced-motion: reduce) {
   .err-invalid .error-bubble,
   .err-quota .error-bubble,
   .err-drm .error-bubble { animation: none; }
   .expression-menu { transition: none; }
+  .preloader__mark,
+  .preloader__spinner,
+  .preloader__petal { animation: none; }
 }
