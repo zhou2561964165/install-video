@@ -1,15 +1,14 @@
 import * as PIXI from 'pixi.js';
 import { Live2DModel } from 'pixi-live2d-display/cubism4';
-import { MODELS, DEFAULT_MODEL_ID } from './mascotConfig.js';
-import { EASE, MODEL_SWITCH_FX } from '../fx/constants.js';
+import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS } from './mascotConfig.js';
 
-// 创建 Live2D 角色并接入「拖动角色」+「点击角色 → 循环切换模型」（仅 ≥2 模型时点击才切换）。
-//   modelId             —— 初始模型 id（缺省/未命中回落 DEFAULT_MODEL_ID）
-//   { onModelChange }   —— 切换成功后的回调 (nextId)，供 React 侧同步状态 / 提示
-// 返回 { getModelId, cycleModel, resize, destroy }。
-// 注意：角色不随下载场景切换表情/动作，也不做奔跑/摆动位移；下载各阶段的状态
-// 反馈由背景粒子/音频独立承担。单模型时仍可拖动，但不设切换点击。
-export async function createMascot(app, modelId, { onModelChange } = {}) {
+// 创建 Live2D 角色并接入「拖动角色」+「点击角色 → onTap（React 弹换装菜单）」。
+//   modelId   —— 初始模型 id（缺省/未命中回落 DEFAULT_MODEL_ID）
+//   { onTap } —— 未位移的点击回调（供 React 打开换装/表情菜单）
+// 返回 { getModelId, setExpression, setStageExpression, startRandomProps, resize, destroy }。
+// 表情/道具走「直接写参数」（setExpression：paramId 置 1 开 / 0 关），与待机正弦驱动（IDLE）
+// 参数不同、互不冲突；角色不随下载场景做奔跑/摆动位移，阶段反馈由表情+背景粒子+音频承担。
+export async function createMascot(app, modelId, { onTap } = {}) {
   window.PIXI = PIXI;                       // 插件依赖 window.PIXI.Ticker
   Live2DModel.registerTicker(PIXI.Ticker);
 
@@ -18,8 +17,9 @@ export async function createMascot(app, modelId, { onModelChange } = {}) {
   // 都先检查 disposed || !app.stage 守卫，绝不再触碰已销毁的 app。place/resize 只在
   // app.stage 非空的前提下调用，读 app.screen（live）是安全的。
   let disposed = false;
-  let switching = false;                    // 切换动画进行中，防连点
   let detachDrag = null;                    // 当前模型的拖动清理句柄（destroy 时解除 window 监听）
+  let idle = { cleanup() {}, refreshBase() {} };  // 待机动画句柄（初始为空，加载后替换）
+  let randomPropsCleanup = null;            // 随机道具定时器清理句柄（destroy 时调用）
 
   const current = { model: null, cfg: null };
 
@@ -34,10 +34,10 @@ export async function createMascot(app, modelId, { onModelChange } = {}) {
     instance.y = h * cfg.y;
   }
 
-  // 交互：可拖动 + 点击切换（仅 ≥2 模型时点击才切换）。
+  // 交互：可拖动 + 点击（onTap，React 弹换装菜单）。
   //   热区 = 模型自身局部包围盒（不外扩），退化时回落 config.hit 盒 —— 不写死像素。
   //   pointerdown 在模型上起拖；移动/抬起挂在 window 上，拖快时指针移出热区也不丢事件。
-  //   位移 < 3px 视为「点击」：未位移的点击才切换模型，拖动本身不触发切换。
+  //   位移 < 3px 视为「点击」：未位移的点击触发 onTap，拖动本身不触发。
   function makeInteractive(instance, cfg) {
     instance.interactive = true;
     instance.cursor = 'grab';
@@ -72,7 +72,7 @@ export async function createMascot(app, modelId, { onModelChange } = {}) {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onUp);
-      if (triggerTap && !moved && MODELS.length >= 2) cycleModel();
+      if (triggerTap && !moved) onTap?.();
     }
     function onUp() { endDrag(true); }
     function onDown(e) {
@@ -94,20 +94,50 @@ export async function createMascot(app, modelId, { onModelChange } = {}) {
     return () => { endDrag(false); instance.off('pointerdown', onDown); };
   }
 
-  // 隐藏模型内置的「免费版水印」Part：水印是 moc3 里的 Part（非 expression），
-  // 无法通过删除 exp3.json 去除，只能通过 coreModel 把对应 Part 不透明度置 0。
-  // 哪些 Part 需要隐藏由 config.hiddenParts 指定，渲染层不写死任何 Part id。
-  function hideParts(instance, cfg) {
-    if (!cfg.hiddenParts || !cfg.hiddenParts.length) return;
+  // 程序化待机动画：「白」的 model3.json 无 Motions / Breath 字段，角色本身不会自动呼吸/摆动，
+  // 用 ticker 逐帧正弦驱动 coreModel 参数（呼吸 + 头/身轻微摆动）。驱动哪些参数由运行时
+  // coreModel.getParameterIndex 判定，振幅/频率/相位来自 mascotConfig.js 的 IDLE 配置（数据驱动）。
+  // 返回 { cleanup, refreshBase }。
+  //   setParameterValueById 写的是「基础值」——cubism4 的 update() 会 saveParameters/loadParameters，
+  //   focus/呼吸/物理在其上叠加并在帧末复原，因此这里每帧写一次即可（至多一帧延迟，肉眼不可感）。
+  function startIdle(instance) {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      return { cleanup() {}, refreshBase() {} };   // 减少动态偏好：完全静止
+    }
     const core = instance.internalModel && instance.internalModel.coreModel;
-    if (!core) return;
-    for (const partId of cfg.hiddenParts) {
-      try {
-        core.setPartOpacityById(partId, 0);
-      } catch (e) {
-        console.warn('[mascot] 隐藏部件失败', cfg.id, partId, e);
+    if (core) {
+      const count = core.getParameterCount();
+      const exists = (id) => core.getParameterIndex(id) < count;
+      const driven = IDLE.params.filter((p) => exists(p.id));
+      if (driven.length) {
+        const t0 = performance.now();
+        const tick = () => {
+          if (disposed) { app.ticker.remove(tick); return; }
+          const t = (performance.now() - t0) / 1000;
+          for (const p of driven) {
+            try {
+              core.setParameterValueById(p.id, p.base + p.amplitude * Math.sin(t * 2 * Math.PI * p.frequency + p.phase));
+            } catch (e) { /* 参数异常：忽略，不阻断其它参数 */ }
+          }
+        };
+        app.ticker.add(tick);
+        return { cleanup() { app.ticker.remove(tick); }, refreshBase() {} };
       }
     }
+    // 回退：无任何匹配参数 → 容器级 scale 呼吸
+    let base = instance.scale.x;
+    const t0 = performance.now();
+    const tick = () => {
+      if (disposed) { app.ticker.remove(tick); return; }
+      const t = (performance.now() - t0) / 1000;
+      const s = 1 + IDLE.fallback.scale * Math.sin(t * 2 * Math.PI * IDLE.fallback.frequency);
+      instance.scale.set(base * s, base * s);
+    };
+    app.ticker.add(tick);
+    return {
+      cleanup() { app.ticker.remove(tick); },
+      refreshBase() { base = instance.scale.x; },
+    };
   }
 
   async function loadModel(id) {
@@ -116,7 +146,6 @@ export async function createMascot(app, modelId, { onModelChange } = {}) {
       const instance = await Live2DModel.from(cfg.url);
       if (disposed || !app.stage) { instance.destroy(); return { cfg, instance: null }; } // 已卸载：不触碰已销毁的 app
       place(instance, cfg);
-      hideParts(instance, cfg);
       app.stage.addChild(instance);
       return { cfg, instance };
     } catch (e) {
@@ -125,84 +154,48 @@ export async function createMascot(app, modelId, { onModelChange } = {}) {
     }
   }
 
-  // —— 切换特效：光环扩散 + 粒子爆散（逐帧，参数取自 MODEL_SWITCH_FX） ——
-  function spawnSwitchFx(cx, cy) {
-    const g = new PIXI.Graphics();
-    app.stage.addChild(g);
-    const pts = [];
-    for (let i = 0; i < MODEL_SWITCH_FX.burstCount; i++) {
-      const ang = (Math.PI * 2 * i) / MODEL_SWITCH_FX.burstCount;
-      pts.push({
-        x: cx, y: cy,
-        vx: Math.cos(ang) * MODEL_SWITCH_FX.burstSpeed,
-        vy: Math.sin(ang) * MODEL_SWITCH_FX.burstSpeed,
-        life: 0,
-      });
-    }
-    let frame = 0;
-    const tick = () => {
-      if (disposed) { app.ticker.remove(tick); return; }
-      frame += 1;
-      const p = Math.min(1, frame / MODEL_SWITCH_FX.burstLife);
-      g.clear();
-      g.lineStyle(2, 0xffffff, 0.8 * (1 - p));
-      g.drawCircle(cx, cy, MODEL_SWITCH_FX.ringRadius * EASE.outCubic(p));
-      for (const pt of pts) {
-        pt.life += 1;
-        pt.x += pt.vx; pt.y += pt.vy;
-        pt.vx *= MODEL_SWITCH_FX.burstDecay;
-        pt.vy *= MODEL_SWITCH_FX.burstDecay;
-        g.beginFill(0xffffff, Math.max(0, 0.9 - pt.life / MODEL_SWITCH_FX.burstLife));
-        g.drawCircle(pt.x, pt.y, 2);
-        g.endFill();
+  // 直接写单个参数（1 开 / 0 关）：绕过单选 expression manager，可多选并存。
+  //   guard 已销毁 / 无模型 / 参数不存在；异常静默忽略，不阻断其它操作。
+  function setExpression(paramId, value) {
+    if (disposed || !current.model) return;
+    const core = current.model.internalModel && current.model.internalModel.coreModel;
+    if (!core) return;
+    try {
+      if (core.getParameterIndex(paramId) < core.getParameterCount()) {
+        core.setParameterValueById(paramId, value);
       }
-      if (frame >= MODEL_SWITCH_FX.burstLife) {
-        app.ticker.remove(tick);
-        app.stage.removeChild(g);
-        g.destroy();
-      }
-    };
-    app.ticker.add(tick);
+    } catch (e) { /* 参数异常：忽略 */ }
   }
 
-  // alpha 补间：from → to，时长 duration（ms），缓动 ease，结束回调 done
-  function fadeAlpha(target, from, to, duration, ease, done) {
-    const start = performance.now();
-    const tick = () => {
-      if (disposed) { app.ticker.remove(tick); return; }
-      const p = Math.min(1, (performance.now() - start) / duration);
-      target.alpha = from + (to - from) * ease(p);
-      if (p >= 1) { app.ticker.remove(tick); if (done) done(); }
-    };
-    app.ticker.add(tick);
+  // 下载阶段 → 情绪眼（单选）：先清空 stage 全部参数，再置目标为 1；scene 无映射则只清空。
+  function setStageExpression(scene) {
+    const target = EXPRESSIONS.stage[scene];
+    Object.keys(EXPRESSIONS.stage).forEach((key) => setExpression(EXPRESSIONS.stage[key].paramId, 0));
+    if (target) setExpression(target.paramId, 1);
   }
 
-  // 循环切换到下一个模型：爆散 + 旧模型淡出 → 加载新模型 → 淡入
-  function cycleModel() {
-    if (switching || disposed || !current.model || MODELS.length < 2) return;
-    switching = true;
-    const idx = MODELS.findIndex((m) => m.id === current.cfg.id);
-    const nextCfg = MODELS[(idx + 1) % MODELS.length];
-    const cur = current.model;
-
-    spawnSwitchFx(cur.x, cur.y);
-    fadeAlpha(cur, 1, 0, MODEL_SWITCH_FX.fadeOut, EASE.inCubic, async () => {
-      const next = await loadModel(nextCfg.id);
-      if (disposed || !next.instance) {   // 卸载或加载失败：旧模型淡回，保持原状
-        fadeAlpha(cur, 0, 1, MODEL_SWITCH_FX.fadeIn, EASE.outCubic, () => { switching = false; });
-        return;
-      }
-      app.stage.removeChild(cur);
-      cur.destroy();
-      current.model = next.instance;
-      current.cfg = next.cfg;
-      detachDrag = makeInteractive(next.instance, next.cfg);
-      next.instance.alpha = 0;
-      fadeAlpha(next.instance, 0, 1, MODEL_SWITCH_FX.fadeIn, EASE.outCubic, () => {
-        switching = false;
-        if (onModelChange) onModelChange(next.cfg.id);
-      });
-    });
+  // 随机道具：每 interval 毫秒从 pool 随机取一个展示 duration 毫秒后收回。
+  //   recover 未清时跳过本轮（防连发）；重复调用只启动一次，destroy 时统一清理。
+  function startRandomProps() {
+    if (randomPropsCleanup) return;
+    let recover = null;
+    const pick = () => {
+      if (disposed) return;
+      const pool = EXPRESSIONS.random.pool;
+      const item = pool[Math.floor(Math.random() * pool.length)];
+      setExpression(item.paramId, 1);
+      recover = setTimeout(() => {
+        recover = null;
+        setExpression(item.paramId, 0);
+      }, EXPRESSIONS.random.duration);
+    };
+    const timer = setInterval(() => {
+      if (!recover) pick();
+    }, EXPRESSIONS.random.interval);
+    randomPropsCleanup = () => {
+      clearInterval(timer);
+      if (recover) clearTimeout(recover);
+    };
   }
 
   // 初始加载；失败则整体降级为静态占位（与旧行为一致）
@@ -212,14 +205,24 @@ export async function createMascot(app, modelId, { onModelChange } = {}) {
   current.cfg = loaded.cfg;
   current.model = loaded.instance;
   detachDrag = makeInteractive(loaded.instance, loaded.cfg);
+  idle = startIdle(loaded.instance);
 
   return {
     getModelId() { return current.cfg.id; },
-    cycleModel,
-    resize() { if (!disposed && current.model && current.cfg) place(current.model, current.cfg); },
+    setExpression,
+    setStageExpression,
+    startRandomProps,
+    resize() {
+      if (!disposed && current.model && current.cfg) {
+        place(current.model, current.cfg);
+        idle.refreshBase();   // 容器级呼吸回退时，重设基准 scale
+      }
+    },
     destroy() {
       if (disposed) return;
       disposed = true;
+      idle.cleanup();
+      if (randomPropsCleanup) randomPropsCleanup();
       if (detachDrag) detachDrag();   // 结束未完成的拖动并解除 window 监听
       if (current.model) { app.stage.removeChild(current.model); current.model.destroy(); }
     },
@@ -230,7 +233,9 @@ export async function createMascot(app, modelId, { onModelChange } = {}) {
 function noopMascot() {
   return {
     getModelId() { return DEFAULT_MODEL_ID; },
-    cycleModel() {},
+    setExpression() {},
+    setStageExpression() {},
+    startRandomProps() {},
     resize() {},
     destroy() {},
   };
@@ -259,7 +264,9 @@ async function createFallback(app, modelId) {
   app.stage.addChild(sprite);
   return {
     getModelId() { return cfg.id; },
-    cycleModel() {},
+    setExpression() {},
+    setStageExpression() {},
+    startRandomProps() {},
     resize() { lay(); },
     destroy() { app.stage.removeChild(sprite); sprite.destroy(); },
   };

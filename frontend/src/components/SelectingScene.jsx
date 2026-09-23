@@ -12,7 +12,7 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
   const { title, thumbnail, duration, formats } = parseResult;
   return (
     <div data-testid="selecting-scene" className="scene selecting-scene">
-      <div className="laser-frame format-card">
+      <div className="format-card">
         {thumbnail && <img src={thumbnail} alt="" />}
         <h2>{title}</h2>
         <p className="duration">{formatDuration(duration)}</p>
@@ -20,7 +20,7 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
           {formats.map((f) => (
             <button
               key={f.format_id}
-              className={`laser-frame float-on-hover${selectedFormat?.format_id === f.format_id ? ' selected' : ''}`}
+              className={selectedFormat?.format_id === f.format_id ? 'selected' : ''}
               aria-pressed={selectedFormat?.format_id === f.format_id}
               onClick={() => { playSfx('select'); onSelect(f); }}
             >

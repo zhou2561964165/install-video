@@ -3,18 +3,16 @@ import { unlock, playSfx } from '../audio/audioManager.js';
 
 export default function EntryScene({ onSubmit }) {
   const [url, setUrl] = useState('');
-  const [justSubmitted, setJustSubmitted] = useState(false);
   const submit = (e) => {
     e.preventDefault();
     if (!url.trim()) return;
-    setJustSubmitted(true);
     unlock();
     playSfx('paste');
     onSubmit(url.trim());
   };
   return (
     <div data-testid="entry-scene" className="scene entry-scene">
-      <div className={`magic-circle entry-halo${justSubmitted ? ' burst' : ''}`}>
+      <div className="entry-halo">
         <h1>粘贴视频链接</h1>
         <form onSubmit={submit}>
           <input

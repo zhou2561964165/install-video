@@ -13,11 +13,11 @@ export const MODELS = [
   {
     id: 'bai',
     name: '白',
-    url: '/live2d/bai/白-免费版.model3.json',
+    url: '/live2d/bai/白.model3.json',
     heightRatio: 0.49,
     x: 0.82,
     y: 0.62,
-    fallback: { url: '/live2d/bai/白-免费版.16384/texture_00.png' },
+    fallback: { url: '/live2d/bai/白.16384/texture_00.png' },
     hit: { width: 1400, height: 2000 },
     credit: { artist: '煎果饼子txy', modeler: '逐尾鲨' },
   },
@@ -25,3 +25,106 @@ export const MODELS = [
 
 // 默认模型 id：切换状态、兜底、初始加载统一从这里取，避免在组件内写死 'bai'
 export const DEFAULT_MODEL_ID = MODELS[0].id;
+
+// 程序化待机动画配置：「白」的 model3.json 无 Motions / Breath 字段（目录里的 edle.motion3.json
+// 是星星/眼泪/生气这类装饰特效，不是呼吸动作），角色本身不会自动呼吸/摆动，故用正弦逐帧
+// 驱动 coreModel 参数补上「呼吸 + 头部轻微摆动」。参数名/振幅/频率/相位全部在此，渲染层不写死。
+//   params   —— 待驱动的 Live2D 参数列表：id 为参数名（运行时按模型真实参数过滤，缺失自动跳过）；
+//               base 为中性值，amplitude 为摆动幅度，frequency 为每秒周期数，phase 为相位
+//               （错开各参数，避免同步抖动）。
+//   注意：只驱动「物理输入」参数（ParamAngleX/Y/Z、ParamBreath 在 physics3.json 里是 Input），
+//   头摆会经物理级联出身体/头发摆动；ParamBodyAngleX 是物理 Output（每帧被物理覆写），不可驱动。
+//   fallback —— 模型没有任何匹配参数时，退化为容器级 scale 呼吸（幅度/频率）。
+export const IDLE = {
+  params: [
+    { id: 'ParamAngleX', base: 0, amplitude: 5, frequency: 0.35, phase: 0 },
+    { id: 'ParamAngleY', base: 0, amplitude: 3, frequency: 0.22, phase: 1.2 },
+    { id: 'ParamAngleZ', base: 0, amplitude: 2, frequency: 0.18, phase: 2.4 },
+    { id: 'ParamBreath', base: 0.5, amplitude: 0.5, frequency: 0.25, phase: 0 },
+  ],
+  fallback: { scale: 0.015, frequency: 0.3 },
+};
+
+// 表情/道具配置：「白」完整版带 46 个 .exp3.json，每个 = 单参数 Value=1（Add 混合）。
+// 标准 expression manager 是单选（一次一个 currentExpression），无法「换发型+换衣服+戴耳机」并存，
+// 因此这里走「直接写参数」：paramId 置 1 开 / 0 关，可任意多选并存。参数名全部在此，渲染层不写死。
+//   stage   —— 下载阶段 → 情绪眼（单选，入口无映射则不显示）
+//   random  —— 随机道具：每 interval 毫秒从 pool 随机取一个展示 duration 毫秒后收回
+//   menu    —— 点击角色弹出的功能菜单分组
+//              mode: single = 组内互斥；toggle = 开关；multi = 独立复选
+//   未进 v1 菜单但可用的表情（往 menu 或 random.pool 加一行即暴露）：
+//   睫毛 Param76、眼镜颜色 Param70、头发颜色 Param71、头部装饰颜色 Param74、身体装饰颜色 Param75、
+//   创可贴（额 Param34 / 嘴 Param92 / 右腿 Param58 / 左腿 Param59）、黑脸 Param51、血迹 Param53、
+//   哭 Param42、脸红 Param52。
+export const EXPRESSIONS = {
+  stage: {
+    parsing: { paramId: 'Param40', name: '圈圈眼' },
+    selecting: { paramId: 'Param38', name: '煎蛋眼' },
+    downloading: { paramId: 'Param38', name: '煎蛋眼' },
+    done: { paramId: 'Param41', name: '星星眼' },
+    error: { paramId: 'Param43', name: '生气' },
+  },
+  random: {
+    pool: [
+      { paramId: 'Param35', name: '拿手柄' },
+      { paramId: 'Param32', name: '拿话筒' },
+      { paramId: 'Param31', name: '戳脸' },
+    ],
+    interval: 20000, // 每 ~20s 随机展示一次
+    duration: 4000,  // 展示 ~4s 后收回
+  },
+  menu: [
+    {
+      key: 'hair',
+      label: '发型',
+      mode: 'single',
+      options: [
+        { name: '短发', paramId: 'Param49' },
+        { name: '披发', paramId: 'Param69' },
+        { name: '刘海切换', paramId: 'Param66' },
+        { name: '左鬓发', paramId: 'Param67' },
+        { name: '右鬓发', paramId: 'Param68' },
+        { name: '左马尾', paramId: 'Param62' },
+        { name: '右马尾', paramId: 'Param63' },
+        { name: '左啾啾', paramId: 'Param64' },
+        { name: '右啾啾', paramId: 'Param65' },
+      ],
+    },
+    {
+      key: 'clothes',
+      label: '衣服',
+      mode: 'single',
+      options: [
+        { name: '衣服颜色1', paramId: 'Param72' },
+        { name: '衣服颜色2', paramId: 'Param73' },
+        { name: '围裙', paramId: 'Param48' },
+        { name: '绷带', paramId: 'Param93' },
+      ],
+    },
+    {
+      key: 'size',
+      label: '大小变',
+      mode: 'toggle',
+      options: [{ name: '大小变', paramId: 'Param108' }],
+    },
+    {
+      key: 'accessory',
+      label: '配饰',
+      mode: 'multi',
+      options: [
+        { name: '耳机', paramId: 'Param54' },
+        { name: '猫', paramId: 'Param60' },
+        { name: '天使环', paramId: 'Param106' },
+        { name: '眼镜（方）', paramId: 'Param33' },
+        { name: '眼镜（圆）', paramId: 'Param36' },
+        { name: '爱心发饰', paramId: 'Param56' },
+        { name: '发卡', paramId: 'Param57' },
+        { name: '翅膀（装饰）', paramId: 'Param61' },
+        { name: '翅膀（背后）', paramId: 'Param37' },
+        { name: '牌子', paramId: 'Param45' },
+        { name: '左袖子爱心', paramId: 'Param55' },
+        { name: '袖带', paramId: 'Param46' },
+      ],
+    },
+  ],
+};

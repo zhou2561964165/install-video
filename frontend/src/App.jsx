@@ -5,7 +5,6 @@ import { initStage, destroyStage, webglSupported, detectTier } from './pixi/stag
 import { createBackground, intensityForScene } from './pixi/background.js';
 import { createMascot } from './pixi/mascot.js';
 import { DEFAULT_MODEL_ID } from './pixi/mascotConfig.js';
-import { useModelSwitcher } from './hooks/useModelSwitcher.js';
 import EntryScene from './components/EntryScene.jsx';
 import ParsingScene from './components/ParsingScene.jsx';
 import SelectingScene from './components/SelectingScene.jsx';
@@ -13,6 +12,7 @@ import DownloadingScene from './components/DownloadingScene.jsx';
 import DoneScene from './components/DoneScene.jsx';
 import ErrorScene from './components/ErrorScene.jsx';
 import About from './components/ui/About.jsx';
+import ExpressionMenu from './components/ui/ExpressionMenu.jsx';
 import { setScene, setMuted as setAudioMuted } from './audio/audioManager.js';
 
 const POLL_MS = 3000; // 轮询间隔：须 ≥2s，后端 /api 限流 30/60s
@@ -25,12 +25,15 @@ export default function App() {
   const mascotRef = useRef(null);
   const [webgl] = useState(() => webglSupported());
   const [tier] = useState(() => detectTier());
-  const [lightMode, setLightMode] = useState(false);
+  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'light');
   const [muted, setMuted] = useState(false);
-  const { toast, onModelChange } = useModelSwitcher();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const toggleLightMode = useCallback(() => setLightMode((m) => !m), []);
+  const toggleTheme = useCallback(() => setTheme((t) => (t === 'dark' ? 'light' : 'dark')), []);
   const toggleMute = useCallback(() => setMuted((m) => !m), []);
+
+  // 主题切换：写 data-theme 属性，CSS token 随之切换（浅/深）
+  useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
 
   const handleSubmit = useCallback(async (url) => {
     dispatch({ type: 'SUBMIT_URL', url });
@@ -74,9 +77,9 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [state.scene, state.download]);
 
-  // PIXI 舞台：WebGL 可用且非轻量模式时挂载，否则走 CSS 渐变兜底（global.css 里 .css-fallback）
+  // PIXI 舞台：WebGL 可用时挂载，否则走 CSS 渐变兜底（global.css 里 .css-fallback）
   useEffect(() => {
-    if (!webgl || lightMode) return;
+    if (!webgl) return;
     const app = initStage(stageRef.current);
     const bg = createBackground(app, tier);
     bgRef.current = bg;
@@ -85,8 +88,9 @@ export default function App() {
       mascotRef.current?.resize();
     };
     window.addEventListener('resize', onResize);
-    createMascot(app, DEFAULT_MODEL_ID, { onModelChange }).then((m) => {
+    createMascot(app, DEFAULT_MODEL_ID, { onTap: () => setMenuOpen(true) }).then((m) => {
       mascotRef.current = m;
+      m.startRandomProps();
     });
     return () => {
       window.removeEventListener('resize', onResize);
@@ -96,7 +100,7 @@ export default function App() {
       mascotRef.current = null;
       bgRef.current = null;
     };
-  }, [webgl, lightMode, tier, onModelChange]);
+  }, [webgl, tier]);
 
   // 随 scene 切换粒子强度（安静/活跃）
   useEffect(() => {
@@ -107,6 +111,11 @@ export default function App() {
   useEffect(() => {
     setScene(state.scene);
   }, [state.scene]);
+
+  // 随 scene 切换角色情绪眼（解析→圈圈眼、选清晰度/下载→煎蛋眼、完成→星星眼、出错→生气）
+  useEffect(() => {
+    mascotRef.current?.setStageExpression(state.scene);
+  }, [state.scene, webgl]);
 
   // 静音状态同步到音频管理器
   useEffect(() => {
@@ -134,26 +143,11 @@ export default function App() {
 
   return (
     <>
-      <div ref={stageRef} className={webgl && !lightMode ? 'stage' : 'stage css-fallback'} />
+      <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'} />
       <div className="ui">{scene}</div>
-      <button
-        type="button"
-        className="mute-toggle"
-        aria-pressed={muted}
-        onClick={toggleMute}
-        style={{ position: 'fixed', top: 16, right: 16, zIndex: 10, ...(muted ? { opacity: 0.6 } : {}) }}
-      >
-        静音
-      </button>
-      <button
-        type="button"
-        className="lightmode-toggle"
-        aria-pressed={lightMode}
-        onClick={toggleLightMode}
-      >
-        轻量模式
-      </button>
-      {toast && <div className="model-toast" role="status">{toast}</div>}
+      <button type="button" className="mute-toggle" aria-pressed={muted} onClick={toggleMute}>静音</button>
+      <button type="button" className="theme-toggle" aria-pressed={theme === 'dark'} onClick={toggleTheme}>{theme === 'dark' ? '浅色' : '深色'}</button>
+      <ExpressionMenu open={menuOpen} onClose={() => setMenuOpen(false)} onExpression={(pid, v) => mascotRef.current?.setExpression(pid, v)} />
       <About />
     </>
   );

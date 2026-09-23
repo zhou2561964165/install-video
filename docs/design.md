@@ -223,3 +223,57 @@ frontend/src/
 - 「轻量模式」/ 低端机（`detectTier() === 'low'`）：跳过 canvas 光标、简化转场；画框/台词（纯 DOM）保留。
 - 移动端触摸：无鼠标，光标自动隐藏。
 - 任何视觉失效都不影响下载闭环。
+
+## 14. 视觉重设计（lolimeow 主题，Task A/B/C 已完成）
+
+> 用户反馈原「深色霓虹二次元」UI 太差、Live2D 角色不动。按参考站 `baomihuahua/lolimeow`（设计语言）+ `Misaka273/lolimeow-shiroki`（玻璃拟态/粒子打磨）重做视觉。原「霓虹二次元」方向（§12 第二阶段电影感视觉）已被本方案替代。
+
+### 14.1 三层 token（design-system 落地）
+
+- **primitive**：紫罗兰阶 `--violet-*` + slate 灰阶 `--slate-*`（原始值）。
+- **semantic**：`--accent`/`--accent-hover`/`--accent-soft`/`--accent-lilac`/`--accent-pink`/`--surface`/`--surface-raised`/`--surface-glass`/`--text-primary|secondary|muted`/`--border`/`--border-strong`/`--shadow-*`。
+- **component**：`--btn-*`、`--card-radius`(12px)、`--pill-radius`(999px)、`--font-body`、`--dur`、`--ease`。
+
+配色：强调色紫罗兰 `#8b3dff`（hover `#6f31cc`，高亮 `#d87cff`/`#f59dff`）；文字 slate `#0f172a→#64748b`；边框 `#e2e8f0`；浅色底 `#fff`、深色底 `#0e0e0e`。
+
+### 14.2 浅/深主题
+
+- `document.documentElement.dataset.theme` 切换，CSS `[data-theme='dark']` 小块覆盖 surface/text/border token；**强调色（accent）跨主题恒定**，因此 PIXI 侧调色板跨主题不变。
+- 原「轻量模式」按钮（其实是 WebGL 开关）改名为真正的浅/深主题切换；WebGL 兜底回归自动（仅 `!webgl` 走 CSS 渐变）。
+
+### 14.3 视觉语言（替代霓虹 gimmick）
+
+- 移除：`.magic-circle`/`.laser-frame`/`.rainbow-outline`/`.danmaku`/`.burst`/`.speed-lines`/斜切 clip-path/`.float-on-hover` RGB 分离光晕。
+- 落地：白色圆角卡片 + 玻璃拟态（`backdrop-filter: blur`）、紫罗兰胶囊主按钮、胶囊单选清晰度（选中紫罗兰填充）、细圆角进度条、图标化完成/错误气泡；错误场景差异化动画收敛为克制的紫罗兰光晕（保留 `err-invalid`/`err-quota`/`err-drm` 类名语义，`data-testid`/`energy-bar` 等类名不破，测试 32/32）。
+- 字体：Google Fonts `Noto Sans SC` 400/500/700 + URL 输入等宽 `JetBrains Mono`。
+
+### 14.4 PIXI 侧颜色收敛
+
+- `pixi/theme.js` 的 `palette` 改读语义 token（`--accent` 等），fallback 与当前值一致。
+- `pixi/background.js` 粒子/极光/光斑换成紫罗兰/淡紫系，数量/透明度整体下调（参考 shiroki 克制度）；`intensityForScene` 与降级链不变。
+
+### 14.5 主题数据来源（解耦）
+
+CSS 与 PIXI 颜色单一来源 = `global.css` 的 `:root` 语义 token；`theme.js` 仅在无 DOM（jsdom 测试）时用 fallback。视觉表现层仍只读场景状态，不触碰下载核心。
+
+### 14.6 待机动画（Task D，程序化驱动）
+
+「白」的 `model3.json` 无 `Motions` / `Breath` 字段（目录里的 `edle.motion3.json` 是星星/眼泪/生气这类装饰特效，不是呼吸动作），角色本身不会自动呼吸/摆动。因此用 `pixi/mascot.js` 的 `startIdle()`：`app.ticker` 逐帧正弦写 `coreModel.setParameterValueById`，驱动 `ParamAngleX/Y/Z` + `ParamBreath`（均为物理输入），头摆经物理级联出身体/头发摆动。驱动参数名/振幅/频率/相位全部在 `mascotConfig.js` 的 `IDLE` 配置（数据驱动）；运行时按 `coreModel.getParameterIndex` 过滤缺失参数，全缺失时退化为容器级 scale 呼吸。尊重 `prefers-reduced-motion`（完全静止）。
+
+### 14.7 模型升级（完整版「白」）
+
+由免费版升级为作者提供的完整版（`白.moc3` 9.7MB / 46 个表情 / `edle.motion3.json` / 42 组物理）。随之调整：
+- `mascotConfig.js`：`url`/`fallback.url` 指向 `白.model3.json` / `白.16384/texture_00.png`。
+- 删除 `hideParts`（免费版水印隐藏）——完整版无水印 Part，且配置从未填 `hiddenParts`，属死代码。
+- 保留 `startIdle` 待机（完整版仍无呼吸动作）。
+- 表情（46 个）与 `edle.motion3.json` 已随模型拷入 `public/live2d/bai/`；表情/道具接入见 §14.8。
+
+### 14.8 表情 / 道具系统（46 表情接入）
+
+完整版「白」带 46 个 `.exp3.json`，每个 = 单参数 `{Id, Value:1, Blend:'Add'}`。标准 expression manager 是**单选**（一次一个 currentExpression），无法「换发型 + 换衣服 + 戴耳机」并存；因此走**直接写参数** `coreModel.setParameterValueById(paramId, 1/0)`，可任意多选并存，且与待机正弦驱动（`IDLE`）参数不重叠、互不冲突。参数名/分组/节奏全部进 `mascotConfig.js` 的 `EXPRESSIONS`（数据驱动）。
+
+- **阶段映射（`EXPRESSIONS.stage`）**：解析中→圈圈眼、选清晰度/下载中→煎蛋眼、完成→星星眼、出错→生气、入口→无。
+- **随机道具（`EXPRESSIONS.random`）**：拿手柄 / 拿话筒 / 戳脸，每 ~20s 随机展示 ~4s 收回。
+- **点击换装菜单（`EXPRESSIONS.menu`）**：发型（single）/ 衣服（single）/ 大小变（toggle）/ 配饰（multi），`ExpressionMenu.jsx` 只读配置渲染。
+- **未进菜单但可用的表情**：睫毛 / 眼镜颜色 / 头发颜色 / 头部装饰颜色 / 身体装饰颜色 / 创可贴×4 / 黑脸 / 血迹 / 哭 / 脸红 —— 往 `menu` 或 `random.pool` 加一行即暴露。
+- **模型切换已删除**（`cycleModel` / 切换特效 / `useModelSwitcher` / toast）。

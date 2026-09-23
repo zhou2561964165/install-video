@@ -1,6 +1,8 @@
 # 万能视频下载网站 · 前端
 
-一个「粘贴链接 → 解析 → 选清晰度 → 下载」的全流程视频下载前端，包含 PIXI 舞台背景、Live2D 角色、二次元视觉与音频交互。
+一个「粘贴链接 → 解析 → 选清晰度 → 下载」的全流程视频下载前端，包含 PIXI 舞台背景、Live2D 角色（含程序化待机动画）、「lolimeow」紫罗兰浅/深主题视觉与音频交互。
+
+视觉采用三层设计 token（primitive→semantic→component），浅/深主题由 `document.documentElement.dataset.theme` 切换，CSS 与 PIXI 颜色单一来源为 `src/styles/global.css` 的 `:root` 语义 token。详见根 `docs/design.md` §14。
 
 ## 工程约定（每次遵守）
 
@@ -35,18 +37,18 @@ npm run test:watch
 
 ## Live2D 模型署名与授权
 
-- **Live2D 角色「白」—— 人物绘制：煎果饼子txy · 建模：逐尾鲨（来源：b站工房，免费版）**；遵循作者使用规则：**非商用、不二传二改**。
+- **Live2D 角色「白」—— 人物绘制：煎果饼子txy · 建模：逐尾鲨（来源：b站工房，完整版）**；遵循作者使用规则：**非商用、不二传二改**。
 
-## 如何新增 / 切换模型
+## 如何新增模型 + 角色换装/表情
 
 角色模型由 `src/pixi/mascotConfig.js` 里的 `MODELS` 注册表驱动（数据驱动，改渲染代码为 0）：
 
 1. 把新模型整套文件放进 `public/live2d/<id>/`（`<id>` 为小写唯一标识，含 `.model3.json` / `.moc3` / 纹理等）。
 2. 在 `MODELS` 数组追加一条：`{ id, name, url: '/live2d/<id>/<name>.model3.json', heightRatio, x, y }`。
    - `heightRatio` 为模型占屏幕高度的比例（0~1），渲染时按屏幕高等比缩放，任意尺寸屏幕都看到等比例模型；`x` / `y` 为相对屏幕宽高的占比（0~1）定位角色。
-   - 角色不随下载场景切换表情/动作，也不做奔跑/摆动位移；下载各阶段的状态反馈由背景粒子/音频独立承担。
+   - 角色随下载阶段切换情绪眼（`EXPRESSIONS.stage`），另有随机道具（`EXPRESSIONS.random`）与点击弹出的换装/表情菜单（`EXPRESSIONS.menu`），均数据驱动。
 
-> 说明：当前仅注册「白」一个模型（`MODELS.length === 1`），因此不显示模型切换下拉，点击角色不触发切换（但可拖动角色到任意位置）。新增第二个模型后，`MODELS.length > 1` 会自动恢复「点击角色循环切换」。
+> 说明：**点击角色会弹出换装/表情菜单**（换发型 / 换衣服 / 大小变 / 配饰），拖动角色仍可任意摆放。表情/道具映射见 `mascotConfig.js` 的 `EXPRESSIONS` 配置（阶段映射、随机节奏、菜单分组），实现见 `docs/design.md` §14.8。
 
 ### 已知限制
 
