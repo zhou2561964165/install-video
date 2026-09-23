@@ -1,10 +1,22 @@
 # 第一阶段交接文档（Phase 1 Handover）
 
-> 本文档面向**零历史上下文**的新窗口 AI / 接手开发者。读完本文即可无缝继续第二阶段（Task 3–6）开发，无需回溯任何历史对话。
+> 本文档面向**零历史上下文**的新窗口 AI / 接手开发者。读完本文即可无缝继续第二阶段（Task 4–6）开发，无需回溯任何历史对话。
 >
 > 生成时间：2026-09-22
+> 最后更新：2026-09-22（Task 3 完成 + 工程约定落地）
 > 项目根目录：`E:\install_video`
 > 当前分支：`main`
+
+---
+
+## 0. 工程约定（必读，最高优先级）
+
+> 与根目录 `CLAUDE.md` 一致，每次开发必须遵守。
+
+1. **UI 必须用 skill**：涉及配色/字体/动效/无障碍/组件时，先调用 `ui-ux-pro-max` + `design-system`。
+2. **skill 优先于计划**：计划文档与 skill 冲突时以 skill 为准（例：每屏最多动 1–2 个关键元素 > 计划里的常驻动画清单）。
+3. **不写死、保留扩展**：颜色/字体/时长走 `:root` token；新增能力数据驱动、可配置，避免大规模重构。
+4. **解耦**：核心模块对外只暴露窄接口（后端 `ytdlp_service.py` 唯一接触 yt-dlp；前端视觉层只读 `scene`、不改下载状态、不 import 下载核心）；层与模块通过稳定接口通信，扩展不触碰既有核心。
 
 ---
 
@@ -15,8 +27,8 @@
 3. [目录结构与文件清单](#3-目录结构与文件清单)
 4. [环境配置与运行](#4-环境配置与运行)
 5. [测试方式](#5-测试方式)
-6. [已完成事项（Task 1 / Task 2）](#6-已完成事项task-1--task-2)
-7. [未完成事项（Task 3 / 4 / 5 / 6）](#7-未完成事项task-3--4--5--6)
+6. [已完成事项（Task 1 / 2 / 3）](#6-已完成事项task-1--2--3)
+7. [未完成事项（Task 4 / 5 / 6）](#7-未完成事项task-4--5--6)
 8. [阻塞项](#8-阻塞项)
 9. [待确认项](#9-待确认项)
 10. [关键决策及原因](#10-关键决策及原因)
@@ -56,7 +68,7 @@
 | 语言运行时 | Python 3.12 / Node.js 18+ |
 | 外部依赖 | ffmpeg（合并高清音视频流必需） |
 
-**当前进度**：第一阶段（v1 后端 + 前端 + Live2D 基础）已完成并合并 main；第二阶段视觉升级的 Task 1（Live2D 竞态修复）与 Task 2（点击角色切换模型）已完成；随后按用户要求简化：删除「初音未来」模型、仅保留「白」，角色改为响应式缩放（按屏幕高度等比）+ 可拖动，取消下载各阶段的场景表情/动作反馈；Task 3–6 未开始。
+**当前进度**：第一阶段（v1 后端 + 前端 + Live2D 基础）已完成并合并 main；第二阶段视觉升级的 Task 1（Live2D 竞态修复）、Task 2（点击角色切换模型）与 Task 3（霓虹色彩 token 系统 + UI 二次元语言）已完成；随后按用户要求简化：删除「初音未来」模型、仅保留「白」，角色改为响应式缩放（按屏幕高度等比）+ 可拖动，取消下载各阶段的场景表情/动作反馈；Task 4–6 未开始。另已建立工程约定（根 `CLAUDE.md` + 各文档「§0 工程约定」，见 §0）。
 
 ---
 
@@ -101,7 +113,7 @@ backend/
 │   └── services/
 │       ├── ytdlp_service.py  # yt-dlp 封装：extract/classify_error/build_format_options/get_direct_url/download
 │       └── jobs.py           # JobManager 线程池 + 进度 hook + TTL 清理
-├── tests/                    # 10 个 pytest 文件（32 用例）
+├── tests/                    # 9 个测试文件 + conftest.py（32 用例）
 ├── scripts/                  # install_ffmpeg.ps1 / .sh
 ├── requirements.txt
 ├── jobs.db                   # SQLite（运行时生成，被 .gitignore 忽略）
@@ -214,7 +226,7 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 
 ---
 
-## 6. 已完成事项（Task 1 / Task 2）
+## 6. 已完成事项（Task 1 / 2 / 3）
 
 ### Task 1：修复 Live2D 加载竞态（StrictMode 双重挂载）—— **已完成**
 
@@ -252,27 +264,25 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 - **修复**：`ParticleContainer` → 普通 `PIXI.Container`（ParticleContainer 只支持 Sprite，不支持 Graphics）。
 - **产出物**：`frontend/src/pixi/background.js`。
 
+### Task 3：霓虹色彩 token 系统 + UI 二次元语言 —— **已完成**
+
+- **目标**：把零散写死的色值收敛为三层 token（primitive→semantic→component），统一 `--neon-*` 前缀，落地二次元 UI 动效语言（彩虹描边/光晕/流光/速度线/斜切角/全息弹幕），并引入 Google Fonts。
+- **完成内容**：
+  1. **Token 系统**（`global.css` `:root`）：底 `--bg-deep #06060f` / `--bg-midnight #0d1b3e` / `--bg-purple #1a0f3a`；霓虹 `--neon-magenta #ff2d95` / `--neon-blue #2f7bff` / `--neon-cyan #22d3ee` / `--neon-lime` / `--neon-amber` / `--neon-coral` / `--neon-violet` / `--neon-mint` / `--laser-pink`；复合渐变 `--grad-aurora` / `--grad-holo`。改名：`--neon-pink`→`--neon-magenta`、`--amber`→`--neon-amber`；`--neon-blue` 改值（原 #22d3ee 实为青色 → 现 #2f7bff 真蓝，旧值由新 `--neon-cyan` 承接）。
+  2. **字体 token**：`--font-display`（Orbitron 数字/HUD）、`--font-mono`（JetBrains Mono 等宽）、`--font-body`（中文系统栈）；替换 3 处硬编码 font-family。
+  3. **对比度 token**：`--on-neon #06060f`（霓虹底深字，≥4.5:1 AA）；`button.laser-frame` 深底描边按钮例外保持白字。
+  4. **无障碍**：补全局 `:focus-visible`（`outline: 2px solid var(--neon-cyan); outline-offset: 2px`）；`prefers-reduced-motion` 关闭魔法阵呼吸/能量条流光/按钮速度线/错误呼吸与灰暗。
+  5. **Google Fonts**：`index.html` preconnect（googleapis + gstatic crossorigin）+ Orbitron 700;900 + JetBrains Mono 400;500（`display=swap`）。
+- **skill 合规回改（skill 优先于计划）**：计划原含 `.laser-frame` 常驻 `hue-rotate 6s` 旋转动画，与 ui-ux-pro-max「每屏最多动 1–2 个关键元素」冲突，**已改为静态描边**（删除 `laser-spin` 关键帧）；每屏仅保留 1 个关键动画（入口魔法阵呼吸 / 下载能量条流光 / 错误呼吸或灰暗）。
+- **产出物**：Modify `frontend/src/styles/global.css`、`frontend/index.html`；Create `docs/superpowers/specs/2026-09-22-neon-anime-theme.md`（三层 token 表 + 改名对照 + 动效/无障碍 + 工程约定）；Create 根 `CLAUDE.md`（工程约定）；5 个文档补「§0 工程约定」（design / requirements / README / frontend README / handover）。
+- **验证**：`npm test` 32/32 通过；grep 确认无残留 `--neon-pink` / `laser-spin` / `hue-rotate`。
+- **未覆盖（留 Task 4）**：`background.js` 的 PIXI 颜色仍硬编码（渐变 `#0b0f2a/#3a1c71/#0f3460`、粒子 `0xffc9e8/0x7ef9ff/0xffd700`），H-1 的 PIXI 侧未统一。
+
 ---
 
-## 7. 未完成事项（Task 3 / 4 / 5 / 6）
+## 7. 未完成事项（Task 4 / 5 / 6）
 
 > 详细执行计划原文见 `C:\Users\zxk\.claude\plans\immutable-sniffing-lemur.md`（该文件在用户家目录，不在仓库内）。以下为已构思好的完整计划摘录。
-
-### Task 3：霓虹色彩 token 系统 + UI 二次元语言 —— **未开始**
-
-- **目标**：替换现有单一渐变 + 4 个霓虹 token，落地用户霓虹二次元 spec 的「多层动态渐变 + 高饱和霓虹 + 极光/全息/流体」。
-- **涉及文件**：
-  - Modify `frontend/src/styles/global.css`（`:root` 扩展 + 组件重样式）
-  - Modify `frontend/index.html`（引入 Google Fonts：Orbitron + JetBrains Mono）
-  - Create `docs/superpowers/specs/2026-09-22-neon-anime-theme.md`（token 记录：primitive→semantic→component 三层）
-- **配色 token（预期，覆盖 ui-ux-pro-max 默认的 indigo/绿 SaaS 配色）**：
-  - 底：`--bg-deep: #06060f`、`--bg-midnight: #0d1b3e`、`--bg-purple: #1a0f3a`
-  - 霓虹：`--neon-magenta: #ff2d95`、`--neon-blue: #2f7bff`、`--neon-cyan: #22d3ee`、`--neon-lime: #a3e635`、`--neon-amber: #fbbf24`、`--neon-coral: #ff6b4a`、`--neon-violet: #8b5cf6`、`--neon-mint: #34d399`、`--laser-pink: #ff4dd8`
-  - 复合渐变：`--grad-aurora`、`--grad-holo`（多段 linear-gradient）
-- **字体**：Orbitron（数字/清晰度/进度百分比，HUD 感）+ JetBrains Mono（小标签）；中文沿用 PingFang SC / Microsoft YaHei。
-- **组件重样式**：`.css-fallback` 多段极光渐变、`.bubble` 场景配色变体、`.danmaku` 全息背景、`.laser-frame` 彩虹描边、`.energy-bar-fill` shimmer 扫光、`.float-on-hover` RGB 分离、下载按钮速度线、卡片斜切角、`@media (prefers-reduced-motion: reduce)` 关闭动画。
-- **硬编码隐患**：现有 `background.js` 渐变三色与 `global.css` 的 `.css-fallback`/`--bg-deep` 是**两处不同源**，Task 3 必须统一 token 来源（见 §16 报告 H-1）。
-- **验证**：`npm test` 通过；截屏对比（Task 6 统一做）。
 
 ### Task 4：PIXI 背景重写 —— 樱花/气泡/星星/光尘/极光/粒子旋流 —— **未开始**
 
@@ -317,7 +327,7 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 
 ## 8. 阻塞项
 
-**无**。当前无阻塞 Task 3–6 的技术阻塞项。
+**无**。当前无阻塞 Task 4–6 的技术阻塞项。
 
 > 说明：Live2D 竞态（Task 1）与 PIXI 渲染崩溃（附带修复）这两个原本阻塞视觉体验的问题已解决；后续任务纯增量视觉开发，无外部依赖阻塞。
 
@@ -353,16 +363,16 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 
 | 问题 | 影响 | 状态 |
 | --- | --- | --- |
-| 前端 `App.jsx:53` `window.location.assign(d.url)`（直链下载）在 jsdom 测试中触发 `Error: Not implemented: navigation` 警告 | 无害（测试仍 32 通过），是直链下载的预期副作用 | 已知，不阻塞 |
+| 前端 `App.jsx:52` `window.location.assign(d.url)`（直链下载）在 jsdom 测试中触发 `Error: Not implemented: navigation` 警告 | 无害（测试仍 32 通过），是直链下载的预期副作用 | 已知，不阻塞 |
 | `docs/superpowers/plans/2026-09-22-phase2-cinematic-visual.md` 已被 `immutable-sniffing-lemur.md` 取代，但仍存在且 README 仍引用 | 文档冗余 | 建议删除或标注废弃 |
 | 仓库根目录散落 7 张截图（`phase1-*.png` / `phase2-*.png|jpg`）与 `.playwright-mcp/` 未跟踪 | 工作区杂乱 | 建议清理或移入 `docs/` |
-| Task 1/2 的新文件 `fx/constants.js`、`hooks/useModelSwitcher.js` **未提交**（git 状态 `??`） | 若新窗口在**不同目录/worktree** 工作会丢失这些改动 | 建议先提交 |
+| Task 3 改动与工程约定文档**未提交**（`frontend/index.html`、`frontend/src/styles/global.css`、`docs/superpowers/specs/2026-09-22-neon-anime-theme.md`、根 `CLAUDE.md`、5 个含「§0 工程约定」的文档） | 若新窗口在**不同目录/worktree** 工作会丢失这些改动 | 建议先提交形成 Task 3 基线 |
 
 ---
 
 ## 12. 技术债
 
-- **颜色双源**：PIXI 渐变颜色（`background.js`）与 CSS 渐变（`global.css`）是两处独立维护的同一组颜色，易漂移（Task 3/4 应统一）。
+- **颜色双源（残留）**：Task 3 已把 CSS 侧收敛为 `:root` token，但 PIXI 渐变颜色（`background.js` `#0b0f2a/#3a1c71/#0f3460`、粒子 `0xffc9e8/0x7ef9ff/0xffd700`）仍硬编码，两处仍不同源，易漂移（Task 4 统一到与 token 共享的颜色模块）。
 - **App.jsx 职责偏重**：编排逻辑 + 内联控制按钮视图 + 直链下载副作用混杂。
 - **错误映射双份**：`sceneMachine.js` 的 `ERROR_SCENES`（文案）与 `ErrorScene.jsx` 的 `ERR_CLASS`（视觉 class）需手工同步 9 种 error_type。
 - 详细清单见 §16 报告。
@@ -373,7 +383,7 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 
 | 风险 | 等级 | 缓解 |
 | --- | --- | --- |
-| 未提交的 Task 1/2 改动在异目录 worktree 丢失 | 高 | 新窗口务必在 `E:\install_video` 原地继续，或先提交 |
+| 未提交的 Task 3 改动在异目录 worktree 丢失 | 高 | 新窗口务必在 `E:\install_video` 原地继续，或先提交 |
 | 第二阶段大量视觉改动破坏下载闭环 | 中 | 坚持「只读原则」：视觉层只消费 `scene/job`，不改 `sceneMachine.reduce`，不 import 下载核心；每任务后 `npm test` 全绿 |
 | Google Fonts 外网依赖 | 中 | 提供本地字体降级 |
 | 低端设备性能（樱花/气泡/粒子叠加） | 中 | `detectTier()==='low'` 减半去滤镜、`prefers-reduced-motion` 关动画 |
@@ -410,7 +420,7 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 
 | # | 文件:行 | 问题 | 严重度 | 重构建议 |
 | --- | --- | --- | --- | --- |
-| H-1 | `frontend/src/pixi/background.js:21-23` | 渐变三色 `#0b0f2a/#3a1c71/#0f3460` 写死，与 `global.css:27` 的 `.css-fallback` 渐变、`:root` 的 `--bg-deep` 是**两处不同源** | **高** | Task 3/4 统一到单一 token 来源（JS 颜色模块或读 CSS 变量） |
+| H-1 | `frontend/src/pixi/background.js:21-23,54` | 渐变三色 `#0b0f2a/#3a1c71/#0f3460`、粒子 `0xffc9e8/0x7ef9ff/0xffd700` 写死，与 `global.css` 的 `:root` token 是**两处不同源**（CSS 侧 Task 3 已 token 化，PIXI 侧仍硬编码） | **高** | Task 4 统一到与 CSS token 共享的颜色模块（JS 常量或读 CSS 变量） |
 | H-2 | `frontend/src/pixi/background.js:50,54,58-60,70,75` | 粒子数量 `MAX=low?40:120`、颜色 `0xffc9e8/0x7ef9ff/0xffd700`、alpha `0.6`、速度 `0.4/0.2+rand*0.8/-5`、hue `+0.02`、`speed=1+intensity*2.5` 全部魔法数 | **高** | Task 4 重写时收敛到常量模块 |
 | H-3 | `frontend/src/App.jsx:149-160` | 静音/轻量按钮用 inline `style`（`top:16/right:16/zIndex:10` 等），与 `.lightmode-toggle`（CSS 类）风格不一致 | 中 | 抽 `TopControls.jsx`，样式进 CSS 类 |
 | H-4 | `frontend/src/App.jsx:18` | `POLL_MS = 3000` 轮询间隔魔法数 | 中 | 提到配置/常量模块（已注释 ≥2s 因限流，但值应命名） |
@@ -428,7 +438,7 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 
 | # | 模块 | 问题 | 严重度 | 建议 |
 | --- | --- | --- | --- | --- |
-| C-1 | `frontend/src/App.jsx` | 编排器同时承载：内联控制按钮视图（H-3）、直链下载副作用 `window.location.assign`（:53）、toast JSX、About JSX | **高** | 抽 `TopControls`、`downloadClient` 抽象（直链/服务端二选一），App 只做编排 |
+| C-1 | `frontend/src/App.jsx` | 编排器同时承载：内联控制按钮视图（H-3）、直链下载副作用 `window.location.assign`（:52）、toast JSX、About JSX | **高** | 抽 `TopControls`、`downloadClient` 抽象（直链/服务端二选一），App 只做编排 |
 | C-2 | `frontend/src/pixi/mascot.js`（约 300 行） | 混合：生命周期守卫、模型加载、拖动/点击热区、切换粒子特效、兜底 Sprite | 中 | 若继续膨胀，把 `spawnSwitchFx` 拆到 `fx/` 子模块 |
 | C-3 | `frontend/src/pixi/background.js` | 渐变 + 单粒子循环混杂 | 中 | Task 4 本就整文件重写，无需单独处理 |
 
@@ -446,7 +456,7 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 | --- | --- | --- | --- | --- |
 | O-1 | `docs/superpowers/plans/2026-09-22-phase2-cinematic-visual.md` | 已被取代但仍存在，README 仍引用 | 低 | 删除或标注废弃 |
 | O-2 | 仓库根目录 | 7 张截图 + `.playwright-mcp/` 未跟踪 | 低 | 清理或归档到 `docs/` |
-| O-3 | git 工作区 | Task 1/2 新文件 `fx/`、`hooks/` 未提交 | 中 | 先提交再开工（见 §11） |
+| O-3 | git 工作区 | Task 3 改动 + 工程约定文档未提交（Task 1/2 已提交于 `6b22795`） | 中 | 先提交再开工（见 §11） |
 
 ---
 
@@ -454,30 +464,30 @@ curl -X POST http://127.0.0.1:8000/api/parse \
 
 ### 前置条件
 
-1. 在 `E:\install_video` **原地**继续（或用同一 worktree），确保未提交的 Task 1/2 改动在（或先提交）。
+1. 在 `E:\install_video` **原地**继续（或用同一 worktree），确保未提交的 Task 3 改动在（或先提交）。
 2. 后端 `uvicorn 127.0.0.1:8000` 与前端 `vite localhost:5173` 已在后台运行（复用，不重复启动）。
 3. 确认 `npm test`（32）与 `python -m pytest`（32）基线全绿。
-4. 读取计划原文 `C:\Users\zxk\.claude\plans\immutable-sniffing-lemur.md`（Task 3–6 完整步骤）。
+4. 读取计划原文 `C:\Users\zxk\.claude\plans\immutable-sniffing-lemur.md`（Task 4–6 完整步骤；Task 3 已完成，见 §6）。
 
 ### 建议优先级
 
-Task 3（色彩 token 系统）→ Task 4（PIXI 背景重写）→ Task 5（漫画气泡台词）→ Task 6（粒子汇聚 + 完成动画 + 验收）。
-理由：Task 3 先定 token，Task 4 才能复用同一颜色来源（解决 H-1 双源债）；Task 5 数据驱动、独立；Task 6 收口并整体验收。
+Task 4（PIXI 背景重写）→ Task 5（漫画气泡台词）→ Task 6（粒子汇聚 + 完成动画 + 验收）。
+理由：Task 3 已定 token（CSS 侧），Task 4 需复用同一颜色来源（收敛 PIXI 侧，解决 H-1 双源债）；Task 5 数据驱动、独立；Task 6 收口并整体验收。
 
 ### 可并行任务
 
-- Task 5（漫画气泡，纯前端数据 + 组件 + 测试）与 Task 3/4 的**依赖弱**，可在 Task 3 完成后与 Task 4 并行。
-- Task 3 与 Task 4 有颜色来源依赖，**不建议并行**（先定 token 再画背景）。
+- Task 5（漫画气泡，纯前端数据 + 组件 + 测试）与 Task 4 的**依赖弱**，可与 Task 4 并行。
+- Task 4 复用 Task 3 的 CSS token（收敛 PIXI 侧颜色），与 Task 3 的颜色来源依赖已在 Task 3 完成后解除。
 
 ### 风险点
 
 - 大量视觉改动破坏下载闭环 → 严守「只读原则」，每任务后跑测试。
-- 颜色双源债（H-1）若 Task 3/4 不统一，会持续漂移。
+- 颜色双源债（H-1）残留：Task 3 已统一 CSS 侧，Task 4 需统一 PIXI 侧，否则持续漂移。
 - Google Fonts 外网依赖（待确认项 #4）。
 
 ### 建议拆分
 
-按 Task 3–6 逐任务「实现 → `npm test` → 截屏目验 → 提交」；每个任务一个独立 commit，便于回滚。执行方式二选一（推荐 Subagent-Driven：每任务新 subagent + 评审，快速迭代；或 Inline 本会话内推进，便于频繁截屏目验）。
+按 Task 4–6 逐任务「实现 → `npm test` → 截屏目验 → 提交」；每个任务一个独立 commit，便于回滚。执行方式二选一（推荐 Subagent-Driven：每任务新 subagent + 评审，快速迭代；或 Inline 本会话内推进，便于频繁截屏目验）。
 
 ---
 
@@ -504,7 +514,7 @@ Task 3（色彩 token 系统）→ Task 4（PIXI 背景重写）→ Task 5（漫
 3. **只读原则**（来自计划全局约束）：视觉层只消费 `scene`/`job`，绝不改 `sceneMachine.reduce` 的下载状态、绝不 import 下载核心。任何视觉失效不得影响下载闭环。
 4. **降级链**：`prefers-reduced-motion` 关动画；`detectTier()==='low'` 粒子减半、去滤镜；`'none'` 走 `.css-fallback`。
 5. **Live2D 入口**：必须继续 `import { Live2DModel } from 'pixi-live2d-display/cubism4'`（`index.html` 只加载了 `live2dcubismcore.min.js`）。
-6. **提交前先看 §11 / §16-O-4**：Task 1/2 的新文件尚未提交，建议先提交形成干净基线。
+6. **提交前先看 §11 / §16.4-O-3**：Task 3 改动与工程约定文档尚未提交，建议先提交形成干净基线。
 7. **禁止编造**：本文所有「待确认」均已标注；未标注的均为已核实事实。
 
 ---

@@ -24,7 +24,10 @@
 }
 /* 无 WebGL 时的 CSS 渐变兜底，与 canvas 渐变同色 */
 .css-fallback {
-  background: linear-gradient(135deg, #0b0f2a 0%, #3a1c71 50%, #0f3460 100%);
+  background:
+    radial-gradient(circle at 18% 22%, rgba(139, 92, 246, .28), transparent 45%),
+    radial-gradient(circle at 82% 78%, rgba(47, 123, 255, .28), transparent 45%),
+    linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-purple) 45%, var(--bg-midnight) 100%);
 }
 /* 轻量模式开关：与静音键同列（右上角），避免重叠 */
 .lightmode-toggle {
@@ -47,7 +50,7 @@
   padding: 10px 18px;
   border-radius: 16px;
   font-weight: 600;
-  box-shadow: 0 0 18px var(--neon-pink);
+  box-shadow: 0 0 18px var(--neon-magenta);
   pointer-events: none;
   animation: toast-pop .3s ease-out;
 }
@@ -68,35 +71,69 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body, #root { height: 100%; }
 body {
-  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-  background: #0b0f2a;
+  font-family: var(--font-body);
+  background: var(--bg-deep);
   color: #f5f6ff;
   overflow: hidden;
 }
 
+/* 键盘焦点可见（无障碍 CRITICAL）：所有可聚焦控件都需清晰焦点环 */
+:focus-visible {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 2px;
+}
+
 /* ── Task 5 视觉语言：变量 + 关键动画 ─────────────────────────────── */
 :root {
-  --neon-pink: #ff2d95;
-  --neon-blue: #22d3ee;
+  /* 底：深空黑 / 午夜蓝 / 暗紫 */
+  --bg-deep: #06060f;
+  --bg-midnight: #0d1b3e;
+  --bg-purple: #1a0f3a;
+  /* 点缀（高饱和霓虹） */
+  --neon-magenta: #ff2d95;
+  --neon-blue: #2f7bff;
+  --neon-cyan: #22d3ee;
   --neon-lime: #a3e635;
-  --amber: #fbbf24;
-  --bg-deep: #0b0f2a;
+  --neon-amber: #fbbf24;
+  --neon-coral: #ff6b4a;
+  --neon-violet: #8b5cf6;
+  --neon-mint: #34d399;
+  --laser-pink: #ff4dd8;
+  /* 复合渐变（极光带 / 全息 / 虹彩） */
+  --grad-aurora: linear-gradient(120deg, var(--neon-magenta), var(--neon-violet), var(--neon-blue), var(--neon-cyan), var(--neon-magenta));
+  --grad-holo: linear-gradient(90deg, var(--laser-pink), var(--neon-cyan), var(--neon-mint), var(--neon-violet), var(--neon-amber), var(--laser-pink));
+  /* 字体（扩展点：换字体只改这里，不散落硬编码） */
+  --font-display: 'Orbitron', 'JetBrains Mono', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', system-ui, -apple-system, sans-serif;
+  --font-body: "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* 霓虹底上的文字色（保证对比度 ≥ 4.5:1，AA） */
+  --on-neon: #06060f;
 }
 .laser-frame {
   border: 2px solid transparent;
   background:
     linear-gradient(var(--bg-deep), var(--bg-deep)) padding-box,
-    linear-gradient(120deg, var(--neon-pink), var(--neon-blue), var(--neon-lime), var(--neon-pink)) border-box;
-  animation: laser-spin 6s linear infinite;
+    linear-gradient(120deg, var(--neon-magenta), var(--neon-blue), var(--neon-lime), var(--neon-magenta)) border-box;
 }
-@keyframes laser-spin { to { filter: hue-rotate(360deg); } }
+.rainbow-outline {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--bg-deep), var(--bg-deep)) padding-box,
+    var(--grad-holo) border-box;
+}
 .bubble { /* 漫画气泡 */ background: #fff; color: #111; border-radius: 18px; position: relative; }
 .bubble::after { content: ""; position: absolute; bottom: -12px; left: 24px; border: 10px solid transparent; border-top-color: #fff; }
 .float-on-hover { transition: transform .2s, box-shadow .2s; }
-.float-on-hover:hover { transform: translateY(-6px); box-shadow: 0 0 24px var(--neon-blue); }
+.float-on-hover:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 0 12px rgba(255, 45, 149, .55),
+    6px 0 16px rgba(47, 123, 255, .55),
+    -6px 0 16px rgba(52, 211, 153, .55);
+}
 .danmaku { position: fixed; animation: danmaku-slide 3s linear forwards; }
 @keyframes danmaku-slide { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
-.magic-circle { /* 入口魔法阵 */ border-radius: 50%; box-shadow: 0 0 40px var(--neon-blue), inset 0 0 20px var(--neon-pink); animation: breathe 3s ease-in-out infinite; }
+.magic-circle { /* 入口魔法阵 */ border-radius: 50%; box-shadow: 0 0 40px var(--neon-blue), inset 0 0 20px var(--neon-magenta); animation: breathe 3s ease-in-out infinite; }
 @keyframes breathe { 50% { transform: scale(1.04); } }
 
 /* ── Task 5 落地：场景 class 与补充动画 ───────────────────────────── */
@@ -117,12 +154,23 @@ body {
   box-shadow: inset 0 0 8px rgba(0,0,0,.5);
 }
 .energy-bar-fill {
+  position: relative;
+  overflow: hidden;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue), var(--neon-lime));
+  background: linear-gradient(90deg, var(--neon-magenta), var(--neon-blue), var(--neon-lime));
   box-shadow: 0 0 14px var(--neon-blue);
   transition: width .3s ease;
 }
+.energy-bar-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+@keyframes shimmer { to { transform: translateX(100%); } }
 
 /* 弹幕外观（叠加在定位/滑动动画之上） */
 .danmaku {
@@ -130,7 +178,9 @@ body {
   color: #fff;
   font-weight: 600;
   padding: 8px 18px;
-  background: linear-gradient(90deg, rgba(255,45,149,.9), rgba(34,211,238,.9));
+  background: var(--grad-holo);
+  border: 1px solid rgba(255, 255, 255, .3);
+  box-shadow: 0 0 16px var(--neon-cyan);
   border-radius: 999px;
   white-space: nowrap;
   pointer-events: none;
@@ -169,29 +219,51 @@ body {
   background: rgba(255,255,255,.08);
   color: #f5f6ff;
   outline: none;
+  font-family: var(--font-mono);
 }
 .entry-scene input:focus { border-color: var(--neon-blue); box-shadow: 0 0 12px var(--neon-blue); }
 
 /* 通用按钮 */
 button {
+  position: relative;
+  overflow: hidden;
   cursor: pointer;
   border: 1px solid transparent;
   padding: 10px 18px;
   border-radius: 999px;
-  color: #f5f6ff;
-  background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+  color: var(--on-neon);
+  background: linear-gradient(90deg, var(--neon-magenta), var(--neon-blue));
   font-weight: 600;
   transition: transform .2s, box-shadow .2s;
 }
-button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 16px var(--neon-blue); }
+/* 描边按钮（.laser-frame）在深底上，文字保持白（深字在深底不可读） */
+button.laser-frame { color: #f5f6ff; }
+/* 加速度线：下载/解析等通用操作按钮 hover 时斜向扫过（清晰度按钮除外，走 RGB 分离） */
+button:not(.float-on-hover)::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: repeating-linear-gradient(115deg, transparent 0 8px, rgba(255,255,255,.18) 8px 9px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+button:hover:not(:disabled):not(.float-on-hover) { transform: translateY(-2px); box-shadow: 0 0 16px var(--neon-blue); }
+button:hover:not(:disabled):not(.float-on-hover)::before { opacity: 1; animation: speed-lines .35s linear infinite; }
 button:disabled { opacity: .45; cursor: not-allowed; }
+@keyframes speed-lines { to { transform: translateX(9px); } }
 
 /* 清晰度选择卡片 */
-.format-card { padding: 24px 28px; max-width: 520px; width: 100%; }
+.format-card {
+  padding: 24px 28px;
+  max-width: 520px;
+  width: 100%;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
 .format-list { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-.format-list button { padding: 10px 18px; font-weight: 600; }
+.format-list button { padding: 10px 18px; font-weight: 600; font-family: var(--font-display); }
 .format-list button.selected {
-  box-shadow: 0 0 18px var(--neon-pink), inset 0 0 10px rgba(255,45,149,.3);
+  box-shadow: 0 0 18px var(--neon-magenta), inset 0 0 10px rgba(255,45,149,.3);
   color: #fff;
 }
 .badge-switch {
@@ -205,7 +277,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   transition: box-shadow .2s;
 }
 .badge-switch:hover { box-shadow: 0 0 12px var(--neon-blue); }
-.badge-switch input { accent-color: var(--neon-pink); }
+.badge-switch input { accent-color: var(--neon-magenta); }
 
 /* 气泡容器内边距 */
 .done-bubble,
@@ -215,6 +287,9 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   width: 100%;
   text-align: center;
 }
+/* 场景配色变体：完成=琥珀+珊瑚庆祝光晕；错误=洋红危险光晕（err-* 场景动画会覆盖） */
+.done-bubble { box-shadow: 0 0 24px var(--neon-amber), 0 0 48px rgba(255, 107, 74, .4); }
+.error-bubble { box-shadow: 0 0 20px rgba(255, 45, 149, .45); }
 .error-bubble h2 { margin-bottom: 8px; }
 
 /* ── Task 8 错误场景差异化视觉（≥3 种） ─────────────────────────── */
@@ -231,7 +306,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .err-quota .error-bubble { animation: err-breathe 2s ease-in-out infinite; }
 @keyframes err-breathe {
   0%, 100% { transform: scale(1); box-shadow: 0 0 12px var(--neon-blue); }
-  50% { transform: scale(1.03); box-shadow: 0 0 32px var(--amber); }
+  50% { transform: scale(1.03); box-shadow: 0 0 32px var(--neon-amber); }
 }
 /* err-drm：灰暗（版权/年龄/地区等受限内容） */
 .err-drm .error-bubble { animation: err-dim 3s ease-in-out infinite; }
@@ -253,4 +328,20 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   line-height: 1.5;
   color: rgba(245, 246, 255, .55);
   pointer-events: none;
+}
+
+/* ── Task 3 字体落地：Orbitron（时长/清晰度数字）+ JetBrains Mono（URL 等宽输入） ── */
+.duration {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+/* ── 无障碍：减少动态效果 ── */
+@media (prefers-reduced-motion: reduce) {
+  .magic-circle { animation: none; }
+  .energy-bar-fill::after { animation: none; }
+  button:hover:not(:disabled):not(.float-on-hover)::before { animation: none; }
+  .err-quota .error-bubble { animation: none; }
+  .err-drm .error-bubble { animation: none; }
 }

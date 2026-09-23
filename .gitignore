@@ -38,3 +38,9 @@ backend/tmp/
 
 # SQLite (init_db 会生成 jobs.db)
 *.db
+
+# Playwright MCP 运行产物（日志/截图/yaml）
+.playwright-mcp/
+
+# 根级空 lockfile（非项目代码；项目锁文件在 frontend/package-lock.json）
+/package-lock.json
