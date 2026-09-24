@@ -84,9 +84,10 @@ install_video/
 ```
 1. POST /api/parse {url}
    → ytdlp_service.extract_info(url, download=False)
-   → 返回 {title, thumbnail, duration,
-           formats:[{format_id, note(清晰度), height, ext, filesize,
-                     vcodec, acodec, direct(是否有直链)}]}
+   → 返回 {title, thumbnail, duration, duration_string, uploader, platform,
+           view_count, upload_date, description, subtitles,
+           formats:[{format_id, label, height, ext, resolution, filesize,
+                     has_audio, vcodec, acodec, direct(是否有直链), note}]}
 
 2. POST /api/download {url, format_id, mode?}
    → 判定下载方式（见 §5）
@@ -107,7 +108,8 @@ install_video/
   1. 直链可用 → 返回 `{mode:"direct", url, headers}`，前端直接浏览器下载；
   2. 直链不可用/过期/需 cookie → 自动落到服务端下载 `{mode:"server", job_id}`；
   3. UI 提供「强制走服务器」开关兜底。
-- **服务端下载**：`YoutubeDL.download()` 到临时目录，`progress_hooks` 更新 Job 进度；完成后由 `/api/file/{id}` 流式回传。
+- **服务端下载**：`YoutubeDL.download()` 到临时目录，`progress_hooks` 更新 Job 进度；完成后由 `/api/file/{id}` 流式回传。前端轮询到 `done` 后经 `lib/saveFile.js`（`<a download>`）自动触发浏览器保存，无需手动点链接。
+- **ffmpeg 合并阈值（`FFMPEG_MIN_HEIGHT = 1080`）**：音视频分离流需 ffmpeg 合并，仅对 `>= 1080p` 的档位开放；低于 1080p 的档位只用渐进式直链，无直链则跳过该档（不触发 ffmpeg）。
 
 ## 6. 数据模型
 
@@ -226,6 +228,8 @@ frontend/src/
 
 ## 14. 视觉重设计（lolimeow 主题，Task A/B/C 已完成）
 
+> **⚠️ 已被 pidanai 重构替代（2026-09-24）**：本节记录的是 lolimeow 主题（紫罗兰 `--violet-*` + slate，accent `#8b3dff`）。当前代码已重构为「深色液态玻璃 + 樱花粉辉光」——`--sakura-*` + `--ink-*` + `--refract-*`（五色折射）+ `--gray-*`，accent `#d6336c`，深色默认 + 三档主题（浅/深/自动）。当前主题的分析见 `docs/ui-refactor-pidanai.md`（token 对照/组件映射/解耦/分步），扩展方法见 `docs/ui-extension-guide.md`。§14.6（待机动画 `IDLE`）与 §14.8（表情/道具 `EXPRESSIONS` 数据驱动机制）**未被推翻、仍准确**；§14.1–14.5/14.7 的「紫罗兰配色」描述已被 pidanai 覆盖。
+
 > 用户反馈原「深色霓虹二次元」UI 太差、Live2D 角色不动。按参考站 `baomihuahua/lolimeow`（设计语言）+ `Misaka273/lolimeow-shiroki`（玻璃拟态/粒子打磨）重做视觉。原「霓虹二次元」方向（§12 第二阶段电影感视觉）已被本方案替代。
 
 ### 14.1 三层 token（design-system 落地）
@@ -258,7 +262,7 @@ CSS 与 PIXI 颜色单一来源 = `global.css` 的 `:root` 语义 token；`theme
 
 ### 14.6 待机动画（Task D，程序化驱动）
 
-「白」的 `model3.json` 的 `Motions` 只挂了 `edle` 装饰特效（星星/眼泪/生气，非呼吸/待机动作）、且无 `Breath` 字段，角色本身不会自动呼吸/摆动。因此用 `pixi/mascot.js` 的 `startIdle()`：`app.ticker` 逐帧正弦写 `coreModel.setParameterValueById`，驱动 `ParamAngleX/Y/Z` + `ParamBreath`（均为物理输入），头摆经物理级联出身体/头发摆动。驱动参数名/振幅/频率/相位全部在 `mascotConfig.js` 的 `IDLE` 配置（数据驱动）；运行时按 `coreModel.getParameterIndex` 过滤缺失参数，全缺失时退化为容器级 scale 呼吸。尊重 `prefers-reduced-motion`（完全静止）。
+「白」的 `model3.json` 的 `Motions` 只挂了 `edle` 装饰特效（单个星光特效，非呼吸/待机动作）、且无 `Breath` 字段，角色本身不会自动呼吸/摆动。因此用 `pixi/mascot.js` 的 `startIdle()`：`app.ticker` 逐帧正弦写 `coreModel.setParameterValueById`，驱动 `ParamAngleX/Y/Z` + `ParamBreath`（均为物理输入），头摆经物理级联出身体/头发摆动。驱动参数名/振幅/频率/相位全部在 `mascotConfig.js` 的 `IDLE` 配置（数据驱动）；运行时按 `coreModel.getParameterIndex` 过滤缺失参数，全缺失时退化为容器级 scale 呼吸。尊重 `prefers-reduced-motion`（完全静止）。
 
 ### 14.7 模型升级（完整版「白」）
 
@@ -273,8 +277,8 @@ CSS 与 PIXI 颜色单一来源 = `global.css` 的 `:root` 语义 token；`theme
 
 完整版「白」带 46 个 `.exp3.json`，每个 = 单参数 `{Id, Value:1, Blend:'Add'}`。标准 expression manager 是**单选**（一次一个 currentExpression），无法「换发型 + 换衣服 + 戴耳机」并存；因此走**直接写参数** `coreModel.setParameterValueById(paramId, 1/0)`，可任意多选并存，且与待机正弦驱动（`IDLE`）参数不重叠、互不冲突。参数名/分组/节奏全部进 `mascotConfig.js` 的 `EXPRESSIONS`（数据驱动）。
 
-- **阶段映射（`EXPRESSIONS.stage`）**：解析中→圈圈眼(Param40)、选清晰度/下载中→煎蛋眼(Param38)、完成→星星眼(Param41)、出错→生气(Param43)、入口→无。
+- **阶段映射（`EXPRESSIONS.stage`）**：解析中→圈圈眼(Param40)、选清晰度→煎蛋眼(Param38)、下载中→圈圈眼(Param40)、完成→星星眼(Param41)、出错→生气(Param43)、入口→无。
 - **随机道具（`EXPRESSIONS.random`）**：拿手柄(Param35) / 拿话筒(Param32) / 戳脸(Param31)，每 ~20s 随机展示 ~4s 收回。
 - **点击换装菜单（`EXPRESSIONS.menu`，6 组 39 项）**：发型(9, single) / 衣服(4, single) / 大小变(1, toggle) / 配饰(16, multi，含创可贴×4) / 颜色(5, multi) / 情绪(4, multi：黑脸/血迹/哭/脸红)，`ExpressionMenu.jsx` 只读配置渲染。**46 个表情已全量暴露，无闲置。**
-- **装饰特效（`EXPRESSIONS.effect` → `edle.motion3.json`）**：星星/眼泪/生气/圈圈/小翅膀的循环装饰动作（`Meta.Loop=true`，~11.9s）。命中 `stages`（默认 `done`/`error`）时由 `setStageEffect` 调 `model.motion(group, index, MotionPriority.IDLE)` 循环播放，其余场景 `motionManager.stopAllMotions()` 停止。`edle` motion 已注册进 `白.model3.json` 的 `FileReferences.Motions`；motion 文件按需懒加载（首次触发 `motion()` 时才请求）。
+- **装饰特效（`EXPRESSIONS.effect` → `edle.motion3.json`）**：单个「星光闪烁」循环装饰动作（`Meta.Loop=true`，~11.9s；`白.model3.json` 的 Motions 仅挂这一个文件、且该文件无 Motions 数组，并非多特效）。命中 `stages`（默认 `done`/`error`）时由 `setStageEffect` 调 `model.motion(group, index, MotionPriority.IDLE)` 循环播放，其余场景 `motionManager.stopAllMotions()` 停止。`edle` motion 已注册进 `白.model3.json` 的 `FileReferences.Motions`；motion 文件按需懒加载（首次触发 `motion()` 时才请求）。
 - **模型切换已删除**（`cycleModel` / 切换特效 / `useModelSwitcher` / toast）。

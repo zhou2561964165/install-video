@@ -22,7 +22,7 @@ const FX = {
   light: { count: 2, alpha: 0.2, drift: 0.12, size: 1.4 },
   stars: { count: 70, rMax: 1.8, alpha: 0.7, twinkle: 0.02 },
   dust: { count: 40, rMax: 1.4, alpha: 0.4, drift: 0.1 },
-  petals: { count: 10, size: 10, fall: 0.45, sway: 0.02, spin: 0.012 },
+  spots: { count: 10, size: 16, drift: 0.3, sway: 0.008, alpha: 0.5 },
   bubbles: { count: 12, rMax: 6, rise: 0.35, sway: 0.012 },
   swirl: { count: 70, rMax: 2.6, orbit: 0.02, converge: 0.006 },
 };
@@ -46,16 +46,6 @@ function makeGlowTexture(size, colorNum, alpha) {
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, s, s);
   return PIXI.Texture.from(canvas);
-}
-
-// 樱花花瓣：上尖下圆的泪滴形
-function drawPetal(g, s, color) {
-  g.beginFill(color);
-  g.moveTo(0, -s);
-  g.quadraticCurveTo(s, -s * 0.1, s * 0.45, s * 0.5);
-  g.quadraticCurveTo(0, s * 1.1, -s * 0.45, s * 0.5);
-  g.quadraticCurveTo(-s, -s * 0.1, 0, -s);
-  g.endFill();
 }
 
 // 极光带：大块柔和紫罗兰光晕，缓慢漂移（普通混合，浅/深底皆可）
@@ -201,36 +191,36 @@ function createDust(root, size, low) {
   };
 }
 
-// 樱花花瓣：下落 + 左右摇曳 + 自旋（软粉/淡紫）
-function createPetals(root, size, low) {
+// 折射光点：五色折射彩虹的柔和光晕，缓慢上浮 + 左右摇曳（替代樱花花瓣）
+function createSpots(root, size, low) {
   const c = new PIXI.Container();
-  const colors = [palette.accentPink, palette.accentSoft, palette.accentLilac];
-  const petals = [];
-  const n = countFor(FX.petals.count, low);
+  const colors = [palette.refractCyan, palette.refractViolet, palette.refractPink, palette.refractMint, palette.refractWarm];
+  const spots = [];
+  const n = countFor(FX.spots.count, low);
   for (let i = 0; i < n; i++) {
-    const p = new PIXI.Graphics();
-    drawPetal(p, FX.petals.size * rand(0.7, 1.3), hex(colors[i % colors.length]));
-    p.baseX = rand(0, size.w);
-    p.x = p.baseX;
-    p.y = rand(0, size.h);
-    p.phase = rand(0, Math.PI * 2);
-    p.spin = rand(-1, 1) * FX.petals.spin;
-    p.swayAmp = rand(20, 60);
-    p.fall = FX.petals.fall * rand(0.6, 1.4);
-    p.alpha = rand(0.5, 1);
-    petals.push(p);
-    c.addChild(p);
+    const s = new PIXI.Sprite(makeGlowTexture(128, hex(colors[i % colors.length]), FX.spots.alpha));
+    s.anchor.set(0.5);
+    const sc = FX.spots.size * rand(0.6, 1.4);
+    s.width = sc;
+    s.height = sc;
+    s.baseX = rand(0, size.w);
+    s.x = s.baseX;
+    s.y = rand(0, size.h);
+    s.phase = rand(0, Math.PI * 2);
+    s.swayAmp = rand(8, 22);
+    s.drift = FX.spots.drift * rand(0.5, 1.5);
+    spots.push(s);
+    c.addChild(s);
   }
   root.addChild(c);
   return {
     update(delta, intensity) {
-      const speed = 1 + intensity * 1.5;
-      for (const p of petals) {
-        p.phase += FX.petals.sway * delta * speed;
-        p.y += p.fall * delta * speed;
-        p.x = p.baseX + Math.sin(p.phase) * p.swayAmp;
-        p.rotation += p.spin * delta * speed;
-        if (p.y > size.h + 30) { p.y = -30; p.baseX = rand(0, size.w); }
+      const speed = 1 + intensity * 0.6;
+      for (const s of spots) {
+        s.phase += FX.spots.sway * delta * speed;
+        s.y -= s.drift * delta * speed;
+        s.x = s.baseX + Math.sin(s.phase) * s.swayAmp;
+        if (s.y < -20) { s.y = size.h + 20; s.baseX = rand(0, size.w); }
       }
     },
     resize() {},
@@ -345,7 +335,7 @@ export function createBackground(app, tier = 'high') {
     createLight(root, size, low),
     createStars(root, size, low),
     createDust(root, size, low),
-    createPetals(root, size, low),
+    createSpots(root, size, low),
     createBubbles(root, size, low),
     createSwirl(root, size, low),
   ];

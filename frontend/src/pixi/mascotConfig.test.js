@@ -27,6 +27,10 @@ describe('SCALE 等比缩放配置', () => {
     expect(SCALE.min).toBeGreaterThan(0);
     expect(SCALE.max).toBeGreaterThan(SCALE.min);
   });
+  it('initial 落在 [min, max] 区间内', () => {
+    expect(SCALE.initial).toBeGreaterThanOrEqual(SCALE.min);
+    expect(SCALE.initial).toBeLessThanOrEqual(SCALE.max);
+  });
 });
 
 describe('EXPRESSIONS 表情/道具配置', () => {

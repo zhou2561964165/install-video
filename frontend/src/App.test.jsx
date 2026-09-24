@@ -45,7 +45,7 @@ describe('App 功能闭环', () => {
     await userEvent.click(screen.getByRole('button', { name: '解析' }));
 
     expect(await screen.findByTestId('selecting-scene')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: '1080p · mp4' }));
+    await userEvent.click(screen.getByRole('button', { name: '1080p MP4 · 含音频' }));
     await userEvent.click(screen.getByRole('button', { name: '下载' }));
 
     expect(startDownload).toHaveBeenCalledWith('https://example.com/v', '1080', false);
@@ -61,7 +61,7 @@ describe('App 功能闭环', () => {
     render(<App />);
     await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/v');
     await userEvent.click(screen.getByRole('button', { name: '解析' }));
-    await userEvent.click(await screen.findByRole('button', { name: '1080p · mp4' }));
+    await userEvent.click(await screen.findByRole('button', { name: '1080p MP4 · 含音频' }));
     await userEvent.click(screen.getByRole('button', { name: '下载' }));
 
     expect(await screen.findByTestId('done-scene', {}, { timeout: 8000 })).toBeInTheDocument();

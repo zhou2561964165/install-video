@@ -20,7 +20,7 @@ export async function createMascot(app, modelId, { onTap } = {}) {
   let detachDrag = null;                    // 当前模型的拖动清理句柄（destroy 时解除 window 监听）
   let idle = { cleanup() {}, refreshBase() {} };  // 待机动画句柄（初始为空，加载后替换）
   let randomPropsCleanup = null;            // 随机道具定时器清理句柄（destroy 时调用）
-  let scaleFactor = 1;                      // 等比缩放倍率（SCALE 配置，跨 resize 持久）
+  let scaleFactor = SCALE.initial;          // 等比缩放倍率（初始值来自 SCALE 配置，跨 resize 持久）
 
   const current = { model: null, cfg: null };
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer, useCallback, useRef, useState } from 'react';
 import { reduce, initialState, SCENE } from './state/sceneMachine.js';
-import { parseVideo, startDownload, getJob, fileUrl } from './api.js';
+import { parseVideo, fileUrl } from './api.js';
+import { useDownload } from './hooks/useDownload.js';
+import { normalizeParse } from './lib/videoAdapter.js';
 import { initStage, destroyStage, webglSupported, detectTier } from './pixi/stage.js';
 import { createBackground, intensityForScene } from './pixi/background.js';
 import { createMascot } from './pixi/mascot.js';
@@ -11,12 +13,9 @@ import SelectingScene from './components/SelectingScene.jsx';
 import DownloadingScene from './components/DownloadingScene.jsx';
 import DoneScene from './components/DoneScene.jsx';
 import ErrorScene from './components/ErrorScene.jsx';
-import About from './components/ui/About.jsx';
 import ExpressionMenu from './components/ui/ExpressionMenu.jsx';
 import Preloader from './components/ui/Preloader.jsx';
 import { setScene, setMuted as setAudioMuted } from './audio/audioManager.js';
-
-const POLL_MS = 3000; // 轮询间隔：须 ≥2s，后端 /api 限流 30/60s
 
 // 三档主题开关（数据驱动，加档只改这里）
 const THEMES = [
@@ -33,7 +32,7 @@ export default function App() {
   const mascotRef = useRef(null);
   const [webgl] = useState(() => webglSupported());
   const [tier] = useState(() => detectTier());
-  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'light');
+  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'dark');
   const [muted, setMuted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [ready, setReady] = useState(false); // Live2D 模型加载完成才隐藏 preloader
@@ -48,44 +47,15 @@ export default function App() {
   const handleSubmit = useCallback(async (url) => {
     dispatch({ type: 'SUBMIT_URL', url });
     try {
-      const payload = await parseVideo(url);
+      const payload = normalizeParse(await parseVideo(url));
       dispatch({ type: 'PARSE_SUCCESS', payload });
     } catch (e) {
       dispatch({ type: 'PARSE_FAIL', error: e });
     }
   }, []);
 
-  const handleDownload = useCallback(async () => {
-    const { url, selectedFormat, forceServer } = state;
-    try {
-      const d = await startDownload(url, selectedFormat.format_id, forceServer);
-      dispatch({ type: 'START_DOWNLOAD', download: d });
-      if (d.mode === 'direct' && d.url) {
-        // 直链：直接触发浏览器下载（新窗口/隐藏 iframe）
-        window.location.assign(d.url);
-      }
-    } catch (e) {
-      dispatch({ type: 'DOWNLOAD_FAIL', error: e });
-    }
-  }, [state]);
-
-  // 服务端模式：轮询 job
-  useEffect(() => {
-    if (state.scene !== SCENE.DOWNLOADING || !state.download || state.download.mode !== 'server') return;
-    let timer;
-    const tick = async () => {
-      try {
-        const job = await getJob(state.download.job_id);
-        dispatch({ type: 'DOWNLOAD_PROGRESS', job });
-        if (job.status === 'done' || job.status === 'error') return;
-        timer = setTimeout(tick, POLL_MS);
-      } catch (e) {
-        dispatch({ type: 'DOWNLOAD_FAIL', error: e });
-      }
-    };
-    timer = setTimeout(tick, POLL_MS);
-    return () => clearTimeout(timer);
-  }, [state.scene, state.download]);
+  // 下载编排（发起 + 服务端轮询）下沉到 useDownload，App 只保留 dispatch 与场景渲染
+  const { startDownload: handleDownload } = useDownload(state, dispatch);
 
   // PIXI 舞台：WebGL 可用时挂载，否则走 CSS 渐变兜底（global.css 里 .css-fallback）
   useEffect(() => {
@@ -126,7 +96,7 @@ export default function App() {
     setScene(state.scene);
   }, [state.scene]);
 
-  // 随 scene 切换角色情绪眼（解析→圈圈眼、选清晰度/下载→煎蛋眼、完成→星星眼、出错→生气）
+  // 随 scene 切换角色情绪眼（解析/下载→圈圈眼、选清晰度→煎蛋眼、完成→星星眼、出错→生气）
   useEffect(() => {
     mascotRef.current?.setStageExpression(state.scene);
   }, [state.scene, webgl]);
@@ -174,7 +144,6 @@ export default function App() {
         ))}
       </div>
       <ExpressionMenu open={menuOpen} onClose={() => setMenuOpen(false)} onExpression={(pid, v) => mascotRef.current?.setExpression(pid, v)} onScale={(dir) => mascotRef.current?.scaleBy(dir)} />
-      <About />
       {webgl && <Preloader done={ready} />}
     </>
   );

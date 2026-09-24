@@ -30,6 +30,15 @@ export const palette = {
   accent: cssVar('--accent', '#d6336c'),
   accentHover: cssVar('--accent-hover', '#bd2a5b'),
   accentSoft: cssVar('--accent-soft', '#f8c3cd'),
-  accentLilac: cssVar('--accent-lilac', '#f5a6b8'),
-  accentPink: cssVar('--accent-pink', '#ffb3c1'),
+  accentLilac: cssVar('--accent-lilac', '#996fff'),
+  accentPink: cssVar('--accent-pink', '#ff6cae'),
+  // 折射五色（跨主题恒定，对齐 global.css --refract-*；PIXI 光点/描边用，必须 hex 否则 hex() 回退白）
+  refractCyan: cssVar('--refract-cyan', '#47a9ff'),
+  refractViolet: cssVar('--refract-violet', '#996fff'),
+  refractPink: cssVar('--refract-pink', '#ff6cae'),
+  refractMint: cssVar('--refract-mint', '#53ddb8'),
+  refractWarm: cssVar('--refract-warm', '#ffc062'),
 };
+
+// PIXI 渲染器底色：对齐 CSS 深色底（--ink-900），画布透明时的兜底色，避免纯黑闪烁（必须 hex）
+export const baseColor = cssVar('--ink-900', '#0a0a0f');

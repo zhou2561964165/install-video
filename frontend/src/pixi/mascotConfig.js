@@ -8,7 +8,6 @@
 //   x/y         —— 相对屏幕宽高的占比（0~1），决定角色摆放位置（渲染与兜底图共用，勿写死）
 //   fallback    —— Live2D 加载失败时的静态兜底图 { url }（与主模型一致，按 heightRatio 等比缩放）
 //   hit         —— 点击热区兜底盒（模型局部坐标，锚点居中）；getLocalBounds 退化时使用
-//   credit      —— 署名（作者/建模），About 页脚从这里读
 export const MODELS = [
   {
     id: 'bai',
@@ -19,14 +18,13 @@ export const MODELS = [
     y: 0.62,
     fallback: { url: '/live2d/bai/白.16384/texture_00.png' },
     hit: { width: 1400, height: 2000 },
-    credit: { artist: '煎果饼子txy', modeler: '逐尾鲨' },
   },
 ];
 
 // 默认模型 id：切换状态、兜底、初始加载统一从这里取，避免在组件内写死 'bai'
 export const DEFAULT_MODEL_ID = MODELS[0].id;
 
-// 程序化待机动画配置：「白」的 model3.json 的 Motions 只挂了 edle 装饰特效（星星/眼泪/生气，
+// 程序化待机动画配置：「白」的 model3.json 的 Motions 只挂了 edle 装饰特效（单个星光特效，
 // 无呼吸/待机动作），且无 Breath 字段，角色本身不会自动呼吸/摆动，故用正弦逐帧
 // 驱动 coreModel 参数补上「呼吸 + 头部轻微摆动」。参数名/振幅/频率/相位全部在此，渲染层不写死。
 //   params   —— 待驱动的 Live2D 参数列表：id 为参数名（运行时按模型真实参数过滤，缺失自动跳过）；
@@ -45,9 +43,10 @@ export const IDLE = {
   fallback: { scale: 0.015, frequency: 0.3 },
 };
 
-// 模型等比缩放配置：菜单「变大/变小」按 step 倍率累积，clamp 到 [min,max]
-// （相对默认高度的倍率）。改这里调步长/边界，不改渲染逻辑。
-export const SCALE = { step: 1.2, min: 0.5, max: 2.0 };
+// 模型等比缩放配置：菜单「变大/变小」按 step 倍率累积，clamp 到 [min,max]；
+// initial 为初始/默认倍率（相对默认高度的倍率，初始即按最大值展示，可用「变小」缩回）。
+// 改这里调步长/边界/初始值，不改渲染逻辑。
+export const SCALE = { step: 1.2, min: 0.5, max: 2.0, initial: 2.0 };
 
 // 表情/道具配置：「白」完整版带 46 个 .exp3.json，每个 = 单参数 Value=1（Add 混合）。
 // 标准 expression manager 是单选（一次一个 currentExpression），无法「换发型+换衣服+戴耳机」并存，
@@ -62,7 +61,7 @@ export const EXPRESSIONS = {
   stage: {
     parsing: { paramId: 'Param40', name: '圈圈眼' },
     selecting: { paramId: 'Param38', name: '煎蛋眼' },
-    downloading: { paramId: 'Param38', name: '煎蛋眼' },
+    downloading: { paramId: 'Param40', name: '圈圈眼' },
     done: { paramId: 'Param41', name: '星星眼' },
     error: { paramId: 'Param43', name: '生气' },
   },
@@ -76,7 +75,8 @@ export const EXPRESSIONS = {
     duration: 4000,  // 展示 ~4s 后收回
   },
   effect: {
-    // 装饰特效（edle.motion3.json，Loop=true）：星星/眼泪/生气/圈圈/小翅膀 循环。
+    // 装饰特效（edle.motion3.json，Loop=true）：单个「星光闪烁」循环特效——
+    // 白.model3.json 的 Motions 仅挂这一个文件、且该文件无 Motions 数组，并非多特效。
     // 命中 stages 的场景循环播放，其余场景 stopAllMotions。数据驱动，改 stages 即调整触发时机。
     motion: { group: 'edle', index: 0 },
     stages: ['done', 'error'],

@@ -1,21 +1,30 @@
 import React from 'react';
 import { playSfx } from '../audio/audioManager.js';
 
-function formatDuration(seconds) {
-  if (seconds == null) return '';
-  const m = Math.floor(seconds / 60);
-  const s = Math.round(seconds % 60);
-  return `${m}:${String(s).padStart(2, '0')}`;
-}
-
+// 解析结果展示：按参考站信息结构对齐（封面时长角标 → 标题 → up主/平台/播放量 → 简介 → 格式两行），
+// 视觉沿用项目 token（樱花粉玻璃卡片 + 胶囊格式单选）。字段来自 normalizeParse 的派生值。
 export default function SelectingScene({ parseResult, selectedFormat, forceServer, onSelect, onDownload }) {
-  const { title, thumbnail, duration, formats } = parseResult;
+  const {
+    title, thumbnail, durationLabel, uploader, platform, viewCountLabel, description, formats,
+  } = parseResult;
   return (
     <div data-testid="selecting-scene" className="scene selecting-scene">
       <div className="format-card">
-        {thumbnail && <img src={thumbnail} alt="" />}
+        {thumbnail && (
+          <div className="cover">
+            <img src={thumbnail} alt="" />
+            {durationLabel && <span className="cover__duration">{durationLabel}</span>}
+          </div>
+        )}
         <h2>{title}</h2>
-        <p className="duration">{formatDuration(duration)}</p>
+        {(uploader || platform || viewCountLabel) && (
+          <div className="meta">
+            {uploader && <span className="meta__uploader">{uploader}</span>}
+            {platform && <span className="meta__platform">{platform}</span>}
+            {viewCountLabel && <span className="meta__views">{viewCountLabel}</span>}
+          </div>
+        )}
+        {description && <p className="desc">{description}</p>}
         <div className="format-list">
           {formats.map((f) => (
             <button
@@ -24,7 +33,8 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
               aria-pressed={selectedFormat?.format_id === f.format_id}
               onClick={() => { playSfx('select'); onSelect(f); }}
             >
-              {f.label} · {f.ext}
+              <span className="format-list__label">{f.label}</span>
+              <span className="format-list__meta">{f.metaLine}</span>
             </button>
           ))}
         </div>
