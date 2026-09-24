@@ -14,7 +14,11 @@ class FormatOption(BaseModel):
     label: str
     height: Optional[int] = None
     ext: str = "mp4"
+    resolution: Optional[str] = None
     filesize: Optional[int] = None
+    has_audio: bool = True
+    vcodec: Optional[str] = None
+    acodec: Optional[str] = None
     direct: bool = False
     note: Optional[str] = None
 
@@ -23,6 +27,13 @@ class ParseResponse(BaseModel):
     title: str
     thumbnail: Optional[str] = None
     duration: Optional[float] = None
+    duration_string: Optional[str] = None
+    uploader: Optional[str] = None
+    platform: Optional[str] = None
+    view_count: Optional[int] = None
+    upload_date: Optional[str] = None
+    description: Optional[str] = None
+    subtitles: list[str] = []
     formats: list[FormatOption]
 
 

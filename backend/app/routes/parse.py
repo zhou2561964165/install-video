@@ -18,5 +18,12 @@ def parse(req: ParseRequest) -> ParseResponse:
         title=meta["title"],
         thumbnail=meta["thumbnail"],
         duration=meta["duration"],
+        duration_string=meta.get("duration_string"),
+        uploader=meta.get("uploader"),
+        platform=meta.get("platform"),
+        view_count=meta.get("view_count"),
+        upload_date=meta.get("upload_date"),
+        description=meta.get("description"),
+        subtitles=meta.get("subtitles", []),
         formats=[FormatOption(**o) for o in options],
     )

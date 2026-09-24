@@ -13,10 +13,16 @@ def test_parse_ok(monkeypatch):
         return {
             "title": "测试标题",
             "thumbnail": "https://i.example/t.jpg",
-            "duration": 30.0,
+            "duration": 125.0,
+            "uploader": "某人",
+            "extractor": "youtube",
+            "view_count": 12345,
+            "upload_date": "20240101",
+            "description": "desc",
+            "subtitles": {"zh-Hans": [{}], "en": [{}]},
             "formats": [
-                {"format_id": "18", "height": 360, "vcodec": "avc1",
-                 "acodec": "mp4a", "url": "https://cdn/18.mp4", "ext": "mp4"},
+                {"format_id": "18", "height": 360, "width": 640, "vcodec": "avc1",
+                 "acodec": "mp4a", "url": "https://cdn/18.mp4", "ext": "mp4", "filesize": 1000},
             ],
         }
 
@@ -25,7 +31,15 @@ def test_parse_ok(monkeypatch):
     assert r.status_code == 200
     data = r.json()
     assert data["title"] == "测试标题"
-    assert data["formats"][0]["label"] == "360p"
+    assert data["duration_string"] == "2:05"
+    assert data["uploader"] == "某人"
+    assert data["platform"] == "youtube"
+    assert data["view_count"] == 12345
+    assert data["upload_date"] == "20240101"
+    assert data["subtitles"] == ["zh-Hans", "en"]
+    assert data["formats"][0]["label"] == "360p MP4 (1KB)"
+    assert data["formats"][0]["resolution"] == "640x360"
+    assert data["formats"][0]["has_audio"] is True
     assert data["formats"][0]["direct"] is True
 
 

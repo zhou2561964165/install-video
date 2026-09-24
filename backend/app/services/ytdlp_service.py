@@ -61,6 +61,30 @@ def classify_error(exc: Exception) -> str:
 
 HEIGHT_TIERS = [2160, 1440, 1080, 720, 480, 360]
 
+# ffmpeg 合并（音视频分离流）只对 >= 此分辨率的档位开放；
+# 低于此分辨率的档位只用渐进式直链，无直链则跳过该档（不触发 ffmpeg）。
+FFMPEG_MIN_HEIGHT = 1080
+
+
+def _format_duration(seconds) -> str:
+    if not seconds:
+        return "00:00"
+    hours, rem = divmod(int(seconds), 3600)
+    minutes, secs = divmod(rem, 60)
+    if hours:
+        return f"{hours}:{minutes:02d}:{secs:02d}"
+    return f"{minutes}:{secs:02d}"
+
+
+def _format_filesize(size) -> str:
+    if not size:
+        return "未知大小"
+    if size < 1024 * 1024:
+        return f"{size / 1024:.0f}KB"
+    if size < 1024 * 1024 * 1024:
+        return f"{size / (1024 * 1024):.1f}MB"
+    return f"{size / (1024 * 1024 * 1024):.2f}GB"
+
 
 def _is_video(fmt: dict) -> bool:
     return bool(fmt.get("height")) and fmt.get("vcodec") not in (None, "none")
@@ -91,32 +115,47 @@ def build_format_options(info: dict) -> list[dict]:
         seen.add(h)
         direct_fmt = _progressive_direct(formats, h)
         if direct_fmt:
+            ext = direct_fmt.get("ext") or "mp4"
+            filesize = direct_fmt.get("filesize") or direct_fmt.get("filesize_approx")
+            width = direct_fmt.get("width")
             options.append({
                 "format_id": str(direct_fmt["format_id"]),
-                "label": f"{h}p",
+                "label": f"{h}p {ext.upper()} ({_format_filesize(filesize)})",
                 "height": h,
-                "ext": direct_fmt.get("ext") or "mp4",
-                "filesize": direct_fmt.get("filesize"),
+                "ext": ext,
+                "resolution": f"{width}x{h}" if width else f"{h}p",
+                "filesize": filesize,
+                "has_audio": True,
+                "vcodec": direct_fmt.get("vcodec"),
+                "acodec": direct_fmt.get("acodec"),
                 "direct": True,
                 "note": direct_fmt.get("format_note"),
             })
-        else:
+        elif h >= FFMPEG_MIN_HEIGHT:
             options.append({
                 "format_id": f"bestvideo[height<={h}]+bestaudio/best[height<={h}]",
-                "label": f"{h}p",
+                "label": f"{h}p 最佳 (视频+音频合并)",
                 "height": h,
                 "ext": "mp4",
+                "resolution": f"{h}p",
                 "filesize": None,
+                "has_audio": True,
+                "vcodec": None,
+                "acodec": "merged",
                 "direct": False,
                 "note": None,
             })
     if not options:
         options.append({
             "format_id": "best",
-            "label": "best",
+            "label": "最佳",
             "height": None,
             "ext": "mp4",
+            "resolution": None,
             "filesize": None,
+            "has_audio": True,
+            "vcodec": None,
+            "acodec": "merged",
             "direct": False,
             "note": None,
         })
@@ -129,6 +168,13 @@ def parse_video(url: str) -> tuple[dict, list[dict]]:
         "title": info.get("title") or "",
         "thumbnail": info.get("thumbnail"),
         "duration": info.get("duration"),
+        "duration_string": _format_duration(info.get("duration")),
+        "uploader": info.get("uploader") or info.get("channel"),
+        "platform": info.get("extractor") or info.get("extractor_key"),
+        "view_count": info.get("view_count"),
+        "upload_date": info.get("upload_date"),
+        "description": (info.get("description") or "")[:200],
+        "subtitles": list(info.get("subtitles", {}).keys()),
     }
     options = build_format_options(info)
     return meta, options
