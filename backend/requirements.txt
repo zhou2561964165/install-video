@@ -1,8 +1,0 @@
-fastapi
-uvicorn[standard]
-yt-dlp
-sqlmodel
-pydantic
-httpx
-pytest
-pyjwt

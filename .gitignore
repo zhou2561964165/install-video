@@ -43,10 +43,9 @@ backend/tmp/
 # Playwright MCP 运行产物（日志/截图/yaml）
 .playwright-mcp/
 
-# 空/多余 lockfile（非项目代码；真锁文件是 frontend/package-lock.json + backend/requirements.txt）
+# 多余 npm lockfile stub（非项目代码；真锁文件是 uv.lock（Python）+ frontend/package-lock.json（前端））
 /package-lock.json
 /docs/package-lock.json
-/uv.lock
 
 # 屏幕截图 / 验证 / 计划草稿（本地产物，不入库）
 # 注意：frontend/public/live2d 下有源贴图 .png，故不全局忽略 *.png，仅忽略根级临时截图

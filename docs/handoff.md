@@ -14,8 +14,8 @@
 **跑起来（3 条命令）**：
 
 ```bash
-# 后端（端口 8000；venv 在仓库根目录，不是 backend/ 下）
-cd backend && ../.venv/Scripts/python -m uvicorn app.main:app --reload --port 8000
+# 后端（端口 8000；uv 管理的 .venv 在仓库根目录）
+cd backend && uv run uvicorn app.main:app --reload --port 8000
 
 # 前端（端口 5173；dev server 已配 Vite 代理 /api → localhost:8000）
 cd frontend && npm run dev
@@ -27,10 +27,10 @@ cd frontend && npm run dev
 
 ```bash
 cd frontend && npm test                                   # 55/55 通过（本次实测）
-cd backend && ../.venv/Scripts/python -m pytest -q        # 46/46 通过（后端未动）
+cd backend && uv run python -m pytest -q        # 46/46 通过（后端未动）
 ```
 
-> 首次换机器需：`python -m venv .venv`（**仓库根目录**）→ `.venv/Scripts/pip install -r backend/requirements.txt`；前端 `cd frontend && npm install`。
+> 首次换机器需：`uv sync`（仓库根目录，uv 依据 pyproject.toml 建 .venv）；前端 `cd frontend && npm install`。
 
 ---
 
@@ -208,7 +208,7 @@ cd backend && ../.venv/Scripts/python -m pytest -q        # 46/46 通过（后�
 
 ```bash
 cd frontend && npm test                                   # 前端必跑（55/55）
-cd backend && ../.venv/Scripts/python -m pytest -q        # 后端必跑（46/46）
+cd backend && uv run python -m pytest -q        # 后端必跑（46/46）
 ```
 
 **手工验收清单**（动到以下任一项就跑）：
@@ -222,7 +222,7 @@ cd backend && ../.venv/Scripts/python -m pytest -q        # 后端必跑（46/46
 
 ## 7. 坑（务必先读，别再踩）
 
-1. **venv 在仓库根目录** `E:/install_video/.venv`，**不是** `backend/.venv`。后端命令必须 `cd backend && ../.venv/Scripts/python ...`。
+1. **venv 在仓库根目录** `E:/install_video/.venv`，**不是** `backend/.venv`，由 `uv sync` 管理。后端命令用 `uv run ...`（自动用该 venv）。
 2. **ffmpeg**：默认 `ffmpeg_path="ffmpeg"`（走 PATH）；本机靠环境变量 `FFMPEG_PATH` 指定。换机器报 `ffmpeg_missing` 先设 `FFMPEG_PATH`。可 env 覆盖：`MAX_CONCURRENT`(3)、`TEMP_DIR`(backend/tmp)、`MAX_FILE_SIZE`(2GB)、`TTL_SECONDS`(3600)、`RATE_LIMIT`(30)。`ytdlp_service.py` 有 `FFMPEG_MIN_HEIGHT=1080` 阈值：仅 ≥1080p 提供 ffmpeg 合并，低清档只用渐进式直链、无直链跳过该档（720/480/360 可能不出现属预期）。
 3. **16K 纹理**：`白.16384/texture_00.png` 是 16384×16384（约 1GB GPU 纹理），超过部分 GPU 的 `MAX_TEXTURE_SIZE` 会黑屏。开发机已实测可加载；移动端需征得作者许可压缩（属「二改」）。
 4. **授权状态**：Live2D「白」已获作者授权，页脚署名已去除。「二改」（纹理压缩/模型改动）是否在授权范围内仍建议确认后再动。

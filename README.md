@@ -26,7 +26,7 @@
 
 ## 环境要求
 
-- Python 3.12
+- [uv](https://docs.astral.sh/uv/)（Python 依赖管理；`uv sync` 自动准备 Python 3.12 与 `.venv`）
 - Node.js 18+
 - **ffmpeg**（合并高清视频/音频流必需；缺少时服务端下载会报 `ffmpeg_missing`）
 
@@ -35,19 +35,16 @@
 ### 1. 后端
 
 ```bash
-# 建虚拟环境并装依赖
-cd backend
-python -m venv .venv
-.venv/Scripts/activate        # Windows；Linux/macOS 用 source .venv/bin/activate
-pip install -r requirements.txt
+# 装依赖（uv 依据根目录 pyproject.toml 建/更新 .venv）
+uv sync
 
 # 安装 ffmpeg（合并视频/音频流必需）
-#   Windows: powershell -ExecutionPolicy Bypass -File scripts/install_ffmpeg.ps1
-#   Linux:   bash scripts/install_ffmpeg.sh
+#   Windows: powershell -ExecutionPolicy Bypass -File backend/scripts/install_ffmpeg.ps1
+#   Linux:   bash backend/scripts/install_ffmpeg.sh
 #   或系统安装后确保 ffmpeg 在 PATH 上
 
 # 启动（默认 http://127.0.0.1:8000）
-uvicorn app.main:app --reload --port 8000
+cd backend && uv run uvicorn app.main:app --reload --port 8000
 ```
 
 ### 2. 前端
@@ -82,10 +79,10 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 ### 自动化测试
 
 ```bash
-# 后端（pytest，32 项）
-cd backend && .venv/Scripts/python -m pytest
+# 后端（pytest）
+cd backend && uv run python -m pytest
 
-# 前端（vitest，32 项）
+# 前端（vitest）
 cd frontend && npm test
 ```
 
