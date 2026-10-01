@@ -58,14 +58,14 @@ install_video/
 │   │   ├── main.py                # FastAPI 入口、中间件（限流）
 │   │   ├── config.py              # ffmpeg 路径、并发数、临时目录、大小上限、TTL
 │   │   ├── db.py                  # SQLite / SQLModel 引擎与会话
-│   │   ├── models.py              # Job；预留 User / Quota
+│   │   ├── models.py              # Job + User + Quota（v2 已建表）
 │   │   ├── schemas.py             # Pydantic 请求/响应
 │   │   ├── routes/
 │   │   │   ├── parse.py           # POST /api/parse
-│   │   │   └── download.py        # POST /api/download, GET /api/job/{id}, GET /api/file/{id}
+│   │   │   ├── download.py        # POST /api/download, GET /api/job/{id}, GET /api/file/{id}
 │   │   └── services/
 │   │       ├── ytdlp_service.py   # 封装 yt-dlp（解析/下载/进度/错误分类）
-│   │       └── jobs.py            # 线程池 + 任务生命周期 + 临时文件清理
+│   │       ├── jobs.py            # 线程池 + 任务生命周期 + 临时文件清理
 │   ├── requirements.txt
 │   └── scripts/install_ffmpeg.*   # 一键下载 ffmpeg
 ├── frontend/                      # React + Vite
@@ -118,10 +118,11 @@ Job:
   id(uuid) · url · title · format_id · status(queued/downloading/merging/done/error)
   progress(0-100) · file_path · file_size · error_type · error
   created_at · updated_at · expires_at
+  user_id(可空 FK→User，匿名任务为 null)
 
-【预留，v1 不建表但接口隔离】
-User:   id · email · password_hash · created_at
-Quota:  user_id · date · downloads_used · limit
+【v2 已建表（2026-09-24）】
+User:   id(uuid) · email(unique) · password_hash · created_at
+Quota:  user_id(FK→User) · date(UTC 日期串) · downloads_used · limit  — (user_id, date) 复合唯一
 ```
 
 ## 7. 临时文件与防滥用
@@ -150,8 +151,8 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 
 | 未来功能 | 现有隔离边界 | 扩展方式（不碰下载核心） |
 | --- | --- | --- |
-| 账号 / 登录 | `models.py` 预留 User；限流中间件独立 | 新增 auth 路由 + JWT，注入依赖 |
-| 每用户额度 | `jobs.py` 统一任务入口 | 在任务创建前查 Quota 表 |
+| 账号 / 登录 | ✅ 已实现（v2） | `routes/auth.py` + `services/auth.py`（JWT + `Depends` 注入，匿名可选鉴权） |
+| 每用户额度 | ✅ 已实现（v2） | `services/quota.py` `check_and_reserve`，路由层提交即扣（直链/服务端同计） |
 | 任务队列扩展 | `jobs.py` 定义 `TaskRunner` 接口 | 换成 Celery/Redis 实现 |
 | 视频总结 | `routes/` 独立路由 | 下载完成后调 LLM，独立模块 |
 | 字幕翻译 | 同上 | 独立模块 |
@@ -174,7 +175,7 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 
 1. **v1（已完成）**：核心下载闭环（解析/清晰度/下载）+ 二次元前端体验 + 直链/服务端切换 + 防滥用基础。
 2. **第二阶段（前端电影感视觉升级，进行中）**：蒙版揭幕/虹膜转场/几何画框/章节台词/自定义光标/分段按钮/缠绕进度，见 §13 与 `docs/superpowers/plans/2026-09-22-phase2-cinematic-visual.md`。
-3. **v2（候选）**：账号 + 每用户额度。
+3. **v2（已完成 2026-09-24）**：账号 + 每用户额度（注册/登录 JWT + 每用户每日额度，匿名下载保留）。
 4. **v3（候选）**：视频总结、字幕翻译（接入 LLM）。
 5. **v4（候选）**：付费能力。
 

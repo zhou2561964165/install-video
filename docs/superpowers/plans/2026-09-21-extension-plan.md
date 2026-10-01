@@ -44,7 +44,9 @@ v1 通过「接口隔离 + 配置外置 + 模块边界」为后续扩展留了�
 
 ## 3. 各扩展点：建议实现方式、风险与规避
 
-### 3.1 账号体系 + 每用户额度（P0 / v2）
+### 3.1 账号体系 + 每用户额度（P0 / v2）—— ✅ 已实现（2026-09-24）
+
+> 实现偏差：额度检查放在**路由层**（`routes/download.py` → `services/quota.check_and_reserve`），而非下文建议的 `JobManager.submit_download()` 入口——更严格遵循「鉴权只在路由层、下载核心不感知用户」。密码哈希用 stdlib `pbkdf2_hmac`（零新依赖），JWT 用 `pyjwt`（HS256）。详见 `.planning/2026-09-24-v2-account-quota/task_plan.md` 决策记录。
 
 **建议实现**
 - 建 `User`（id/email/password_hash/created_at）与 `Quota`（user_id/date/downloads_used/limit）表——字段已在 `design.md` §6 预留。
