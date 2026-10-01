@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
@@ -57,3 +58,36 @@ class JobResponse(BaseModel):
     title: Optional[str] = None
     error_type: Optional[str] = None
     error: Optional[str] = None
+
+
+class RegisterRequest(BaseModel):
+    email: str
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class UserResponse(BaseModel):
+    id: str
+    email: str
+    created_at: datetime
+
+
+class QuotaInfo(BaseModel):
+    date: str
+    limit: int
+    used: int
+    remaining: int
+
+
+class AuthResponse(BaseModel):
+    token: str
+    user: UserResponse
+
+
+class MeResponse(BaseModel):
+    user: UserResponse
+    quota: QuotaInfo

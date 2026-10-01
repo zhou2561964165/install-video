@@ -6,6 +6,7 @@ from starlette.responses import JSONResponse
 
 from .config import settings
 from .db import init_db
+from .routes.auth import router as auth_router
 from .routes.download import router as download_router
 from .routes.parse import router as parse_router
 
@@ -33,3 +34,4 @@ async def rate_limit_middleware(request: Request, call_next):
 
 app.include_router(parse_router)
 app.include_router(download_router)
+app.include_router(auth_router)

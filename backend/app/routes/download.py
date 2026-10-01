@@ -1,21 +1,31 @@
 from pathlib import Path
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
 from sqlmodel import Session
 
 from ..db import get_session
-from ..models import Job, JobStatus
+from ..models import Job, JobStatus, User
 from ..schemas import DownloadRequest, DownloadResponse, JobResponse
 from ..services import ytdlp_service
+from ..services.auth import get_current_user_optional
 from ..services.jobs import job_manager
+from ..services.quota import check_and_reserve
 
 router = APIRouter()
 
 
 @router.post("/api/download", response_model=DownloadResponse)
-def download(req: DownloadRequest, session: Session = Depends(get_session)) -> DownloadResponse:
+def download(
+    req: DownloadRequest,
+    session: Session = Depends(get_session),
+    user: Optional[User] = Depends(get_current_user_optional),
+) -> DownloadResponse:
     job_manager.cleanup_expired()  # 懒触发 TTL 清理
+    # 登录用户提交即扣额度（直链与服务端下载同计）；匿名跳过（保留每 IP 限流）
+    if user is not None:
+        check_and_reserve(session, user.id)
     if not req.force_server:
         try:
             direct, headers = ytdlp_service.get_direct_url(req.url, req.format_id)
@@ -24,7 +34,7 @@ def download(req: DownloadRequest, session: Session = Depends(get_session)) -> D
         if direct:
             return DownloadResponse(mode="direct", url=direct, headers=headers)
 
-    job = Job(url=req.url, format_id=req.format_id, status=JobStatus.queued)
+    job = Job(url=req.url, format_id=req.format_id, status=JobStatus.queued, user_id=user.id if user else None)
     session.add(job)
     session.commit()
     session.refresh(job)

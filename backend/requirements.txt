@@ -5,3 +5,4 @@ sqlmodel
 pydantic
 httpx
 pytest
+pyjwt

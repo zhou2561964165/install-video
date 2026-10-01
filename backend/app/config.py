@@ -17,6 +17,11 @@ class Settings:
     db_url: str = field(default_factory=lambda: f"sqlite:///{(_BACKEND_DIR / 'jobs.db').as_posix()}")
     rate_limit_requests: int = 30
     rate_limit_window_seconds: int = 60
+    # v2 账号 + 额度（生产环境务必用环境变量覆盖 JWT_SECRET）
+    jwt_secret: str = "dev-secret-change-me-in-production"
+    jwt_expire_minutes: int = 10080  # 7 天
+    default_quota_limit: int = 10  # 每用户每日下载次数
+    password_iterations: int = 100_000  # pbkdf2_hmac 迭代次数
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -36,6 +41,10 @@ class Settings:
             db_url=_str("DB_URL", f"sqlite:///{(_BACKEND_DIR / 'jobs.db').as_posix()}"),
             rate_limit_requests=_int("RATE_LIMIT", 30),
             rate_limit_window_seconds=_int("RATE_LIMIT_WINDOW", 60),
+            jwt_secret=_str("JWT_SECRET", "dev-secret-change-me-in-production"),
+            jwt_expire_minutes=_int("JWT_EXPIRE_MINUTES", 10080),
+            default_quota_limit=_int("DEFAULT_QUOTA_LIMIT", 10),
+            password_iterations=_int("PASSWORD_ITERATIONS", 100_000),
         )
 
 
