@@ -101,6 +101,10 @@
   --dur-spin: 1s;         /* spinner 旋转 */
   --dur-spin-fast: .8s;   /* preloader spinner */
   --dur-pulse: 1.8s;      /* preloader mark 脉冲 */
+  --dur-reveal: .76s;                          /* 滚动揭示：进场时长（对齐参考站 760ms） */
+  --ease-reveal: cubic-bezier(.16, 1, .3, 1);  /* 滚动揭示：进场缓动（easeOutExpo 感） */
+  --dur-focus: .5s;                            /* 滚动聚焦：失焦/锐利过渡时长 */
+  --blur-focus: 8px;                           /* 滚动聚焦：上下页失焦模糊量 */
 
   color-scheme: dark;
 }
@@ -147,6 +151,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body, #root { height: 100%; }
+html { scroll-snap-type: y mandatory; }  /* 落地页：章节强制按页吸附，突出“选择页” */
 
 body {
   font-family: var(--font-body);
@@ -158,7 +163,11 @@ body {
     radial-gradient(1000px 680px at 88% 94%, color-mix(in srgb, var(--refract-violet) 12%, transparent), transparent 55%),
     radial-gradient(1200px 800px at 72% 58%, var(--accent-tint), transparent 62%),
     var(--surface);
-  overflow: hidden;
+  /* 环境辉光固定于视口、不平铺：否则径向渐变默认 repeat 会在滚动时露出接缝（“分割线”） */
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* PIXI 舞台：全屏固定层，位于 UI 之下；canvas 接收事件（角色点击切换） */
@@ -184,6 +193,7 @@ body {
     radial-gradient(1000px 680px at 88% 94%, color-mix(in srgb, var(--refract-violet) 12%, transparent), transparent 55%),
     radial-gradient(1200px 800px at 72% 58%, var(--accent-tint), transparent 62%),
     var(--surface);
+  background-repeat: no-repeat;   /* 视口尺寸的固定兜底层，不平铺避免接缝 */
 }
 
 /* 键盘焦点可见（无障碍 CRITICAL） */
@@ -936,3 +946,270 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   box-shadow: none;
 }
 
+/* ── 入口：滚动式落地页（hero + 特性 + 教程） ──
+   body 已改为 overflow-y:auto；其它场景 min-height:100vh 恰好一屏不滚动。
+   .stage 是 position:fixed → 角色固定「跟随」，.ui pointer-events:none → 空白处点穿透到角色。 */
+.entry-scene {
+  display: block;   /* 覆盖 .scene 的 flex 居中，改纵向文档流 */
+  min-height: 0;
+  padding: 0;
+}
+
+.landing {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 6vw, 88px);
+}
+
+.landing > section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  scroll-snap-align: start;
+}
+
+/* hero：内容左对齐，右侧留白给固定角色（mascotConfig x≈0.82，占右 ~40%） */
+.landing-hero { position: relative; }
+.landing-hero__content {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+.landing-hero__eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: var(--accent);
+}
+.landing-hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 76px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: var(--ls-display);
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.landing-hero__subtitle {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 46ch;
+}
+.landing-hero form { justify-content: flex-start; }   /* 覆盖 .entry-scene form 的居中 */
+.landing-form input { min-width: 360px; }
+
+.landing-examples {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.landing-examples__label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.landing-examples__chip {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--pill-radius);
+  background: var(--surface-glass);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: none;
+  transform: none;
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
+}
+.landing-examples__chip:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-tint);
+  transform: none;
+  box-shadow: none;
+}
+
+/* hero 底部「向下滚动」提示（装饰，随 reduced-motion 关闭） */
+.landing-hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  letter-spacing: .1em;
+}
+.landing-hero__scroll::before {
+  content: '';
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(var(--accent), transparent);
+  animation: landing-scroll-hint 1.8s var(--ease) infinite;
+}
+@keyframes landing-scroll-hint {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: top; opacity: 0; }
+}
+
+/* 章节（一键解析 / 多格式下载 / 三步搞定）：pidanai 滚动叙事节奏——
+   每节独立一屏，左侧内容列，右侧留白给固定角色；eyebrow + 大标题 + 描述 + 三点卡/步骤。 */
+.landing-chapter {
+  max-width: 720px;
+}
+.landing-chapter__eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.landing-chapter__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: var(--ls-display);
+  line-height: 1.08;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+.landing-chapter__desc {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 56ch;
+}
+
+/* 三点卡：放大、竖排（标题在前、详解在后）、无缝——纯排版，无边框/无底色/无阴影，
+   与 pidanai.com/#about 滚动叙事一致：文字直接铺在背景上，仅靠留白分组。 */
+.landing-points {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+}
+.landing-point {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.landing-point__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.landing-point__desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 52ch;
+}
+
+/* 步骤：横向三列编号流（无缝，靠编号提供结构） */
+.landing-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  padding: 0;
+  list-style: none;
+}
+.landing-step {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.landing-step__num {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent) 68%, transparent);
+}
+.landing-step__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.landing-step__desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* 收尾宣言：一句话 + 回到顶部 CTA */
+.landing-outro {
+  max-width: 720px;
+}
+.landing-outro__tagline {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 52ch;
+}
+.landing-outro__cta {
+  align-self: flex-start;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+/* 滚动聚焦（对齐 pidanai 滚动叙事）：当前页锐利展示、上下页轻微模糊（“着重展示选择页 + 上下模糊”）。
+   由 EntryScene 滚动监听加 .is-pending（待揭示）/ .is-blurred（失焦）；默认（无类）= 当前页锐利。 */
+.landing > section {
+  transition:
+    opacity var(--dur-focus) var(--ease-reveal),
+    transform var(--dur-focus) var(--ease-reveal),
+    filter var(--dur-focus) var(--ease-reveal);
+  will-change: opacity, transform, filter;
+}
+/* 未进入视口（待揭示）：隐藏 + 下移 */
+.landing > section.is-pending {
+  opacity: 0;
+  transform: translateY(54px) scale(.98);
+}
+/* 已进入、非当前页：上下失焦模糊 */
+.landing > section.is-blurred {
+  filter: blur(var(--blur-focus));
+}
+
+/* 移动端：内容居中满宽堆叠（角色仍作背景装饰） */
+@media (max-width: 720px) {
+  .landing { padding: 0 20px; }
+  .landing-hero__content {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  .landing-hero form { justify-content: center; }
+  .landing-hero__subtitle { max-width: 100%; }
+  .landing-form input { min-width: 0; width: 100%; }
+  .landing-steps { grid-template-columns: 1fr; max-width: 100%; }
+  .landing-chapter,
+  .landing-outro { max-width: 100%; }
+}
+
+/* 减少动态：关闭滚动提示动画 + 滚动聚焦/吸附（全部直显，不做位移/模糊） */
+@media (prefers-reduced-motion: reduce) {
+  .landing-hero__scroll::before { animation: none; }
+  html { scroll-snap-type: none; }
+  .landing > section,
+  .landing > section.is-pending,
+  .landing > section.is-blurred {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
