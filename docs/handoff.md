@@ -1,6 +1,6 @@
 # 交接文档 · 万能视频下载网站（当前：v2 账号 + 每用户额度，前后端均已接入）
 
-> 交接时间：2026-09-24 · HEAD `62118c4` · **活跃任务：前端接 v2（登录/注册强制门 + 额度余量）——代码完成 + 单测 55/55 全绿；浏览器手动联调未做（见 §1.4）**
+> 更新：2026-10-01 · HEAD `ffda1ce` · **最近：uv 迁移 Python 依赖（pyproject.toml + uv.lock 取代 requirements.txt）+ 清理本地生成物 + 解析链路冒烟验证通过（见 §8）**
 > 本文写给**下一位接手者**（人或 AI）。所有命令、数字、结论均来自**实测**，如实标注验证程度，不夸大、不隐瞒。
 
 ---
@@ -40,7 +40,7 @@ cd backend && uv run python -m pytest -q        # 46/46 通过（后端未动）
 - 后端（已完成）：注册/登录 JWT + 每用户每日额度，46/46 全绿。
 - 前端（本次完成）：登录/注册**强制门** + 顶部账号条额度余量，55/55 全绿；**浏览器手动联调未做**。
 
-- **计划文件**：`.planning/2026-09-24-v2-account-quota/`（`task_plan.md` 阶段+决策 / `progress.md` 会话日志 / `findings.md` 侦察事实）；前端计划 `C:\Users\zxk\.claude\plans\floofy-shimmying-naur.md`。
+- **计划文件**：v2 计划曾存 `.planning/2026-09-24-v2-account-quota/`（已随本地清理删除，内容见 git 历史）；前端计划 `C:\Users\zxk\.claude\plans\floofy-shimmying-naur.md`。
 - **依据文档**：`docs/superpowers/plans/2026-09-21-extension-plan.md` §3.1（已标记「已实现」）、`docs/design.md` §6/§9/§12、`docs/requirements.md` §7/§8。
 
 ### 1.1 阶段进度（如实）
@@ -240,23 +240,23 @@ cd backend && uv run python -m pytest -q        # 后端必跑（46/46）
 
 ## 8. Git 状态（如实）
 
-- **HEAD `62118c4`**（pidanai UI 重构 + 下载编排解耦 + 扩展指南/交接文档，已提交）。
-- 前序 `7ac05a4`（后端解析接口补元数据 + 格式档位精化，已提交）。
-- **工作区有大量未提交改动**：v2 后端（`config.py`/`models.py`/`main.py`/`schemas.py`/`routes/download.py`/`requirements.txt` 改，新增 `routes/auth.py`、`services/auth.py`、`services/quota.py`、`tests/test_auth.py`、`tests/test_quota.py`）与 v2 前端（`App.jsx`/`api.js`/`styles/global.css` 改，新增 `hooks/useAuth.js`、`components/AuthScene.jsx`、`components/ui/AuthBar.jsx`、`components/AuthScene.test.jsx`，改 `api.test.js`/`App.test.jsx`）——**均未提交**。
-- **`??` 勿提交**：根目录参考截图（`blog-home.png` / `ui-1280.png` / `ui-entry-light.png` + `pidanai-desktop-full` / `pidanai-desktop` / `pidanai-mobile-375x812` / `pidanai-mobile` / `pidanai-tablet-768x1024`，共 8 张）、`docs/package-lock.json`、`uv.lock`、`.planning/`（计划文件属工作记忆，是否入库由你定）。
+- **HEAD `ffda1ce`**（2026-10-01）：uv 迁移——`pyproject.toml` 声明依赖 + `uv.lock` 锁定 + 删 `backend/requirements.txt` + README/handoff 命令改 `uv`。
+- 近期前序：`431e435`/`160aacd`（`.gitignore` 拦本地产物与多余 lockfile）、`2183bb6`（入口滚动式落地页）、`b03ce32`/`bf585bc`/`e818cf6`（v2 账号+额度，前后端）。
+- **依赖管理已切 uv**：`uv sync` 建/更新 `.venv`（仓库根），`uv.lock` 入库；`backend/requirements.txt` 已删（如需 `pip` 环境可 `uv export --format requirements-txt`）。
+- **本地生成物已清理**（不入库，`.gitignore` 规则保留）：根级截图、`verify/`、`.planning/`、`*.stale-backup-*`、`docs/package-lock.json`、`package-lock.json`。
 
 ---
 
 ## 9. 下一步
 
-**v2 账号 + 每用户额度已前后端全部落地**（后端 46/46、前端 55/55 全绿）。剩余与可选：
-- **手动联调验证**（建议先做）：起前后端，跑一遍 §6 手工验收第 1 条（本次只做了单测，未做真实浏览器联调）。
-- **后端强制登录（收紧匿名）**：产品方向已定「匿名下载取消、改必须登录」。下一步把 `/api/parse`、`/api/download` 改为必须 token（`get_current_user` 替代 `get_current_user_optional`），同步调整 `test_quota.py` 里「匿名绕过」相关用例。前端已就位，无需再动。
+- **前端 v2 浏览器手动联调**（建议）：登录/注册真实请求、额度递减、刷新保持登录、退出——仍只过了单测，未在真实前后端联调验证（§6 验收第 1 条）。
+- **后端强制登录（收紧匿名）**：产品方向已定「匿名下载取消、改必须登录」。把 `/api/parse`、`/api/download` 改为必须 token（`get_current_user` 替代 `get_current_user_optional`），同步调整 `test_quota.py` 里「匿名绕过」用例。前端已就位，无需再动。
+- **真实下载链路冒烟**：uv 迁移后依赖有升级（fastapi/sqlmodel/starlette/uvicorn/pyjwt），`/api/parse` 已实测通过；`/api/download`（含 ffmpeg 合并）建议再跑一次真实视频。
 - **v3 视频总结 / 字幕翻译**（LLM）、**v4 付费**（会员/支付渠道）——见 `docs/requirements.md` §8 与 `docs/superpowers/plans/2026-09-21-extension-plan.md` §3.2/§3.3。
 
 ## 10. 更多设计细节
 
-- **v2 计划**（阶段/决策/侦察事实）→ `.planning/2026-09-24-v2-account-quota/`（`task_plan.md` / `findings.md` / `progress.md`）；前端 v2 计划 → `C:\Users\zxk\.claude\plans\floofy-shimmying-naur.md`。
+- **v2 计划**（阶段/决策/侦察事实）→ 曾存 `.planning/2026-09-24-v2-account-quota/`（已随清理删除，见 git 历史）；前端 v2 计划 → `C:\Users\zxk\.claude\plans\floofy-shimmying-naur.md`。
 - 表情/道具/特效参数映射 → `docs/design.md` §14.8。
 - 主题/token/待机动画 → `docs/design.md` §14.1–14.6（⚠️ §14 配色已由 pidanai 重构替代，当前 token/主题见 `docs/ui-refactor-pidanai.md` 与 `docs/ui-extension-guide.md`；§14.6 待机/§14.8 表情机制仍准）。
 - 后端架构/数据模型/错误分类/扩展点 → `docs/design.md` §1–§9（§6 含 User/Quota 预留字段、§12 迭代路线）。

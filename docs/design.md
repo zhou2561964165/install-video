@@ -66,7 +66,6 @@ install_video/
 │   │   └── services/
 │   │       ├── ytdlp_service.py   # 封装 yt-dlp（解析/下载/进度/错误分类）
 │   │       ├── jobs.py            # 线程池 + 任务生命周期 + 临时文件清理
-│   ├── requirements.txt
 │   └── scripts/install_ffmpeg.*   # 一键下载 ffmpeg
 ├── frontend/                      # React + Vite
 │   └── src/
@@ -76,6 +75,8 @@ install_video/
 ├── docs/
 │   ├── requirements.md            # 需求文档
 │   └── design.md                  # 本文档
+├── pyproject.toml            # Python 依赖声明（uv 管理）
+├── uv.lock                   # 锁文件（纳入版本库）
 └── README.md
 ```
 
@@ -168,7 +169,7 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 
 ## 11. 环境与部署
 
-- 开发机需装：`pip install yt-dlp` + **ffmpeg**（合并视频/音频流必需，提供 `scripts/install_ffmpeg.*` 一键脚本）。
+- 开发机需装：[uv](https://docs.astral.sh/uv/)（`uv sync` 依 `pyproject.toml` 装依赖）+ **ffmpeg**（合并视频/音频流必需，提供 `backend/scripts/install_ffmpeg.*` 一键脚本）。
 - 生产（Linux VPS）：`apt install ffmpeg`；或 Docker 镜像内置 ffmpeg + yt-dlp。
 
 ## 12. 迭代路线图
