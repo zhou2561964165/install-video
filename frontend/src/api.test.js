@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { parseVideo, startDownload, getJob, fileUrl, normalizeError } from './api.js';
+import { parseVideo, startDownload, getJob, fileUrl, normalizeError, register, login, getMe, setAuthToken, clearAuthToken } from './api.js';
 
-afterEach(() => { vi.restoreAllMocks(); });
+afterEach(() => { vi.restoreAllMocks(); clearAuthToken(); });
 
 describe('api', () => {
   it('parseVideo POSTs to /api/parse and returns json', async () => {
@@ -36,5 +36,42 @@ describe('api', () => {
   it('normalizeError falls back to network', async () => {
     const res = { json: () => Promise.resolve({ detail: { error: '任务不存在' } }) };
     await expect(normalizeError(res)).resolves.toEqual({ error_type: 'network', error: '任务不存在' });
+  });
+
+  it('register POSTs to /api/auth/register', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ token: 't', user: { email: 'a@b.com' } }) }));
+    await register('a@b.com', 'password123');
+    const [url, opts] = fetch.mock.calls[0];
+    expect(url).toBe('/api/auth/register');
+    expect(JSON.parse(opts.body)).toEqual({ email: 'a@b.com', password: 'password123' });
+  });
+
+  it('login POSTs to /api/auth/login', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ token: 't', user: {} }) }));
+    await login('a@b.com', 'password123');
+    const [url, opts] = fetch.mock.calls[0];
+    expect(url).toBe('/api/auth/login');
+    expect(JSON.parse(opts.body)).toEqual({ email: 'a@b.com', password: 'password123' });
+  });
+
+  it('getMe hits /api/auth/me', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ user: {}, quota: {} }) }));
+    await getMe();
+    expect(fetch).toHaveBeenCalledWith('/api/auth/me', expect.anything());
+  });
+
+  it('request attaches Authorization header after setAuthToken', async () => {
+    setAuthToken('secret-token');
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({}) }));
+    await getMe();
+    const [, opts] = fetch.mock.calls[0];
+    expect(opts.headers.Authorization).toBe('Bearer secret-token');
+  });
+
+  it('request omits Authorization header when no token', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({}) }));
+    await getMe();
+    const [, opts] = fetch.mock.calls[0];
+    expect(opts.headers.Authorization).toBeUndefined();
   });
 });

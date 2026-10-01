@@ -25,10 +25,23 @@ vi.mock('./api.js', () => ({
   fileUrl: (id) => `/api/file/${id}`,
 }));
 
+const mockAuth = vi.hoisted(() => ({
+  status: 'authed',
+  user: { id: 'u1', email: 't@e.com', created_at: '' },
+  quota: { date: '2026-09-24', limit: 10, used: 0, remaining: 10 },
+  login: vi.fn(),
+  register: vi.fn(),
+  logout: vi.fn(),
+  refreshQuota: vi.fn(),
+}));
+vi.mock('./hooks/useAuth.js', () => ({
+  useAuth: () => mockAuth,
+}));
+
 import { parseVideo, startDownload, getJob } from './api.js';
 
 describe('App 功能闭环', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => { vi.clearAllMocks(); mockAuth.status = 'authed'; });
 
   it('粘贴 → 解析 → 选清晰度 → 直链下载', async () => {
     parseVideo.mockResolvedValue({
@@ -83,5 +96,12 @@ describe('App 功能闭环', () => {
     await userEvent.type(screen.getByLabelText('视频链接'), 'https://x');
     await userEvent.click(screen.getByRole('button', { name: '解析' }));
     expect(await screen.findByTestId('error-scene')).toBeInTheDocument();
+  });
+
+  it('未登录时渲染登录场景（强制门）', () => {
+    mockAuth.status = 'gate';
+    render(<App />);
+    expect(screen.getByTestId('auth-scene')).toBeInTheDocument();
+    expect(screen.queryByLabelText('视频链接')).not.toBeInTheDocument();
   });
 });

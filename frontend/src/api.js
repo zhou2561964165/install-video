@@ -1,13 +1,18 @@
 const API_BASE = '/api';
 
+let authToken = null;
+
 async function request(path, options = {}) {
-  const res = await fetch(API_BASE + path, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  });
+  const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+  if (authToken) headers.Authorization = `Bearer ${authToken}`;
+  const res = await fetch(API_BASE + path, { ...options, headers });
   if (!res.ok) throw await normalizeError(res);
   return res.json();
 }
+
+export function setAuthToken(token) { authToken = token; }
+export function clearAuthToken() { authToken = null; }
+export function getAuthToken() { return authToken; }
 
 // 后端错误体：{ detail: { error_type, error } } 或 { detail: { error } } 或 { detail: "..." }
 export async function normalizeError(res) {
@@ -40,4 +45,16 @@ export function getJob(jobId) {
 
 export function fileUrl(jobId) {
   return `${API_BASE}/file/${jobId}`;
+}
+
+export function register(email, password) {
+  return request('/auth/register', { method: 'POST', body: JSON.stringify({ email, password }) });
+}
+
+export function login(email, password) {
+  return request('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+}
+
+export function getMe() {
+  return request('/auth/me');
 }

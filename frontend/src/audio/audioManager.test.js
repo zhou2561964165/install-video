@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { playSfx, setMuted, _resetForTest } from './audioManager.js';
+import { playSfx, _resetForTest } from './audioManager.js';
 
 function makeFakeCtx() {
   const osc = {
@@ -39,17 +39,6 @@ describe('audioManager', () => {
     expect(fakeCtx.createOscillator).toHaveBeenCalledTimes(1);
     expect(fakeCtx.createGain).toHaveBeenCalledTimes(1);
     expect(fakeCtx.resume).toHaveBeenCalledTimes(1);
-  });
-
-  it('setMuted(true) 后 playSfx 不再创建振荡器', () => {
-    const fakeCtx = makeFakeCtx();
-    vi.stubGlobal('AudioContext', function FakeAudioContext() { return fakeCtx; });
-
-    setMuted(true);
-    playSfx('paste');
-
-    expect(fakeCtx.createOscillator).not.toHaveBeenCalled();
-    expect(fakeCtx.createGain).not.toHaveBeenCalled();
   });
 
   it('无 AudioContext 时 playSfx 不抛错（jsdom 环境）', () => {

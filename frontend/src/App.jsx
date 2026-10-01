@@ -2,12 +2,15 @@ import React, { useEffect, useReducer, useCallback, useRef, useState } from 'rea
 import { reduce, initialState, SCENE } from './state/sceneMachine.js';
 import { parseVideo, fileUrl } from './api.js';
 import { useDownload } from './hooks/useDownload.js';
+import { useAuth } from './hooks/useAuth.js';
 import { normalizeParse } from './lib/videoAdapter.js';
 import { initStage, destroyStage, webglSupported, detectTier } from './pixi/stage.js';
 import { createBackground, intensityForScene } from './pixi/background.js';
 import { createMascot } from './pixi/mascot.js';
 import { DEFAULT_MODEL_ID } from './pixi/mascotConfig.js';
 import EntryScene from './components/EntryScene.jsx';
+import AuthScene from './components/AuthScene.jsx';
+import AuthBar from './components/ui/AuthBar.jsx';
 import ParsingScene from './components/ParsingScene.jsx';
 import SelectingScene from './components/SelectingScene.jsx';
 import DownloadingScene from './components/DownloadingScene.jsx';
@@ -15,7 +18,6 @@ import DoneScene from './components/DoneScene.jsx';
 import ErrorScene from './components/ErrorScene.jsx';
 import ExpressionMenu from './components/ui/ExpressionMenu.jsx';
 import Preloader from './components/ui/Preloader.jsx';
-import { setScene, setMuted as setAudioMuted } from './audio/audioManager.js';
 
 // 三档主题开关（数据驱动，加档只改这里）
 const THEMES = [
@@ -33,12 +35,10 @@ export default function App() {
   const [webgl] = useState(() => webglSupported());
   const [tier] = useState(() => detectTier());
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'dark');
-  const [muted, setMuted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [ready, setReady] = useState(false); // Live2D 模型加载完成才隐藏 preloader
 
   const setThemeTier = useCallback((t) => setTheme(t), []);
-  const toggleMute = useCallback(() => setMuted((m) => !m), []);
 
   // 主题切换：写 data-theme 属性（light/dark/auto），CSS token 随之切换；
   // auto 由 global.css 的 @media (prefers-color-scheme) 解析，无需 JS 监听系统
@@ -56,6 +56,13 @@ export default function App() {
 
   // 下载编排（发起 + 服务端轮询）下沉到 useDownload，App 只保留 dispatch 与场景渲染
   const { startDownload: handleDownload } = useDownload(state, dispatch);
+
+  // 登录态（强制门）：未登录渲染 AuthScene，登录后渲染下载流程 + 账号条
+  const { status, user, quota, login, register, logout, refreshQuota } = useAuth();
+
+  // 下载提交成功后刷新额度；收到 quota 错误时刷新额度（拿到最新 used/limit）
+  useEffect(() => { if (status !== 'authed' || !state.download) return; refreshQuota(); }, [state.download, status, refreshQuota]);
+  useEffect(() => { if (status !== 'authed' || state.error?.error_type !== 'quota') return; refreshQuota(); }, [state.error, status, refreshQuota]);
 
   // PIXI 舞台：WebGL 可用时挂载，否则走 CSS 渐变兜底（global.css 里 .css-fallback）
   useEffect(() => {
@@ -91,20 +98,10 @@ export default function App() {
     bgRef.current?.setIntensity(intensityForScene(state.scene));
   }, [state.scene]);
 
-  // 随 scene 驱动 BGM/SFX 场景（角色表情/动作已取消，状态反馈由粒子+音频承担）
-  useEffect(() => {
-    setScene(state.scene);
-  }, [state.scene]);
-
   // 随 scene 切换角色情绪眼（解析/下载→圈圈眼、选清晰度→煎蛋眼、完成→星星眼、出错→生气）
   useEffect(() => {
     mascotRef.current?.setStageExpression(state.scene);
   }, [state.scene, webgl]);
-
-  // 静音状态同步到音频管理器
-  useEffect(() => {
-    setAudioMuted(muted);
-  }, [muted]);
 
   let scene;
   switch (state.scene) {
@@ -128,8 +125,16 @@ export default function App() {
   return (
     <>
       <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'} />
-      <div className="ui">{scene}</div>
-      <button type="button" className="mute-toggle" aria-pressed={muted} onClick={toggleMute}>静音</button>
+      <div className="ui">
+        {status === 'authed' ? (
+          <>
+            {scene}
+            <AuthBar user={user} quota={quota} onLogout={logout} />
+          </>
+        ) : (
+          <AuthScene loading={status === 'loading'} onLogin={login} onRegister={register} />
+        )}
+      </div>
       <div className="theme-switch" role="group" aria-label="主题模式">
         {THEMES.map((t) => (
           <button
