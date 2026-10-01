@@ -36,11 +36,18 @@ backend/tmp/
 # Visual companion mockups
 .superpowers/
 
-# SQLite (init_db 会生成 jobs.db)
+# SQLite (init_db 会生成 jobs.db；旧库重命名残留 *.stale-backup-*)
 *.db
+*.stale-backup-*
 
 # Playwright MCP 运行产物（日志/截图/yaml）
 .playwright-mcp/
 
 # 根级空 lockfile（非项目代码；项目锁文件在 frontend/package-lock.json）
 /package-lock.json
+
+# 屏幕截图 / 验证 / 计划草稿（本地产物，不入库）
+# 注意：frontend/public/live2d 下有源贴图 .png，故不全局忽略 *.png，仅忽略根级临时截图
+/*.png
+/verify/
+.planning/
