@@ -1,6 +1,6 @@
 # 交接文档 · 万能视频下载网站（当前：v2 账号 + 每用户额度，前后端均已接入）
 
-> 更新：2026-10-01 · HEAD `ffda1ce` · **最近：uv 迁移 Python 依赖（pyproject.toml + uv.lock 取代 requirements.txt）+ 清理本地生成物 + 解析链路冒烟验证通过（见 §8）**
+> 更新：2026-10-02 · 代码 HEAD `ffda1ce` · **最近：依赖切 uv + 清理本地生成物 + 补齐「滚动落地页」现状（见 §8）**
 > 本文写给**下一位接手者**（人或 AI）。所有命令、数字、结论均来自**实测**，如实标注验证程度，不夸大、不隐瞒。
 
 ---
@@ -21,7 +21,7 @@ cd backend && uv run uvicorn app.main:app --reload --port 8000
 cd frontend && npm run dev
 ```
 
-浏览器打开 `http://localhost:5173`（若端口被占，Vite 自动 +1，看终端实际地址）。首屏是**登录/注册门**（强制登录、无「游客继续」）：注册/登录后进入下载流程，顶部账号条显示「今日剩余 X/Y」。
+浏览器打开 `http://localhost:5173`（若端口被占，Vite 自动 +1，看终端实际地址）。首屏是**登录/注册门**（强制登录、无「游客继续」）：注册/登录后进入**五屏滚动落地页**（`EntryScene` 叙事 + 聚焦吸附），粘贴链接即进入下载流程，顶部账号条显示「今日剩余 X/Y」。
 
 **验证跑通（2 条命令，均全绿——已实测）**：
 
@@ -40,7 +40,7 @@ cd backend && uv run python -m pytest -q        # 46/46 通过（后端未动）
 - 后端（已完成）：注册/登录 JWT + 每用户每日额度，46/46 全绿。
 - 前端（本次完成）：登录/注册**强制门** + 顶部账号条额度余量，55/55 全绿；**浏览器手动联调未做**。
 
-- **计划文件**：v2 计划曾存 `.planning/2026-09-24-v2-account-quota/`（已随本地清理删除，内容见 git 历史）；前端计划 `C:\Users\zxk\.claude\plans\floofy-shimmying-naur.md`。
+- **计划文件**：v2 计划曾存 `.planning/2026-09-24-v2-account-quota/`（已随本地清理删除，内容见 git 历史）；前端 v2 计划是 Claude 本地文件（`~/.claude/plans/...`，非本仓库，Codex 无需）。
 - **依据文档**：`docs/superpowers/plans/2026-09-21-extension-plan.md` §3.1（已标记「已实现」）、`docs/design.md` §6/§9/§12、`docs/requirements.md` §7/§8。
 
 ### 1.1 阶段进度（如实）
@@ -54,6 +54,7 @@ cd backend && uv run python -m pytest -q        # 46/46 通过（后端未动）
 | 阶段 4 测试 | ✅ 完成（`test_auth.py` 8 条 + `test_quota.py` 5 条，后端 46/46 全绿） |
 | 阶段 5 文档同步 | ✅ 完成（requirements/design/extension-plan/handoff 四处） |
 | 会话 7 前端接 v2 | ✅ 代码完成 + 单测 55/55（登录/注册强制门 + 额度余量；**手动联调未做**） |
+| 会话 8 入口改滚动落地页 | ✅ 代码完成（`EntryScene` 五屏叙事 + 滚动聚焦 + 强制吸附；**手动联调未做**） |
 
 > v2 前后端均已落地：后端 `46 passed`（既有 33 + 新增 13），前端 `55 passed`（原 44 + 本次新增 11）。
 
@@ -79,6 +80,7 @@ cd backend && uv run python -m pytest -q        # 46/46 通过（后端未动）
 - [2026-09-24 前端] 额度余量 = **顶部账号条**（`今日剩余 X/Y`，用完显示「额度已用完」）。
 - [2026-09-24 前端] 登录持久化 = **localStorage**（key `auth_token`），刷新自动恢复。
 - [2026-09-24 前端] 额度刷新 = App 层 `useEffect` 监听 `state.download`（提交成功）与 `state.error`（`quota`）→ `refreshQuota()`，`useDownload.js` 零改动。
+- [2026-10-01 前端] 入口 = **滚动落地页**（`EntryScene` 五屏叙事 + 滚动聚焦 + 强制吸附）。**当前在登录门之后**（`App.jsx` 的 `authed` 分支内渲染），无「登录前公开落地页」；是否前置为公开首页 = **待定产品决策**。
 
 ### 1.4 前端 v2 验证程度（如实）
 
@@ -115,6 +117,8 @@ cd backend && uv run python -m pytest -q        # 46/46 通过（后端未动）
 3. 不写死、保留扩展，避免大规模重构。
 4. 解耦（见 2.2）。
 5. 每完成一个 Task **停下等用户指示**，不自动推进下一个 Task。
+
+> 注：`ui-ux-pro-max` / `design-system` 是 Claude 的 skill 工具；换 Codex 接手时无这些 skill，直接照本列表与根 `CLAUDE.md` 写明的约定（解耦 / token / 不写死 / 数据驱动）执行即可。
 
 ---
 
@@ -173,17 +177,24 @@ cd backend && uv run python -m pytest -q        # 46/46 通过（后端未动）
 | `pixi/mascotConfig.js` | **数据单一来源**：`MODELS`/`IDLE`/`EXPRESSIONS`/`SCALE` |
 | `pixi/mascot.js` | Live2D 创建/待机/`setExpression`/`scaleBy` |
 | `pixi/background.js` | 折射光点/背景 |
+| `pixi/stage.js` | PIXI 舞台初始化/销毁 + `webglSupported`/`detectTier`（App 挂载入口） |
 | `components/ui/ExpressionMenu.jsx` | 换装菜单 |
 | `components/ui/Preloader.jsx` | 加载层 |
-| `components/{Entry,Selecting,Downloading,Done,Error}Scene.jsx` | 各下载场景 |
+| `components/EntryScene.jsx` | **五屏滚动落地页**（叙事 + 滚动聚焦 + 强制吸附；登录后入口） |
+| `components/ParsingScene.jsx` | 解析中 |
+| `components/{Selecting,Downloading,Done,Error}Scene.jsx` | 选格式/下载中/完成/出错场景 |
 | `components/AuthScene.jsx` | 登录/注册整屏门（强制，无游客继续） |
 | `components/ui/AuthBar.jsx` | 顶部账号条（邮箱 + 额度 + 退出） |
+| `components/ui/{Bubble,Danmaku,EnergyBar}.jsx` | 气泡 / 弹幕 / 能量条 |
 | `api.js` | 后端接口封装（前端唯一接后端的边界）：含 auth token 边界 + `register/login/getMe` |
 | `lib/videoAdapter.js` / `lib/saveFile.js` | parse 归一化 / 浏览器原生保存 |
 | `hooks/useDownload.js` | 下载编排（发起 + 轮询 + 自动保存） |
 | `hooks/useAuth.js` | 登录态三态 `loading/gate/authed` + localStorage 持久化 + 额度刷新 |
 | `state/sceneMachine.js` | 场景状态机 + `ERROR_SCENES` 9 类文案 |
 | `state/downloadConfig.js` | `POLL_MS` 配置 |
+| `audio/audioManager.js` | SFX / WebAudio（EntryScene 音效；jsdom 下静默） |
+| `fx/constants.js` | 动效/交互共享常量（时长/缓动，**第二个「不写死」源**，呼应 §2.2） |
+| `main.jsx` | 前端入口（挂 ReactDOM） |
 
 ### 后端 `backend/app/`
 
@@ -240,8 +251,8 @@ cd backend && uv run python -m pytest -q        # 后端必跑（46/46）
 
 ## 8. Git 状态（如实）
 
-- **HEAD `ffda1ce`**（2026-10-01）：uv 迁移——`pyproject.toml` 声明依赖 + `uv.lock` 锁定 + 删 `backend/requirements.txt` + README/handoff 命令改 `uv`。
-- 近期前序：`431e435`/`160aacd`（`.gitignore` 拦本地产物与多余 lockfile）、`2183bb6`（入口滚动式落地页）、`b03ce32`/`bf585bc`/`e818cf6`（v2 账号+额度，前后端）。
+- **代码 HEAD `ffda1ce`**（2026-10-01）：uv 迁移——`pyproject.toml` 声明依赖 + `uv.lock` 锁定 + 删 `backend/requirements.txt` + README/handoff 命令改 `uv`。其后 `docs:` 提交（`6d34ab9` 等）只同步文档、未动代码。
+- 近期前序：`431e435`/`160aacd`（`.gitignore` 拦本地产物与多余 lockfile）、`2183bb6`（**入口滚动式落地页**，见 §1.3/§5/§9）、`b03ce32`/`bf585bc`/`e818cf6`（v2 账号+额度，前后端）。
 - **依赖管理已切 uv**：`uv sync` 建/更新 `.venv`（仓库根），`uv.lock` 入库；`backend/requirements.txt` 已删（如需 `pip` 环境可 `uv export --format requirements-txt`）。
 - **本地生成物已清理**（不入库，`.gitignore` 规则保留）：根级截图、`verify/`、`.planning/`、`*.stale-backup-*`、`docs/package-lock.json`、`package-lock.json`。
 
@@ -250,13 +261,14 @@ cd backend && uv run python -m pytest -q        # 后端必跑（46/46）
 ## 9. 下一步
 
 - **前端 v2 浏览器手动联调**（建议）：登录/注册真实请求、额度递减、刷新保持登录、退出——仍只过了单测，未在真实前后端联调验证（§6 验收第 1 条）。
+- **滚动落地页验证 + 位置决策**：`EntryScene` 五屏叙事（滚动聚焦/强制吸附/reduced-motion/示例 chip）代码完成但未手动验证；且**当前在登录门之后**（§1.3），是否前置为登录前公开首页 = 待定产品决策。
 - **后端强制登录（收紧匿名）**：产品方向已定「匿名下载取消、改必须登录」。把 `/api/parse`、`/api/download` 改为必须 token（`get_current_user` 替代 `get_current_user_optional`），同步调整 `test_quota.py` 里「匿名绕过」用例。前端已就位，无需再动。
 - **真实下载链路冒烟**：uv 迁移后依赖有升级（fastapi/sqlmodel/starlette/uvicorn/pyjwt），`/api/parse` 已实测通过；`/api/download`（含 ffmpeg 合并）建议再跑一次真实视频。
 - **v3 视频总结 / 字幕翻译**（LLM）、**v4 付费**（会员/支付渠道）——见 `docs/requirements.md` §8 与 `docs/superpowers/plans/2026-09-21-extension-plan.md` §3.2/§3.3。
 
 ## 10. 更多设计细节
 
-- **v2 计划**（阶段/决策/侦察事实）→ 曾存 `.planning/2026-09-24-v2-account-quota/`（已随清理删除，见 git 历史）；前端 v2 计划 → `C:\Users\zxk\.claude\plans\floofy-shimmying-naur.md`。
+- **v2 计划**（阶段/决策/侦察事实）→ 曾存 `.planning/2026-09-24-v2-account-quota/`（已随清理删除，见 git 历史）；前端 v2 计划为 Claude 本地文件（`~/.claude/plans/...`，非本仓库）。
 - 表情/道具/特效参数映射 → `docs/design.md` §14.8。
 - 主题/token/待机动画 → `docs/design.md` §14.1–14.6（⚠️ §14 配色已由 pidanai 重构替代，当前 token/主题见 `docs/ui-refactor-pidanai.md` 与 `docs/ui-extension-guide.md`；§14.6 待机/§14.8 表情机制仍准）。
 - 后端架构/数据模型/错误分类/扩展点 → `docs/design.md` §1–§9（§6 含 User/Quota 预留字段、§12 迭代路线）。
