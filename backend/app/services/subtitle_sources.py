@@ -9,6 +9,7 @@ import httpx
 
 from ..config import settings
 from . import network_retry
+from .bilibili_subtitle_source import InvalidVideoPartError, bilibili_tracks
 
 _CAPTION_FORMATS = {"srt", "vtt", "json3", "ttml", "srv3"}
 _LANGUAGE_ALIASES = {
@@ -113,7 +114,8 @@ def _archive_tracks(url: str) -> dict:
 
 
 # New public-platform fallbacks register here; routes and summary services stay platform-neutral.
-_ADAPTERS = {"archive.org": _archive_tracks, "www.archive.org": _archive_tracks}
+_ADAPTERS = {"archive.org": _archive_tracks, "www.archive.org": _archive_tracks,
+             "bilibili.com": bilibili_tracks, "www.bilibili.com": bilibili_tracks}
 
 
 def resolve_public_subtitles(url: str) -> dict:

@@ -7,7 +7,7 @@ import httpx
 from yt_dlp.utils import GeoRestrictedError, UnsupportedError
 
 from ..config import settings
-from .subtitle_sources import resolve_public_subtitles
+from .subtitle_sources import InvalidVideoPartError, resolve_public_subtitles
 
 ERROR_INVALID_URL = "invalid_url"
 ERROR_UNSUPPORTED = "unsupported_site"
@@ -70,19 +70,23 @@ def _is_caption(language: str, item: dict) -> bool:
     return language not in {"live_chat", "danmaku"} and not str(item.get("protocol", "")).startswith("youtube_live_chat")
 
 
-def extract_subtitle_tracks(url: str) -> dict:
+def extract_subtitle_tracks(url: str, *, use_public_sources: bool = True) -> dict:
     """返回规范化字幕轨道；这是项目其余层读取 yt-dlp 字幕信息的唯一入口。"""
     # Platform-native captions are sufficient for AI content analysis. Avoid unnecessary
     # video page extraction when a public source adapter can already supply the content.
     fallback_error = None
-    try:
-        fallback = resolve_public_subtitles(url)
-        if fallback["tracks"]:
-            return fallback
-    except (httpx.HTTPError, ValueError) as error:
-        fallback_error = error
+    if use_public_sources:
+        try:
+            fallback = resolve_public_subtitles(url)
+            if fallback["tracks"]:
+                return {**fallback, "_source": "public"}
+        except InvalidVideoPartError:
+            raise
+        except (httpx.HTTPError, ValueError) as error:
+            fallback_error = error
     info = extract_info(url)
     tracks: list[dict] = []
+    is_bilibili = urlparse(url).hostname in {"bilibili.com", "www.bilibili.com"}
     for source_key, is_auto in (("subtitles", False), ("automatic_captions", True)):
         for language, formats in (info.get(source_key) or {}).items():
             normalized_formats = []
@@ -90,6 +94,13 @@ def extract_subtitle_tracks(url: str) -> dict:
                 if not _is_caption(language, item):
                     continue
                 track_url = item.get("url")
+                inline = item.get("data")
+                if isinstance(inline, str) and inline:
+                    normalized_formats.append({
+                        "data": inline, "ext": str(item.get("ext") or "vtt").lower(),
+                        "name": item.get("name"), "http_headers": {},
+                    })
+                    continue
                 if not track_url or not str(track_url).startswith(("http://", "https://")):
                     continue
                 normalized_formats.append({
@@ -99,9 +110,10 @@ def extract_subtitle_tracks(url: str) -> dict:
                     "http_headers": {**(info.get("http_headers") or {}), **(item.get("http_headers") or {})},
                 })
             if normalized_formats:
+                automatic_language = is_bilibili and str(language).startswith("ai-")
                 tracks.append({
-                    "language": str(language),
-                    "is_auto": is_auto,
+                    "language": str(language)[3:] if automatic_language else str(language),
+                    "is_auto": is_auto or automatic_language,
                     "formats": normalized_formats,
                 })
     if not tracks:
@@ -112,6 +124,8 @@ def extract_subtitle_tracks(url: str) -> dict:
 
 
 def classify_error(exc: Exception) -> str:
+    if isinstance(exc, InvalidVideoPartError):
+        return ERROR_INVALID_URL
     if isinstance(exc, GeoRestrictedError):
         return ERROR_GEO
     if isinstance(exc, UnsupportedError):

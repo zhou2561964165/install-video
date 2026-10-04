@@ -153,3 +153,52 @@ def test_summary_budget_rejects_excess_chunks_before_provider_call(monkeypatch):
         summarize_text('012345678901234567890123456789', title='t', output_language='en', client=client)
     assert exc.value.error_type == 'llm_input_too_large'
     assert client.calls == []
+
+
+def test_summary_above_whole_input_limit_preserves_facts_from_first_and_last_sections(monkeypatch):
+    """Content routing regression; the local provider is not an LLM quality oracle."""
+    import json
+
+    _configure(monkeypatch)
+    monkeypatch.setattr(settings, 'llm_max_input_chars', 60_000)
+    monkeypatch.setattr(settings, 'llm_summary_chunk_chars', 20_000)
+    monkeypatch.setattr(settings, 'llm_summary_max_chunks', 16)
+    monkeypatch.setattr(settings, 'llm_summary_max_output_tokens', 4096)
+    first = 'Budget ceiling is 48000 yuan for 1200 pilot records.'
+    last = 'Final release is September 9 only after a clean audit; Noor may stop release.'
+    lines = [first] + [f'Rehearsal observation {index}: ' + 'inspect the test copy and retain the original. ' * 5 for index in range(270)] + [last]
+    transcript = '\n'.join(lines)
+    assert len(transcript) > 60_000
+    supplied_sources = []
+
+    def provider(request):
+        payload = json.loads(request.content)
+        prompt = payload['messages'][-1]['content']
+        if 'Section summaries:\n' in prompt:
+            sections = json.loads(prompt.split('Section summaries:\n', 1)[1])
+            facts = list(dict.fromkeys(point for section in sections for point in section['key_points']))
+        else:
+            source = prompt.split('Transcript:\n', 1)[1]
+            supplied_sources.append(source)
+            facts = [fact for fact in (first, last) if fact in source]
+        body = {'summary': ' '.join(facts) or 'Intermediate rehearsal observations.', 'key_points': facts or ['Rehearsal observations.']}
+        return httpx.Response(200, json={'choices': [{'finish_reason': 'stop', 'message': {'content': json.dumps(body)}}]})
+
+    with httpx.Client(transport=httpx.MockTransport(provider)) as client:
+        result = summarize_text(transcript, title='Pilot decision', output_language='en', client=client)
+    assert len(supplied_sources) >= 4
+    assert all(len(section) <= 20_000 for section in supplied_sources)
+    assert first in result.key_points
+    assert last in result.key_points
+    assert result.key_points.count(first) == 1
+    assert result.key_points.count(last) == 1
+
+
+def test_one_complete_summary_point_is_preserved_without_padding(monkeypatch):
+    _configure(monkeypatch)
+    fact = 'The community library is closed on Monday for maintenance.'
+    with httpx.Client(transport=httpx.MockTransport(lambda request: httpx.Response(
+        200, json={'choices': [{'message': {'content': '{"summary":"Library closure notice.","key_points":["' + fact + '"]}'}}]},
+    ))) as client:
+        result = summarize_text(fact, title='Library notice', output_language='en', client=client)
+    assert result.key_points == [fact]

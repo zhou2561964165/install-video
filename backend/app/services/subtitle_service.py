@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import json
+import math
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
@@ -15,7 +16,7 @@ from ..config import settings
 from . import network_retry
 from . import ytdlp_service
 
-_FORMAT_PRIORITY = {"vtt": 0, "srt": 1, "json3": 2, "ttml": 3, "srv3": 4}
+_FORMAT_PRIORITY = {"vtt": 0, "srt": 1, "json3": 2, "ttml": 3, "srv3": 4, "bilibili_json": 5}
 _LANGUAGE_PRIORITY = ("zh-hans", "zh-cn", "zh", "en", "en-us")
 _TIMESTAMP_RE = re.compile(
     r"^\s*(?:\d{1,2}:)?\d{2}:\d{2}[.,]\d{1,3}\s*-->\s*(?:\d{1,2}:)?\d{2}:\d{2}[.,]\d{1,3}(?=\s|$)"
@@ -99,9 +100,33 @@ def _parse_ttml(raw: str) -> str:
     return _dedupe_lines(lines)
 
 
+def _is_finite_timestamp(value: Any) -> bool:
+    if type(value) not in {int, float}:
+        return False
+    try:
+        return math.isfinite(value)
+    except (OverflowError, TypeError):
+        return False
+
+
 def parse_subtitle_text(raw: str, ext: str) -> str:
     normalized_ext = ext.lower().lstrip(".")
-    if normalized_ext == "json3":
+    if normalized_ext == "bilibili_json":
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise SubtitleServiceError("subtitle_invalid", "字幕 JSON 格式无效") from exc
+        if not isinstance(payload, dict) or not isinstance(payload.get("body"), list):
+            raise SubtitleServiceError("subtitle_invalid", "字幕 JSON 结构无效")
+        lines = []
+        for cue in payload["body"]:
+            if (not isinstance(cue, dict) or not isinstance(cue.get("content"), str)
+                    or any(not _is_finite_timestamp(cue.get(k)) for k in ("from", "to"))
+                    or not 0 <= cue["from"] <= cue["to"]):
+                raise SubtitleServiceError("subtitle_invalid", "字幕 JSON 结构无效")
+            lines.extend(cue["content"].splitlines())
+        text = _dedupe_lines(lines)
+    elif normalized_ext == "json3":
         text = _parse_json3(raw)
     elif normalized_ext in {"ttml", "srv3"}:
         text = _parse_ttml(raw)
@@ -161,14 +186,45 @@ def fetch_subtitle_document(
     client: httpx.Client | None = None,
 ) -> SubtitleDocument:
     payload = ytdlp_service.extract_subtitle_tracks(video_url)
+    try:
+        return _document_from_tracks(payload, language, client=client)
+    except SubtitleServiceError as native_error:
+        if payload.get("_source") != "public":
+            raise
+        # Native captions can expire or lack the requested language. Try the narrow
+        # generic entrypoint once, retaining the native error if it cannot help.
+        try:
+            generic = ytdlp_service.extract_subtitle_tracks(video_url, use_public_sources=False)
+            return _document_from_tracks(generic, language, client=client)
+        except Exception:
+            raise native_error from None
+
+
+def _document_from_tracks(
+    payload: dict,
+    language: str | None,
+    *,
+    client: httpx.Client | None,
+) -> SubtitleDocument:
     tracks = payload["tracks"]
     selected = _select_track(tracks, language)
     selected_format = _select_format(selected)
+    if "data" in selected_format:
+        raw = selected_format["data"]
+        if not isinstance(raw, str):
+            raise SubtitleServiceError("subtitle_invalid", "字幕内容格式无效")
+        if len(raw.encode("utf-8")) > settings.subtitle_max_bytes:
+            raise SubtitleServiceError("subtitle_too_large", "字幕文件超过大小限制")
+        return SubtitleDocument(
+            title=payload["title"], language=selected["language"], is_auto=bool(selected["is_auto"]),
+            available_languages=_available_languages(tracks), text=parse_subtitle_text(raw, selected_format["ext"]),
+        )
     owns_client = client is None
     http = client or httpx.Client(follow_redirects=True, timeout=float(settings.subtitle_timeout_seconds))
     try:
         def get_caption() -> tuple[bytes, str | None]:
-            with http.stream("GET", selected_format["url"], headers=selected_format["http_headers"]) as response:
+            redirect_options = {"follow_redirects": False} if selected_format["ext"] == "bilibili_json" else {}
+            with http.stream("GET", selected_format["url"], headers=selected_format["http_headers"], **redirect_options) as response:
                 response.raise_for_status()
                 content = bytearray()
                 for chunk in response.iter_bytes():
