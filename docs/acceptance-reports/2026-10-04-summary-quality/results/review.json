@@ -1,0 +1,58 @@
+{
+  "method": "Manual comparison against independent facts fixed in corpus/manifest.json before any model call. Checks cover summary and key_points together; not a full precision metric or independent human rating.",
+  "engineering_rules": "UI skills and three-layer tokens; skills outrank plans; configurable abilities; stable narrow interfaces; yt-dlp only through ytdlp_service.py and visuals read-only.",
+  "samples": [
+    {
+      "id": "short",
+      "before": {
+        "required_facts_present": [true],
+        "absent_facts_invented": [false, false],
+        "key_points": 3,
+        "observation": "One closure event was unnecessarily split into venue, date and reason fragments. No false reopening time or alternative venue."
+      },
+      "after": {
+        "required_facts_present": [true],
+        "absent_facts_invented": [false, false],
+        "key_points": 1,
+        "observation": "One complete point preserves venue, Monday and maintenance; no padding or invented reopening details."
+      }
+    },
+    {
+      "id": "medium",
+      "before": {
+        "required_facts_present": [true, true, true, true, true, true, true],
+        "absent_facts_invented": [false, false, false],
+        "key_points": 7,
+        "observation": "All seven required facts retained with correct quantities, date replacement and conditional pause/manual action. Points 1 and 7 both explicitly repeat no expansion; point 3 also repeats deployment scope."
+      },
+      "after": {
+        "required_facts_present": [true, true, true, true, true, true, true],
+        "absent_facts_invented": [false, false, false],
+        "key_points": 7,
+        "observation": "All required facts retained: 2400 ceiling, 18 split 12/6, June 17 replacing June 10, four weeks, <22 percent manual action and three consecutive missing days. Explicit no wider deployment collected in final point; scope still appears contextually in points 1 and 2. Supplier/price/savings are not invented. Points remain long."
+      }
+    },
+    {
+      "id": "long",
+      "before": {
+        "required_facts_present": [true, true, true, true, true, true],
+        "absent_facts_invented": [false, false, false],
+        "key_points": 7,
+        "observation": "All six facts retained through three section requests and merge. Old and final dates occupy separate points. Low-value rehearsal identifiers appear; approval scope is repeated."
+      },
+      "after": {
+        "required_facts_present": [true, true, true, true, true, true],
+        "absent_facts_invented": [false, false, false],
+        "key_points": 6,
+        "observation": "48000 ceiling, 1200 records, six-week pilot, exactly 17 mismatches, rejected August 12 / conditional September 9 and Noor stop authority all retained. Superseded/final dates are combined in one point. No completion/downtime/reliability claim invented. Remaining issue: summary includes low-priority rehearsal counts; points 1 and 6 repeat pilot-only approval."
+      }
+    }
+  ],
+  "limits": [
+    "Three self-authored artificial English sources, Chinese outputs, one before and one after output each; not a natural-video benchmark.",
+    "Short density fixture is 236 raw / 58 cleaned characters; medium 2411; long 40441. Long fixture stress-tests routing rather than realistic dialogue distribution.",
+    "No multi-run stability study, independent human evaluation, numerical precision/recall metric or latency improvement established.",
+    "The >60000-character regression uses deterministic local transport and proves content routing only; live long fixture is below 60000 but exceeds default chunk length.",
+    "Observed semantic repetition and verbose low-priority details remain. Prompt guidance does not guarantee factfulness or deduplication."
+  ]
+}

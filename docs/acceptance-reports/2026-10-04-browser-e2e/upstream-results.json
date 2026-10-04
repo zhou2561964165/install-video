@@ -1,0 +1,29 @@
+{
+  "fail": false,
+  "requests": [
+    {
+      "operation": "translate",
+      "failed": false
+    },
+    {
+      "operation": "summary",
+      "failed": false
+    },
+    {
+      "operation": "summary",
+      "failed": true
+    },
+    {
+      "operation": "translate",
+      "failed": false
+    },
+    {
+      "operation": "summary",
+      "failed": false
+    },
+    {
+      "operation": "summary",
+      "failed": true
+    }
+  ]
+}

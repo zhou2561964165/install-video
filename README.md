@@ -104,7 +104,11 @@ uv run uvicorn app.main:app --reload --port 8000 --env-file .env
 
 ## 验证
 
-最近已完成的验证：后端121/121、前端66/66、生产构建通过；原5份已许可文件解析5/5且SHA-256不变。TLS重试修复提交于 `96b0b59`。三平台字幕请求、TLS重试后的真实字幕复测和三次真实 DeepSeek 总结见[平台与总结质量报告](docs/acceptance-reports/2026-10-03-platform-quality/report.md)。上一轮结果见[AI总结修复报告](docs/acceptance-reports/2026-10-03-ai-summary-regression/report.md)，各轮数据分别记录，不推断所有平台均可用。
+最新全量验证：后端169/169、前端66/66、生产构建通过。新增公开Bilibili字幕适配，保留元数据/正文失败后的yt-dlp回退并支持通用inline字幕；总结输出允许1–7个完整独立要点。实现提交 `e7c29be`。
+
+证据见[平台扩展](docs/acceptance-reports/2026-10-04-platform-expansion/report.md)、[浏览器闭环](docs/acceptance-reports/2026-10-04-browser-e2e/report.md)与[总结质量](docs/acceptance-reports/2026-10-04-summary-quality/report.md)：本机桌面/375px共40项、6个下载文件通过，公网Archive桌面解析→总结9项通过；12次受控真实模型评测显示短要点改善，但长内容冗余仍有残余。公网下载、GPU角色渲染及所有平台可用性尚未全面证明。
+
+此前[平台/TLS报告](docs/acceptance-reports/2026-10-03-platform-quality/report.md)和[AI修复报告](docs/acceptance-reports/2026-10-03-ai-summary-regression/report.md)按原采集时间保留，各轮结果不相互改写。
 
 ### 自动化测试
 

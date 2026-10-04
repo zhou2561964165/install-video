@@ -71,6 +71,7 @@ install_video/
 │   │       ├── jobs.py            # 线程池 + 任务生命周期 + 临时文件清理
 │   │       ├── auth.py / quota.py  # 鉴权与路由层每日额度
 │   │       ├── subtitle_sources.py # 公开平台来源适配，由ytdlp_service调用
+│   │       ├── bilibili_subtitle_source.py # 匿名BV/分P字幕元数据，可信来源与输入校验
 │   │       ├── subtitle_service.py # 正文HTTP与文本化
 │   │       └── llm_service.py      # 去重、分段归纳、分层合并与兼容传输
 │   └── scripts/install_ffmpeg.*   # 一键下载 ffmpeg
@@ -200,6 +201,14 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 - `routes/subtitle.py` 与 `routes/summary.py` 使用 `Depends(get_current_user)`，同步路由交由 FastAPI 线程池执行。
 - 前端通过 `api.js` + `useVideoInsights` 调用，`VideoInsights` 只接收 props；现有下载 reducer 和 `useDownload` 不变。
 - 解析阶段的字幕发现可能是可选查询，空语言列表不会隐藏视频智能动作：面板提供自动选源语言和显式用户触发；请求失败就地展示，下载状态和额度互相隔离。
+
+### 12.2 增量平台与验收边界
+
+新增公开字幕元数据适配器继续返回既有标题与轨道格式，通过 `subtitle_sources.py` 注册，再由 `ytdlp_service.py` 统一调用；适配器无轨道或失败时保留通用提取。需要新字幕正文格式时只扩展 `subtitle_service.py` 的格式解析入口，不让路由接触平台JSON。
+
+当前注册Archive与Bilibili。原生payload由唯一入口附内部来源标记；选轨道/正文获取/解析失败时，字幕服务最多一次调用 `use_public_sources=False` 的通用路径，通用仍失败则保留原生错误。上游inline `data` 字幕也经同一格式解析和字节上限。明确非法分P映射 `invalid_url`，不借回退静默选择另一段内容。
+
+浏览器验收使用隔离账户/数据库和可控外部HTTP服务；应用API及其真实请求编排参与运行。本机LLM协议夹具用于稳定验证页面行为，实际配置模型用于独立内容质量评测；两类报告提供各自的数据与限制。平台、浏览器和LLM实现工作线分配不同文件，主agent集中整合与复审。
 
 ## 13. 第二阶段：前端视觉表现层（fx）架构
 

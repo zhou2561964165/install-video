@@ -1,0 +1,1699 @@
+{
+  "generatedAt": "2026-10-04T07:07:11.933Z",
+  "base": "http://127.0.0.1:5185",
+  "videoURL": "http://127.0.0.1:8052/captioned.html",
+  "summaryOnly": false,
+  "browser": "Microsoft Edge headless, WebGL disabled to exercise existing CSS fallback",
+  "appRoutesMocked": false,
+  "scopes": {
+    "real": [
+      "registration/login/JWT/auth restoration",
+      "Vite and application UI",
+      "FastAPI parse/subtitle/translate/summary/download/job/file APIs",
+      "yt-dlp reads local HTTP HTML video, two-variant HLS and track",
+      "real HTTP VTT text parse",
+      "yt-dlp downloads H264/AAC generated owned media",
+      "browser file and ffprobe verification"
+    ],
+    "simulated": [
+      "LLM HTTP upstream deterministic completion and controlled503"
+    ],
+    "limitation": "Local media is not evidence of public-platform compatibility. WebGL/Live2D model rendering is not exercised."
+  },
+  "checks": [
+    {
+      "name": "desktop: auth fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: entry fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: registration, login persistence and logout use real auth API",
+      "pass": true
+    },
+    {
+      "name": "desktop: real yt-dlp parse and explicit format selection",
+      "pass": true,
+      "parsed": {
+        "title": "Owned browser acceptance media (1)",
+        "thumbnail": null,
+        "duration": null,
+        "duration_string": "00:00",
+        "uploader": null,
+        "platform": "html5",
+        "view_count": null,
+        "upload_date": "20261004",
+        "description": "",
+        "subtitles": [
+          "en"
+        ],
+        "formats": [
+          {
+            "format_id": "hls-600",
+            "label": "720p MP4 (未知大小)",
+            "height": 720,
+            "ext": "mp4",
+            "resolution": "1280x720",
+            "filesize": null,
+            "has_audio": true,
+            "vcodec": "avc1.64001f",
+            "acodec": "mp4a.40.2",
+            "direct": true,
+            "note": null
+          },
+          {
+            "format_id": "hls-300",
+            "label": "360p MP4 (未知大小)",
+            "height": 360,
+            "ext": "mp4",
+            "resolution": "640x360",
+            "filesize": null,
+            "has_audio": true,
+            "vcodec": "avc1.64001e",
+            "acodec": "mp4a.40.2",
+            "direct": true,
+            "note": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop: selecting fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: real subtitle HTTP parser and simulated upstream translation",
+      "pass": true
+    },
+    {
+      "name": "desktop: summary visible",
+      "pass": true,
+      "summary": {
+        "title": "Owned browser acceptance media (1)",
+        "source_language": "en",
+        "summary": "可靠工具需要测试，并在失败后恢复。",
+        "key_points": [
+          "构建可靠工具",
+          "测试提前发现错误",
+          "失败后恢复"
+        ],
+        "provider": "simulated-local-upstream",
+        "model": "deterministic-local-e2e"
+      }
+    },
+    {
+      "name": "desktop: AI requests do not consume download quota",
+      "pass": true
+    },
+    {
+      "name": "desktop: summary fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: captioned server download reaches browser file",
+      "pass": true,
+      "selectedLabel": "720p MP4 (未知大小)",
+      "expectedHeight": 720,
+      "fileAPI": "/api/file/de791583-3e5d-4a46-b285-e5a6e3de646d",
+      "bytes": 34691,
+      "sha256": "885b10d5716410edaf267d6bef6ad083c9aaf4254d260b6cbe08ab4e9592d04f",
+      "duration": "3.041814",
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "type": "audio",
+          "codec": "aac"
+        }
+      ],
+      "suggestedFilename": "Owned browser acceptance media (1).mp4"
+    },
+    {
+      "name": "desktop: captioned-done fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: no-caption explicit summary attempt shows local error",
+      "pass": true,
+      "errorType": "subtitle_unavailable"
+    },
+    {
+      "name": "desktop: no-caption fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: no-caption server download reaches browser file",
+      "pass": true,
+      "selectedLabel": "360p MP4 (未知大小)",
+      "expectedHeight": 360,
+      "fileAPI": "/api/file/e1472b33-7a32-402e-be5d-934efe30c567",
+      "bytes": 33176,
+      "sha256": "6995a35d05d0d1fffa31a0c8c9f956f08f57a902329060bac317cbcf7604ec4c",
+      "duration": "3.041814",
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 640,
+          "height": 360
+        },
+        {
+          "type": "audio",
+          "codec": "aac"
+        }
+      ],
+      "suggestedFilename": "Owned browser acceptance media (1).mp4"
+    },
+    {
+      "name": "desktop: no-caption-done fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: simulated upstream503 produces local AI error",
+      "pass": true,
+      "errorType": "llm_error"
+    },
+    {
+      "name": "desktop: ai-error fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: ai-error server download reaches browser file",
+      "pass": true,
+      "selectedLabel": "720p MP4 (未知大小)",
+      "expectedHeight": 720,
+      "fileAPI": "/api/file/7096f087-01b5-42a1-b0dd-5a01ead28e34",
+      "bytes": 34691,
+      "sha256": "885b10d5716410edaf267d6bef6ad083c9aaf4254d260b6cbe08ab4e9592d04f",
+      "duration": "3.041814",
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "type": "audio",
+          "codec": "aac"
+        }
+      ],
+      "suggestedFilename": "Owned browser acceptance media (1).mp4"
+    },
+    {
+      "name": "desktop: ai-error-done fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: final logout persists after reload",
+      "pass": true
+    },
+    {
+      "name": "mobile375: auth fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: entry fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: registration, login persistence and logout use real auth API",
+      "pass": true
+    },
+    {
+      "name": "mobile375: real yt-dlp parse and explicit format selection",
+      "pass": true,
+      "parsed": {
+        "title": "Owned browser acceptance media (1)",
+        "thumbnail": null,
+        "duration": null,
+        "duration_string": "00:00",
+        "uploader": null,
+        "platform": "html5",
+        "view_count": null,
+        "upload_date": "20261004",
+        "description": "",
+        "subtitles": [
+          "en"
+        ],
+        "formats": [
+          {
+            "format_id": "hls-600",
+            "label": "720p MP4 (未知大小)",
+            "height": 720,
+            "ext": "mp4",
+            "resolution": "1280x720",
+            "filesize": null,
+            "has_audio": true,
+            "vcodec": "avc1.64001f",
+            "acodec": "mp4a.40.2",
+            "direct": true,
+            "note": null
+          },
+          {
+            "format_id": "hls-300",
+            "label": "360p MP4 (未知大小)",
+            "height": 360,
+            "ext": "mp4",
+            "resolution": "640x360",
+            "filesize": null,
+            "has_audio": true,
+            "vcodec": "avc1.64001e",
+            "acodec": "mp4a.40.2",
+            "direct": true,
+            "note": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "mobile375: selecting fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: real subtitle HTTP parser and simulated upstream translation",
+      "pass": true
+    },
+    {
+      "name": "mobile375: summary visible",
+      "pass": true,
+      "summary": {
+        "title": "Owned browser acceptance media (1)",
+        "source_language": "en",
+        "summary": "可靠工具需要测试，并在失败后恢复。",
+        "key_points": [
+          "构建可靠工具",
+          "测试提前发现错误",
+          "失败后恢复"
+        ],
+        "provider": "simulated-local-upstream",
+        "model": "deterministic-local-e2e"
+      }
+    },
+    {
+      "name": "mobile375: AI requests do not consume download quota",
+      "pass": true
+    },
+    {
+      "name": "mobile375: summary fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: captioned server download reaches browser file",
+      "pass": true,
+      "selectedLabel": "720p MP4 (未知大小)",
+      "expectedHeight": 720,
+      "fileAPI": "/api/file/d1ef1e65-7c51-4d27-b26c-17078b27dcd7",
+      "bytes": 34691,
+      "sha256": "885b10d5716410edaf267d6bef6ad083c9aaf4254d260b6cbe08ab4e9592d04f",
+      "duration": "3.041814",
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "type": "audio",
+          "codec": "aac"
+        }
+      ],
+      "suggestedFilename": "Owned browser acceptance media (1).mp4"
+    },
+    {
+      "name": "mobile375: captioned-done fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: no-caption explicit summary attempt shows local error",
+      "pass": true,
+      "errorType": "subtitle_unavailable"
+    },
+    {
+      "name": "mobile375: no-caption fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: no-caption server download reaches browser file",
+      "pass": true,
+      "selectedLabel": "360p MP4 (未知大小)",
+      "expectedHeight": 360,
+      "fileAPI": "/api/file/0a2cf85a-a096-431c-8bc9-368b32741a3b",
+      "bytes": 33176,
+      "sha256": "6995a35d05d0d1fffa31a0c8c9f956f08f57a902329060bac317cbcf7604ec4c",
+      "duration": "3.041814",
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 640,
+          "height": 360
+        },
+        {
+          "type": "audio",
+          "codec": "aac"
+        }
+      ],
+      "suggestedFilename": "Owned browser acceptance media (1).mp4"
+    },
+    {
+      "name": "mobile375: no-caption-done fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: simulated upstream503 produces local AI error",
+      "pass": true,
+      "errorType": "llm_error"
+    },
+    {
+      "name": "mobile375: ai-error fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: ai-error server download reaches browser file",
+      "pass": true,
+      "selectedLabel": "720p MP4 (未知大小)",
+      "expectedHeight": 720,
+      "fileAPI": "/api/file/fa32eb1c-3888-4625-8dfb-6a4132a26e42",
+      "bytes": 34691,
+      "sha256": "885b10d5716410edaf267d6bef6ad083c9aaf4254d260b6cbe08ab4e9592d04f",
+      "duration": "3.041814",
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "type": "audio",
+          "codec": "aac"
+        }
+      ],
+      "suggestedFilename": "Owned browser acceptance media (1).mp4"
+    },
+    {
+      "name": "mobile375: ai-error-done fits viewport",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "bodyWidth": 375,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "mobile375: final logout persists after reload",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/subtitle",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/subtitle/translate",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/download",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/job/de791583-3e5d-4a46-b285-e5a6e3de646d",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 422
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/download",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/job/e1472b33-7a32-402e-be5d-934efe30c567",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 502
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/download",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/job/7096f087-01b5-42a1-b0dd-5a01ead28e34",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/subtitle",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/subtitle/translate",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/download",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/job/d1ef1e65-7c51-4d27-b26c-17078b27dcd7",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 422
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/download",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/job/0a2cf85a-a096-431c-8bc9-368b32741a3b",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 502
+    },
+    {
+      "viewport": "mobile375",
+      "method": "POST",
+      "path": "/api/download",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "mobile375",
+      "method": "GET",
+      "path": "/api/job/fa32eb1c-3888-4625-8dfb-6a4132a26e42",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

@@ -1,0 +1,60 @@
+{
+  "results": [
+    {
+      "id": "bilibili-native-captions",
+      "url": "https://www.bilibili.com/video/BV12N4y1M7rh",
+      "utc": "2026-10-04T07:03:07.287849+00:00",
+      "permission": "access probe only; no transcript retained; no LLM",
+      "tracks": [
+        {
+          "language": "zh-Hans",
+          "is_auto": false,
+          "source_hosts": [
+            "aisubtitle.hdslb.com"
+          ]
+        }
+      ],
+      "outcome": "caption_text_received",
+      "language": "zh-Hans",
+      "is_auto": false,
+      "chars": 1973,
+      "lines": 136,
+      "sha256": "56e9cb1efab4fcc0b4756ea413dfdc21482dfb4ee525a8d10d8692de6e65aa8a",
+      "elapsed_seconds": 2.125
+    },
+    {
+      "id": "bilibili-second-video",
+      "url": "https://www.bilibili.com/video/BV1jL41167ZG",
+      "utc": "2026-10-04T07:03:09.420625+00:00",
+      "permission": "access metadata only; no transcript retained",
+      "outcome": "native_access_failure",
+      "error_type": "ValueError",
+      "elapsed_seconds": 0.781
+    },
+    {
+      "id": "archive-long",
+      "url": "https://archive.org/details/lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack",
+      "utc": "2026-10-04T07:03:10.196659+00:00",
+      "permission": "CC BY 4.0; prior manifest ../2026-10-03-single-platform-subtitles/manifest.json",
+      "tracks": [
+        {
+          "language": "en",
+          "is_auto": true,
+          "source_hosts": [
+            "archive.org"
+          ]
+        }
+      ],
+      "outcome": "tracks_received",
+      "elapsed_seconds": 5.469
+    },
+    {
+      "id": "youtube-access",
+      "url": "https://www.youtube.com/watch?v=hVimVzgtD6w",
+      "utc": "2026-10-04T07:03:16.233685+00:00",
+      "permission": "HTTP access probe only; no transcript retained",
+      "http_status": 200,
+      "outcome": "page_access_only_not_caption_proof"
+    }
+  ]
+}

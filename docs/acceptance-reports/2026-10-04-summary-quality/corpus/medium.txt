@@ -1,0 +1,14 @@
+This is a planning meeting about a water-sensor trial at Maple Farm. The team wants to detect dry soil earlier, but this is only a trial, not proof that yields will increase.
+The approved trial budget is 2400 yuan. That is a spending ceiling, not money already spent. No supplier invoice has arrived and the discussion gives no final unit price.
+There are 18 sensors in the plan. Twelve go in the east plot and six go in the west plot. These are the entire trial; the farm is not deploying sensors to all fields.
+Mei is responsible for installation. Arun is responsible for weekly data review. Their duties are different: installing the equipment does not make Mei the reviewer.
+The team initially suggested starting on June 10, but the final start date is June 17 because the east plot access path needs repair. The trial runs for four weeks.
+On each Tuesday morning Arun will compare sensor readings with a manual soil check. The team will keep both readings so that disagreement can be investigated, rather than automatically trusting the sensor.
+The alert threshold is a moisture reading below 22 percent. An alert means a staff member checks the soil; it does not automatically start irrigation.
+If there are three consecutive days of missing readings, the trial pauses until the connection is fixed. A single missed reading does not meet this rule.
+No fertilizer change is part of this experiment. The team wants to keep other farm work consistent so the readings can be interpreted. Weather and access problems will be recorded in the trial notebook.
+Staff asked whether the sensors would save water. The meeting supplied no water-saving measurement, percentage, or guarantee. That question is left for the trial results.
+Staff also asked which vendor won the order. No vendor was selected in this discussion. Procurement must stay within the approved ceiling after quotations are reviewed.
+Only Arun's weekly review and the manual check can support a later decision. The plan requires a review at the end of the four weeks before any expansion. Expansion has not been approved.
+For clarity, the 2400 yuan is the ceiling, the 18 sensors are divided twelve and six, and the start is June 17. The early June 10 suggestion was superseded.
+The closing decision is to approve this limited trial with manual verification and a pause rule, without approving wider deployment or promising a water-saving result.

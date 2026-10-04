@@ -1,0 +1,376 @@
+{
+  "generatedAt": "2026-10-04T07:08:25.155Z",
+  "base": "http://127.0.0.1:5186",
+  "videoURL": "https://archive.org/details/youtube-6k-kbg3_Drc",
+  "summaryOnly": true,
+  "browser": "Microsoft Edge headless, WebGL disabled to exercise existing CSS fallback",
+  "appRoutesMocked": false,
+  "scopes": {
+    "real": [
+      "registration/login/JWT/auth restoration",
+      "Vite and application UI",
+      "FastAPI parse/summary and actual configured upstream",
+      "supplied video URL metadata and subtitle retrieval"
+    ],
+    "simulated": [],
+    "limitation": "Local media is not evidence of public-platform compatibility. WebGL/Live2D model rendering is not exercised."
+  },
+  "checks": [
+    {
+      "name": "desktop: auth fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: entry fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: registration, login persistence and logout use real auth API",
+      "pass": true
+    },
+    {
+      "name": "desktop: real yt-dlp parse and explicit format selection",
+      "pass": true,
+      "parsed": {
+        "title": "Imagine the Consequences",
+        "thumbnail": "https://archive.org/download/youtube-6k-kbg3_Drc/youtube-6k-kbg3_Drc.thumbs/Imagine_the_Consequences-6k-kbg3_Drc_000073.jpg",
+        "duration": 75.74,
+        "duration_string": "1:15",
+        "uploader": "dslr@email.com",
+        "platform": "archive.org",
+        "view_count": null,
+        "upload_date": "20190406",
+        "description": "If you're a regular viewer please DON'T try to become a Patreon supporter for as little as $1 per video because they are of course free for me to make, and I don't even have a Patreon account. I have ",
+        "subtitles": [
+          "en",
+          "fr"
+        ],
+        "formats": [
+          {
+            "format_id": "best",
+            "label": "最佳",
+            "height": null,
+            "ext": "mp4",
+            "resolution": null,
+            "filesize": null,
+            "has_audio": true,
+            "vcodec": null,
+            "acodec": "merged",
+            "direct": false,
+            "note": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop: selecting fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: summary visible",
+      "pass": true,
+      "summary": {
+        "title": "Imagine the Consequences",
+        "source_language": "en",
+        "summary": "说话者想到《指环王》最后一章中弗罗多对山姆的话：他们出发是为拯救霍比特屯或夏尔，并且做到了，但不是为自己。由此引出的观点是：我们做的事让自己还是对方受益并不重要，重要的是后代能否从中受益；我们应当根据后代是否会受益来决定要做什么。",
+        "key_points": [
+          "说话者提到《指环王》最后一章中弗罗多对山姆所说的话。",
+          "引述大意是：他们出发是为拯救霍比特屯或夏尔，并且做到了，但不是为了弗罗多自己。",
+          "核心观点认为，我们做的事让自己或对方受益并不重要。",
+          "真正重要的是我们的后代能从我们做的事中受益。",
+          "我们应当以“后代是否会从我们做的事中受益”为依据来决定要做什么。"
+        ],
+        "provider": "deepseek",
+        "model": "deepseek-flash"
+      }
+    },
+    {
+      "name": "desktop: AI requests do not consume download quota",
+      "pass": true
+    },
+    {
+      "name": "desktop: summary fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: final logout persists after reload",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "pass": true
+}

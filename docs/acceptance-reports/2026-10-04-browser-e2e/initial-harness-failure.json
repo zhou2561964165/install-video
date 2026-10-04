@@ -1,0 +1,502 @@
+{
+  "generatedAt": "2026-10-04T06:58:15.722Z",
+  "base": "http://127.0.0.1:5185",
+  "videoURL": "http://127.0.0.1:8052/captioned.html",
+  "summaryOnly": false,
+  "browser": "Microsoft Edge headless, WebGL disabled to exercise existing CSS fallback",
+  "appRoutesMocked": false,
+  "scopes": {
+    "real": [
+      "registration/login/JWT/auth restoration",
+      "Vite and application UI",
+      "FastAPI parse/subtitle/translate/summary/download/job/file APIs",
+      "yt-dlp reads local HTTP HTML video and track",
+      "real HTTP VTT text parse",
+      "yt-dlp downloads H264/AAC generated owned media",
+      "browser file and ffprobe verification"
+    ],
+    "simulated": [
+      "LLM HTTP upstream deterministic completion and controlled503"
+    ],
+    "limitation": "Local media is not evidence of public-platform compatibility. WebGL/Live2D model rendering is not exercised."
+  },
+  "checks": [
+    {
+      "name": "desktop: auth fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: entry fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: registration, login persistence and logout use real auth API",
+      "pass": true
+    },
+    {
+      "name": "desktop: real yt-dlp parse and explicit format selection",
+      "pass": true,
+      "parsed": {
+        "title": "Owned browser acceptance media (1)",
+        "thumbnail": null,
+        "duration": null,
+        "duration_string": "00:00",
+        "uploader": null,
+        "platform": "html5",
+        "view_count": null,
+        "upload_date": "20261004",
+        "description": "",
+        "subtitles": [
+          "en"
+        ],
+        "formats": [
+          {
+            "format_id": "best",
+            "label": "最佳",
+            "height": null,
+            "ext": "mp4",
+            "resolution": null,
+            "filesize": null,
+            "has_audio": true,
+            "vcodec": null,
+            "acodec": "merged",
+            "direct": false,
+            "note": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "desktop: selecting fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: real subtitle HTTP parser and simulated upstream translation",
+      "pass": true
+    },
+    {
+      "name": "desktop: summary visible",
+      "pass": true,
+      "summary": {
+        "title": "Owned browser acceptance media (1)",
+        "source_language": "en",
+        "summary": "可靠工具需要测试，并在失败后恢复。",
+        "key_points": [
+          "构建可靠工具",
+          "测试提前发现错误",
+          "失败后恢复"
+        ],
+        "provider": "simulated-local-upstream",
+        "model": "deterministic-local-e2e"
+      }
+    },
+    {
+      "name": "desktop: summary fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop: captioned server download reaches browser file",
+      "pass": true,
+      "bytes": 34092,
+      "sha256": "ae295675896ba43c070906fddd63460c143ca547767213bd62294a736885882c",
+      "duration": "3.000000",
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 1280,
+          "height": 720
+        },
+        {
+          "type": "audio",
+          "codec": "aac"
+        }
+      ],
+      "suggestedFilename": "Owned browser acceptance media (1).mp4"
+    },
+    {
+      "name": "desktop: captioned-done fits viewport",
+      "pass": true,
+      "width": 1440,
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "cssFallback": true,
+      "overflowing": [
+        {
+          "tag": "ASIDE",
+          "class": "expression-menu",
+          "width": 280
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__close",
+          "width": 40
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__scale",
+          "width": 246
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "BUTTON",
+          "class": "expression-menu__pill",
+          "width": 119
+        },
+        {
+          "tag": "SECTION",
+          "class": "expression-menu__group",
+          "width": 246
+        },
+        {
+          "tag": "H3",
+          "class": "expression-menu__label",
+          "width": 246
+        },
+        {
+          "tag": "DIV",
+          "class": "expression-menu__options",
+          "width": 246
+        }
+      ]
+    },
+    {
+      "name": "desktop no-caption error leaves download usable",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'subtitle_unavailable'\n- 'no_subtitles'\n"
+    }
+  ],
+  "requests": [
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/subtitle",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/subtitle/translate",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/download",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "GET",
+      "path": "/api/job/492c4fb2-b7fc-4a4b-9d63-bf2ca70a6e77",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "viewport": "desktop",
+      "method": "POST",
+      "path": "/api/summary",
+      "status": 422
+    }
+  ],
+  "errors": [],
+  "pass": false,
+  "failure": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'subtitle_unavailable'\n- 'no_subtitles'\n"
+}

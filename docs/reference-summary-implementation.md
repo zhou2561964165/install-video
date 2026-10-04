@@ -27,6 +27,8 @@ UI 改动先使用 `ui-ux-pro-max` + `design-system`，skill 优先于计划；�
 
 ## 验证与边界
 
+2026-10-04增量：在既有注册式接口中独立加入Bilibili公开view/dm字幕适配；同时适配本机yt-dlp返回的inline SRT与AI语言标记，补充原生正文失败后的单次通用恢复。真实匿名正文1973字符与访问限制分开留证，见[平台扩展](acceptance-reports/2026-10-04-platform-expansion/report.md)。完整[浏览器验收](acceptance-reports/2026-10-04-browser-e2e/report.md)和[总结质量评测](acceptance-reports/2026-10-04-summary-quality/report.md)另列证据。实现 `e7c29be`，全量169/66与构建通过。
+
 > 本节下列96/65及3/3数据是本报告对应的上一轮记录。后续101/66回归、三平台字幕样本以及有限TLS重试后的121/66复验，见[平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)；TLS重试实现提交于 `96b0b59`。
 
 - 后端96项、前端65项通过，生产构建通过。

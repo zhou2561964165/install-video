@@ -1,0 +1,63 @@
+{
+  "results": [
+    {
+      "id": "commons-climate",
+      "utc": "2026-10-04T06:56:09.399045+00:00",
+      "endpoint": "https://commons.wikimedia.org/w/api.php?action=query&format=json&formatversion=2&prop=videoinfo&viprop=timedtext&titles=File%3ADie_Temperaturkurve_der_Erde_%28ZDF%2C_Terra_X%29_720p_HD_50FPS.webm",
+      "permission": "access metadata only; no transcript retained",
+      "http_status": 403,
+      "outcome": "access_or_network_failure",
+      "error_type": "HTTPStatusError",
+      "error": "Client error '403 Forbidden' for url 'https://commons.wikimedia.org/w/api.php?action=query&format=json&formatversion=2&prop=videoinfo&viprop=timedtext&titles=File%3ADie_Temperaturkurve_der_Erde_%28ZDF%2C_Terra_X%29_720p_HD_50FPS.webm'\nFor more inform",
+      "elapsed_seconds": 2.984
+    },
+    {
+      "id": "commons-film",
+      "utc": "2026-10-04T06:56:12.392111+00:00",
+      "endpoint": "https://commons.wikimedia.org/w/api.php?action=query&format=json&formatversion=2&prop=videoinfo&viprop=timedtext&titles=File%3AElephants_Dream.ogv",
+      "permission": "access metadata only; no transcript retained",
+      "http_status": 403,
+      "outcome": "access_or_network_failure",
+      "error_type": "HTTPStatusError",
+      "error": "Client error '403 Forbidden' for url 'https://commons.wikimedia.org/w/api.php?action=query&format=json&formatversion=2&prop=videoinfo&viprop=timedtext&titles=File%3AElephants_Dream.ogv'\nFor more information check: https://developer.mozilla.org/en-US/",
+      "elapsed_seconds": 0.453
+    },
+    {
+      "id": "bilibili-view",
+      "utc": "2026-10-04T06:56:12.842512+00:00",
+      "endpoint": "https://api.bilibili.com/x/web-interface/view?bvid=BV12N4y1M7rh",
+      "permission": "access metadata only; no transcript retained",
+      "http_status": 200,
+      "code": 0,
+      "cid": 768121453,
+      "aid": 898179753,
+      "caption_metadata_endpoint": "https://api.bilibili.com/x/v2/dm/view?aid=898179753&oid=768121453&type=1",
+      "caption_metadata_status": 200,
+      "caption_metadata_code": 0,
+      "need_login_subtitle": null,
+      "track_count": 1,
+      "tracks": [
+        {
+          "lan": "zh-Hans",
+          "type": 0,
+          "source_host": "aisubtitle.hdslb.com"
+        }
+      ],
+      "outcome": "metadata_received",
+      "elapsed_seconds": 0.297
+    },
+    {
+      "id": "archive-short",
+      "utc": "2026-10-04T06:56:13.143675+00:00",
+      "endpoint": "https://archive.org/metadata/youtube-6k-kbg3_Drc",
+      "permission": "access metadata only; no transcript retained",
+      "http_status": 200,
+      "caption_names": [
+        "Imagine_the_Consequences-6k-kbg3_Drc.en.vtt",
+        "Imagine_the_Consequences-6k-kbg3_Drc.fr.vtt"
+      ],
+      "outcome": "metadata_received",
+      "elapsed_seconds": 1.875
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "ownership": "Self-authored artificial evaluation fixtures; redistributable with project.",
+  "samples": [
+    {
+      "id": "short",
+      "title": "Library closure notice",
+      "file": "short.txt",
+      "characters": 236,
+      "sha256": "fb697e852cc9ec63d276248cdd7d1ce50ef18606133f43b0f22b899ce8b2925b",
+      "required_facts": [
+        "Library is closed on Monday for maintenance."
+      ],
+      "absent_facts": [
+        "Reopening time",
+        "Alternative venue"
+      ],
+      "review_note": "One independent fact; do not pad key points."
+    },
+    {
+      "id": "medium",
+      "title": "Maple Farm limited trial decision",
+      "file": "medium.txt",
+      "characters": 2411,
+      "sha256": "abd8a2bd62e04a91d170eea7410191095985265073c23e3d03cb6543e4f3133d",
+      "required_facts": [
+        "2400 yuan ceiling, not actual spend",
+        "18 sensors: 12 east and 6 west",
+        "Final June 17 start supersedes June 10",
+        "Four-week trial",
+        "Below 22 percent prompts manual check, not automatic irrigation",
+        "Three consecutive missing-data days pauses trial",
+        "No expansion approved"
+      ],
+      "absent_facts": [
+        "Vendor selection",
+        "Unit price",
+        "Water-saving percentage"
+      ],
+      "review_note": "Check numbers, superseded proposal, responsibilities and absence claims."
+    },
+    {
+      "id": "long",
+      "title": "Cedar migration pilot meeting stress transcript",
+      "file": "long.txt",
+      "characters": 40441,
+      "sha256": "7ec581df8758983161dc535a254560945e32ba99f5e8cf0fd04d307c35e0d0a9",
+      "required_facts": [
+        "48000 yuan ceiling",
+        "1200 records in a six-week pilot",
+        "17 checksum mismatches",
+        "August 12 proposal rejected; September 9 conditional date",
+        "Clean checksum audit and successful rollback are release conditions",
+        "Noor can stop release if rollback fails"
+      ],
+      "absent_facts": [
+        "Production downtime measured",
+        "Full migration completed",
+        "Production reliability proved"
+      ],
+      "review_note": "Tail decisions must survive three section summaries and merge."
+    }
+  ]
+}
