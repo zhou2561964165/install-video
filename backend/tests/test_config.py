@@ -70,3 +70,23 @@ def test_default_paths_are_anchored_not_cwd_relative():
     # db_url 默认不再指向相对 CWD 的 ./jobs.db，而是锚定到 backend/jobs.db
     assert "jobs.db" in s.db_url
     assert "./jobs.db" not in s.db_url
+
+
+def test_summary_output_controls_are_loaded_from_env(monkeypatch):
+    monkeypatch.setenv("LLM_SUMMARY_RESPONSE_FORMAT", "json_object")
+    monkeypatch.setenv("LLM_SUMMARY_THINKING_MODE", "disabled")
+    configured = Settings.from_env()
+    assert configured.llm_summary_response_format == "json_object"
+    assert configured.llm_summary_thinking_mode == "disabled"
+
+
+@pytest.mark.parametrize("name,value", [
+    ("LLM_SUMMARY_RESPONSE_FORMAT", "yaml"),
+    ("LLM_SUMMARY_RESPONSE_FORMAT", "enabled"),
+    ("LLM_SUMMARY_THINKING_MODE", "text"),
+    ("LLM_SUMMARY_THINKING_MODE", "sometimes"),
+])
+def test_invalid_summary_output_controls_fail_at_startup(monkeypatch, name, value):
+    monkeypatch.setenv(name, value)
+    with pytest.raises(ValueError, match="llm_summary_"):
+        Settings.from_env()

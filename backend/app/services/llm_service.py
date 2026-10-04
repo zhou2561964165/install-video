@@ -12,6 +12,11 @@ import httpx
 from ..config import settings
 
 
+_SUMMARY_PROVIDER_DEFAULTS = {
+    "deepseek": {"response_format": "json_object", "thinking": "disabled"},
+}
+
+
 class LLMServiceError(RuntimeError):
     def __init__(self, error_type: str, message: str):
         super().__init__(message)
@@ -65,7 +70,13 @@ def _content_from_payload(payload: dict[str, Any]) -> str:
     return content.strip()
 
 
-def _complete(messages: list[dict[str, str]], *, client: httpx.Client | None = None, max_tokens: int | None = None) -> str:
+def _complete(
+    messages: list[dict[str, str]],
+    *,
+    client: httpx.Client | None = None,
+    max_tokens: int | None = None,
+    summary_options: dict[str, Any] | None = None,
+) -> str:
     endpoint = _endpoint()
     headers = {"Content-Type": "application/json"}
     if settings.llm_api_key:
@@ -73,6 +84,8 @@ def _complete(messages: list[dict[str, str]], *, client: httpx.Client | None = N
     payload = {"model": settings.llm_model, "messages": messages, "temperature": 0.2}
     if max_tokens is not None:
         payload["max_tokens"] = max_tokens
+    if summary_options:
+        payload.update(summary_options)
     owns_client = client is None
     http = client or httpx.Client(timeout=float(settings.llm_timeout_seconds))
     try:
@@ -134,7 +147,25 @@ def _parse_summary_json(content: str) -> tuple[str, list[str]]:
     normalized_points = [point.strip() for point in points if point.strip()]
     if not normalized_points:
         raise LLMServiceError("llm_invalid_response", "LLM 未返回关键要点")
+    if len(normalized_points) > 7:
+        raise LLMServiceError("llm_invalid_response", "LLM 关键要点超过七项上限")
     return summary.strip(), normalized_points
+
+
+def _summary_options() -> dict[str, Any]:
+    defaults = _SUMMARY_PROVIDER_DEFAULTS.get(settings.llm_provider.strip().lower(), {})
+    response_format = settings.llm_summary_response_format
+    if response_format == "auto":
+        response_format = defaults.get("response_format", "text")
+    thinking = settings.llm_summary_thinking_mode
+    if thinking == "auto":
+        thinking = defaults.get("thinking")
+    options: dict[str, Any] = {}
+    if response_format == "json_object":
+        options["response_format"] = {"type": "json_object"}
+    if thinking:
+        options["thinking"] = {"type": thinking}
+    return options
 
 
 def _summary_request(
@@ -146,6 +177,18 @@ def _summary_request(
     merge: bool = False,
 ) -> LLMSummaryResult:
     source_label = "Section summaries" if merge else "Transcript"
+    request_guidance = (
+        "Merge all sections into one final summary with at most seven thematic key points overall; "
+        "do not concatenate the section lists. Combine a topic's related reasons, conditions, and examples "
+        "inside its point, prioritizing central content. Preserve important conclusions near the end, "
+        "exact quantities and terminology, and the source's specific scope; do not generalize a concrete "
+        "example into a universal claim.\n\n"
+    ) if merge else (
+        "Summarize this transcript into one to seven thematic key points. Combine a topic's supporting "
+        "reasons, conditions, and examples inside its point; select central topics instead of listing "
+        "every detail separately. Check the point count before returning JSON. Preserve exact quantities, "
+        "terminology, specific scope, and important final conclusions without broadening examples.\n\n"
+    )
     content = _complete(
         [
             {
@@ -156,21 +199,28 @@ def _summary_request(
                     "and final decisions, distinguishing them from superseded proposals. Compress repetitive "
                     "or low-priority observations rather than listing their identifiers. Each key point must "
                     "state a distinct, complete important fact; combine related fragments and avoid repeating "
-                    "the same fact across points. Use fewer points when the source contains fewer independent "
+                    "the same fact across points. Organize points by main topic, combining a principle with "
+                    "its supporting reasons, conditions, and examples in one compact point. Prioritize core "
+                    "content over introductory logistics or incidental details, and avoid collecting unrelated "
+                    "topics into a catch-all point. Use fewer points when the source contains fewer independent "
                     "facts; do not pad or invent details. Return strict JSON only with keys "
-                    '"summary" (string) and "key_points" (array of 1-7 concise strings).'
+                    '"summary" (string) and "key_points" (array of 1-7 concise strings). '
+                    'Example JSON shape (replace placeholders with source facts): '
+                    '{"summary":"...","key_points":["..."]}'
                 ),
             },
             {
                 "role": "user",
                 "content": (
                     f"Output language: {output_language}\nTitle: {title or 'Untitled'}\n\n"
+                    f"{request_guidance}"
                     f"{source_label}:\n{_bounded(content_text)}"
                 ),
             },
         ],
         client=client,
         max_tokens=settings.llm_summary_max_output_tokens,
+        summary_options=_summary_options(),
     )
     summary, key_points = _parse_summary_json(content)
     return LLMSummaryResult(summary, key_points, settings.llm_provider, settings.llm_model)

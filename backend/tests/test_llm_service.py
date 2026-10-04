@@ -202,3 +202,67 @@ def test_one_complete_summary_point_is_preserved_without_padding(monkeypatch):
     ))) as client:
         result = summarize_text(fact, title='Library notice', output_language='en', client=client)
     assert result.key_points == [fact]
+
+
+@pytest.mark.parametrize("provider,response_mode,thinking_mode,expected", [
+    ("deepseek", "auto", "auto", {"response_format": {"type": "json_object"}, "thinking": {"type": "disabled"}}),
+    (" DeepSeek ", "auto", "auto", {"response_format": {"type": "json_object"}, "thinking": {"type": "disabled"}}),
+    ("compatible", "auto", "auto", {}),
+    ("deepseek", "text", "enabled", {"thinking": {"type": "enabled"}}),
+    ("compatible", "json_object", "disabled", {"response_format": {"type": "json_object"}, "thinking": {"type": "disabled"}}),
+])
+def test_summary_provider_output_controls(monkeypatch, provider, response_mode, thinking_mode, expected):
+    """Breaks if summary defaults/overrides emit the wrong provider payload."""
+    import json
+
+    _configure(monkeypatch)
+    monkeypatch.setattr(settings, "llm_provider", provider)
+    monkeypatch.setattr(settings, "llm_summary_response_format", response_mode, raising=False)
+    monkeypatch.setattr(settings, "llm_summary_thinking_mode", thinking_mode, raising=False)
+    captured = []
+
+    def provider_response(request):
+        payload = json.loads(request.content)
+        captured.append(payload)
+        return httpx.Response(200, json={"choices": [{"finish_reason": "stop", "message": {
+            "content": '{"summary":"Source fact.","key_points":["Source fact."]}'}}]})
+
+    with httpx.Client(transport=httpx.MockTransport(provider_response)) as client:
+        result = summarize_text("Source fact.", title="video", output_language="en", client=client)
+    assert result.key_points == ["Source fact."]
+    assert len(captured) == 1
+    emitted = {key: captured[0][key] for key in ("response_format", "thinking") if key in captured[0]}
+    assert emitted == expected
+    assert captured[0]["max_tokens"] == settings.llm_summary_max_output_tokens
+
+
+def test_translation_does_not_receive_summary_output_controls(monkeypatch):
+    """Breaks if summary-specific compatibility options leak into translation."""
+    _configure(monkeypatch)
+    monkeypatch.setattr(settings, "llm_provider", "deepseek")
+    monkeypatch.setattr(settings, "llm_summary_response_format", "json_object", raising=False)
+    monkeypatch.setattr(settings, "llm_summary_thinking_mode", "disabled", raising=False)
+    client = _FakeClient("Translated fact.")
+    result = translate_text("Source fact.", "en", client=client)
+    assert result.text == "Translated fact."
+    payload = client.calls[0][2]
+    assert "response_format" not in payload
+    assert "thinking" not in payload
+
+
+@pytest.mark.parametrize("point_count,rejected", [(1, False), (7, False), (8, True), (12, True)])
+def test_summary_enforces_point_count_contract_without_truncating_or_retrying(monkeypatch, point_count, rejected):
+    """Breaks if an overlong model list is accepted/truncated or the POST repeats."""
+    import json
+
+    _configure(monkeypatch)
+    points = [f"Distinct source fact {index}." for index in range(point_count)]
+    client = _FakeClient(json.dumps({"summary": "Source facts.", "key_points": points}))
+    if rejected:
+        with pytest.raises(LLMServiceError) as error:
+            summarize_text("\n".join(points), title="facts", output_language="en", client=client)
+        assert error.value.error_type == "llm_invalid_response"
+    else:
+        result = summarize_text("\n".join(points), title="facts", output_language="en", client=client)
+        assert result.key_points == points
+    assert len(client.calls) == 1
