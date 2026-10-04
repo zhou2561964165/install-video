@@ -22,6 +22,18 @@ class Settings:
     jwt_expire_minutes: int = 10080  # 7 天
     default_quota_limit: int = 10  # 每用户每日下载次数
     password_iterations: int = 100_000  # pbkdf2_hmac 迭代次数
+    # v3 字幕 + LLM（OpenAI-compatible；留空表示未配置，仅字幕读取可用）
+    subtitle_max_bytes: int = 5 * 1024 * 1024
+    subtitle_timeout_seconds: int = 30
+    llm_provider: str = "openai-compatible"
+    llm_base_url: str = ""
+    llm_api_key: str = ""
+    llm_model: str = ""
+    llm_timeout_seconds: int = 90
+    llm_max_input_chars: int = 60_000
+    llm_summary_chunk_chars: int = 20_000
+    llm_summary_max_chunks: int = 16
+    llm_summary_max_output_tokens: int = 4096
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -45,6 +57,17 @@ class Settings:
             jwt_expire_minutes=_int("JWT_EXPIRE_MINUTES", 10080),
             default_quota_limit=_int("DEFAULT_QUOTA_LIMIT", 10),
             password_iterations=_int("PASSWORD_ITERATIONS", 100_000),
+            subtitle_max_bytes=_int("SUBTITLE_MAX_BYTES", 5 * 1024 * 1024),
+            subtitle_timeout_seconds=_int("SUBTITLE_TIMEOUT_SECONDS", 30),
+            llm_provider=_str("LLM_PROVIDER", "openai-compatible"),
+            llm_base_url=_str("LLM_BASE_URL", ""),
+            llm_api_key=_str("LLM_API_KEY", ""),
+            llm_model=_str("LLM_MODEL", ""),
+            llm_timeout_seconds=_int("LLM_TIMEOUT_SECONDS", 90),
+            llm_max_input_chars=_int("LLM_MAX_INPUT_CHARS", 60_000),
+            llm_summary_chunk_chars=_int("LLM_SUMMARY_CHUNK_CHARS", 20_000),
+            llm_summary_max_chunks=_int("LLM_SUMMARY_MAX_CHUNKS", 16),
+            llm_summary_max_output_tokens=_int("LLM_SUMMARY_MAX_OUTPUT_TOKENS", 4096),
         )
 
 

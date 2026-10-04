@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { MODELS, DEFAULT_MODEL_ID, EXPRESSIONS, SCALE } from './mascotConfig.js';
+import { MODELS, DEFAULT_MODEL_ID, EXPRESSIONS, SCALE, getModelLayout } from './mascotConfig.js';
 
 describe('MODELS 模型注册表', () => {
   it('仅注册「白」一个模型', () => {
@@ -18,6 +18,12 @@ describe('MODELS 模型注册表', () => {
   });
   it('DEFAULT_MODEL_ID 指向唯一模型', () => {
     expect(DEFAULT_MODEL_ID).toBe('bai');
+  });
+  it('窄屏使用配置化布局，角色高度小于桌面布局', () => {
+    const m = MODELS[0];
+    expect(getModelLayout(m, 375)).toBe(m.mobile);
+    expect(getModelLayout(m, 1440)).toBe(m);
+    expect(m.mobile.heightRatio).toBeLessThan(m.heightRatio);
   });
 });
 

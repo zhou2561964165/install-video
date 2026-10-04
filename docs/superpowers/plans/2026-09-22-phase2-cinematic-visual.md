@@ -1,4 +1,6 @@
 # 第二阶段：电影感视觉升级 · 实现计划
+> 文档状态（2026-10-03整理）：**历史参考**。历史视觉方案，当前不推进这条演进线。未勾选项不代表本轮必做；最新已定方向是AI内容总结，当前状态见 [交接](../../handoff.md)。
+> 工程约定仍适用：UI先用 `ui-ux-pro-max` + `design-system`；skill优先于旧计划；颜色/字体/时长token化、能力数据与配置驱动；yt-dlp仅经 `ytdlp_service.py`，视觉只读scene，不修改下载核心。
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Live2DModel, MotionPriority } from 'pixi-live2d-display/cubism4';
-import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE } from './mascotConfig.js';
+import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE, getModelLayout } from './mascotConfig.js';
 
 // 创建 Live2D 角色并接入「拖动角色」+「点击角色 → onTap（React 弹换装菜单）」。
 //   modelId   —— 初始模型 id（缺省/未命中回落 DEFAULT_MODEL_ID）
@@ -29,10 +29,11 @@ export async function createMascot(app, modelId, { onTap } = {}) {
   function place(instance, cfg) {
     const w = app.screen.width;
     const h = app.screen.height;
+    const layout = getModelLayout(cfg, w);
     instance.anchor.set(0.5, 0.5);
-    instance.scale.set((h * cfg.heightRatio * scaleFactor) / instance.getLocalBounds().height);
-    instance.x = w * cfg.x;
-    instance.y = h * cfg.y;
+    instance.scale.set((h * layout.heightRatio * scaleFactor) / instance.getLocalBounds().height);
+    instance.x = w * layout.x;
+    instance.y = h * layout.y;
   }
 
   // 交互：可拖动 + 点击（onTap，React 弹换装菜单）。
@@ -285,9 +286,10 @@ async function createFallback(app, modelId) {
   if (!app.stage) return noopMascot(); // await 期间 app 已销毁
   const naturalHeight = sprite.height;   // 纹理自然高（scale 仍为 1）
   const lay = () => {
-    sprite.scale.set((app.screen.height * cfg.heightRatio) / naturalHeight);
-    sprite.x = app.screen.width * cfg.x;
-    sprite.y = app.screen.height * cfg.y;
+    const layout = getModelLayout(cfg, app.screen.width);
+    sprite.scale.set((app.screen.height * layout.heightRatio) / naturalHeight);
+    sprite.x = app.screen.width * layout.x;
+    sprite.y = app.screen.height * layout.y;
   };
   lay();
   app.stage.addChild(sprite);

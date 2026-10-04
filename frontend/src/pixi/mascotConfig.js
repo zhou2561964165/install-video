@@ -16,6 +16,9 @@ export const MODELS = [
     heightRatio: 0.49,
     x: 0.82,
     y: 0.62,
+    // 窄屏把角色收在右下装饰区，避免遮住标题、输入框和示例按钮。
+    // maxWidth 与 CSS 移动断点一致；初始 SCALE=2，因此 0.2 最终约占屏高 40%。
+    mobile: { maxWidth: 720, heightRatio: 0.2, x: 0.78, y: 0.78 },
     fallback: { url: '/live2d/bai/白.16384/texture_00.png' },
     hit: { width: 1400, height: 2000 },
   },
@@ -23,6 +26,11 @@ export const MODELS = [
 
 // 默认模型 id：切换状态、兜底、初始加载统一从这里取，避免在组件内写死 'bai'
 export const DEFAULT_MODEL_ID = MODELS[0].id;
+
+// 模型布局选择保持配置驱动：渲染与静态兜底共用同一入口，新增断点不改摆放算法。
+export function getModelLayout(model, viewportWidth) {
+  return model.mobile && viewportWidth <= model.mobile.maxWidth ? model.mobile : model;
+}
 
 // 程序化待机动画配置：「白」的 model3.json 的 Motions 只挂了 edle 装饰特效（单个星光特效，
 // 无呼吸/待机动作），且无 Breath 字段，角色本身不会自动呼吸/摆动，故用正弦逐帧

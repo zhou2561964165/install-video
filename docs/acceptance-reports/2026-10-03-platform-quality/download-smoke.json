@@ -1,0 +1,20 @@
+{
+  "captured_at_utc": "2026-10-03T13:49:21.627877+00:00",
+  "url": "https://download.samplelib.com/mp4/sample-5s.mp4",
+  "pass": false,
+  "quota_before": {
+    "date": "2026-10-03",
+    "limit": 10,
+    "used": 0,
+    "remaining": 10
+  },
+  "parse_status": 422,
+  "error_type": "HTTPStatusError",
+  "error": "Client error '422 Unprocessable Entity' for url 'http://127.0.0.1:8010/api/parse'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/422",
+  "detail": {
+    "detail": {
+      "error_type": "network",
+      "error": "ERROR: [generic] sample-5s: Unable to download webpage: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010) (caused by SSLError('[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+    }
+  }
+}

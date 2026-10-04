@@ -1,0 +1,58 @@
+{
+  "caption_http_failure_count": 0,
+  "attempts": [
+    {
+      "attempt_id": "initial-strict-runner",
+      "stage": "yt-dlp track match gate",
+      "sample_id": "IA-lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack-eng-vtt",
+      "error_type": "LookupError",
+      "observation": "The project adapter returned zero tracks; the preliminary runner stopped before caption HTTP.",
+      "resolved": true,
+      "resolution": "Kept the adapter failure as a platform integration result and fetched the metadata-listed, licensed VTT directly for parser-only acceptance.",
+      "counted_as_sample_http_failure": false,
+      "counted_as_platform_integration_failure": true
+    },
+    {
+      "attempt_id": "python-httpx-route",
+      "stage": "Python metadata HTTP",
+      "error_type": "ConnectError",
+      "observation": "The local Python/httpx route could not connect; no caption file was saved by this attempt.",
+      "resolved": true,
+      "resolution": "Used PowerShell Invoke-WebRequest with explicit sandbox escalation to the same public Internet Archive endpoint.",
+      "counted_as_sample_http_failure": false
+    },
+    {
+      "attempt_id": "collector-write-acl",
+      "stage": "raw license metadata write",
+      "error_type": "MethodInvocationException",
+      "inner_error_type": "UnauthorizedAccessException",
+      "observation": "The elevated collector could not write directly into the ACL-restricted raw-extra folder; caption GET did not start.",
+      "resolved": true,
+      "resolution": "Staged the public file under the report workspace, then copied it to raw-extra with SHA-256 and size verification under restricted folder ACLs.",
+      "counted_as_sample_http_failure": false
+    },
+    {
+      "attempt_id": "collector-encoding-init",
+      "stage": "license metadata write",
+      "error_type": "MethodInvocationException",
+      "inner_error_type": "ArgumentNullException",
+      "inner_error_message": "Value cannot be null: encoding",
+      "observation": "The helper omitted UTF-8 Encoding initialization; caption GET did not start.",
+      "resolved": true,
+      "resolution": "Initialized UTF8Encoding(false), then reran all four listed caption GETs successfully.",
+      "counted_as_sample_http_failure": false
+    },
+    {
+      "attempt_id": "staging-finalizer-boolean",
+      "stage": "staged file copy verification",
+      "error_type": "CommandNotFoundException",
+      "observation": "The first finalizer copied and hash-verified the first caption, then stopped at a bare true literal.",
+      "resolved": true,
+      "resolution": "Changed it to $true and reran idempotently; all four staged files matched receipt hashes and were copied.",
+      "counted_as_sample_http_failure": false
+    }
+  ],
+  "final_successful_caption_gets": 5,
+  "final_direct_http_failures": 0,
+  "note": "Helper and sandbox issues are preserved here but excluded from sample parser/platform pass-rate denominators. Application track-discovery results are recorded separately in test-results.json."
+}

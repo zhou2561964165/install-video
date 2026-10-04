@@ -9,6 +9,8 @@ from .db import init_db
 from .routes.auth import router as auth_router
 from .routes.download import router as download_router
 from .routes.parse import router as parse_router
+from .routes.subtitle import router as subtitle_router
+from .routes.summary import router as summary_router
 
 app = FastAPI(title="万能视频下载")
 
@@ -35,3 +37,5 @@ async def rate_limit_middleware(request: Request, call_next):
 app.include_router(parse_router)
 app.include_router(download_router)
 app.include_router(auth_router)
+app.include_router(subtitle_router)
+app.include_router(summary_router)

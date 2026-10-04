@@ -1,276 +1,124 @@
-# 交接文档 · 万能视频下载网站（当前：v2 账号 + 每用户额度，前后端均已接入）
+# 交接文档 · 万能视频下载与 AI 内容总结
 
-> 更新：2026-10-02 · 代码 HEAD `ffda1ce` · **最近：依赖切 uv + 清理本地生成物 + 补齐「滚动落地页」现状（见 §8）**
-> 本文写给**下一位接手者**（人或 AI）。所有命令、数字、结论均来自**实测**，如实标注验证程度，不夸大、不隐瞒。
+> 更新：2026-10-04 · v3实现、验收与文档已提交在 `main`。
+> 当前入口见 [文档索引](README.md)。最后一次交接前验收结果见[平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)。
 
----
+## 0. 当前结论与用户已定方向
 
-## 0. 30 秒上手
+- v2：注册/登录、JWT、每用户每日下载额度；解析、下载和 v3 API 必须登录。
+- v3：AI 内容总结为主，字幕只是内容来源；允许清理重复片段，长内容分段归纳后合并。字幕读取/翻译保留为辅助能力。
+- 滚动落地页保留在登录后，用户已确认；本轮不扩展完整字幕展示、时间轴导出、思维导图、问答或支付。
+- 当前测试供应商为 DeepSeek-V4.1-Flash，API 模型 ID `deepseek-flash`；供应商地址、模型和 key 走配置。
+- 已只读分析 `C:/Users/zxk/free-video-downloader`，借鉴平台专用提取与通用回退思想并独立实现，未修改参考项目或复制其源码。
 
-**这是什么**：一个「粘贴链接 → 解析 → 选清晰度 → 下载」的全流程视频下载网站。
-- 后端：FastAPI + yt-dlp + SQLite（进程内直接调 yt-dlp Python API）。
-- 前端：React 18.3 + Vite + PIXI 6.5.10 + pixi-live2d-display 0.4.0，Live2D 角色「白」，深色液态玻璃 + 樱花粉辉光主题。
+## 1. 子agent与本轮交接状态
 
-**跑起来（3 条命令）**：
-
-```bash
-# 后端（端口 8000；uv 管理的 .venv 在仓库根目录）
-cd backend && uv run uvicorn app.main:app --reload --port 8000
-
-# 前端（端口 5173；dev server 已配 Vite 代理 /api → localhost:8000）
-cd frontend && npm run dev
-```
-
-浏览器打开 `http://localhost:5173`（若端口被占，Vite 自动 +1，看终端实际地址）。首屏是**登录/注册门**（强制登录、无「游客继续」）：注册/登录后进入**五屏滚动落地页**（`EntryScene` 叙事 + 聚焦吸附），粘贴链接即进入下载流程，顶部账号条显示「今日剩余 X/Y」。
-
-**验证跑通（2 条命令，均全绿——已实测）**：
-
-```bash
-cd frontend && npm test                                   # 55/55 通过（本次实测）
-cd backend && uv run python -m pytest -q        # 46/46 通过（后端未动）
-```
-
-> 首次换机器需：`uv sync`（仓库根目录，uv 依据 pyproject.toml 建 .venv）；前端 `cd frontend && npm install`。
-
----
-
-## 1. 当前活跃任务（先读这个）
-
-**任务**：v2 账号体系 + 每用户额度，**后端 + 前端均已接入（2026-09-24）**。
-- 后端（已完成）：注册/登录 JWT + 每用户每日额度，46/46 全绿。
-- 前端（本次完成）：登录/注册**强制门** + 顶部账号条额度余量，55/55 全绿；**浏览器手动联调未做**。
-
-- **计划文件**：v2 计划曾存 `.planning/2026-09-24-v2-account-quota/`（已随本地清理删除，内容见 git 历史）；前端 v2 计划是 Claude 本地文件（`~/.claude/plans/...`，非本仓库，Codex 无需）。
-- **依据文档**：`docs/superpowers/plans/2026-09-21-extension-plan.md` §3.1（已标记「已实现」）、`docs/design.md` §6/§9/§12、`docs/requirements.md` §7/§8。
-
-### 1.1 阶段进度（如实）
-
-| 阶段 | 状态 |
-| --- | --- |
-| 会话 1：侦察 + 计划初始化 | ✅ 完成（读遍后端源码 + 扩展计划，产出 3 个计划文件） |
-| 阶段 1 数据模型 + 配置 | ✅ 完成（`models.py` 加 User/Quota/Job.user_id + `config.py` 加 4 环境变量） |
-| 阶段 2 认证服务 + 路由 | ✅ 完成（`services/auth.py` + `routes/auth.py` + `schemas.py` + 新依赖 pyjwt） |
-| 阶段 3 额度接入下载 | ✅ 完成（`services/quota.py` + `download.py` 路由层检查） |
-| 阶段 4 测试 | ✅ 完成（`test_auth.py` 8 条 + `test_quota.py` 5 条，后端 46/46 全绿） |
-| 阶段 5 文档同步 | ✅ 完成（requirements/design/extension-plan/handoff 四处） |
-| 会话 7 前端接 v2 | ✅ 代码完成 + 单测 55/55（登录/注册强制门 + 额度余量；**手动联调未做**） |
-| 会话 8 入口改滚动落地页 | ✅ 代码完成（`EntryScene` 五屏叙事 + 滚动聚焦 + 强制吸附；**手动联调未做**） |
-
-> v2 前后端均已落地：后端 `46 passed`（既有 33 + 新增 13），前端 `55 passed`（原 44 + 本次新增 11）。
-
-### 1.2 约束红线（不可破）
-
-1. **下载核心永不被触碰**：`services/ytdlp_service.py` 不加账号/额度职责；`services/jobs.py` 线程池不感知用户。
-2. **后端公开访问现状**：`/api/parse`、`/api/download` 无 token 仍可用（匿名走每 IP 限流）。⚠️ 产品方向已变：匿名下载**后续取消、改必须登录**，后端收紧留作后续任务（本次未动后端）；前端已做强制登录门（不提供匿名入口）。
-3. **契约向后兼容**：`schemas.py` 新字段用可选/默认值，旧前端不因缺字段报错。
-4. **错误类型向前兼容**：只复用既有 `error_type`（`quota` / `login_required`），不改 9 类语义。
-5. **配置不硬编码**：secret / 额度上限 / 过期时长 / 迭代次数全进 `config.py` 环境变量。
-6. **测试不删改**：既有 pytest 33 条保持全绿，新增测试独立成文件。
-
-### 1.3 已定设计决策（计划阶段拍板，勿再问）
-
-- 鉴权 = **JWT（pyjwt，HS256）**，Bearer token；session cookie 方案暂不采用。
-- 密码哈希 = **stdlib `hashlib.pbkdf2_hmac`**（零新依赖，不引入 bcrypt/passlib）。
-- **匿名保留**：额度只作用于已登录用户，匿名下载仍走每 IP 限流。
-- 额度 = **每日额度**（UTC 日期粒度），提交即扣，直链与服务端下载同计；失败退款留作后续。
-- 额度检查放**路由层**（`download.py`），不进 `jobs.py` 线程池。
-- 额度超限复用 `error_type="quota"`（前端 `ERROR_SCENES.quota` 已覆盖，零新增错误类型）。
-- 唯一新依赖 = **`pyjwt`**。
-- [2026-09-24 前端] 登录门 = **强制登录**（无「游客继续」），未登录先登录/注册才能下载。
-- [2026-09-24 前端] 额度余量 = **顶部账号条**（`今日剩余 X/Y`，用完显示「额度已用完」）。
-- [2026-09-24 前端] 登录持久化 = **localStorage**（key `auth_token`），刷新自动恢复。
-- [2026-09-24 前端] 额度刷新 = App 层 `useEffect` 监听 `state.download`（提交成功）与 `state.error`（`quota`）→ `refreshQuota()`，`useDownload.js` 零改动。
-- [2026-10-01 前端] 入口 = **滚动落地页**（`EntryScene` 五屏叙事 + 滚动聚焦 + 强制吸附）。**当前在登录门之后**（`App.jsx` 的 `authed` 分支内渲染），无「登录前公开落地页」；是否前置为公开首页 = **待定产品决策**。
-
-### 1.4 前端 v2 验证程度（如实）
-
-- ✅ 单测 55/55 全绿（`api.test.js` auth 边界、`App.test.jsx` 强制门、`AuthScene.test.jsx` 表单）。
-- ⚠️ **未做浏览器手动联调**：登录/注册真实请求、额度递减、刷新保持登录、退出，均未在真实前后端联调下验证过（只靠单测 mock）。接手后建议先跑一遍 §6 手工验收第 1 条。
-
----
-
-## 2. 架构与解耦铁律
-
-### 2.1 数据流
-
-```
-[前端 React/Vite :5173]  ⇄ /api（Vite 代理） ⇄  [FastAPI :8000]
-                                                    │
-                          ┌─────────────────────────┼──────────────────┐
-                          │ ytdlp_service.py        │  线程池 + 并发上限  │
-                          │ extract_info / download │  任务状态落 SQLite │
-                          └─────────────────────────┼──────────────────┘
-                                                    │
-                                              临时目录 TTL 自动清理
-```
-
-### 2.2 解耦边界（单向依赖，改动隔离——违反会破坏扩展性）
-
-- **后端**：`backend/app/services/ytdlp_service.py` 是**唯一**接触 `yt_dlp` 的层；其余模块只依赖它的接口（`extract_info` / `download` / 进度回调），**不得直接 import `yt_dlp`**。
-- **前端**：视觉表现层（`pixi/`、`components/`）**只读** `scene` 状态，**绝不修改下载状态、绝不 import 下载核心**；下载核心也不依赖视觉层。
-- **数据驱动、不写死**：颜色/字体/时长走 `:root` token；模型/表情/道具/特效走 `frontend/src/pixi/mascotConfig.js`。
-
-### 2.3 工程约定（最高优先级，与根 CLAUDE.md 一致）
-
-1. UI 必用 skill（`ui-ux-pro-max` 主 + `design-system`）；涉及 UI 前**先调 skill，再写代码**。
-2. skill 优先于计划（冲突以 skill 为准）。
-3. 不写死、保留扩展，避免大规模重构。
-4. 解耦（见 2.2）。
-5. 每完成一个 Task **停下等用户指示**，不自动推进下一个 Task。
-
-> 注：`ui-ux-pro-max` / `design-system` 是 Claude 的 skill 工具；换 Codex 接手时无这些 skill，直接照本列表与根 `CLAUDE.md` 写明的约定（解耦 / token / 不写死 / 数据驱动）执行即可。
-
----
-
-## 3. 前端 token 体系（pidanai 重构成果，已提交）
-
-三层 token：primitive → semantic → component，单一切换开关 `[data-theme]`（写在 `<html>` 上）。
-
-**深色为默认**（`:root` = 深色签名）；`[data-theme='light']` 为显式浅色覆盖块；`[data-theme='dark']` 继承默认；`[data-theme='auto']` 由 `@media (prefers-color-scheme)` 解析。`App.jsx` 的 `useState` 默认 `'dark'`，三档数组 `THEMES = [{v:'light'},{v:'dark'},{v:'auto'}]`。
-
-### 3.1 关键 token 值（evaluate_script 实测读数）
-
-| token | 深色 | 说明 |
+| 子agent | 处理结果 | 后续使用 |
 | --- | --- | --- |
-| `--surface` | `#0a0a0f`（ink-900） | 基底 |
-| `--surface-glass` | `color-mix(in srgb, #fff 6%, transparent)` | 玻璃面（浅色档为 72% 白） |
-| `--accent` | `#d6336c` | 品牌樱花粉·主按钮（白字 4.6:1） |
-| `--accent-hover` | `#bd2a5b` | 深一档 |
-| `--accent-pink` | `#ff6cae` | 折射粉（辉光/PIXI 粒子） |
-| `--accent-lilac` | `#996fff` | 折射紫 |
-| `--refract-cyan` | `#47a9ff` | 折射青 |
-| `--refract-violet` | `#996fff` | 折射紫 |
-| `--refract-pink` | `#ff6cae` | 折射粉 |
-| `--refract-mint` | `#53ddb8` | 折射薄荷 |
-| `--refract-warm` | `#ffc062` | 折射暖橙 |
-| `--fs-display` | `clamp(40px, 8vw, 104px)` | 超大展示字号 |
+| `real_platform_subtitle_acceptance` | 已完成，已执行停止操作，无运行任务 | 本轮停用，不自动重启或复用 |
+| `v3_review` | 已完成，已执行停止操作，无运行任务 | 本轮停用，不自动重启或复用 |
 
-折射五色**跨主题恒定**（hex，不随浅/深变化）；品牌粉 `--accent` 也跨主题恒定。
+当前运行中的子agent为 **0**；主agent设定未修改。现有管理工具无法删除已完成的历史会话记录，界面仍可能显示这两个完成记录。审查记录中的两项 Important 是修复前发现，现已通过回归测试修复，不代表仍未处理。
 
-### 3.2 PIXI `hex()` 约束（重要坑）
+## 2. 启动与验证
 
-`pixi/theme.js` 的 `hex()` 用 `parseInt(hex,16)`，非 hex 输入回退**白色**。因此 `--accent` 系列 token **必须解析为 hex**，**不能**是 `rgba()`/`color-mix()`。PIXI 消费的 token 与 CSS 消费的 token 分属两条线，改值时两侧同步（theme.js fallback 与 global.css `:root` 一致）。
+仓库根目录执行 `uv sync` 安装 Python 依赖；前端首次安装执行 `cd frontend && npm install`。虚拟环境位于仓库根 `.venv`，不是 `backend/.venv`。
 
----
-
-## 4. 玻璃系统（pidanai 重构成果，已提交）
-
-- 玻璃配方统一 token：`--glass-blur:18px` / `--glass-saturate:1.16` / `--glass-filter: blur(18px) saturate(1.16)`。
-- 所有 `backdrop-filter`（含 `-webkit-` 孪生行）统一引用 `var(--glass-filter)`。
-- `body` 背景 = 深色底 + 折射双光斑 + 樱花粉辉光（角色身后）。
-
-### 4.1 backdrop-filter 祖先破坏（必须逐模块巡检）
-
-`opacity<1` / `transform` / `filter` / `overflow:hidden` 任一出现在玻璃元素**祖先**上，会**静默破坏** `backdrop-filter`。改任何玻璃面，先检查祖先链（巡检法：chrome-devtools 读 `getComputedStyle(el).backdropFilter` + 逐祖先查这四项）。
-
----
-
-## 5. 文件地图（改哪，看哪）
-
-### 前端 `frontend/src/`
-
-| 文件 | 职责 |
-| --- | --- |
-| `App.jsx` | 场景装配：登录门（gate/authed 分支）、三档主题、角色点击开菜单、scene→表情/特效 |
-| `styles/global.css` | **三层 token + 全部组件样式（视觉层唯一真源）** |
-| `pixi/theme.js` | PIXI 颜色读 `:root` 语义 token |
-| `pixi/mascotConfig.js` | **数据单一来源**：`MODELS`/`IDLE`/`EXPRESSIONS`/`SCALE` |
-| `pixi/mascot.js` | Live2D 创建/待机/`setExpression`/`scaleBy` |
-| `pixi/background.js` | 折射光点/背景 |
-| `pixi/stage.js` | PIXI 舞台初始化/销毁 + `webglSupported`/`detectTier`（App 挂载入口） |
-| `components/ui/ExpressionMenu.jsx` | 换装菜单 |
-| `components/ui/Preloader.jsx` | 加载层 |
-| `components/EntryScene.jsx` | **五屏滚动落地页**（叙事 + 滚动聚焦 + 强制吸附；登录后入口） |
-| `components/ParsingScene.jsx` | 解析中 |
-| `components/{Selecting,Downloading,Done,Error}Scene.jsx` | 选格式/下载中/完成/出错场景 |
-| `components/AuthScene.jsx` | 登录/注册整屏门（强制，无游客继续） |
-| `components/ui/AuthBar.jsx` | 顶部账号条（邮箱 + 额度 + 退出） |
-| `components/ui/{Bubble,Danmaku,EnergyBar}.jsx` | 气泡 / 弹幕 / 能量条 |
-| `api.js` | 后端接口封装（前端唯一接后端的边界）：含 auth token 边界 + `register/login/getMe` |
-| `lib/videoAdapter.js` / `lib/saveFile.js` | parse 归一化 / 浏览器原生保存 |
-| `hooks/useDownload.js` | 下载编排（发起 + 轮询 + 自动保存） |
-| `hooks/useAuth.js` | 登录态三态 `loading/gate/authed` + localStorage 持久化 + 额度刷新 |
-| `state/sceneMachine.js` | 场景状态机 + `ERROR_SCENES` 9 类文案 |
-| `state/downloadConfig.js` | `POLL_MS` 配置 |
-| `audio/audioManager.js` | SFX / WebAudio（EntryScene 音效；jsdom 下静默） |
-| `fx/constants.js` | 动效/交互共享常量（时长/缓动，**第二个「不写死」源**，呼应 §2.2） |
-| `main.jsx` | 前端入口（挂 ReactDOM） |
-
-### 后端 `backend/app/`
-
-| 文件 | 职责 | v2 状态 |
-| --- | --- | --- |
-| `services/ytdlp_service.py` | **唯一**接触 yt-dlp 的层 | ❌ 未动（红线） |
-| `services/jobs.py` | 线程池 + 任务生命周期 + 临时文件清理 | ❌ 未动（红线） |
-| `config.py` | 全部配置（env 覆盖） | ✅ 加 JWT/额度 4 变量 |
-| `routes/parse.py` / `download.py` | HTTP 路由 | ✅ `download.py` 注入可选鉴权 + 额度检查 |
-| `models.py` | SQLModel `Job` + `User` + `Quota` | ✅ 加 User/Quota + Job.user_id |
-| `db.py` | SQLite 引擎/会话 | ✅ `init_db` 未改（create_all 自动建新表） |
-| `schemas.py` | Pydantic 请求/响应 | ✅ 加 auth 相关 6 个 schema |
-| `main.py` | 入口 + 限流中间件 | ✅ include auth_router |
-| `services/auth.py` | 密码哈希（pbkdf2）+ JWT + 鉴权依赖 | ✅ 新增 |
-| `services/quota.py` | 每用户每日额度（查/扣） | ✅ 新增 |
-| `routes/auth.py` | `POST /api/auth/register·login`、`GET /api/auth/me` | ✅ 新增 |
-| `tests/test_auth.py` / `tests/test_quota.py` | v2 测试（8+5 条） | ✅ 新增 |
-
----
-
-## 6. 如何验证改动
+本机已配置被 Git 忽略的 `backend/.env`，启动 DeepSeek 联调环境：
 
 ```bash
-cd frontend && npm test                                   # 前端必跑（55/55）
-cd backend && uv run python -m pytest -q        # 后端必跑（46/46）
+cd backend
+uv run uvicorn app.main:app --reload --port 8000 --env-file .env
 ```
 
-**手工验收清单**（动到以下任一项就跑）：
-1. **登录/额度（本次新增，尚未联调）**：首屏登录门 → 注册新号 → 进入下载流程 → 账号条「今日剩余 10/10」→ 下载一次递减 → 刷新仍登录 → 退出回登录门。
-2. 起前后端 → 打开 `:5173` → 登录后模型正常显示（非黑屏）。
-3. 点角色 → 弹菜单 → 点「变大/变小」等比缩放、点表情变 `is-active`。
-4. 主题三档切换（浅/深/自动）→ 玻璃卡、token、文字色随档切换。
-5. 登录后粘贴真实链接跑「解析 → 选清晰度 → 下载」全流程。
+另开终端：
 
----
+```bash
+cd frontend
+npm run dev
+```
 
-## 7. 坑（务必先读，别再踩）
+新机器先创建自己的 `.env`。不启用 LLM 时，可不加 `--env-file .env`；模型未配置会在功能面板就地提示。文档和源码不保存 key。访问 Vite 输出的实际端口，`/api` 默认代理到 8000。
 
-1. **venv 在仓库根目录** `E:/install_video/.venv`，**不是** `backend/.venv`，由 `uv sync` 管理。后端命令用 `uv run ...`（自动用该 venv）。
-2. **ffmpeg**：默认 `ffmpeg_path="ffmpeg"`（走 PATH）；本机靠环境变量 `FFMPEG_PATH` 指定。换机器报 `ffmpeg_missing` 先设 `FFMPEG_PATH`。可 env 覆盖：`MAX_CONCURRENT`(3)、`TEMP_DIR`(backend/tmp)、`MAX_FILE_SIZE`(2GB)、`TTL_SECONDS`(3600)、`RATE_LIMIT`(30)。`ytdlp_service.py` 有 `FFMPEG_MIN_HEIGHT=1080` 阈值：仅 ≥1080p 提供 ffmpeg 合并，低清档只用渐进式直链、无直链跳过该档（720/480/360 可能不出现属预期）。
-3. **16K 纹理**：`白.16384/texture_00.png` 是 16384×16384（约 1GB GPU 纹理），超过部分 GPU 的 `MAX_TEXTURE_SIZE` 会黑屏。开发机已实测可加载；移动端需征得作者许可压缩（属「二改」）。
-4. **授权状态**：Live2D「白」已获作者授权，页脚署名已去除。「二改」（纹理压缩/模型改动）是否在授权范围内仍建议确认后再动。
-5. **WebGL canvas 读不到像素**：PIXI 默认 `preserveDrawingBuffer:false`。测模型尺寸用临时 `window.__mascot` 钩子，实测后删。
-6. **edle 只有单个特效**：`edle.motion3.json` 是单个「星光闪烁」循环，非旧注释所写 5 个。
-7. **YouTube 间歇性风控**：部分视频报 `Sign in to confirm you're not a bot`（`login_required`/网络错误），属风控非 bug。真实链路验证应预期偶发失败。
-8. **backdrop-filter 祖先破坏**：`opacity<1`/`transform`/`filter`/`overflow:hidden` 出现在祖先会静默破坏玻璃效果（§4.1）。
-9. **PIXI `hex()` 只吃 hex**：`--accent*` 系列 token 必须 hex，不能 `rgba`/`color-mix`，否则 PIXI 侧回退白色（§3.2）。
-10. **Vitest 两条「Not implemented: navigation」告警是既有的**：来自 `useDownload.js` 的 `window.location.assign` 与 `saveFile` 的 `a.click()` 在 jsdom 不支持，**非测试失败**（55/55 仍全绿）。
-11. **SQLite 建表**：新表靠 `init_db()` 的 `create_all` 自动建，无需迁移工具；但已有 `jobs.db` 上**已有表不会被 ALTER**——v2 已给 `Job` 加 `user_id` 列、新增 `user`/`quota` 表，**换到旧库需删 `backend/jobs.db` 重建**（开发期直接删即可）。
-12. **App.test.jsx 已 mock `useAuth`**：加登录门后 `App` 首屏不再是 EntryScene。凡在 App.test 测下载流程，必须让 `vi.mock('./hooks/useAuth.js')` 返回 `status:'authed'`（已配好）；测「未登录」用 `status:'gate'`。改 App 结构时别漏这条 mock。
-13. **登录 token 两处要一致**：localStorage key `auth_token`（持久）+ `api.js` 模块级 `authToken`（运行时，刷新后靠 `useAuth.init()` 从 localStorage 恢复并 `setAuthToken`）。改 token 流程时两处同步。
+环境要求：Python 3.12（uv）、Node 满足当前 Vite 的 `^20.19.0 || >=22.12.0`、ffmpeg；最近验证本机 Node 为24.16.0。
 
----
+```bash
+cd backend && uv run python -m pytest -q
+cd frontend && npm test
+cd frontend && npm run build
+```
 
-## 8. Git 状态（如实）
+| 最近验证 | 结果 | 证据范围 |
+| --- | --- | --- |
+| 后端全量 | 101/101通过 | 96项基线 + provider 畸形响应分类回归 |
+| 前端全量 | 66/66通过 | 包含解析阶段未发现字幕时仍可显式尝试 AI 的集成回归 |
+| 生产构建 / diff check | 通过 | build 有 bundle 大小提示；diff check 只有 Windows 行尾提示 |
+| 原5份已许可文件 | 5/5解析通过，原件哈希不变 | 原始验收时为4/5 |
+| 新增已许可平台样本字幕API | 首轮 Archive.org、Wikimedia Commons、YouTube 三平台都有成功样本；8项中3项成功 | 单条字幕请求受间歇 TLS/超时影响。限次重试5项为0项成功；失败表示网络错误，不代表无字幕或平台不支持 |
+| 真实DeepSeek总结 | 首轮3/3成功，含 Archive.org 约7.2万字符演讲、Archive.org 短片和 Commons 短片 | 长文71,658字符，清理后71,214字符，4段归纳合并，72.67秒返回中文摘要与7要点；只抽查代表性事实和尾部内容，不代表完整语义准确率已测 |
+| 下载闭环 | 本机生成3秒 H.264/AAC 样本，经本机 HTTP、yt-dlp、下载任务和文件接口成功；ffprobe确认音视频轨、时长及分辨率 | 验证服务端核心闭环；公网 Samplelib 请求遇TLS错误，不能据此声称该公网样本下载通过 |
+| 鉴权/额度 | 5个未授权受保护API均返回401；AI总结前后下载额度不变 | 下载验收用独立临时用户和隔离数据库 |
 
-- **代码 HEAD `ffda1ce`**（2026-10-01）：uv 迁移——`pyproject.toml` 声明依赖 + `uv.lock` 锁定 + 删 `backend/requirements.txt` + README/handoff 命令改 `uv`。其后 `docs:` 提交（`6d34ab9` 等）只同步文档、未动代码。
-- 近期前序：`431e435`/`160aacd`（`.gitignore` 拦本地产物与多余 lockfile）、`2183bb6`（**入口滚动式落地页**，见 §1.3/§5/§9）、`b03ce32`/`bf585bc`/`e818cf6`（v2 账号+额度，前后端）。
-- **依赖管理已切 uv**：`uv sync` 建/更新 `.venv`（仓库根），`uv.lock` 入库；`backend/requirements.txt` 已删（如需 `pip` 环境可 `uv export --format requirements-txt`）。
-- **本地生成物已清理**（不入库，`.gitignore` 规则保留）：根级截图、`verify/`、`.planning/`、`*.stale-backup-*`、`docs/package-lock.json`、`package-lock.json`。
+逐项平台请求、重试、总结响应与质量核查见[平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)及其 JSON 证据。此前桌面/375px浏览器验证覆盖注册、登录、刷新、退出、额度、落地页与视频智能面板；本轮补充了真实 insights hook 的前端集成回归。浏览器自动化的后续交互受工具审批阻断，因此不能宣称本轮完整浏览器 E2E 通过。
 
----
+## 3. 工程约定与隔离边界
 
-## 9. 下一步
+1. UI/视觉/交互先用 `ui-ux-pro-max` + `design-system`；不因更换AI工具而跳过已有技能。
+2. 用户指令与工程约定优先；skill指引优先于旧计划，历史文档不是新的执行授权。
+3. 颜色、字体、时长走三层token；阈值、模型、来源适配、目标语言数据驱动、可配置，避免大规模重构。
+4. `ytdlp_service.py` 是唯一接触yt-dlp的层；公开来源适配由它调用。下载线程池不感知账号、LLM或视觉。视觉只读场景状态，不修改下载reducer、不import下载核心。
 
-- **前端 v2 浏览器手动联调**（建议）：登录/注册真实请求、额度递减、刷新保持登录、退出——仍只过了单测，未在真实前后端联调验证（§6 验收第 1 条）。
-- **滚动落地页验证 + 位置决策**：`EntryScene` 五屏叙事（滚动聚焦/强制吸附/reduced-motion/示例 chip）代码完成但未手动验证；且**当前在登录门之后**（§1.3），是否前置为登录前公开首页 = 待定产品决策。
-- **后端强制登录（收紧匿名）**：产品方向已定「匿名下载取消、改必须登录」。把 `/api/parse`、`/api/download` 改为必须 token（`get_current_user` 替代 `get_current_user_optional`），同步调整 `test_quota.py` 里「匿名绕过」用例。前端已就位，无需再动。
-- **真实下载链路冒烟**：uv 迁移后依赖有升级（fastapi/sqlmodel/starlette/uvicorn/pyjwt），`/api/parse` 已实测通过；`/api/download`（含 ffmpeg 合并）建议再跑一次真实视频。
-- **v3 视频总结 / 字幕翻译**（LLM）、**v4 付费**（会员/支付渠道）——见 `docs/requirements.md` §8 与 `docs/superpowers/plans/2026-09-21-extension-plan.md` §3.2/§3.3。
+前端接口只走 `api.js`；`useVideoInsights` 独立管理AI请求和结果，不污染下载状态机。额外工作是否继续以用户当前指令为准；本次停止了子agent，但没有给主agent设定增加规则。
 
-## 10. 更多设计细节
+## 4. 实现与文件地图
 
-- **v2 计划**（阶段/决策/侦察事实）→ 曾存 `.planning/2026-09-24-v2-account-quota/`（已随清理删除，见 git 历史）；前端 v2 计划为 Claude 本地文件（`~/.claude/plans/...`，非本仓库）。
-- 表情/道具/特效参数映射 → `docs/design.md` §14.8。
-- 主题/token/待机动画 → `docs/design.md` §14.1–14.6（⚠️ §14 配色已由 pidanai 重构替代，当前 token/主题见 `docs/ui-refactor-pidanai.md` 与 `docs/ui-extension-guide.md`；§14.6 待机/§14.8 表情机制仍准）。
-- 后端架构/数据模型/错误分类/扩展点 → `docs/design.md` §1–§9（§6 含 User/Quota 预留字段、§12 迭代路线）。
-- pidanai 风格分析 → `docs/ui-refactor-pidanai.md`；深度分析 → `docs/ui-refactor-pidanai-deep.md`；扩展指南 → `docs/ui-extension-guide.md`。
-- v2 实现方案依据 → `docs/superpowers/plans/2026-09-21-extension-plan.md` §3.1。
+| 文件/模块 | 当前职责 |
+| --- | --- |
+| `backend/app/config.py` | 环境变量配置；完整变量列表见根README |
+| `services/ytdlp_service.py` | 解析/下载窄接口与字幕来源入口，过滤聊天/弹幕 |
+| `services/subtitle_sources.py` | 注册式公开平台适配；Archive元数据优先，文件名精确关联，校验异常结构 |
+| `services/subtitle_service.py` | 字幕正文HTTP、字节上限与SRT/VTT/JSON3/TTML文本化 |
+| `services/llm_service.py` | 兼容HTTP适配，总结去重、分段/分层合并、输出完整性检查；翻译仍有输入上限 |
+| `services/auth.py` / `quota.py` | JWT、密码哈希、每日下载额度；额度在下载路由提交时预留 |
+| `services/jobs.py` | 下载线程池、SQLite任务与产物TTL |
+| `routes/auth.py` / `parse.py` / `download.py` | 认证、解析、下载/任务状态/文件响应 |
+| `routes/insight_common.py` / `subtitle.py` / `summary.py` | v3错误映射、正文、翻译和摘要API |
+| `frontend/src/App.jsx` | 登录门、下载场景、主题、独立insights hook与视觉装配；登录后加载重资源 |
+| `api.js` / `hooks/useAuth.js` / `hooks/useDownload.js` / `hooks/useVideoInsights.js` | 唯一后端边界与各职责请求编排 |
+| `components/ui/VideoInsights.jsx` | 只通过props触发动作和展示结果，下载与AI错误互不替换 |
+| `state/sceneMachine.js` / `state/insightConfig.js` | 下载reducer、错误文案与目标语言配置 |
+| `styles/global.css` / `pixi/theme.js` | 三层CSS token与PIXI颜色桥接 |
+| `pixi/mascotConfig.js` / `mascot.js` | 单模型白、待机/表情/缩放、移动布局；目前没有模型切换UI |
+
+API：`POST /api/subtitle`、`POST /api/subtitle/translate`、`POST /api/summary`；请求与响应详见v3计划。总结返回摘要、关键要点、provider/model。AI请求当前不扣下载额度，AI计费未实现。
+
+## 5. 配置、已修复项与限制
+
+- 当前默认：每用户每天下载10次（UTC日期），提交即扣；失败退款未实现。每IP限流独立保留。
+- AI：`LLM_MAX_INPUT_CHARS=60000`；总结分段默认20000字符、最多16段、每次输出最多4096 tokens；可通过 `LLM_SUMMARY_*` 配置调整。
+- Archive内容获取不再先依赖视频网页；专用路径不可用时回退yt-dlp。多视频条目没有明确内容关联时要求具体视频文件链接。
+- 审查修复：`movie`不会混入`movie.part2`字幕；异常metadata/files/title不会绕过回退；SRT小数精度容错1–3位。
+- 本轮审查修复：LLM provider 的 `finish_reason` 与文本块字段格式异常时统一映射为 `llm_invalid_response`；解析阶段暂未发现字幕时，视频智能面板仍开放显式请求并使用“自动选择”语言来源。
+- 服务端产物TTL清理、ffmpeg合并、直链HTTP请求头限制仍沿用既有下载契约。
+- 16K角色纹理的GPU兼容与原作者非商用/不二改限制仍存在；代码只调整布局，没有压缩原模型。
+- 原始字幕完整性、音画对齐、说话人、所有语言/编码/平台尚未全面验收；AI主目标不等于已经覆盖这些能力。
+- 长模型输出如果被截断会明确报错；超过整体分段预算会提示调整容量，不无限调用模型。
+- 已有SQLite表不会被 `create_all` 自动修改；使用旧库前检查schema并备份/迁移，不直接删用户数据库。
+
+## 6. Git、产物与下一步
+
+- v3实现、验收与交接文档已本地提交；可用 `git log -1 --oneline` 查看提交号。原有根目录 `AGENTS.md` 保持未跟踪且未纳入提交；没有改主agent规则或参考项目。
+- 原验收 [report.md](acceptance-reports/2026-10-03-single-platform-subtitles/report.md) 保留0/3与4/5历史结果；当前状态以修复后报告为准。
+- 原始来源、UTC采集时间、许可、哈希、脱敏副本与去重关联继续保留；历史证据不因修复而改写。
+- 验收期间临时服务已全部停止：后端8010、前端5178、本机媒体HTTP 8021均无监听。测试用户库 `backend/quality-online-acceptance.db`、本机生成媒体、pytest临时文件和工作计划均是 Git 忽略的本地验收产物；原 `backend/.env` 仍是被忽略的本地配置，没有复制进代码或报告。
+- 用户曾在关机前暂停本轮工作；恢复后已完成全量验证、复审和本地提交。联网验收服务已停止。本地未跟踪的 `AGENTS.md` 未纳入提交；忽略的 `.env` 和 SQLite 数据库也未进入提交。
+
+下一步仅为候选，不自动推进：按用户指令继续扩平台与AI总结质量样本；再考虑流式体验、AI独立额度或v4付费。滚动首页位置已定，不再反复询问。
+
+## 7. 文档入口与阅读顺序
+
+1. [文档索引](README.md) → 本交接 → [需求](requirements.md) / [设计](design.md)。
+2. [v3实现计划](superpowers/plans/2026-10-03-v3-video-intelligence.md) → [参考实现分析](reference-summary-implementation.md) → [AI总结修复报告](acceptance-reports/2026-10-03-ai-summary-regression/report.md) → [平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)。
+3. [扩展路线](superpowers/plans/2026-09-21-extension-plan.md) 与 [UI扩展指南](ui-extension-guide.md)。
+
+旧Phase1、霓虹规范与电影感实现计划均为历史参考，不能直接把旧未勾选项当作当前待办。

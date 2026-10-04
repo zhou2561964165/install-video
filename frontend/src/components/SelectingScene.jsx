@@ -1,9 +1,10 @@
 import React from 'react';
 import { playSfx } from '../audio/audioManager.js';
+import VideoInsights from './ui/VideoInsights.jsx';
 
 // 解析结果展示：按参考站信息结构对齐（封面时长角标 → 标题 → up主/平台/播放量 → 简介 → 格式两行），
 // 视觉沿用项目 token（樱花粉玻璃卡片 + 胶囊格式单选）。字段来自 normalizeParse 的派生值。
-export default function SelectingScene({ parseResult, selectedFormat, forceServer, onSelect, onDownload }) {
+export default function SelectingScene({ parseResult, selectedFormat, forceServer, onSelect, onDownload, insights }) {
   const {
     title, thumbnail, durationLabel, uploader, platform, viewCountLabel, description, formats,
   } = parseResult;
@@ -43,6 +44,7 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
           强制走服务器
         </label>
         <button onClick={onDownload} disabled={!selectedFormat}>下载</button>
+        {insights && <VideoInsights languages={parseResult.subtitles || []} insights={insights} />}
       </div>
     </div>
   );

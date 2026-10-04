@@ -3,6 +3,7 @@ import { reduce, initialState, SCENE } from './state/sceneMachine.js';
 import { parseVideo, fileUrl } from './api.js';
 import { useDownload } from './hooks/useDownload.js';
 import { useAuth } from './hooks/useAuth.js';
+import { useVideoInsights } from './hooks/useVideoInsights.js';
 import { normalizeParse } from './lib/videoAdapter.js';
 import { initStage, destroyStage, webglSupported, detectTier } from './pixi/stage.js';
 import { createBackground, intensityForScene } from './pixi/background.js';
@@ -38,6 +39,10 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [ready, setReady] = useState(false); // Live2D 模型加载完成才隐藏 preloader
 
+  // 登录态（强制门）：未登录渲染 AuthScene，登录后才启动较重的 PIXI / Live2D 视觉层。
+  // 账号入口不依赖 16K 模型资源，慢设备上也能立即操作表单。
+  const { status, user, quota, login, register, logout, refreshQuota } = useAuth();
+
   const setThemeTier = useCallback((t) => setTheme(t), []);
 
   // 主题切换：写 data-theme 属性（light/dark/auto），CSS token 随之切换；
@@ -56,17 +61,23 @@ export default function App() {
 
   // 下载编排（发起 + 服务端轮询）下沉到 useDownload，App 只保留 dispatch 与场景渲染
   const { startDownload: handleDownload } = useDownload(state, dispatch);
-
-  // 登录态（强制门）：未登录渲染 AuthScene，登录后渲染下载流程 + 账号条
-  const { status, user, quota, login, register, logout, refreshQuota } = useAuth();
+  const insights = useVideoInsights(status === 'authed' ? state.url : '');
 
   // 下载提交成功后刷新额度；收到 quota 错误时刷新额度（拿到最新 used/limit）
   useEffect(() => { if (status !== 'authed' || !state.download) return; refreshQuota(); }, [state.download, status, refreshQuota]);
   useEffect(() => { if (status !== 'authed' || state.error?.error_type !== 'quota') return; refreshQuota(); }, [state.error, status, refreshQuota]);
 
+  // 退出时清理上一账号的下载会话，避免重新登录后泄露/恢复旧场景。
+  useEffect(() => {
+    if (status === 'gate' && state.scene !== SCENE.ENTRY) dispatch({ type: 'RESET' });
+  }, [status, state.scene]);
+
   // PIXI 舞台：WebGL 可用时挂载，否则走 CSS 渐变兜底（global.css 里 .css-fallback）
   useEffect(() => {
-    if (!webgl) return;
+    if (!webgl || status !== 'authed') {
+      setReady(false);
+      return;
+    }
     const app = initStage(stageRef.current);
     const bg = createBackground(app, tier);
     bgRef.current = bg;
@@ -91,7 +102,7 @@ export default function App() {
       mascotRef.current = null;
       bgRef.current = null;
     };
-  }, [webgl, tier]);
+  }, [webgl, tier, status]);
 
   // 随 scene 切换粒子强度（安静/活跃）
   useEffect(() => {
@@ -113,6 +124,7 @@ export default function App() {
         forceServer={state.forceServer}
         onSelect={(format, forceServer) => dispatch({ type: 'SELECT_FORMAT', format, forceServer })}
         onDownload={handleDownload}
+        insights={insights}
       />
     ); break;
     case SCENE.DOWNLOADING: scene = <DownloadingScene job={state.job} mode={state.download?.mode} />; break;
@@ -149,7 +161,7 @@ export default function App() {
         ))}
       </div>
       <ExpressionMenu open={menuOpen} onClose={() => setMenuOpen(false)} onExpression={(pid, v) => mascotRef.current?.setExpression(pid, v)} onScale={(dir) => mascotRef.current?.scaleBy(dir)} />
-      {webgl && <Preloader done={ready} />}
+      {status === 'authed' && webgl && <Preloader done={ready} />}
     </>
   );
 }

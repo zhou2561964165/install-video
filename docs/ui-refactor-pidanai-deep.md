@@ -1,4 +1,6 @@
 # 皮蛋 AI（pidanai.com）深度设计分析报告
+> 文档状态（2026-10-03整理）：**历史参考**。历史观察记录，不把待确认清单直接当当前需求。当前配色、模型与v3目标以 [handoff.md](handoff.md) 和 [需求](requirements.md) 为准。
+> 工程约定仍适用：UI先用 `ui-ux-pro-max` + `design-system`；skill优先于旧计划；颜色/字体/时长token化、能力数据与配置驱动；yt-dlp仅经 `ytdlp_service.py`，视觉只读scene，不修改下载核心。
 
 > 2026-09-24 · 深度观察版（只做分析，未改任何代码）
 > 观察对象：https://pidanai.com/#about （PDAim，计算机视觉 FPS 瞄准优化工具官网）

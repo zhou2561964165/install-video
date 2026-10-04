@@ -1,0 +1,97 @@
+{
+  "subagent": "真实平台字幕样本验收测试",
+  "model": "gpt-6-luna",
+  "requested_model": "gpt6.0luna",
+  "reasoning": "max",
+  "main_agent_unchanged": true,
+  "status": "已完成；平台集成存在阻断项",
+  "sample_total": 5,
+  "unique_video_total": 3,
+  "unique_content_total": 4,
+  "sample_total_bytes": 168559,
+  "platform_selection": {
+    "candidate_pool_order": ["Internet Archive", "Wikimedia Commons"],
+    "random_method": "Python secrets.randbits(128) then random.Random(seed).randrange(2)",
+    "seed": "326591177287492597204726524381134284180",
+    "selected_index": 0,
+    "selected_platform": "Internet Archive"
+  },
+  "pass_rate": {
+    "direct_caption_fetch": {"passed": 5, "total": 5, "ratio": 1.0},
+    "subtitle_parser": {"passed": 4, "total": 5, "ratio": 0.8},
+    "application_platform_integration": {"passed": 0, "total": 3, "ratio": 0.0},
+    "source_timeline_intervals": {"valid": 1850, "total": 1850, "ratio": 1.0},
+    "strict_utf8_decode": {"passed": 5, "total": 5, "ratio": 1.0},
+    "capture_sha256_receipt_match": {"passed": 5, "total": 5, "ratio": 1.0}
+  },
+  "coverage": {
+    "platform_entry": {
+      "selected_platforms": 1,
+      "video_items": 3,
+      "subtitle_tracks": 5,
+      "public_metadata_and_file_http_tested": true,
+      "mobile_or_other_platforms_tested": 0,
+      "note": "IDs prefixed youtube- are Internet Archive item IDs, not direct YouTube tests."
+    },
+    "language_labels": {"eng": 1, "en": 1, "fr": 1, "und": 2},
+    "language_gaps": ["Chinese", "mixed language", "dialect/accent", "automatic language detection", "human language-quality review"],
+    "caption_provenance": {"automatic_or_asr_filename_evidence": 3, "unknown": 2, "manual_confirmed": 0},
+    "scenarios": {"conference_or_technical_talk_title": 1, "book_interview_or_review_title": 1, "unclassified_title": 1},
+    "formats": {
+      "track_counts": {"vtt": 4, "srt": 1},
+      "v3_contract": {"tested": 2, "total": 4, "ratio": 0.5, "untested": ["json3", "ttml"]},
+      "user_matrix_format_families": {"tested": 2, "total": 6, "ratio": 0.3333333333, "tested_categories": ["SRT", "VTT"], "untested": ["ASS", "JSON", "XML", "platform native"]}
+    },
+    "timeline": {
+      "source_cues": 1850,
+      "non_finite_or_reversed": 0,
+      "source_start_order_regressions": 0,
+      "overlaps": 0,
+      "nonstandard_fraction_fields_in_srt": 604,
+      "application_output_preserves_timing": false
+    },
+    "encoding": {"strict_utf8": 5, "replacement_characters": 0, "gbk_samples": 0, "utf16_samples": 0},
+    "audio_noise_speakers": {"media_samples": 0, "status": "未测"},
+    "boundaries": {"over_60000_characters": 1, "empty_or_single_cue_real_samples": 0, "llm_calls": 0},
+    "platform_compatibility": {
+      "direct_file_http": "5/5",
+      "application_service": "0/3",
+      "import_preview_export_secondary_edit_mobile": "未测或当前能力未声明"
+    }
+  },
+  "failures": [
+    {
+      "severity": "阻断",
+      "category": "platform integration",
+      "evidence": "yt-dlp returned zero subtitle tracks for all 3 sampled Internet Archive URLs; app service returned subtitle_unavailable before subtitle HTTP."
+    },
+    {
+      "severity": "一般",
+      "category": "parser compatibility",
+      "sample_id": "IA-mnn_23214_387-en-srt",
+      "error": "subtitle_invalid",
+      "evidence": "Source SRT timestamp fractions have two digits, while the app timestamp regex requires exactly three."
+    }
+  ],
+  "blocking_issues": [
+    "The installed ArchiveOrg extractor does not expose the listed subtitle files through the subtitles mapping expected by the project adapter; application integration pass rate is 0/3."
+  ],
+  "recommendations": [
+    "Fix or upgrade the ArchiveOrg extractor path, or normalize its track structure inside the existing ytdlp_service boundary, then rerun these same three URLs.",
+    "Define whether SRT timestamps with one or two fractional digits are accepted; preserve raw input and test any normalization rule explicitly.",
+    "Treat the two MNN formats as one independent transcript body and retain both as format compatibility cases."
+  ],
+  "next_actions": [
+    "After an extractor fix, verify yt-dlp track discovery, application HTTP subtitle fetch, and parser output end to end for the three source IDs.",
+    "After agreeing the SRT precision policy, rerun the MNN SRT and VTT comparison.",
+    "Expand JSON3, TTML/XML, ASS, additional languages, and other licensed platforms only after the current platform chain passes."
+  ],
+  "llm_calls": 0,
+  "business_code_modified": false,
+  "evidence_files": [
+    "manifest.json",
+    "test-results.json",
+    "platform-checks.json",
+    "collection-errors.json"
+  ]
+}

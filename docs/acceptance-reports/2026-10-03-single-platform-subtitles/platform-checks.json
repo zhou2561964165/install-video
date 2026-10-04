@@ -1,0 +1,50 @@
+[
+  {
+    "source_id": "lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack",
+    "source_url": "https://archive.org/details/lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack",
+    "language_requested": "eng",
+    "status": "fail",
+    "error_type": "subtitle_unavailable",
+    "extractor_observation": {
+      "returned_track_count": 0,
+      "languages": [],
+      "formats": [],
+      "title": "Awesome Monitoring Infrastructure Using the Elastic Stack"
+    },
+    "text_characters": null,
+    "elapsed_ms": 3579.3,
+    "caption_http_attempted_by_application": false
+  },
+  {
+    "source_id": "youtube-6k-kbg3_Drc",
+    "source_url": "https://archive.org/details/youtube-6k-kbg3_Drc",
+    "language_requested": "en",
+    "status": "fail",
+    "error_type": "subtitle_unavailable",
+    "extractor_observation": {
+      "returned_track_count": 0,
+      "languages": [],
+      "formats": [],
+      "title": "Imagine the Consequences"
+    },
+    "text_characters": null,
+    "elapsed_ms": 3412.4,
+    "caption_http_attempted_by_application": false
+  },
+  {
+    "source_id": "mnn_23214_387",
+    "source_url": "https://archive.org/details/mnn_23214_387",
+    "language_requested": null,
+    "status": "fail",
+    "error_type": "subtitle_unavailable",
+    "extractor_observation": {
+      "returned_track_count": 0,
+      "languages": [],
+      "formats": [],
+      "title": "Host Caroline Plank reviews the book 'Running From Cancer' with its author Agnes Varona Oquendo."
+    },
+    "text_characters": null,
+    "elapsed_ms": 2647.5,
+    "caption_http_attempted_by_application": false
+  }
+]

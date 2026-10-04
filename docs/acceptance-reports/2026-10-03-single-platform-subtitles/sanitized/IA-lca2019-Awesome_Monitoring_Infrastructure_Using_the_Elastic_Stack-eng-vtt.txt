@@ -1,0 +1,1207 @@
+Thanks everyone for joining us. There is a few power cables running around the place so everyone
+can get power. Just be careful if you're walking around because they are a trip hazard.
+Thanks for coming. I don't think I was expecting this many people so we may or may not get through
+everything. Just if people have problems feel free to chat to your neighbours and we can pop
+up and help you. Does everyone have Docker installed and if not just spend a couple of
+minutes installing it for your operating system? This might be a little bit confusing and
+I put this up here intentionally. So in the Docker commands, well if you go to this URL
+I've got all the commands that we run in a gist or a gist or however you want to call it so feel
+free to use that. There's a link to the slides. Probably don't copy the commands out of the slides
+because sometimes back ticks and quotes and stuff don't work so that's why I put it in the gist.
+We have two different Docker images even though we're using Elasticsearch and Kibana. I put
+these in here because our default images for Elasticsearch, Kibana, Logstash,
+and Kibana, Logstash, they are not pure open source and I wanted to call that out explicitly
+so they do include proprietary code in there that we include in the default distribution that gives
+you access to free but non-open source products and functionality. If you want to use open source
+and we will only touch on the open source today that's totally cool. Just whack dash OSS on the
+end of the container image so that's the second one there and you will get the Apache 2 licensed
+open source. I have got here the URL which is different to the one in the slides I just
+realized probably because I've made some changes. I'll update that but if you go to this one here
+you can get access to everything so don't worry about what's in the slides here.
+I just wanted to explain these two. I default to the non-OSS ones because
+I put stuff in there that I use every day and I'm lazy and I don't want to type in extra four
+characters or something. I don't know if that's a valid excuse. Anyway, so my name is Mark. I am
+based in Australia. I live in Dubbo if anyone knows where that is. I just wanted to say that
+when I got here everyone's saying it's 33 degrees and it's super hot. That's beautiful. It's perfect.
+Now it's cold today. I'm part of the community team so basically part of what I do is just go
+to conferences. We do meetups. We teach people about our stack. We help them solve problems.
+We make them aware of what we do. There's a whole bunch of other stuff that I do. You can
+normally recognize me by my hat but unfortunately it blocks the video so I'm hatless today.
+So I'm Mark and this is my awesome co-presenter. I'm Karen. I work Elastic as well but on the other
+side I'm an SRE on the cloud team. So normally I'm more on behind the laptop side of things and not
+so much in front of people's side of things. I'm based out of Wellington but I'm originally from
+Mexico and I've been here for about three years which started as a working holiday trip which
+extended to I love this country and I'm staying here. I would move here except the earthquake
+thing kind of worries me a little although Wellington is an awesome city and so is Cross
+Church actually. And just one more thing. So I'm basically going to be going around helping you
+guys troubleshoot so if anyone has a question or stuck on something just raise your hand and I'll
+just pop over and help you out. Yeah except if you're up the back because we don't want to be
+constantly climbing the stairs. We're in the middle. Yeah Paul's volunteered to cover the middle.
+Yeah so I just put this in here because if you don't know where Dubbo is it's in the middle of
+nowhere but I'm pretty sure most people know where Wellington is. So this is sort of some of
+the things that I do at home when I'm playing around with the stack and you can actually jump
+onto github and I've got this in a repo. So Bloomsky is a weather station. It's a really neat little
+thing. It was a kickstarter a couple of years ago and it's made of a couple of things. It's got a
+camera that just points up at the sky and it's a fisheye camera so you get a really cool time
+lapse over the course of the day but you also grab things like temperature, humidity, wind speed,
+wind direction all these other different sorts of bits and it goes into their app and their apps
+you know it's nice for the phone except I wanted a dashboard at home that I could have sitting on a
+monitor on the wall. They have an API and so I just thought well I might as well use the technology
+that we make to pull it in. This is a pretty I'm not real good at dashboards or graphics or anything
+like that but this is something that I whipped together not that long ago and then I'm going to
+see if this thing works here. So see I hope you can see this 46.58 that was about two weeks ago
+when we had a massive heatwave. Yeah it got pretty hot. I actually I tweeted a little thread about
+it but I have one of those infrared hand thermometer things. We've got a north facing brick wall and
+that brick wall was 65 and then the ground was 62. The water coming out of the cold water tap was
+actually I think it was about 36 and then the hot water tap when you turn the hot water tap on
+it actually came out cold because the pipes insulated and the water took a while to heat up
+before it came through so I was not expecting that I will say that. Oh I'm supposed to put a logo in
+here but that's does anyone know elk or however the elk stack yeah okay so elk is elastic search
+log stash and cabana so that formed probably about I'm just trying to remember well I've been at
+elastic for a bit over four years and it was kind of a thing back then and when log stash and cabana
+both became part of elastic search as we were known then and people used this for logging
+so it was an open source option for people that didn't want to pay money to anyone or if they
+didn't have anything and they were just using grep and and orc and all those awesome well not
+so awesome tools when you're dealing with gigabytes of logs and we've kind of grown a bit from there
+and we sort of refer to ourselves now as the elastic stack and one of the things that sort
+of made us re-review what we're doing and change what we're doing is beats
+and beats are what we're going to primarily use today so beats are little shippers or generators
+of information that sends it through to elastic search and you can view it in cabana we well we're
+not going to touch on log stash today this is more just about some fundamentals to let you go away
+and say okay I know how to get my head around these I can get data going into elastic search
+I can start to get value out of this data and then if you want to go away and put log stash in
+come and have a chat to us or if you're familiar with log stash then it shouldn't be too difficult
+to get beats going through log stash so really quickly this is the elastic stack
+so cabana's at the top it's our ui it's our front end it's where we import dashboards it's where we
+can build dashboards like my awesome bloom sky one there's a whole bunch more functionality that
+we're pushing into it which is kind of why we've moved away from elk we've we're moving towards
+being able to essentially manage a lot of the aspects of the stack so we have well let me go
+into the next one we have elastic search which is the that's where we as a company started
+sorry we as an entity or anything started it's about 12 years ago I think
+when shy who's our ceo now he started elastic search and he open sourced it and
+it's a distributed search engine it's jason documents we can we refer to documents sometimes
+as events as in you know like a log is an event or a log is a
+time is an event but they're all ultimately get stored as documents in elastic search
+and it's api based so when cabana talks to elastic search it just happens it talks over the same
+api's it uses the same query language as if you were using a language to talk like python to talk
+to elastic search or if you're using curl or anything like that so we're not doing that
+anything unusual between any of that the stack here it's just using those default api's and the
+languages and stuff like that so elastic search is a search engine ultimately that's what it was
+created to do it's distributed system so you can go from you know we're going to use containers here
+so you can go from one container on your laptop to three if you really wanted or you can go from one
+container to three if you really wanted or you can go from one container to three if you really
+wanted or you could go from one vm to many or if you're using kubernetes you can have multiple pods
+running elastic search instances and scales really well the cool thing about elastic search is once
+we can find stuff and when we talk about search in elastic search and and we we have response times
+and things like that we we're pretty fast so generally we talk in you know the couple hundred
+second range for a response even across gigabytes of data and interesting story we're actually
+finding out that it's too fast it tries to be too fast and when people have got terabytes or
+petabytes of data you know it wants to get all of that and get the response out so quickly it can
+actually overwhelm itself which is kind of a little weird so we're trying to make elastic search go a
+bit slower just so that we can cope with you know if you query hey i've got 10 years worth of data
+here you don't really need a response time for the data 10 years ago within 200 milliseconds so
+we're trying to make it a little smarter with that sort of older data but it's fast that's really good
+so we shouldn't have any problems today though but once we find this data we can do analysis around
+it and we have these apis and this functionality called aggregations and they're like facets is
+another way that people look at it or i don't know if pivot tables is the right way to put it
+but you can look at all these different rows of data and you can summarize that up and then you
+can say okay you know like here's the 95th percentile for response time for the last seven
+days for example and that's what we actually do in cabana so when we build those
+when we build these these are all aggregations they're just sent by http or https to elastic
+search in a json format we get the json response back and then we just convert that into an image
+and then down the bottom we have the ingest so we have beats that i mentioned earlier
+and then we have logsash so we actually use a whole bunch of different technologies or languages
+here so cabana is written mostly in javascript and i think we're moving to typescript at the
+moment if anyone's interested in that we use a bit of d3 and stuff for the visualizations
+elastic search is java so we do use the jvm
+beats is written in golang and logsash is i think it's still primarily ruby that we convert to java
+so jruby but we're slowly moving to java native java just to to make things a bit faster
+to make things a bit faster because jruby was sort of great when it was first started but
+you know people are really starting to test the limits of logstash
+so i probably already explained most of this but this is just really quickly
+you know different bits and pieces about elastic search
+so these are the that well we've lost the bottom one down here but the bottom one's machine learning
+but you can quit you can store all different sorts of data in elastic search so by default it actually
+has geospatial capabilities so if you've got coordinates for an entity or a person well a
+person's an entity or you know coordinates for if you take an ip and convert that into coordinates
+you can start to do queries and aggregations and say hey listen return everything that has a
+location within new zealand or new south wales and then you can start to do analytics down on that level
+so by default elastic search you just search as documents it doesn't really
+you know it doesn't really have any concept of time-based data but you can use it to store
+time-based data and then logically structure things and then query them so it's not a time-based database
+or time series database i should say so there are other open source ones out there like influx for
+example and i think who was it someone's someone is not prometheus but yeah but there's another one
+that grafana yeah there's a few out there right so you'll probably to be honest you will find
+better performance if you want to use a time series database and better efficiency from using
+that particular tool like it's like you don't use a screwdriver to hammer a nail in you use a hammer
+but i think what we find is that when you have things like logs and metrics and some of the
+other things that we'll talk about in the one place you sort of we find that our users are
+getting more value from that so it's really up to you you can use tools like grafana to query a
+time series database analytics search side by side so you still get those merged those merged views
+but we're not going to we'll focus on this because this is what i know i don't really know grafana
+so a whole bunch of stuff around cabana so cabana is really where we start to today when we start to
+do analysis this is where we really start to get the value out of things and this is where we start
+to take that data and convert it into you know time series analysis there's a whole bunch of
+other stuff and we'll run through some of that as we as we go through so these are just some nice
+images the things you can create well outside my my abilities we do have a whole bunch of pre-configured
+dashboards and we'll actually touch on some of them today as well
+so beats beats beats beats beats are relatively new they were actually an open source project
+and from i think it was about they started sort of five years ago and they started a little bit
+years ago and i actually remember emailing one of the the creators and asking them some a bunch of
+questions and it's like oh this is a cool open source project and then how long ago was i think
+nearly three years ago they actually joined elastic and that was super awesome to have them to have
+them part of our team and as i said the whole idea about it is it's a data shipper or or it's
+actually a data generator but it generates the data and then ships it we'll touch on three and
+we'll go into them a little bit later but the idea is that you can install these wherever you want
+and they're pre-compiled go lang so they're very small they're very fast they're efficient
+you can deploy them on your in your pods you can deploy them on your vms we don't have official
+arm builds for anyone that's sort of thinking of doing things like arpies or network switches
+or things like that arch links arch linux has got some really good packages that i use for my
+network gear at home we are moving towards having fully automated and supported arm builds because
+that's kind of ubiquitous now there is some really cool stuff and we'll touch on this a little bit
+later with um with docker and kubernetes is anyone using kubernetes yeah a few people yeah
+so we're seeing a lot of demand for kubernetes at the moment and functionality with that
+there's a whole bunch of community beats so at the core of there's multiple different beats and
+they're all based on this one called lib beat which is essentially the core of all of the beats and
+it's a bunch of common functionality that um you can just copy and paste and and you'll see a bit
+of that later exactly how common the functionality is there's something like 78 community beats
+so there is a beat that will connect to github and pull prs and issues and format them in json
+and then put them into a i6 search there is i had a look at them and i yeah there's heaps
+uh there is a beat for twitter so you can listen you can follow users and it'll connect to the
+api and pull things in um there's a couple of docker beats um yeah there's heaps and there's
+also modules and we'll talk about modules in a little bit um but today we're going to be
+looking at file beat which funnily enough ships files so we're going to be looking explicitly
+at logs but it can be any sort of a file so if you've got you know financial transactions
+being dumped in csv onto a share like an nfs share or a samba share or wherever it can look
+at those and read it why would you ever do financial transactions
+um why i don't know why but it is a reality unfortunately and file beats intelligent in
+that it has the ability to know where it's at when it's reading a file or multiple files so if you
+for example have to restart the host that this is on file bit will pick up where it left off
+it can also do things like detect when elastic search isn't available and it stops and says okay
+i'm not going to send anything and then i'll pick up when elastic search is available again so
+i'm saying send to elastic search because that's what we're going to use today but you can send it
+to log stash there's a few other outputs that you can send it to as well so i'm just trying to keep
+it simple but just make you aware there's other options out there we have metric beat and metric
+beat isn't so much a it's it's one of those generators i talked about metric beat you can
+install it we'll install on our laptops today and it collects different stats around what's
+happening on the the host or for a process and ships them to elastic search hopefully we'll
+i'm thinking we'll be able to touch on packet beat and it's super cool it was actually the first
+beat and that's the one i said when i emailed the authors but you can actually listen to traffic
+for certain protocols not everything and you can create transactions so today hopefully what we'll
+do is we'll be able to listen to http requests so you listen to a port it says here's a request it
+waits for the response to come back and then it builds information about that like the size of the
+request and the response how long it took so you're starting to get some sort of level of
+intelligence more than just you know this is the number of requests that i've had and those sorts
+of things and there's different protocols we'll touch on some of them later is anyone using things
+like lambda serverless yeah a couple of people yeah so um one of the things we found is is once
+you run them what do you do with the output or how do you monitor them so function beta is a
+relatively new one that we have it currently only supports lambda but we're working towards
+i only ever hear lambda so i don't know what gcp has or azure sorry maybe i saw someone up
+the back that might know what the azure one is where is he i think he's gone
+um windows i know we have one person using windows does anyone else have a windows fleet
+no okay it is lca i suppose oh there he is hey um if you do run windows wind log beat collects
+things from event viewer uh and you know we find me that one really really popular
+um hopefully we'll get to heartbeat today so you know this is an iot conference heartbeat is the
+ability to ping services or hosts and get status information and say hey are you still alive
+and so it pulls that data in and then it stores in elastic search you can see trends around things
+order beat if people know audit d so this hooks into audit d in the kernel and will start to pull
+audit information it's a whole bunch of different things you can do here and then once you have this
+sort of data you can start to really ask really interesting questions in different ways so log
+sash it's essentially our etl tools so export transform load or transport or however you want
+to call it basically the idea is you take an input you do stuff and then you put it back out
+so it's pretty it has a whole bunch of plugins inputs filters or outputs too many to go into
+um but there is this is probably in the long slide now that i look at it
+um but there is modules that you can enable within log sash all right so let's get started
+so we'll install elastic search so go feel free to go to the gist and then grab i'm probably going
+to jump out of these slides or jump between the slides and the um my shell just so that we can
+i can run through this
+uh i've already got
+i've already got the images that i need so elastic searching cabana here but we just want to run
+either of these two docker commands don't forget you can go to this url if it's not too hard to see
+uh and and then these commands are in here which might be a bit easier
+just like can you make the hook stops and then you can go to ios or something but it's for safe
+okay thanks i did not know that
+you might be like
+we couldn't well i mean our our as you can see our url is uh dot co because it's a little bit
+you can see our url is uh dot co because we couldn't afford the dot com that's when we
+rebranded rebranded a while ago is that any better or not really i don't think so
+so uh yeah just grab one of these two images um i've just included a link to the uh the install
+for docker it's pretty simple um you can actually we've got a front end to our our um docker
+repository you can go and you can have a look at all the different things and then um just
+graphically browse things we also were up on the docker hub um the previous image that was here
+used to be an official one that was official by docker and it was a really odd version and people
+would complain to us and we said well it's it's not our image so we we spent a whole bunch of
+time working with the docker team and we got this updated so if you just do you know docker pull
+elastic search you will actually grab the latest image from us uh one thing we do not use latest
+you know when people do docker pool whatever colon latest we don't do that and um some people
+complain but if we did um and someone you know spun up a new added a new nose to a cluster and
+we release code every six weeks we release a new version a minor version um we're working towards
+a new major version generally we do them every year uh and there's breaking changes between these
+and so if people just did latest and they add a new one in and it breaks something that comes back
+to us so um there is a little bit of i suppose friction if people are used to using latest but
+we do that intentionally so anyway has everyone grabbed um i don't know what the wi-fi is pretty
+good but i don't know what it's likely 55 people do docker put elastic search so how how's it is
+anyone downloading them now done really oh no i was expecting this to take 10 minutes so i'm
+going to run out of material uh that's not true yeah uh yeah yeah exactly so now we're going to
+we can run elastic search and there's a couple of things here so you know we're just literally
+saying docker run so we have port 9200 here so 9200 for elastic search is the http port that we
+run on so you can run curl against we also and you can exclude the next one 9300 is the inter node
+so it's a binary protocol for elastic search so if you had if everyone here wanted to create one big
+cluster it would talk all the nodes which is an instance of elastic search would talk to each
+other on 9300 so you can or you can't expose that this is literally copied out of the documentation
+so i just thought i'd include it but we are explicitly saying here single node discovery
+so basically what that's doing is it's like a development mode so you can start it up on
+your laptop and it runs and it'll just start if you want to cluster multiple nodes or instances
+of elastic search together there are a number of um we call them bootstrap checks that we implement
+so these are things designed to make sure that when you do start using elastic search in a
+capacity more than just on your laptop and playing around that you have the best possible uh experience
+and things don't go a little wobbly um we found that again there was some friction when we first
+did this but implementing these this is what we recommend and we're going to make you do it
+um has made things a lot easier it's it's hard to put it into the code because a lot of it applies
+to things like um memory mapping limits and a whole bunch of other stuff yes
+what's sorry all right yeah um block block is awesome until you need the tab
+tab don't suspend for now uh where are we
+sorry where can you
+sorry this one
+one
+yeah sorry i should have made sure that that'll still work all right yeah okay um
+yeah sorry i put these in here because i can't i couldn't assume that everyone knows how to use
+docker i didn't want to assume everyone knows how to use docker um but these two are just um ways
+that you can run an elastic search the second one the first one will run it in a foreground mode
+uh where let's run it
+so if we run this we'll get all the logs uh and the output from the container directly to our
+console which is you know okay for playing around um and i just put this one in here dash d
+is detached so it'll actually spin up uh the the docker container but you won't see any of this output
+so this has to be the beginning
+okay there we go sorry so if anyone wants to copy those commands if you go to that link you can
+actually they're on the documentation so you can copy them off yeah i just i just did docker run
+i didn't do all the other commands so that's my fault
+um all right so does everyone did anyone manage to run uh elastic certify one of these two yeah okay
+um so we can also dock we can also use docker compose and docker compose isn't installed by
+default if you install docker so if you're interested in running that um just install docker
+compose for for whatever os you are on and this is an example compose file and it's in the gist as well
+um i just put this in here feel free to do this if you want to do it otherwise we can just keep
+running things using these commands but we've started elastic search we can see that it you
+know it's found a whole bunch of information there's heaps of logs in here um you know it by
+default we give it a this heap size here we give it a gig you can manually change that if you want
+there's a few other bits in here like you know spits out the version that we're running
+different sorts of arguments we include a lot of modules and we've been separating things out from
+core into modules so if you see this grow it's probably not a bad bad thing it's just us
+logically splitting out code and if we see here discovery type single node so that's
+that's the output of this section here so it's just saying that you are only ever going to be a
+cluster of one node and that's that's still valid for us it's not really a cluster in a sort of
+distributed system sense but it is still you know one node talking to itself is a cluster
+some other interesting information in here might be the publish address and the bound address so
+these are the addresses that we listen to when we are on the various protocols that we're listening
+to so by default elastic search will only listen to localhost
+so for you to change it from localhost to a non-localhost address you need to go through
+and do a whole bunch of changes to the configs and it's pretty explicit you can't just accidentally
+accidentally expose your elastic search cluster to the internet if anyone's interested in some
+of the things that have been happening lately it isn't explicit and i'm going to do this and we
+we make these again we we've done this because people were just going oh here's elastic search
+it's awesome i've got data in here i'm going to put on the internet so i can access it anywhere
+and then someone you know hits up showdown and decides to bitcoin ransom your data so we've been
+making some of these things a little bit more explicit we can see a few other bits and pieces
+around here and what it's doing so i put this in here i'm not going to run through it
+but if we have questions around docker compose please ask so let's let's actually have a bit
+of a chat to elastic search so the cat api is super awesome interestingly it is i think the
+only api that isn't jason based it's been designed to be human readable so what we can do is we can
+let's just copy this i'll go to a different tab oh that's right
+all right
+oh yeah yeah i'm i'm having a that is wrong how did i miss that so uh zero is a shorthand for local
+host if you didn't know that when you type out like an ip or local host a whole bunch of times
+you just kind of get sick of it and if you just do like if i do that so i zero just talks to the
+local host so no matter what host you're on because local host is always local
+um well i missed that i haven't missed that okay sorry that's what we wanted to do
+you don't have to put the x get in there i just sort of made it explicit
+so if you just do curl local host cat you'll get all these outputs uh you get this output so there's
+a whole bunch of different um api's here so for example we can ask about cat nodes so this will
+return all the nodes in the cluster you can use question mark v and it gives you headers for the
+columns you can actually convert this into jason if you really want uh and then use that somewhere
+else so there's a whole bunch of different things you can do here um you can explicitly
+there is more the more columns of data in these outputs than what we actually return so we default
+just a sort of a short scene output but there is a whole bunch more in there and you can actually
+configure that and change it so for example i could just pull um i could have the name first
+um followed by uh you know maybe the the ram usage and then maybe the version
+maybe the version so nodes is a good one because we can see you know who's part of my cluster you
+should only ever have one node in here for this um this one so we can also do well yeah no indices
+so an indicy or an index depending however you want to say it because we we can say indexes or
+indices um which is so super confusing but when you and i'm going to overload that term even more
+when you send data to elastic search you are indexing that data and you index that data into
+an index and then each index is made up of shards and you can take those shards and distribute them
+around on various nodes in the cluster so that's how we become distributed so using the cad indices
+will let you see okay you know what indexes or what indices do i have uh and you know what is the
+state of those have you know they allocated to a node or is because i've added a new node in and
+it's copying data over is it in that allocation process so we can also have a look at um
+shards and have a look at the specific shard state so if you have an index one index that's
+got four shards in it and you've got three nodes you'll have you know one shard on each
+except one node will have two shards because that's the way that it balances out
+that yeah easy way to put that on the whiteboard
+um it's probably not super important let's have a chat about later i'm just trying to sort of
+give people really quick overview uh and i'm probably going too slow anyway there's a whole
+bunch of really cool cat stuff cat is good because it's not jason um jason is isn't too hard to read
+um it's in my opinion better than xml i've spent some bad times with xml so i like jason
+but have a look at cat and just have a bit of a play around with it and um and just get to know
+this and have a this is a nice easy way to get started with some of the apis you can plug these
+into your browser too so we can go i'll go host 9200 cat indices there's nothing there because
+there's no indices that's not super um but we can do nodes so we can see that that's actually
+probably terrible but we can so it's just it's an api request it's a htp request it's nothing
+um revolutionary okay so we'll do the same thing for kabana we'll pull the image down
+uh you can literally just take the docker pull command and change elastic search elastic search
+and put kabana kabana in there it's pretty simple
+so kabana um is really awesome but it can take quite a while to start up uh because it has a
+whole bunch of really small javascript files which take a while to initialize we've made some changes
+um which will fix that i'm not sure when it's coming though so if you run and if you run a
+javascript file it's going to take a while to initialize we've made some changes um which will
+take a while to initialize we've made some changes um which will take a while to initialize we've
+got to
+unless you want to specify another one.
+Because I pulled these from the documentation,
+so we've got a bit of inconsistencies
+between Elasticsearch defines the ports when we run Docker,
+Kibana doesn't, that's a nice takeaway, thank you.
+Do you want a sticker for that?
+Have you got a car?
+That's, I.
+I haven't got a big enough laptop, that's what's going on.
+I can help you with a sticker but not a car.
+I think you put one of those on those awesome limed scooters
+out there.
+We'll see a whole bunch of stuff in here
+and you know I just realized we need to put in Elasticsearch.
+So you can see here where it's starting
+a whole bunch of things.
+I don't know why, well actually I do know why,
+but we use JSON logging for Kibana,
+we're putting JSON logging in Elasticsearch
+in for the next major version.
+That's an interesting story, come and have a chat with me.
+But you can see it's loading a whole bunch
+of different things, it's a similar sort of thing.
+What you'll probably also find is that it's trying
+to connect to Elasticsearch 9200,
+which is not gonna work because we haven't defined
+Elasticsearch as local host.
+So I'll just cancel this.
+Come on.
+Just kill it, okay, stop.
+So we need to pass in where we expect Elasticsearch to.
+Where is it?
+Right, there we go.
+Sorry, just bear with me, here we go.
+So we need to pass in where we expect Elasticsearch to.
+Sorry, just bear with me, here we go.
+What's the format for that one?
+Oh, it has, okay, it's done again.
+Okay, give me a sec.
+What's going on with you?
+Here we go.
+How's that?
+Bit better?
+Go host 9200.
+Add that in here.
+So I normally use Docker Compose,
+so this just all gets done magically for me, so.
+How's that not working out?
+Are you sure you're running time created?
+Yeah, I'm not doing it right.
+Oh, that's why.
+Sorry, this is why I use Docker Compose,
+because it figures it all out automatically for me.
+So let's, in the interest of me not remembering how to do that,
+I'm gonna go ahead and pass in where we expect Elasticsearch to.
+Okay, so we need to pass in where we expect Elasticsearch to.
+Me not remembering how to do that.
+Feel free to go in and copy this Docker Compose file here,
+which works really well.
+If you have a MacBook, Docker Compose already comes as pre-installed.
+It does?
+Yeah.
+Awesome.
+So anyone who has a MacBook doesn't need to pre-install it again.
+Yeah, it's just stopped that container.
+So you should be able to control, see that.
+So now we can just run Docker Compose up.
+And just make sure when you run Docker Compose up,
+it's done in the directory that you have the,
+so I've got this Docker Compose file here.
+Docker Compose.
+Stopped that out of Elasticsearch.
+Yeah, stop.
+It's running before it's running out.
+Yep.
+It'll run, it'll probably create another one,
+because Docker Compose is essentially saying, you know,
+this is a new separate process that we're spawning.
+It will create another one,
+so you don't get confused which container is running what.
+I would recommend apart from stopping it,
+then removing it with Docker RM,
+and then the container name or the container ID.
+So if you want to get the container ID,
+run Docker PS, and that'll give you a nice output
+with the ID, the name, and more information
+about your container.
+It should be okay if you don't remove it.
+So if you have this Docker Compose.yml file,
+and just put it in a directory anywhere,
+and then you open a using Windows subsystem for Linux,
+or using PS PowerShell, or just normal command prompt.
+Seguin.
+So if you just go into that directory,
+you should just be able to type Docker Compose up,
+and then, and it will,
+it takes implication that the Docker file
+that it's looking for is in the directory
+that you're running the command from.
+So if we've, is anyone having problems
+with the Docker Compose?
+Yeah.
+Oh, yeah.
+Oh, yeah, yeah, yeah.
+Yep.
+Yeah.
+So there is some, I don't want to say,
+I haven't, I didn't run into this when I was doing this,
+so I didn't notice that,
+but you can run into some VM max problems,
+which you may need to change.
+So if you're running a VM max problem,
+which you may need to change,
+so if you do run into that,
+just head into this link for Elasticsearch,
+and it will mention it,
+it's pretty much at the top of the page,
+the things that you need to set,
+I'll actually open it up.
+Uh...
+Does it?
+No, it'll work.
+Okay, so with Docker,
+Kibana is a bit verbose when it logs stuff.
+It's pretty much constantly speeding stuff out,
+so you can lose some of the Elasticsearch logs.
+You can also run Docker Compose up dash D,
+which is in a detached mode,
+so you don't get this output.
+But what you'll probably notice somewhere here,
+if I can find it,
+I probably won't be able to find it,
+but it says Kibana is available on host colon 5601,
+so if you open up localhost 5601,
+you'll get to this page here.
+And there's a couple of different things to use,
+so you can load some sample data,
+so we've started including sample data to get started,
+or we can just explore on my own,
+and if you click on that, you'll get to this,
+and there's a whole bunch of stuff in here
+that probably doesn't make a whole bunch of sense
+at the moment,
+but we're trying to make the getting started process
+a bit simpler,
+so we're trying to provide a bit more direction
+rather than dumping someone into a screen
+that says, hi, I have no data,
+and then people are like, okay, what do I do now?
+So I use docu-compose,
+and I get enabled to provide the next search engine
+with the elastic performance,
+the last research cost,
+and the same error as Kibana.
+So you're using this?
+Correct.
+Right.
+Yeah?
+Sorry?
+Oh, you had to...
+Is that on the image?
+So you would have put that in
+as a configuration option into...
+Yeah, okay.
+The single node.
+Let me just scroll down,
+and I'll add that real quick.
+So it would have been in here?
+So you can see it's in here.
+So it's in here.
+It would have been in here.
+So can you just throw the syntax at me?
+Yeah, I was just guessing, yeah.
+Sorry, what was that?
+Environment.
+Polar.
+Then indent.
+Discovery.type.
+Polar.
+Space. Single node.
+So that...
+Was there a dash in front of that?
+No?
+No dash.
+I was guessing that
+that's not the word.
+Okay.
+So that...
+You can open Kibana, okay?
+Okay.
+So Kibana's loaded,
+but it may be...
+May not be talking to
+Elasticsearch.
+Wow, I may have made an assumption here
+that it's kind of backfiring.
+That didn't help me with...
+That didn't help me with
+with getting Elasticsearch
+into the main system.
+Okay.
+Some people are getting some strange errors
+and I tried them to try the open source version
+instead of...
+Okay.
+Because with the Docker Compose YAML
+it didn't work so well
+with me with the normal version
+but with the did-without open source.
+Okay.
+Right.
+What if you add that in, Paul, into your Docker Compose file?
+These two lines.
+So for the people having trouble getting their clusters up, it might be a solution.
+So if you go to the documentation for Elasticsearch 6.5, which is in...
+Everybody has a link for that?
+Or do you want me to...
+Anyway, there's...
+If you do Elasticsearch reference for 6.5, and the Docker instructions for setting it
+up, there is a small warning that says you might need that.
+So if everybody wants to try that first, destroy anything you have running at the moment and
+then try that.
+Stop your containers.
+Yeah, stop your containers, get rid of them, and then try that.
+And once you got that going, then try again.
+No, no, so that's not...
+Yeah, yeah.
+Did you add that?
+Yeah, I did.
+So you don't want it.
+It's...
+It's linked to the link for the reference, so it results in Elasticsearch as the other
+Elasticsearch instance.
+Yeah, yeah.
+So that's a good...
+Someone got it running, yay.
+Try pulling the open source container.
+I shouldn't.
+That's what I'm starting.
+Oh, really?
+Well, it worked for someone else.
+Okay.
+Really?
+Yeah, just I'll...
+Okay, great.
+So this isn't going as...
+I'm sorry about this, people.
+Okay.
+So how about we do this?
+Rather than sitting around and trying to figure out what's going on with Docker, I'll run
+through the next couple of slides and the things that we're going to go through just
+to walk you through it.
+And then if anyone is really up to the challenge, we can have a chat during lunch, and we can
+see them get this going.
+So I'm sorry about this.
+I thought Docker would be a nice even playing field.
+Okay, so we have...
+Well let's just go with we have Kibana up and running.
+And so this is what Kibana looks like.
+It's talking to Elasticsearch.
+And so what we want to have a look at is we want to have a look at metric beat.
+So I've in the interest of time, I've downloaded file beat, metric beat, and packet beat.
+So we go into metric beat, and obviously we have different packages for different operating
+systems except arm, as I mentioned.
+But we have...
+I don't think we have a Windows installer, but we've got devs and we have RPMs and Taji
+zips and zips and that sort of stuff.
+So it's pretty simple.
+We just download it.
+We extract it, and we can literally just run metric beat and it will run.
+Except there's a couple of interesting things I wanted to point out here.
+You can just run metric beat and it'll send data to Elasticsearch and you can start playing
+around with things.
+But we have this concept of a setup command and modules as well.
+And modules are essentially pre-configured packages that will collect data in a specific
+manner.
+So you can actually just run metric beat setup help and it will give you a whole bunch of
+information.
+I'm not going to run through it because we actually have in the next slide here we have
+a command.
+So let me just run modules list.
+So these are all the modules.
+Sorry.
+These are all the modules that we ship.
+You can create your own modules as well.
+But by default we have the system module that is enabled.
+So as soon as you start metric beat it will start collecting system metrics about whatever
+host it's running on.
+So it does things like CPU and memory and disk space and things like that.
+There's a whole bunch of other ones you can enable which just mean you don't have to manually
+configure things.
+So I don't know why the system module is different from the Windows module.
+It is so just be aware of that.
+We also have these setup commands.
+And the setup commands are really good because what it does is it loads we have when you
+put data into Elasticsearch by default it will try to figure out exactly what each field
+is if it's a date or a number or a text.
+And that's called a mapping.
+It's essentially a schema if you use the traditional databases.
+So what we can do is we can pre-upload a template of that mapping so that when it starts to
+load data everything is formatted correctly.
+So it's pretty simple to do.
+We can just run this setup command here.
+And then it loads things.
+And then now we can sorry now what we can do is we can actually when we run metric beat
+it doesn't it's by default it's quite quiet.
+So that's going to be running.
+It's not going to be spitting anything out.
+But now what I can do is I can come back here and we can see here where I used cat to ask
+it hey do you have any indices there?
+And we can see we have metric beat two metric beat ones.
+We have a Kibana index.
+Kibana stores the information about like the information about itself as data in Elasticsearch.
+So if you shut down Kibana and start up again all your dashboards and everything will be
+there.
+I just want to add something.
+So if you see the health says yellow there's nothing wrong with the beats at all.
+That's because for every shard has a primary and a replica.
+So usually you are going to want to have more than one node.
+So it would put one primary and one node and one replica and the other node.
+In this case because we are just running a demo so we are just doing one node the replica
+is not going to be able to go anywhere.
+So it just stays in yellow state.
+So if you see that don't worry nothing is wrong.
+Everything is fine.
+Yep.
+Exactly.
+If we run the cat call here we can see here the document count.
+So the document count, an event, a metric that's generated or a metric set is a document.
+So we can see here we had 37 and that's changed to 250.
+So it's constantly polling the system getting this information and sending it to Elasticsearch.
+If it worked that's what we would all see.
+So I'm sorry.
+And we can just enable other different modules.
+So for example we can come in here and we can, I'll just stop that.
+We can do modules dot metric bit metric, metric bit modules enable.
+I don't know what looks interesting here.
+So Kibana.
+So this is actually a module that we've written that can monitor Kibana.
+And then we have this modules dot D directory and this is pretty I think pretty common for
+people that use like in it and I haven't used system D so I can't comment.
+But if you have a look at this file you'll have a whole bunch of information about where
+to find Kibana and you can go in here and you can configure things and change them.
+We've just sort of gone here is a default that we think is pretty good for everyone.
+So that's how we get metric bit started.
+The next one that we would have run into was file beat.
+And this is probably hopefully starting to look a little bit familiar but we have the
+same sort of thing where we do file beat.
+We can just run file beat and it will start to run.
+But we can also enable modules and create this template as well.
+So let's do modules list.
+Have a bit of a quick look.
+Sorry, there we go.
+How's that?
+So by default we don't enable any modules in file beat.
+That's the difference with metric beat.
+So if you start a file beat now you would get nothing.
+It would poll nothing.
+So you can actually just go enable system and if we have a look at modules dot D system
+you can see a bunch of the different things that it pulls out.
+So it connects to syslog and it starts to grab the logs from syslog.
+We can start to do things like the auth logs and various bits and pieces there.
+And there's more in here.
+So when you enable, for example, if we enabled the elastic search one it would look for the
+elastic search log and it would pull that in and so on and so forth.
+So that's file beat.
+And because it worked for everyone and everything is fantastic and I'm not feeling kind of
+foolish I will just run this.
+Actually let's just one last thing.
+So we can see this is the setup help.
+So I ran setup dash dash template.
+You can also run dash dash dash boards.
+Wow.
+I wasn't expecting that.
+And so what it will actually do is connect to Kavana and preload a whole bunch of dash
+boards.
+So you get the config to collect the data for a specific thing but we can also get the
+config to actually pre-do the dash boards.
+So let me go into metric beat and load those.
+So metric beat setup dash boards.
+Is there an S on that?
+Yes.
+Dash boards.
+And then let me just wait for one of those two to finish because it can take a while.
+So you can see here the file beats run.
+You only need to do this once because as I said Kavana stores stuff in elastic search.
+So if we had a cluster everyone could run their own Kavana and it would connect and
+there would all be these existing dash boards in there including anything that you've created
+yourself.
+Okay.
+So let's go into dash board.
+Now, templates, dash boards.
+Yeah, that should work.
+I'll just refresh.
+That's the default one.
+Default.
+So we can see here that we've got a whole bunch of dash boards that we've loaded in
+so stuff that's probably not really relevant to us.
+But if we go to system we can see metric beat, system overview.
+I did stop metric beat.
+So if I restart metric beat we will start to see information here.
+So this is pretty basic, right?
+We can, you know, very high level sorts of things but the idea is it gets you going quickly
+and you have, you can start to look at things straight away.
+You're not sort of going oh great how do I build a dash board?
+And then you can take these and you can edit these and then create your own dash boards
+and do your own things.
+All right.
+So let's, well, I'm going to enable the docker module for metric beat because what we can
+actually do is what is it module?
+Help modules.
+So with these, and let's just do it, actually let's do a list.
+So if we enable the docker module here what it will do is actually connect to the docker
+daemon and it will start pulling stats from the docker daemon for any containers that
+are running on the host.
+So without having to go into the container and install metric beat and do anything like
+that it can start collecting metrics from those containers.
+And this is where we're starting to see for people that run things like Kubernetes or
+anything like that it becomes really powerful because people can just spin up containers
+and metric beat will be like oh hey I can see there's a new container I'm going to start
+collecting the metrics from that.
+We're also starting to put a little bit more intelligence into things like metric beat
+and file beat.
+So if you're running Apache in a container and you're running Redis in another container
+and you enable what we call auto discovery it will look at the output and be like hey
+I can see this is Redis so I'm going to automatically enable this module and start treating the
+data like that.
+So that's docker enabled so we're going to metric beat again.
+We can also do the same thing for file beat where we enable the docker input and it's
+not a module so that's one slight difference so I don't know if that's something that
+we're going to be working on.
+If you have a look at the file beat and we have multiple file beat config files in here.
+We have the file beat dot yaml which is the default and we have the reference which is
+literally everything that you can potentially configure.
+So if you want to go super crazy you can have a look at the reference one.
+But really quickly in here just to run through when we enable a module by default what it's
+doing is it's creating a file beat input.
+If we enable say the system module it's creating this input and has some of this data in here
+and so it knows automatically where to go.
+So in here you can for example like it mentions here you can point it at a custom path.
+You can do some very basic filtering so you can exclude things so if you don't really
+care about debug stuff or you really only want to include errors or warnings you can
+do that sort of thing.
+You can do things like ignoring files and a whole bunch of other things.
+Interestingly we can also handle multi-line.
+So does anyone work with Java stack traces?
+They are a real pain to deal with logging and what we see is when people use those is
+each line ends up as a document or an event in Elasticsearch so it's not treated as a
+single one.
+But we can actually handle that with file beat here and we can say okay look for this
+pattern and then collapse that all into one event which makes a lot of sense.
+So a bit around different modules and you can change various Elasticsearch settings
+here and then there's more bits and pieces here, different sorts of outputs including
+sending it to logstash, a whole bunch of other stuff in here.
+So what we want to do is we want to enable the Docker input so let's just have a real
+quick look at the logs, the documentation on how to do that.
+Modules, that's right it's not a module.
+I mentioned that earlier.
+So it's actually under configure inputs and you can see here we've got a number of different
+inputs so we can actually take data from various places.
+So we can actually, we enable this within the config file so under the inputs we create
+this type Docker container IDs and you can specifically list containers or you can just
+wild card it so any container that it finds it will start to take the logs in.
+I'm going to skip over that just in the interest of time.
+But let's just assume we've got the Docker input working so we would start to see different
+sorts of logs, we would see logs from say the Elasticsearch container here.
+So let's just quickly go to dashboard and then if we go to Docker.
+So we can see here, we just enabled the Docker module and we've got information about Elasticsearch
+combiner running here.
+We can see if we had a whole bunch of different containers you would see all of those.
+We can click here, we can just filter on one particular container.
+We can go over here or we can click on here for the different images and it will give
+us information.
+So you can see here I've been running different sorts of Docker containers in this instance.
+You can see a bunch of other information here around different sorts of network and CPU
+and things like that.
+So again this is pretty basic but it sort of gives you an idea of the things that you
+can do.
+Quick question.
+Yep.
+Can you tell us if you can take that as your own?
+What sort of metrics are you thinking of adding?
+Yeah.
+So let me just have a quick look.
+So we were looking in this dashboard section here, right?
+So that's all the existing dashboards.
+You can come over to discover here and you can actually start to see the raw data that
+we're generating.
+And here we can pick whether we want metric B or file B for example.
+So if we have a quick look, so that's a Docker container one.
+You can see here all the different sorts of fields that are created and we're working
+towards a common schema for this type of stuff.
+I'm pretty sure disk space is in here.
+Yep.
+Here we go.
+File system.
+So let's have a look.
+Dashboard.
+So what is the difference between the physical and the user experience?
+It isn't too difficult.
+No.
+You can create your own modules relatively easy.
+There is a little bit of Go programming involved, but there's a really good developer guide
+on doing it and we're starting to see more and more of that roll out.
+So we can have a look in here.
+Let's actually have a look in, yeah, so disk use for example.
+So we do include a lot of that by default, but yeah, you can extend stuff.
+Okay.
+Yeah.
+So what we did, metric beat setup dashboards.
+So it's just another setup command.
+I'll update the gist and chuck that in there.
+So because everything went perfectly, we're now at a point where we can start to do something
+really cool and that's analyze some of the network data with packet beat.
+I'll just talk through this one.
+But as I mentioned before, packet beat is, the whole idea is that it listens to ports
+and it can decode various protocols and you can start to build metrics around them.
+So this is probably super familiar by now where we're downloading things, we're writing
+the same things and again, it's the same sort of commands here, right?
+Now here's, can anyone spot something unusual on this?
+This is actually on this slide.
+No, that's all right.
+That's right.
+Yeah, the title's wrong.
+And this was intentional.
+This is actually one of the intentionally wrong things that I did that's worked.
+But I put metric beat there because just to reinforce that these are all built on the
+one lib beat, all on that one underlying library.
+So everything is the same.
+So all the commands that you're running are going to be the same across all the beats.
+If you use a community beat, unless someone does something really funky, you're going
+to be able to take the knowledge that you've maybe kind of learned here and apply it to
+some of these other beats and then run these same things.
+So let's have a quick look at packet beat, so I'll just extract that.
+I wish I had auto-complete.
+Okay.
+This is a packet beat.
+So there's a whole bunch of different things we can do in packet beat, including sniffing
+packet flows.
+You can actually pass in, I think, PCAP files if you've got those into packet beat and it'll
+code those and extract different sorts of things.
+But here is where we start to see the protocols.
+So these are, they're not modules.
+We just enable or disable the protocols.
+We can see here, you know, we've got different sorts of, like, does anyone use Cassandra?
+You can monitor Cassandra transactions.
+We can do a whole bunch of really cool DNS stuff.
+So basically what will happen is it will listen to port 53 and then take in DNS requests and
+sniff those and you can start to see DNS traffic that's happening over your site and say, hey,
+why is someone constantly requesting this?
+This is interesting because I actually found out that BloomSky, every time it records data
+and sends it to the cloud, it does a DNS request every single time.
+So it's like one of the devices on my network at home that does the most DNS requests.
+It's kind of weird and I'd probably never get the developers to fix it.
+But you know, it's interesting that you can find it.
+You can also do HTTP and you can use whatever port that you want.
+Obviously the default is 80.
+In this awesome example that would totally work if I did it, we would listen to 9200,
+which is the Elasticsearch port.
+And so what we would be able to see, we'd be able to see Kibana making requests and
+getting responses and we start to see that level of transaction, those transactions.
+We can do the same thing for MySQL and Postgres.
+So this is a really easy way to start to see what your application is doing without having
+to make any major changes because you don't have to stop Postgres or MySQL or your web
+server.
+You literally just install PacketBeat and it will silently listen to the traffic on
+the port.
+Yeah, we don't do HTTPS.
+Yeah.
+So that's for the obvious reasons of how do we do it.
+Yeah.
+It's just a whole bucket of we probably don't want to touch that.
+So that's all great.
+And this was just a little bit of extra.
+Hopefully we got to this and I guess we kind of have.
+So Heartbeat, I mentioned it earlier.
+Again, it's all the same sort of stuff, right?
+So we download Heartbeat.
+We can run the commands.
+We can set up the templates.
+We can set up the dashboards.
+And Heartbeat's really cool.
+Actually started from a, we have, well, one of our support team is in Canberra and he,
+I don't know if he was on the NBN so I don't want to sort of project, but he had really
+terrible internet speeds because it's Australia.
+And so he wrote this thing called Pingbeat and it literally would just run a ping command
+and then get the response and then use the beats to format that into JSON and put it
+into Elasticsearch so he could see what was happening with his connection.
+And what he found is that, you know, funnily enough, there was an effect in the morning,
+not so much, but in the evening and he coined it the Netflix effect.
+But basically when everyone got home, contention went up, latency went up, speeds went down.
+And so he was able to take that and go to his ISP and say, hey, listen, this is terrible.
+What's going on?
+Actually he changed ISPs.
+So what happened is we took that idea of Pingbeat and we turned it into Heartbeat.
+So you can still run different sorts of pings.
+You can run TCP or UDP pings.
+You can call a URL.
+So if you're running a microservice architecture, you can put in all your URLs in there.
+It'll call them.
+It'll grab that data and then it'll put it into Elasticsearch so you can start to see
+different health checks.
+So the idea is that Heartbeat can do these sorts of checks and you end up with all this
+data in Elasticsearch.
+So I mentioned, so that's kind of beats in a terrible workshop.
+And I'm really sorry about that.
+So what do we do now is you come and hassle me at lunch and we can get this working and
+we can actually do it.
+But you can also go and have a look at a whole bunch of other things.
+As I mentioned, we've got like 78 different community beats out there.
+There's heaps of things.
+There's a Kafka beat.
+If anyone uses Kafka, you can pull data out of Kafka topics and do things with it.
+There's a whole bunch out there and we're building more as well.
+You can insert Logstash into this.
+I said this is about getting started with beats really easily.
+But you can add Logstash in to do things like maybe translate error codes in the human readable
+text or you can do a lookup and take an IP into a DNS request and convert that into a
+host name and then add that into the logs.
+So Logstash adds that sort of functionality that beats, we're never going to do with beats.
+Which is about let's take this data and put it over here.
+We can use the Elasticsearch ingest API and I haven't touched on this, but Logstash has
+the ability to manipulate data and we have a subset of that in Elasticsearch.
+So you can actually take a custom log format that you're shipping with file beat and send
+it to an ingest API where it will look at the data and it will break it apart and say,
+hey, this is the time, this is the host, this is the other sorts of information.
+There is all these other beats, we did touch on heartbeat, but if you're using Windows,
+check out Winlogbeat, it's really awesome.
+You can definitely create your own beats.
+We have a pretty good developers guide that you can jump online and have a look at.
+We have forums where you can jump in if you go to discuss.elastic.co and ask people the
+community questions, but our beats developers hang out there as well.
+So if you've got something specific, they're really good with helping out there.
+We have an open source application performance monitoring, so APM.
+I didn't touch on that at all, but if we've got things like system metrics and we're collecting
+logs, we can then start to add things like, hey, let's do distributed tracing on our application
+and put that into Elasticsearch as well.
+Of course, you can create a whole bunch more dashboards.
+I'm terrible at dashboarding and I'm happy to admit it, but there's some really cool
+stuff that people are doing out there.
+We're adding more and more pre-built dashboards.
+We're adding more and more visualizations.
+So all this sort of stuff is maturing and you can definitely take the things like this
+one here and start to create your own dashboards and change colors if you really want.
+This is all just a starting point.
+Thank you, and I'm really sorry that this has gone south.
+Come and have a chat to us if you want to get this working properly.
+Thanks for your patience.
+Has anyone got questions?
+We've got a bunch of stickers up here as well if anyone wants to get some.
+No cars, but you can have a bumper sticker and there's just the traditional Elasticsearch
+swag that we have, the stickers.
+But if anyone's got any questions, please ask.
+Happy to help.
+Sorry?
+Do we have a puppet module?
+Public module.
+Oh, puppet module.
+There is a puppet beat.
+So I think it connects to the puppet daemon and pulls the facts in and takes that information.
+But I don't know.
+I want to set up the puppet beat.
+Oh, right.
+Sorry.
+I don't know, actually.
+That's a good question.
+I know we have puppet modules for Elasticsearch Kibana.
+I'm not sure about beats.
+There's one for file beats.
+Sorry?
+There's one for file beats.
+Okay.
+There's one for file beat.
+Yep.
+So in order to set up the beat, do we need to run the setup command?
+No.
+So the only time you want to run the setup command is if maybe, for example, you had
+a different cluster in a different location.
+So for example, if you had a bunch of VMs or hosts in Europe and the US and then maybe
+here in New Zealand, you probably, you may not want to ship the data from everywhere
+to one cluster.
+So what you could do is you could set up multiple and then you just run the setup command against
+each cluster once so that it would be configured for any beats that come in.
+But you don't need to run every single time that you install the beat and do things.
+Oh, did you?
+Okay.
+There we go.
+Yeah.
+I'm sorry.
+I don't know what to say there.
+This is the...
+Yeah.
+Okay.
+Yeah.
+That's...
+I don't want to say that because it makes me look terrible.
+I mean, I already look bad enough.
+So it's container underscore name.
+Just that, Paul?
+Container underscore name Elasticsearch.
+There we go.
+Yeah.
+You may need to do that.
+Some operating systems do it, some don't.
+It's kind of...
+Yeah.
+Yes.
+Question.
+Yeah.
+Yes.
+Yeah.
+Yep.
+I mean, that seems to be like the way it works with the beats,
+it's there and it's here and it beats the files on there.
+So, you're expanding that directly.
+Is that the right model, I guess, for pushing the data in?
+Or could the custom application push the data in?
+What's the right answer?
+There is no right answer to that.
+So, I'll just repeat the question for the video,
+but if you have a custom application,
+should you use something like Filebeat,
+which you send directly to Elasticsearch?
+Logging to File is basically the ultimate...
+How do I put it?
+If you log to File, you've got the log.
+If you log locally and you restart the machine,
+the log is still going to be there unless you've destroyed the machine.
+So, if something happens, you can still go in and see what's going on.
+So, logging to File is great because no matter what happens,
+if someone decides that they don't like Elasticsearch
+and we're moving somewhere else and you can't copy the data over for some reason,
+you can go back and you can reprocess the log.
+So, logging to File is fantastic if you can do it.
+You can definitely log directly to Elasticsearch,
+and we have a number of different clients for most languages, I think, that you'll want.
+And that handles things like if one of the nodes fails,
+it can talk to another node, it handles back pressure and things like that.
+But things can still go wrong there, so it's really up to you.
+But I think we'd probably safely say it's probably better to log to File
+because if your application decides to go crazy
+or if you get a whole bunch of access requests or whatever the case is
+and you start logging dramatically,
+if there's something depending on that log being written somewhere else,
+then you've suddenly got a blocker because you've overwhelmed Elasticsearch
+or something else that's going on.
+So if you log to File, then you don't have to worry as much.
+So you can do it.
+Sorry?
+Except for filling up the disk.
+Except for filling up the disk, yeah.
+But I mean, MetricBeat will tell you when the disk is filling up.
+Right.
+There are some cases where you're logging in high enough
+or sort of not difficult that you don't really want to stage the disk
+and then back out and want to keep it in the main network.
+In that case, where would you log?
+So if you were logging so quickly you didn't want to write to disk
+because there was an overhead there?
+Is that...?
+Yeah, yeah.
+And so you wanted to just put it in the memory and...
+In an environment where, like a container-based environment,
+where you don't even want to be relying on the load of disk
+or anything in particular.
+What's the reverse?
+Well, so if you're using a container environment
+and maybe someone with a bit more Docker expertise will correct me here,
+but by default it'll log to standard out.
+And so FileBeat will listen.
+You can set FileBeat to listen to that standard out
+or you can connect it to the Docker daemon or to the files on disk.
+So there's a couple of different options there.
+I think that's more about, well, what do you want to do?
+I don't have enough knowledge to answer that one with any sort of authority.
+Sorry.
+Would you say maybe that if you had a version of writing that's that
+the pattern would be to expose this information
+or something in which the recommendation would be to enter it in?
+So if you didn't want to write to disk,
+would you expose something where a bit could pull it?
+Yeah, I mean, FileBeat listens to TCP sockets,
+so maybe you could just expose a socket and push it directly to that
+if you wanted to use a push model.
+If you wanted to use a pull model, so like pub-sub type stuff,
+MetricBeat can actually pull a URL and collect information from it.
+It's in a sort of a, I'd probably say beta phase at the moment.
+So you could potentially have a logging API
+and MetricBeat is constantly polling that.
+I think though the problem that I see with that is FileBeat has a one-second resolution.
+I don't know if we can go lower than that.
+So if you're generating quite a lot of logging,
+you might find that a bit of a backlog.
+So you could potentially do it.
+I don't know if it's the best option or not.
+Any other questions we can help with?
+No? Okay.
+Well, thank you for coming to this tutorial.
+Hopefully though you've kind of seen Beats.
+A lot of people don't know about Beats, which is why we're focusing on them,
+but they're very simple to get started with
+and they provide a lot of prepackaged modules and dashboards and things like that.
+It's very easy to take those and then you do your own.
+We're working on creating more and more modules.
+So does anyone use Ubiquiti networking gear, for example?
+Yeah, so Ubiquiti or Ubiquiti?
+Yeah, yeah, all their UniFi stuff.
+So we use that, well, I use that at home.
+And someone's writing a module for it now,
+so I put my hand up and say, hey, I want to test that because it's awesome.
+But I have Metric Beats and FileBeat running on my USG firewall,
+and that's why I mentioned the Arch Linux stuff before,
+because they do really awesome packages and they're pretty much always up to date.
+So Beats are pretty cool. They're really cool.
+They can do quite a lot and they're super extensible.
+We didn't touch a whole bunch on with zero on Logstash.
+We didn't go into, other than maybe I took a wrong segue talking about shards
+and indices down here, but we didn't talk about Elasticsearch at all.
+You don't really need to know a whole bunch about that to get started.
+It does help to know Elasticsearch at some point,
+and you can definitely go and do some education on that or come and have a chat to us.
+Hopefully, someone will leave here and go and do something like I did
+with my BloomSky dashboard where I'm using Logstash, but I could use Metric Beat.
+I have Metric Beat and FileBeat installed all around my house,
+put it into a Docker container with Elasticsearch.
+I'm working on pulling the solar system metrics from my solar system,
+like the production for each panel and stuff like that with all the microinverters,
+and I'll have a dashboard so I'll be able to see what my peak periods are
+or if there's a panel that might be dirty and it's not generating compared to others.
+There's really no limitation with what you can do.
+If you can extract the data, you can then do something with it and then build dashboards.
+That's really what I was hoping to get people thinking about is there's ways to get the data,
+put it into Elasticsearch, and then you're really only limited.
+There's a whole bunch of stuff we haven't covered,
+like different visualization methods and other bits and pieces.
+We have different sorts of apps.
+If anyone uses Kubernetes, we've got a Kubernetes infrastructure type app,
+which is really good for looking at pod-level stuff.
+We've got our logging app.
+There's heaps and heaps of stuff that we haven't talked about,
+but feel free to come and have a chat to us at lunch, which is pretty soon.
+Oh, awesome. Timing's right.
+Thank you very much, everyone.
+We'll be around for today and tomorrow, so feel free to come and have a chat
+or hit us up on Twitter or anything.
+I'll update the gist and the slide, and hopefully if we've got this URL,
+if you've got access to the gist, just maybe check later today, do a refresh,
+and we'll have a few of the corrections.
+Thank you very much for that, Paul. Thanks, everyone.
+Thank you.

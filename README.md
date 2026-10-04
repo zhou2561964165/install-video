@@ -1,6 +1,6 @@
 # 万能视频下载网站
 
-粘贴任意平台视频链接 → 解析 → 选清晰度 → 下载到本地。依托 yt-dlp 覆盖数千站点，前端是「lolimeow」紫罗兰浅/深主题 + 玻璃拟态卡片（PIXI 舞台 + Live2D 白角色，含程序化待机动画），移动端可用。
+注册或登录后，粘贴任意平台视频链接 → 解析 → 选清晰度 → 下载到本地；有字幕的视频还可读取字幕、翻译并生成 AI 总结。依托 yt-dlp 覆盖数千站点，前端采用深色液态玻璃 + 樱花粉辉光主题（PIXI 舞台 + Live2D 白角色，含程序化待机动画），移动端可用。
 
 ## 工程约定（每次遵守）
 
@@ -19,15 +19,15 @@
                                           yt-dlp 服务层（线程池 + SQLite 任务状态）
 ```
 
-- 后端：`backend/` — FastAPI + yt-dlp(Python API) + SQLModel/SQLite。直链下载与服务端下载自动切换，服务端产物 TTL 自动清理。
+- 后端：`backend/` — FastAPI + yt-dlp(Python API) + SQLModel/SQLite。JWT 登录后才能解析和下载；直链下载与服务端下载自动切换，服务端产物 TTL 自动清理。
 - 前端：`frontend/` — React 18 + Vite + PIXI v6 + pixi-live2d-display。单一 PIXI 管线，场景状态机驱动，WebGL 缺失/低端机自动降级。
 
-详细设计见 `docs/design.md`，需求见 `docs/requirements.md`，后续扩展见 `docs/superpowers/plans/2026-09-21-extension-plan.md`，第二阶段视觉升级见 `docs/superpowers/plans/2026-09-22-phase2-cinematic-visual.md`。
+当前文档从 [文档索引](docs/README.md) 与 [交接文档](docs/handoff.md) 开始阅读。v3以AI内容总结为主：字幕作为来源，重复内容可去重，长内容分段归纳后合并。电影感/霓虹旧计划是历史参考，不直接作为当前待办。
 
 ## 环境要求
 
 - [uv](https://docs.astral.sh/uv/)（Python 依赖管理；`uv sync` 自动准备 Python 3.12 与 `.venv`）
-- Node.js 18+
+- Node.js 满足当前 Vite 依赖要求：`^20.19.0 || >=22.12.0`（本机最近验证为24.16.0）
 - **ffmpeg**（合并高清视频/音频流必需；缺少时服务端下载会报 `ffmpeg_missing`）
 
 ## 快速启动
@@ -55,7 +55,7 @@ npm install
 npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 ```
 
-浏览器打开 `http://localhost:5173`，粘贴一个视频链接即可走完「解析 → 选清晰度 → 下载」。
+浏览器打开 `http://localhost:5173`，先注册或登录，再粘贴视频链接走完「解析 → 选清晰度 → 下载」。
 
 ## 配置（环境变量）
 
@@ -71,10 +71,38 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `DB_URL` | `sqlite:///<backend>/jobs.db` | SQLite 连接串（可换 PostgreSQL） |
 | `RATE_LIMIT` | `30` | 每 IP 每窗口请求上限 |
 | `RATE_LIMIT_WINDOW` | `60` | 限流窗口（秒） |
+| `JWT_SECRET` | 开发默认值 | 生产自行设置JWT签名secret |
+| `JWT_EXPIRE_MINUTES` | `10080` | 登录token有效期，默认7天 |
+| `DEFAULT_QUOTA_LIMIT` | `10` | 每用户每日下载次数，UTC日期粒度 |
+| `PASSWORD_ITERATIONS` | `100000` | PBKDF2密码哈希迭代次数 |
+| `SUBTITLE_MAX_BYTES` | `5242880` | 单个字幕文件大小上限 |
+| `SUBTITLE_TIMEOUT_SECONDS` | `30` | 字幕来源元数据及正文 HTTP 超时 |
+| `LLM_PROVIDER` | `openai-compatible` | 前端展示的供应商名称 |
+| `LLM_BASE_URL` | 空 | OpenAI-compatible API 根地址，如 `https://api.example.com/v1` |
+| `LLM_API_KEY` | 空 | LLM Bearer key；本地免鉴权服务可留空 |
+| `LLM_MODEL` | 空 | 总结/翻译使用的模型；为空时返回 `llm_unconfigured` |
+| `LLM_TIMEOUT_SECONDS` | `90` | LLM 请求超时 |
+| `LLM_MAX_INPUT_CHARS` | `60000` | 单次内容输入上限；总结会分段，翻译超限则明确提示 |
+| `LLM_SUMMARY_CHUNK_CHARS` | `20000` | 总结分段大小；先清理重复内容，再分段归纳并合并 |
+| `LLM_SUMMARY_MAX_CHUNKS` | `16` | 单次总结最多的原始分段数，限制一次请求的模型调用规模 |
+| `LLM_SUMMARY_MAX_OUTPUT_TOKENS` | `4096` | 每次分段或合并总结的最大输出 token 数 |
 
 默认路径（`TEMP_DIR` / `DB_URL`）已锚定到后端目录，与启动时的工作目录无关。
 
+### v3 · DeepSeek 本地联调
+
+当前联调使用 DeepSeek-V4.1-Flash，官方 API 模型 ID 为 `deepseek-flash`（见 [DeepSeek 模型列表](https://api-docs.deepseek.com/api/list-models/)）。本机配置位于被 Git 忽略的 `backend/.env`；API key 只保存在该本地文件中。
+
+```bash
+cd backend
+uv run uvicorn app.main:app --reload --port 8000 --env-file .env
+```
+
+新环境需自行创建 `.env`，设置 `LLM_PROVIDER=deepseek`、`LLM_BASE_URL=https://api.deepseek.com`、`LLM_MODEL=deepseek-flash` 和 `LLM_API_KEY`。后续兼容供应商只需更改这些环境变量。
+
 ## 验证
+
+最近已完成的验证：后端101/101、前端66/66、生产构建通过；原5份已许可文件解析5/5且SHA-256不变。三平台真实字幕请求和三次真实 DeepSeek 总结的范围与网络限制见[平台与总结质量报告](docs/acceptance-reports/2026-10-03-platform-quality/report.md)。上一轮5份文件和3个Archive.org URL的通过记录见[AI总结修复报告](docs/acceptance-reports/2026-10-03-ai-summary-regression/report.md)，不同轮次的数字各自保留，不推断所有平台均可用。
 
 ### 自动化测试
 

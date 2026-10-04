@@ -66,10 +66,10 @@ def test_quota_me_reflects_usage(monkeypatch):
     assert quota["remaining"] == 2
 
 
-def test_anonymous_bypasses_quota():
-    # 匿名（无 token）不受额度限制，保留每 IP 限流
+def test_unauthenticated_download_requires_login():
     r = _download({})
-    assert r.status_code == 200
+    assert r.status_code == 401
+    assert r.json()["detail"]["error_type"] == "login_required"
 
 
 def test_job_user_id_written_for_logged_in():
@@ -84,8 +84,7 @@ def test_job_user_id_written_for_logged_in():
         assert s.get(User, job.user_id) is not None
 
 
-def test_job_user_id_none_for_anonymous():
-    job_id = _download({}).json()["job_id"]
-    with Session(engine) as s:
-        job = s.get(Job, job_id)
-        assert job.user_id is None
+def test_download_with_bad_token_requires_login():
+    r = _download({"Authorization": "Bearer not-a-real-token"})
+    assert r.status_code == 401
+    assert r.json()["detail"]["error_type"] == "login_required"

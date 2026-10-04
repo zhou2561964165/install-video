@@ -13,9 +13,13 @@ def test_settings_defaults():
 def test_settings_from_env(monkeypatch):
     monkeypatch.setenv("MAX_CONCURRENT", "5")
     monkeypatch.setenv("TTL_SECONDS", "60")
+    monkeypatch.setenv("LLM_MODEL", "test-model")
+    monkeypatch.setenv("LLM_MAX_INPUT_CHARS", "12345")
     s = Settings.from_env()
     assert s.max_concurrent_downloads == 5
     assert s.ttl_seconds == 60
+    assert s.llm_model == "test-model"
+    assert s.llm_max_input_chars == 12345
 
 
 def test_global_settings_is_settings():

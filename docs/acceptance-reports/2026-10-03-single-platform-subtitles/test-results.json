@@ -1,0 +1,283 @@
+{
+  "summary": {
+    "platform": "Internet Archive",
+    "sample_track_total": 5,
+    "sample_total_bytes": 168559,
+    "unique_video_total": 3,
+    "unique_content_total": 4,
+    "parser_pass_count": 4,
+    "parser_pass_rate": 0.8,
+    "application_video_checks": 3,
+    "application_integration_pass_count": 0,
+    "application_integration_pass_rate": 0.0,
+    "format_counts": {
+      "srt": 1,
+      "vtt": 4
+    },
+    "language_counts": {
+      "en": 1,
+      "eng": 1,
+      "fr": 1,
+      "und": 2
+    },
+    "current_v3_supported_formats_tested": [
+      "srt",
+      "vtt"
+    ],
+    "capture_times_ms": {
+      "IA-lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack-eng-vtt": 6040,
+      "IA-youtube-6k-kbg3_Drc-en-vtt": 568,
+      "IA-youtube-6k-kbg3_Drc-fr-vtt": 500,
+      "IA-mnn_23214_387-en-srt": 826,
+      "IA-mnn_23214_387-en-vtt": 702
+    }
+  },
+  "samples": [
+    {
+      "sample_id": "IA-lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack-eng-vtt",
+      "parser_pass": true,
+      "parser_error_type": null,
+      "sha256_matches_capture_receipt": true,
+      "utf8_strict_decode": true,
+      "decode_used": "utf-8",
+      "unicode_replacement_character_count": 0,
+      "parsed_characters": 71658,
+      "parsed_lines": 1207,
+      "nonempty_plain_text": true,
+      "timestamp_metadata_leaked_to_output": false,
+      "subtitle_structure_leaked_to_output": false,
+      "timeline_audit": {
+        "cue_count": 1230,
+        "nonstandard_fraction_precision_count": 0,
+        "all_intervals_finite": true,
+        "start_after_end_count": 0,
+        "source_start_order_regressions": 0,
+        "overlapping_cue_count": 0,
+        "first_start_seconds": 0.0,
+        "last_end_seconds": 5583.54
+      },
+      "sanitized_copy_basis": "parsed_plain_text",
+      "redactions": {
+        "emails_redacted": 0,
+        "phone_like_strings_redacted": 0
+      },
+      "normalized_content_duplicate_of": null,
+      "source_body_duplicate_of": null,
+      "source_body_comparison_available": true,
+      "exceeds_default_llm_input_limit_60000_chars": true,
+      "unmeasured": [
+        "audio/text alignment",
+        "speaker attribution accuracy",
+        "background noise",
+        "human linguistic quality review"
+      ]
+    },
+    {
+      "sample_id": "IA-youtube-6k-kbg3_Drc-en-vtt",
+      "parser_pass": true,
+      "parser_error_type": null,
+      "sha256_matches_capture_receipt": true,
+      "utf8_strict_decode": true,
+      "decode_used": "utf-8",
+      "unicode_replacement_character_count": 0,
+      "parsed_characters": 400,
+      "parsed_lines": 8,
+      "nonempty_plain_text": true,
+      "timestamp_metadata_leaked_to_output": false,
+      "subtitle_structure_leaked_to_output": false,
+      "timeline_audit": {
+        "cue_count": 8,
+        "nonstandard_fraction_precision_count": 0,
+        "all_intervals_finite": true,
+        "start_after_end_count": 0,
+        "source_start_order_regressions": 0,
+        "overlapping_cue_count": 0,
+        "first_start_seconds": 0.02,
+        "last_end_seconds": 56.8
+      },
+      "sanitized_copy_basis": "parsed_plain_text",
+      "redactions": {
+        "emails_redacted": 0,
+        "phone_like_strings_redacted": 0
+      },
+      "normalized_content_duplicate_of": null,
+      "source_body_duplicate_of": null,
+      "source_body_comparison_available": true,
+      "exceeds_default_llm_input_limit_60000_chars": false,
+      "unmeasured": [
+        "audio/text alignment",
+        "speaker attribution accuracy",
+        "background noise",
+        "human linguistic quality review"
+      ]
+    },
+    {
+      "sample_id": "IA-youtube-6k-kbg3_Drc-fr-vtt",
+      "parser_pass": true,
+      "parser_error_type": null,
+      "sha256_matches_capture_receipt": true,
+      "utf8_strict_decode": true,
+      "decode_used": "utf-8",
+      "unicode_replacement_character_count": 0,
+      "parsed_characters": 478,
+      "parsed_lines": 8,
+      "nonempty_plain_text": true,
+      "timestamp_metadata_leaked_to_output": false,
+      "subtitle_structure_leaked_to_output": false,
+      "timeline_audit": {
+        "cue_count": 8,
+        "nonstandard_fraction_precision_count": 0,
+        "all_intervals_finite": true,
+        "start_after_end_count": 0,
+        "source_start_order_regressions": 0,
+        "overlapping_cue_count": 0,
+        "first_start_seconds": 0.02,
+        "last_end_seconds": 56.8
+      },
+      "sanitized_copy_basis": "parsed_plain_text",
+      "redactions": {
+        "emails_redacted": 0,
+        "phone_like_strings_redacted": 0
+      },
+      "normalized_content_duplicate_of": null,
+      "source_body_duplicate_of": null,
+      "source_body_comparison_available": true,
+      "exceeds_default_llm_input_limit_60000_chars": false,
+      "unmeasured": [
+        "audio/text alignment",
+        "speaker attribution accuracy",
+        "background noise",
+        "human linguistic quality review"
+      ]
+    },
+    {
+      "sample_id": "IA-mnn_23214_387-en-srt",
+      "parser_pass": false,
+      "parser_error_type": "subtitle_invalid",
+      "sha256_matches_capture_receipt": true,
+      "utf8_strict_decode": true,
+      "decode_used": "utf-8",
+      "unicode_replacement_character_count": 0,
+      "parsed_characters": 0,
+      "parsed_lines": 0,
+      "nonempty_plain_text": false,
+      "timestamp_metadata_leaked_to_output": false,
+      "subtitle_structure_leaked_to_output": false,
+      "timeline_audit": {
+        "cue_count": 302,
+        "nonstandard_fraction_precision_count": 604,
+        "all_intervals_finite": true,
+        "start_after_end_count": 0,
+        "source_start_order_regressions": 0,
+        "overlapping_cue_count": 0,
+        "first_start_seconds": 0.49,
+        "last_end_seconds": 1645.31
+      },
+      "sanitized_copy_basis": "raw_caption_fallback_after_parse_failure",
+      "redactions": {
+        "emails_redacted": 0,
+        "phone_like_strings_redacted": 0
+      },
+      "normalized_content_duplicate_of": null,
+      "source_body_duplicate_of": null,
+      "source_body_comparison_available": true,
+      "exceeds_default_llm_input_limit_60000_chars": false,
+      "unmeasured": [
+        "audio/text alignment",
+        "speaker attribution accuracy",
+        "background noise",
+        "human linguistic quality review"
+      ]
+    },
+    {
+      "sample_id": "IA-mnn_23214_387-en-vtt",
+      "parser_pass": true,
+      "parser_error_type": null,
+      "sha256_matches_capture_receipt": true,
+      "utf8_strict_decode": true,
+      "decode_used": "utf-8",
+      "unicode_replacement_character_count": 0,
+      "parsed_characters": 20504,
+      "parsed_lines": 564,
+      "nonempty_plain_text": true,
+      "timestamp_metadata_leaked_to_output": false,
+      "subtitle_structure_leaked_to_output": false,
+      "timeline_audit": {
+        "cue_count": 302,
+        "nonstandard_fraction_precision_count": 0,
+        "all_intervals_finite": true,
+        "start_after_end_count": 0,
+        "source_start_order_regressions": 0,
+        "overlapping_cue_count": 0,
+        "first_start_seconds": 0.49,
+        "last_end_seconds": 1645.31
+      },
+      "sanitized_copy_basis": "parsed_plain_text",
+      "redactions": {
+        "emails_redacted": 0,
+        "phone_like_strings_redacted": 0
+      },
+      "normalized_content_duplicate_of": null,
+      "source_body_duplicate_of": "IA-mnn_23214_387-en-srt",
+      "source_body_comparison_available": true,
+      "exceeds_default_llm_input_limit_60000_chars": false,
+      "unmeasured": [
+        "audio/text alignment",
+        "speaker attribution accuracy",
+        "background noise",
+        "human linguistic quality review"
+      ]
+    }
+  ],
+  "application_platform_checks": [
+    {
+      "source_id": "lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack",
+      "source_url": "https://archive.org/details/lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack",
+      "language_requested": "eng",
+      "status": "fail",
+      "error_type": "subtitle_unavailable",
+      "extractor_observation": {
+        "returned_track_count": 0,
+        "languages": [],
+        "formats": [],
+        "title": "Awesome Monitoring Infrastructure Using the Elastic Stack"
+      },
+      "text_characters": null,
+      "elapsed_ms": 3579.3,
+      "caption_http_attempted_by_application": false
+    },
+    {
+      "source_id": "youtube-6k-kbg3_Drc",
+      "source_url": "https://archive.org/details/youtube-6k-kbg3_Drc",
+      "language_requested": "en",
+      "status": "fail",
+      "error_type": "subtitle_unavailable",
+      "extractor_observation": {
+        "returned_track_count": 0,
+        "languages": [],
+        "formats": [],
+        "title": "Imagine the Consequences"
+      },
+      "text_characters": null,
+      "elapsed_ms": 3412.4,
+      "caption_http_attempted_by_application": false
+    },
+    {
+      "source_id": "mnn_23214_387",
+      "source_url": "https://archive.org/details/mnn_23214_387",
+      "language_requested": null,
+      "status": "fail",
+      "error_type": "subtitle_unavailable",
+      "extractor_observation": {
+        "returned_track_count": 0,
+        "languages": [],
+        "formats": [],
+        "title": "Host Caroline Plank reviews the book 'Running From Cancer' with its author Agnes Varona Oquendo."
+      },
+      "text_characters": null,
+      "elapsed_ms": 2647.5,
+      "caption_http_attempted_by_application": false
+    }
+  ],
+  "generated_at_utc": "2026-10-03T09:00:57.677626+00:00"
+}

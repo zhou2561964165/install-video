@@ -1,0 +1,113 @@
+{
+  "captured_at_utc": "2026-10-03T13:45:28.381956+00:00",
+  "samples": [
+    {
+      "id": "archive-short-en",
+      "platform": "Internet Archive",
+      "url": "https://archive.org/details/youtube-6k-kbg3_Drc",
+      "requested_language": "en",
+      "expected": "content",
+      "http_status": 422,
+      "detail": {
+        "error_type": "network",
+        "error": "ERROR: [archive.org] youtube-6k-kbg3_Drc: Unable to download webpage: The read operation timed out (caused by TransportError('The read operation timed out'))"
+      },
+      "content_pass": false,
+      "expectation_met": false,
+      "elapsed_seconds": 30.14
+    },
+    {
+      "id": "commons-climate-en",
+      "platform": "Wikimedia Commons",
+      "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+      "requested_language": "en",
+      "expected": "content",
+      "http_status": 422,
+      "detail": {
+        "error_type": "network",
+        "error": "ERROR: [wikimedia.org] Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm: Unable to download JSON metadata: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010) (caused by SSLError('[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+      },
+      "content_pass": false,
+      "expectation_met": false,
+      "elapsed_seconds": 3.24
+    },
+    {
+      "id": "commons-film-en",
+      "platform": "Wikimedia Commons",
+      "url": "https://commons.wikimedia.org/wiki/File:Elephants_Dream.ogv",
+      "requested_language": "en",
+      "expected": "content",
+      "http_status": 422,
+      "detail": {
+        "error_type": "network",
+        "error": "ERROR: [wikimedia.org] Elephants_Dream.ogv: Unable to download JSON metadata: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010) (caused by SSLError('[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+      },
+      "content_pass": false,
+      "expectation_met": false,
+      "elapsed_seconds": 3.22
+    },
+    {
+      "id": "ted-access",
+      "platform": "TED",
+      "url": "https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen",
+      "requested_language": "en",
+      "expected": "observe",
+      "http_status": 422,
+      "detail": {
+        "error_type": "network",
+        "error": "ERROR: [TedTalk] hans_rosling_the_best_stats_you_ve_ever_seen: Unable to download webpage: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010) (caused by SSLError('[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+      },
+      "content_pass": false,
+      "expectation_met": false,
+      "elapsed_seconds": 5.22
+    },
+    {
+      "id": "samplelib-no-captions",
+      "platform": "Samplelib",
+      "url": "https://download.samplelib.com/mp4/sample-5s.mp4",
+      "requested_language": null,
+      "expected": "subtitle_unavailable",
+      "http_status": 422,
+      "detail": {
+        "error_type": "network",
+        "error": "ERROR: [generic] sample-5s: Unable to download webpage: _ssl.c:993: The handshake operation timed out (caused by TransportError('_ssl.c:993: The handshake operation timed out'))"
+      },
+      "content_pass": false,
+      "expectation_met": false,
+      "elapsed_seconds": 41.56
+    }
+  ],
+  "summaries": [
+    {
+      "id": "commons-film-en",
+      "http_status": 422,
+      "result": {
+        "detail": {
+          "error_type": "network",
+          "error": "ERROR: [wikimedia.org] Elephants_Dream.ogv: Unable to download JSON metadata: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010) (caused by SSLError('[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)')); please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+        }
+      },
+      "elapsed_seconds": 3.22
+    }
+  ],
+  "unauthenticated": {
+    "/api/parse": 401,
+    "/api/download": 401,
+    "/api/subtitle": 401,
+    "/api/summary": 401,
+    "/api/subtitle/translate": 401
+  },
+  "quota_before": {
+    "date": "2026-10-03",
+    "limit": 10,
+    "used": 0,
+    "remaining": 10
+  },
+  "quota_after_ai": {
+    "date": "2026-10-03",
+    "limit": 10,
+    "used": 0,
+    "remaining": 10
+  },
+  "quota_unchanged_by_ai": true
+}

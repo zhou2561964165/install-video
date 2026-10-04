@@ -3,9 +3,11 @@ import re
 from urllib.parse import urlparse
 
 import yt_dlp
+import httpx
 from yt_dlp.utils import GeoRestrictedError, UnsupportedError
 
 from ..config import settings
+from .subtitle_sources import resolve_public_subtitles
 
 ERROR_INVALID_URL = "invalid_url"
 ERROR_UNSUPPORTED = "unsupported_site"
@@ -45,6 +47,51 @@ def extract_info(url: str) -> dict:
     }
     with yt_dlp.YoutubeDL(opts) as ydl:
         return ydl.extract_info(url, download=False)
+
+
+def _is_caption(language: str, item: dict) -> bool:
+    return language not in {"live_chat", "danmaku"} and not str(item.get("protocol", "")).startswith("youtube_live_chat")
+
+
+def extract_subtitle_tracks(url: str) -> dict:
+    """返回规范化字幕轨道；这是项目其余层读取 yt-dlp 字幕信息的唯一入口。"""
+    # Platform-native captions are sufficient for AI content analysis. Avoid unnecessary
+    # video page extraction when a public source adapter can already supply the content.
+    fallback_error = None
+    try:
+        fallback = resolve_public_subtitles(url)
+        if fallback["tracks"]:
+            return fallback
+    except (httpx.HTTPError, ValueError) as error:
+        fallback_error = error
+    info = extract_info(url)
+    tracks: list[dict] = []
+    for source_key, is_auto in (("subtitles", False), ("automatic_captions", True)):
+        for language, formats in (info.get(source_key) or {}).items():
+            normalized_formats = []
+            for item in formats or []:
+                if not _is_caption(language, item):
+                    continue
+                track_url = item.get("url")
+                if not track_url or not str(track_url).startswith(("http://", "https://")):
+                    continue
+                normalized_formats.append({
+                    "url": str(track_url),
+                    "ext": str(item.get("ext") or "vtt").lower(),
+                    "name": item.get("name"),
+                    "http_headers": {**(info.get("http_headers") or {}), **(item.get("http_headers") or {})},
+                })
+            if normalized_formats:
+                tracks.append({
+                    "language": str(language),
+                    "is_auto": is_auto,
+                    "formats": normalized_formats,
+                })
+    if not tracks:
+        if fallback_error:
+            raise fallback_error
+        return {"title": info.get("title") or "", "tracks": []}
+    return {"title": info.get("title") or "", "tracks": tracks}
 
 
 def classify_error(exc: Exception) -> str:
@@ -164,6 +211,18 @@ def build_format_options(info: dict) -> list[dict]:
 
 def parse_video(url: str) -> tuple[dict, list[dict]]:
     info = extract_info(url)
+    languages = list(dict.fromkeys(
+        language
+        for source in ("subtitles", "automatic_captions")
+        for language, tracks in (info.get(source) or {}).items()
+        if any(_is_caption(language, item) for item in tracks or [])
+    ))
+    if not languages:
+        # Caption metadata is an optional enhancement, and must not break video parsing/download.
+        try:
+            languages = list(dict.fromkeys(t["language"] for t in resolve_public_subtitles(url)["tracks"]))
+        except (httpx.HTTPError, ValueError):
+            pass
     meta = {
         "title": info.get("title") or "",
         "thumbnail": info.get("thumbnail"),
@@ -174,7 +233,7 @@ def parse_video(url: str) -> tuple[dict, list[dict]]:
         "view_count": info.get("view_count"),
         "upload_date": info.get("upload_date"),
         "description": (info.get("description") or "")[:200],
-        "subtitles": list(info.get("subtitles", {}).keys()),
+        "subtitles": languages,
     }
     options = build_format_options(info)
     return meta, options

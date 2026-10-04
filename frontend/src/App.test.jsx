@@ -1,8 +1,10 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App.jsx';
+
+const mockVisual = vi.hoisted(() => ({ webgl: false }));
 
 vi.mock('pixi.js', () => ({}));
 vi.mock('pixi-live2d-display/cubism4', () => ({
@@ -12,7 +14,7 @@ vi.mock('pixi-live2d-display/cubism4', () => ({
   },
 }));
 vi.mock('./pixi/stage.js', () => ({
-  webglSupported: () => false,
+  webglSupported: () => mockVisual.webgl,
   detectTier: () => 'none',
   initStage: vi.fn(),
   destroyStage: vi.fn(),
@@ -22,6 +24,9 @@ vi.mock('./api.js', () => ({
   parseVideo: vi.fn(),
   startDownload: vi.fn(),
   getJob: vi.fn(),
+  getSubtitle: vi.fn(),
+  translateSubtitle: vi.fn(),
+  summarizeVideo: vi.fn(),
   fileUrl: (id) => `/api/file/${id}`,
 }));
 
@@ -38,10 +43,25 @@ vi.mock('./hooks/useAuth.js', () => ({
   useAuth: () => mockAuth,
 }));
 
-import { parseVideo, startDownload, getJob } from './api.js';
+import { parseVideo, startDownload, getJob, summarizeVideo } from './api.js';
 
 describe('App 功能闭环', () => {
-  beforeEach(() => { vi.clearAllMocks(); mockAuth.status = 'authed'; });
+  beforeEach(() => { vi.clearAllMocks(); mockAuth.status = 'authed'; mockVisual.webgl = false; });
+
+  it('解析未发现字幕时仍可显式获取内容并生成总结', async () => {
+    parseVideo.mockResolvedValue({ title: '字幕发现暂时失败', subtitles: [], formats: [{ format_id: 'b', label: '720p', height: 720, ext: 'mp4', direct: true }] });
+    summarizeVideo.mockResolvedValue({ summary: '恢复获取后的摘要', key_points: ['内容要点'], provider: 'compatible', model: 'm' });
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/recovered');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    await screen.findByTestId('selecting-scene');
+    await userEvent.click(screen.getByRole('button', { name: '720p MP4 · 含音频' }));
+    expect(summarizeVideo).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: '生成总结' }));
+    expect(await screen.findByTestId('summary-result')).toHaveTextContent('恢复获取后的摘要');
+    expect(summarizeVideo).toHaveBeenCalledWith('https://example.com/recovered', '', 'zh-CN', expect.any(AbortSignal));
+    expect(screen.getByRole('button', { name: '下载', exact: true })).toBeEnabled();
+  });
 
   it('粘贴 → 解析 → 选清晰度 → 直链下载', async () => {
     parseVideo.mockResolvedValue({
@@ -100,8 +120,26 @@ describe('App 功能闭环', () => {
 
   it('未登录时渲染登录场景（强制门）', () => {
     mockAuth.status = 'gate';
+    mockVisual.webgl = true;
     render(<App />);
     expect(screen.getByTestId('auth-scene')).toBeInTheDocument();
     expect(screen.queryByLabelText('视频链接')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('preloader')).not.toBeInTheDocument();
+  });
+
+  it('退出后清理下载会话，重新登录回到入口', async () => {
+    parseVideo.mockRejectedValue({ error_type: 'invalid_url', error: '无效链接' });
+    const view = render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'not-a-url');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    expect(await screen.findByTestId('error-scene')).toBeInTheDocument();
+
+    mockAuth.status = 'gate';
+    view.rerender(<App />);
+    expect(screen.getByTestId('auth-scene')).toBeInTheDocument();
+
+    mockAuth.status = 'authed';
+    view.rerender(<App />);
+    await waitFor(() => expect(screen.getByTestId('entry-scene')).toBeInTheDocument());
   });
 });

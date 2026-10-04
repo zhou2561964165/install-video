@@ -1,0 +1,34 @@
+{
+  "engineering_rules": "UI skills first; skills before plans; three-layer tokens/configuration; narrow interfaces; visual scene read-only.",
+  "evidence": {
+    "first_run": "results-initial.json",
+    "limited_retry": "results-retry.json",
+    "remote_download": "download-smoke.json",
+    "local_download": "download-local.json",
+    "quality": "quality.json"
+  },
+  "subtitle_api_first_run": {
+    "passed": 3,
+    "total": 8
+  },
+  "subtitle_api_retry": {
+    "passed": 0,
+    "total": 5
+  },
+  "summary_api_first_run": {
+    "passed": 3,
+    "total": 3
+  },
+  "summary_api_retry": {
+    "passed": 0,
+    "total": 1
+  },
+  "unauthenticated_apis_401": true,
+  "ai_quota_unchanged": true,
+  "local_server_download_pass": true,
+  "tests": {
+    "backend": 101,
+    "frontend": 66,
+    "production_build": "passed"
+  }
+}

@@ -58,3 +58,35 @@ export function login(email, password) {
 export function getMe() {
   return request('/auth/me');
 }
+
+export function getSubtitle(url, language, signal) {
+  return request('/subtitle', {
+    signal,
+    method: 'POST',
+    body: JSON.stringify({ url, language: language || null }),
+  });
+}
+
+export function translateSubtitle(url, sourceLanguage, targetLanguage = 'zh-CN', signal) {
+  return request('/subtitle/translate', {
+    signal,
+    method: 'POST',
+    body: JSON.stringify({
+      url,
+      source_language: sourceLanguage || null,
+      target_language: targetLanguage,
+    }),
+  });
+}
+
+export function summarizeVideo(url, subtitleLanguage, outputLanguage = 'zh-CN', signal) {
+  return request('/summary', {
+    signal,
+    method: 'POST',
+    body: JSON.stringify({
+      url,
+      subtitle_language: subtitleLanguage || null,
+      output_language: outputLanguage,
+    }),
+  });
+}

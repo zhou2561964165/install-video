@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { parseVideo, startDownload, getJob, fileUrl, normalizeError, register, login, getMe, setAuthToken, clearAuthToken } from './api.js';
+import {
+  parseVideo, startDownload, getJob, fileUrl, normalizeError, register, login, getMe,
+  getSubtitle, translateSubtitle, summarizeVideo, setAuthToken, clearAuthToken,
+} from './api.js';
 
 afterEach(() => { vi.restoreAllMocks(); clearAuthToken(); });
 
@@ -73,5 +76,33 @@ describe('api', () => {
     await getMe();
     const [, opts] = fetch.mock.calls[0];
     expect(opts.headers.Authorization).toBeUndefined();
+  });
+
+  it('getSubtitle sends optional language', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ text: 'x' }) }));
+    await getSubtitle('https://example.com/v', 'en');
+    const [url, opts] = fetch.mock.calls[0];
+    expect(url).toBe('/api/subtitle');
+    expect(JSON.parse(opts.body)).toEqual({ url: 'https://example.com/v', language: 'en' });
+  });
+
+  it('translateSubtitle sends source and target languages', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ text: '你好' }) }));
+    await translateSubtitle('https://example.com/v', 'en', 'zh-CN');
+    const [url, opts] = fetch.mock.calls[0];
+    expect(url).toBe('/api/subtitle/translate');
+    expect(JSON.parse(opts.body)).toEqual({
+      url: 'https://example.com/v', source_language: 'en', target_language: 'zh-CN',
+    });
+  });
+
+  it('summarizeVideo sends subtitle and output languages', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ summary: '摘要' }) }));
+    await summarizeVideo('https://example.com/v', 'en', 'zh-CN');
+    const [url, opts] = fetch.mock.calls[0];
+    expect(url).toBe('/api/summary');
+    expect(JSON.parse(opts.body)).toEqual({
+      url: 'https://example.com/v', subtitle_language: 'en', output_language: 'zh-CN',
+    });
   });
 });

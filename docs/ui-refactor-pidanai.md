@@ -1,4 +1,6 @@
 # UI 风格重构分析报告 · 对齐 pidanai.com
+> 文档状态（2026-10-03整理）：**历史参考**。历史设计分析，保留观察与当时建议；当前默认深色液态玻璃/樱花粉主题，实施状态看 [handoff.md](handoff.md)，扩展用 [UI指南](ui-extension-guide.md)。
+> 工程约定仍适用：UI先用 `ui-ux-pro-max` + `design-system`；skill优先于旧计划；颜色/字体/时长token化、能力数据与配置驱动；yt-dlp仅经 `ytdlp_service.py`，视觉只读scene，不修改下载核心。
 
 > 2026-09-24 · 阶段 1 报告（只分析，未改任何代码）
 > 目标：把「樱花粉玻璃拟态」重构为 pidanai.com（PDAim）的「黑白极简 + 折射彩虹 + 超大展示字 + 玻璃拟态」设计语言。

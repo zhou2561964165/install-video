@@ -1,0 +1,95 @@
+{
+  "offline": [
+    {
+      "sample_id": "IA-lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack-eng-vtt",
+      "source_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 71658
+    },
+    {
+      "sample_id": "IA-youtube-6k-kbg3_Drc-en-vtt",
+      "source_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 400
+    },
+    {
+      "sample_id": "IA-youtube-6k-kbg3_Drc-fr-vtt",
+      "source_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 478
+    },
+    {
+      "sample_id": "IA-mnn_23214_387-en-srt",
+      "source_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 20504
+    },
+    {
+      "sample_id": "IA-mnn_23214_387-en-vtt",
+      "source_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 20504
+    }
+  ],
+  "online": [
+    {
+      "url": "https://archive.org/details/lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack",
+      "pass": true,
+      "available_languages": [
+        "en"
+      ],
+      "selected_language": "en",
+      "is_auto": true,
+      "characters": 71658,
+      "elapsed_seconds": 4.59
+    },
+    {
+      "url": "https://archive.org/details/youtube-6k-kbg3_Drc",
+      "pass": true,
+      "available_languages": [
+        "en",
+        "fr"
+      ],
+      "selected_language": "en",
+      "is_auto": false,
+      "characters": 400,
+      "elapsed_seconds": 3.33
+    },
+    {
+      "url": "https://archive.org/details/mnn_23214_387",
+      "pass": true,
+      "available_languages": [
+        "en"
+      ],
+      "selected_language": "en",
+      "is_auto": true,
+      "characters": 20504,
+      "elapsed_seconds": 3.94
+    }
+  ],
+  "network_test_utc": "2026-10-03T11:54:04.635475+00:00",
+  "long_summary": {
+    "sample_id": "IA-lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack-eng-vtt",
+    "source_characters": 71658,
+    "prepared_characters": 71214,
+    "initial_chunks": 4,
+    "elapsed_seconds": 46.62,
+    "summary": "该视频是一场关于使用 Elastic Stack 构建监控基础设施的分享/动手会，讲者 Mark 来自 Elastic 社区团队，Karen 是 Elastic 云团队的 SRE。内容先说明 Docker 镜像选择：默认 Elasticsearch、Kibana、Logstash 等镜像包含非开源/专有代码，使用 -OSS 后缀可获得 Apache 2 许可开源版本。Elastic Stack 由 ELK 发展而来，本次主要使用 Beats，基本不涉及 Logstash；Kibana 是 UI/前端，Elasticsearch 是分布式 JSON 文档搜索与分析引擎、基于 API、支持聚合、速度快但不是时序数据库，Beats 是 Go 编写、轻量高效的数据 shipper/generator。演示用 Docker 和 Docker Compose 启动 Elasticsearch 与 Kibana，涉及 9200/9300、5601 端口、单节点发现、cat API、索引与分片、Kibana 连接问题等。重点介绍 Beats：Metricbeat、Filebeat、Packetbeat、Heartbeat 等基于 libbeat，命令一致；setup 可加载 mapping 模板和仪表板，Metricbeat 默认启用 system 模块并可启用 Docker 模块，Filebeat 默认不启用模块、支持多行日志，Packetbeat 可解码 DNS/HTTP/MySQL/Postgres 等协议但不支持 HTTPS，Heartbeat 可做 ping/TCP/UDP/URL 健康检查。还提到 Logstash 可补充加工能力、Elasticsearch ingest API 解析自定义日志、Winlogbeat、自建 Beats、APM 分布式追踪、仪表盘/可视化，以及问答涉及 Puppet 模块、setup 运行次数、自定义应用日志写文件还是直接发 Elasticsearch、容器日志收集、Filebeat 监听 TCP、Metricbeat 拉取 URL 等。结论是 Beats 简单、可扩展，有大量预打包模块和仪表盘，可用于 UniFi、Kubernetes、家庭能源等场景，且无需先深入掌握 Elasticsearch 即可开始。",
+    "key_points": [
+      "默认 Docker 镜像包含非开源/专有代码，使用 -OSS 后缀可获得 Apache 2 许可的开源版本；演示用 Docker/Docker Compose 运行 Elasticsearch 9200/9300 与 Kibana 5601，并涉及单节点发现、cat API、索引与分片。",
+      "Elastic Stack 由 ELK 发展而来；Kibana 是 UI，Elasticsearch 是分布式 JSON 文档搜索与分析引擎但不是时序数据库；本次主要使用 Beats，基本不涉及 Logstash。",
+      "Beats 用 Go 编写、基于 libbeat，轻量且命令一致；包括 Filebeat、Metricbeat、Packetbeat、Functionbeat、Winlogbeat、Heartbeat、Auditbeat 等，并有社区 Beats 和模块。",
+      "Metricbeat 默认启用 system 模块收集主机指标，也可启用 Docker 模块直接从 Docker daemon 收集容器指标；Filebeat 默认不启用模块，支持日志、多行合并和忽略文件；Packetbeat 解码 DNS/HTTP/MySQL/Postgres 等协议但不支持 HTTPS；Heartbeat 做 ping/TCP/UDP/URL 健康检查。",
+      "setup 命令可预加载 Elasticsearch mapping 模板，setup dashboards 可向 Kibana 预加载仪表板；Kibana 将仪表板等数据存储在 Elasticsearch 中；单节点 Elasticsearch 健康状态为黄色是因为副本无法分配。",
+      "Logstash 可补充 Beats 不具备的加工能力，如错误码翻译、IP 反查 DNS/主机名；Elasticsearch ingest API 可解析自定义日志格式；还有 Winlogbeat、自建 Beats、开源 APM 分布式追踪和仪表盘/可视化。",
+      "结论：Beats 简单、可扩展，有大量预打包模块和仪表盘，可用于 UniFi、Kubernetes、家庭能源等场景，无需先深入掌握 Elasticsearch 即可开始；问答涉及 Puppet 模块、setup 只需对不同集群/位置各运行一次、自定义日志写文件还是直接写 Elasticsearch、容器日志、Filebeat 监听 TCP、Metricbeat 轮询 URL（beta）等。"
+    ],
+    "provider": "deepseek",
+    "model": "deepseek-flash"
+  },
+  "backend_tests_passed": 96,
+  "frontend_tests_passed": 65,
+  "build_passed": true,
+  "reference_project": "C:/Users/zxk/free-video-downloader",
+  "reference_project_modified": false
+}

@@ -7,6 +7,8 @@
 
 ## 0. 一句话原则
 
+UI改动先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；颜色/字体/时长token化，新增能力配置驱动，模块只通过窄接口单向通信。当前决策与状态以 [交接](handoff.md) 为准。
+
 **颜色/字体/时长一律走 `:root` token；新增能力走「配置表」而非改渲染逻辑；视觉层只读 `scene` 状态，绝不 import 下载核心。** 改任何 UI，先判断「这是不是已有 token 的消费方」，是就直接用 token，不是就加 token 再消费。
 
 ---
@@ -133,3 +135,11 @@
 | 动画时长 | `global.css` `--dur*` | token 段 |
 | 玻璃配方 / 描边环 | `global.css` `--glass-*` / `--refract-ring` | component 段 |
 | 场景 → 粒子强度 | `App.jsx` `intensityForScene` | 映射函数 |
+
+## 10. 当前v3面板与登录/移动布局
+
+- 视频智能面板的主目标是AI内容总结，字幕作为来源；不要因为辅助字幕读取而扩展未授权的完整时间轴展示/导出。
+- `VideoInsights.jsx` 仅消费props；`useVideoInsights` 通过 `api.js` 请求，取消过期请求，下载reducer不变。
+- 面板消费 `--insight-bg` / `--insight-result-bg` / `--insight-border` / `--insight-label-size` / `--insight-body-size` / `--insight-control-radius`，新增样式复用或扩展token。
+- 登录前不启动PIXI/Live2D重资源；登录后才初始化。预加载层不得遮住登录表单。
+- 模型窄屏布局由 `MODELS[].mobile` 与 `getModelLayout` 配置；账号条、主题开关和选择卡有移动端间距，改固定控件后需检查重叠和水平溢出。

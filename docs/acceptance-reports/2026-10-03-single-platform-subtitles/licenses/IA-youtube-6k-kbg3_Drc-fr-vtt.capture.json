@@ -1,0 +1,12 @@
+{
+    "sample_id":  "IA-youtube-6k-kbg3_Drc-fr-vtt",
+    "source_id":  "youtube-6k-kbg3_Drc",
+    "source_file":  "Imagine_the_Consequences-6k-kbg3_Drc.fr.vtt",
+    "captured_at_utc":  "2026-10-03T08:43:02.8718277Z",
+    "method":  "PowerShell Invoke-WebRequest public HTTP GET to temporary staging; no login/cookies",
+    "status_code":  200,
+    "elapsed_ms":  500,
+    "bytes":  770,
+    "sha256":  "4ffb215a0e8b594d5d0a69605e30d9380b9eec3b931fc45c0a2b4dc3073dd098",
+    "archive_md5":  "c07fa878aee0e30444a001207a64b721"
+}

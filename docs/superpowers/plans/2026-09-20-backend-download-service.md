@@ -1,4 +1,6 @@
 # Backend 下载服务 Implementation Plan
+> 文档状态（2026-10-03整理）：**历史参考**。v1原始实现计划；旧勾选框不是当前待办，账号/额度/鉴权/AI总结已扩展。当前状态见 [交接](../../handoff.md)。
+> 工程约定仍适用：UI先用 `ui-ux-pro-max` + `design-system`；skill优先于旧计划；颜色/字体/时长token化、能力数据与配置驱动；yt-dlp仅经 `ytdlp_service.py`，视觉只读scene，不修改下载核心。
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 

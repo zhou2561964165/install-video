@@ -1,6 +1,6 @@
 # 方案设计文档 · 万能视频下载网站
 
-> 版本：v1（2026-09-20）
+> 版本：v3（2026-10-03；历史视觉方案另作标记）
 > 对应需求：见 `docs/requirements.md`
 > 本文档是**技术设计基准**。所有「预留扩展点」在实现时通过接口隔离，后续拓展不触碰下载核心。
 
@@ -46,7 +46,7 @@
 | 下载核心 | yt-dlp（Python API） | 进程内调用 |
 | 任务存储 | SQLite + SQLModel | 轻量，后续可换 PostgreSQL |
 | 前端 | React + Vite | 二次元交互式视觉 |
-| 视觉/动效 | CSS + 可选 Three.js / Canvas / Lottie | 二次元场景 |
+| 视觉/动效 | CSS + PIXI v6 + pixi-live2d-display | 单一PIXI管线与Live2D；未引入Three.js/Lottie |
 | 媒体合并 | ffmpeg | 视频流+音频流合并出高清（必需） |
 
 ## 3. 目录结构
@@ -56,22 +56,32 @@ install_video/
 ├── backend/
 │   ├── app/
 │   │   ├── main.py                # FastAPI 入口、中间件（限流）
-│   │   ├── config.py              # ffmpeg 路径、并发数、临时目录、大小上限、TTL
+│   │   ├── config.py              # 下载/鉴权/字幕来源/LLM配置
 │   │   ├── db.py                  # SQLite / SQLModel 引擎与会话
 │   │   ├── models.py              # Job + User + Quota（v2 已建表）
 │   │   ├── schemas.py             # Pydantic 请求/响应
 │   │   ├── routes/
 │   │   │   ├── parse.py           # POST /api/parse
 │   │   │   ├── download.py        # POST /api/download, GET /api/job/{id}, GET /api/file/{id}
+│   │   │   ├── auth.py            # JWT注册/登录/me
+│   │   │   ├── subtitle.py        # 字幕内容读取/翻译
+│   │   │   └── summary.py         # AI内容总结
 │   │   └── services/
 │   │       ├── ytdlp_service.py   # 封装 yt-dlp（解析/下载/进度/错误分类）
 │   │       ├── jobs.py            # 线程池 + 任务生命周期 + 临时文件清理
+│   │       ├── auth.py / quota.py  # 鉴权与路由层每日额度
+│   │       ├── subtitle_sources.py # 公开平台来源适配，由ytdlp_service调用
+│   │       ├── subtitle_service.py # 正文HTTP与文本化
+│   │       └── llm_service.py      # 去重、分段归纳、分层合并与兼容传输
 │   └── scripts/install_ffmpeg.*   # 一键下载 ffmpeg
 ├── frontend/                      # React + Vite
 │   └── src/
 │       ├── App.jsx
 │       ├── api.js                 # 后端接口封装
-│       └── scenes/                # 二次元场景组件（登录页/解析/进度/错误）
+│       ├── components/            # 登录/解析/选择/进度/错误与视频智能面板
+│       ├── hooks/                 # useAuth / useDownload / useVideoInsights
+│       ├── state/                 # 下载状态机与语言配置
+│       └── pixi/                  # 舞台、角色与背景纯表现层
 ├── docs/
 │   ├── requirements.md            # 需求文档
 │   └── design.md                  # 本文档
@@ -83,14 +93,14 @@ install_video/
 ## 4. 核心数据流
 
 ```
-1. POST /api/parse {url}
+1. POST /api/parse {url}（Authorization: Bearer <token> 必需）
    → ytdlp_service.extract_info(url, download=False)
    → 返回 {title, thumbnail, duration, duration_string, uploader, platform,
            view_count, upload_date, description, subtitles,
            formats:[{format_id, label, height, ext, resolution, filesize,
                      has_audio, vcodec, acodec, direct(是否有直链), note}]}
 
-2. POST /api/download {url, format_id, mode?}
+2. POST /api/download {url, format_id, mode?}（Authorization: Bearer <token> 必需）
    → 判定下载方式（见 §5）
    → 建 Job（status=queued）→ 线程池执行下载
    → 返回 {mode:"direct", url, headers} 或 {mode:"server", job_id}
@@ -119,7 +129,7 @@ Job:
   id(uuid) · url · title · format_id · status(queued/downloading/merging/done/error)
   progress(0-100) · file_path · file_size · error_type · error
   created_at · updated_at · expires_at
-  user_id(可空 FK→User，匿名任务为 null)
+  user_id(可空 FK→User；新任务必填，nullable 仅兼容 v1 历史数据)
 
 【v2 已建表（2026-09-24）】
 User:   id(uuid) · email(unique) · password_hash · created_at
@@ -152,11 +162,11 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 
 | 未来功能 | 现有隔离边界 | 扩展方式（不碰下载核心） |
 | --- | --- | --- |
-| 账号 / 登录 | ✅ 已实现（v2） | `routes/auth.py` + `services/auth.py`（JWT + `Depends` 注入，匿名可选鉴权） |
+| 账号 / 登录 | ✅ 已实现（v2） | `routes/auth.py` + `services/auth.py`（JWT + `Depends(get_current_user)`；解析/下载必须登录） |
 | 每用户额度 | ✅ 已实现（v2） | `services/quota.py` `check_and_reserve`，路由层提交即扣（直链/服务端同计） |
-| 任务队列扩展 | `jobs.py` 定义 `TaskRunner` 接口 | 换成 Celery/Redis 实现 |
-| 视频总结 | `routes/` 独立路由 | 下载完成后调 LLM，独立模块 |
-| 字幕翻译 | 同上 | 独立模块 |
+| 任务队列扩展 | 当前 `JobManager.submit_download` + `ThreadPoolExecutor` | 未来先定义TaskRunner窄协议，再接Celery/Redis；当前未实现这些类 |
+| 视频总结 | ✅ v3 MVP | `routes/summary.py` → `llm_service.py`，显式请求、独立于下载任务 |
+| 字幕翻译 | ✅ v3 MVP | `routes/subtitle.py` → `subtitle_service.py` / `llm_service.py` |
 | 付费 | Quota 数据模型预留 | 支付回调 → 更新 Quota |
 
 **核心约束**：`ytdlp_service.py` 是唯一接触 yt-dlp 的层；其余模块只依赖它的接口（`extract_info` / `download` / 进度回调）。任何扩展都不得直接 import `yt_dlp`。
@@ -175,12 +185,25 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 ## 12. 迭代路线图
 
 1. **v1（已完成）**：核心下载闭环（解析/清晰度/下载）+ 二次元前端体验 + 直链/服务端切换 + 防滥用基础。
-2. **第二阶段（前端电影感视觉升级，进行中）**：蒙版揭幕/虹膜转场/几何画框/章节台词/自定义光标/分段按钮/缠绕进度，见 §13 与 `docs/superpowers/plans/2026-09-22-phase2-cinematic-visual.md`。
-3. **v2（已完成 2026-09-24）**：账号 + 每用户额度（注册/登录 JWT + 每用户每日额度，匿名下载保留）。
-4. **v3（候选）**：视频总结、字幕翻译（接入 LLM）。
+2. **第二阶段（历史视觉计划）**：电影感手法见§13与旧计划；当前UI已改为深色液态玻璃/樱花粉主题，不把旧电影感清单自动列为未完成任务。
+3. **v2（已完成，2026-10-03 收口）**：账号 + 每用户额度（注册/登录 JWT + 每用户每日额度；解析/下载强制登录）。
+4. **v3（MVP 已完成，2026-10-03）**：字幕抓取、字幕翻译、视频总结；见 `docs/superpowers/plans/2026-10-03-v3-video-intelligence.md`。
 5. **v4（候选）**：付费能力。
 
+### 12.1 v3 视频智能架构
+
+- `ytdlp_service.py` 新增只读字幕轨道查询接口，仍是唯一 import `yt_dlp` 的模块。
+- `subtitle_service.py` 负责轨道选择、HTTP 获取和 VTT/SRT/JSON3/TTML 文本化，不感知下载任务。
+- `llm_service.py` 定义总结/翻译窄接口，OpenAI-compatible 传输细节封装在内部；配置缺失返回 `llm_unconfigured`。
+- AI 总结先清理重复行，再按 `LLM_SUMMARY_CHUNK_CHARS` 分段归纳；超长结果分层合并，保持全局输出为现有摘要与要点结构。字幕源文件和翻译流程不做全局去重。
+- `subtitle_sources.py` 提供注册式公开平台适配器，由 `ytdlp_service.py` 唯一调用。Archive.org 总结内容优先从官方字幕附件元数据获取，无需先解析视频下载信息；不可用时回退 yt-dlp。文件级字幕使用去除已识别后缀后的精确内容关联，避免混入其他视频。
+- `routes/subtitle.py` 与 `routes/summary.py` 使用 `Depends(get_current_user)`，同步路由交由 FastAPI 线程池执行。
+- 前端通过 `api.js` + `useVideoInsights` 调用，`VideoInsights` 只接收 props；现有下载 reducer 和 `useDownload` 不变。
+- 解析阶段的字幕发现可能是可选查询，空语言列表不会隐藏视频智能动作：面板提供自动选源语言和显式用户触发；请求失败就地展示，下载状态和额度互相隔离。
+
 ## 13. 第二阶段：前端视觉表现层（fx）架构
+
+> 本节为历史方案，所列 `Subtitle` / `Frame` / `TransitionOverlay` / `Cursor` / `PathProgress` 不代表当前组件已实现。当前实际文件见§3、交接文件地图与v3计划；本轮不扩展这条视觉演进线。
 
 > 第二阶段把前端从「炫彩工具页」升级为「可交互的二次元短篇体验」。核心原则：视觉表现层**只读**场景状态，**绝不修改下载状态、绝不 import 下载核心**；下载核心也不依赖视觉层。
 

@@ -1,4 +1,8 @@
 # backend/tests/test_parse_route.py
+from collections import defaultdict
+from uuid import uuid4
+
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app  # Task 1 已建最小 app，此处挂载 router
@@ -6,6 +10,20 @@ from app.main import app  # Task 1 已建最小 app，此处挂载 router
 from app.services import ytdlp_service
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def _reset_rate_limit(monkeypatch):
+    monkeypatch.setattr("app.main._window", defaultdict(list))
+
+
+def _auth_headers():
+    r = client.post(
+        "/api/auth/register",
+        json={"email": f"parse-{uuid4()}@example.com", "password": "password123"},
+    )
+    assert r.status_code == 200
+    return {"Authorization": f"Bearer {r.json()['token']}"}
 
 
 def test_parse_ok(monkeypatch):
@@ -27,7 +45,7 @@ def test_parse_ok(monkeypatch):
         }
 
     monkeypatch.setattr(ytdlp_service, "extract_info", fake_extract)
-    r = client.post("/api/parse", json={"url": "https://example.com/v"})
+    r = client.post("/api/parse", json={"url": "https://example.com/v"}, headers=_auth_headers())
     assert r.status_code == 200
     data = r.json()
     assert data["title"] == "测试标题"
@@ -44,7 +62,7 @@ def test_parse_ok(monkeypatch):
 
 
 def test_parse_invalid_url():
-    r = client.post("/api/parse", json={"url": "not a url"})
+    r = client.post("/api/parse", json={"url": "not a url"}, headers=_auth_headers())
     assert r.status_code == 400
     assert r.json()["detail"]["error_type"] == "invalid_url"
 
@@ -56,6 +74,12 @@ def test_parse_unsupported(monkeypatch):
         raise UnsupportedError("unsupported")
 
     monkeypatch.setattr(ytdlp_service, "extract_info", fake_extract)
-    r = client.post("/api/parse", json={"url": "https://example.com/v"})
+    r = client.post("/api/parse", json={"url": "https://example.com/v"}, headers=_auth_headers())
     assert r.status_code == 422
     assert r.json()["detail"]["error_type"] == "unsupported_site"
+
+
+def test_parse_requires_login():
+    r = client.post("/api/parse", json={"url": "https://example.com/v"})
+    assert r.status_code == 401
+    assert r.json()["detail"]["error_type"] == "login_required"

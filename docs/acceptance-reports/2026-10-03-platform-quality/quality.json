@@ -1,0 +1,83 @@
+{
+  "engineering_rules": "UI skills first; skills before plans; three-layer tokens/configuration; narrow interfaces; visual scene read-only.",
+  "original_sample_checks": [
+    {
+      "sample_id": "IA-lca2019-Awesome_Monitoring_Infrastructure_Using_the_Elastic_Stack-eng-vtt",
+      "original_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 71658
+    },
+    {
+      "sample_id": "IA-youtube-6k-kbg3_Drc-en-vtt",
+      "original_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 400
+    },
+    {
+      "sample_id": "IA-youtube-6k-kbg3_Drc-fr-vtt",
+      "original_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 478
+    },
+    {
+      "sample_id": "IA-mnn_23214_387-en-srt",
+      "original_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 20504
+    },
+    {
+      "sample_id": "IA-mnn_23214_387-en-vtt",
+      "original_sha256_unchanged": true,
+      "parser_pass": true,
+      "characters": 20504
+    }
+  ],
+  "long_content": {
+    "original_characters": 71658,
+    "prepared_characters": 71214,
+    "initial_chunks_at_default_20000": 4,
+    "online_text_matches_original": true,
+    "source_tail_solar_example_exists": true,
+    "result_preserves_solar_example": true,
+    "key_points_count": 7
+  },
+  "manual_review": [
+    {
+      "sample": "archive-short-en",
+      "checked": "Frodo/Shire quotation and descendants as the criterion for action",
+      "result": "matches original seven-line source; several points repeat related ideas"
+    },
+    {
+      "sample": "archive-long-en",
+      "checked": "ELK/Beats, OSS image distinction, single-node replica explanation, setup per cluster, tail solar-monitoring example",
+      "result": "checked facts trace to original captions; all-source factual precision not quantified"
+    },
+    {
+      "sample": "commons-climate-en",
+      "checked": "historical curve, stable period, industrial emissions and final dated statement",
+      "result": "matches official en-GB TimedText source; source assertions not independently fact-checked",
+      "source": "https://commons.wikimedia.org/wiki/TimedText:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm.en-gb.srt"
+    }
+  ],
+  "local_download": {
+    "sha256_matches_generated_source": true,
+    "ffprobe_verified": {
+      "duration_seconds": 3,
+      "video": "h264",
+      "width": 320,
+      "height": 240,
+      "audio": "aac"
+    }
+  },
+  "review": {
+    "initial_important": 2,
+    "initial_minor": 1,
+    "resolved": 3,
+    "verification": "four malformed-provider regressions failed before the fix and passed after; no-caption discovery App integration failed then passed; server-mode smoke succeeded"
+  },
+  "tests": {
+    "backend": 101,
+    "frontend": 66,
+    "production_build": "passed"
+  }
+}

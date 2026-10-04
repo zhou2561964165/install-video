@@ -1,8 +1,10 @@
 # 万能视频下载网站 · 前端
 
-一个「粘贴链接 → 解析 → 选清晰度 → 下载」的全流程视频下载前端，包含 PIXI 舞台背景、Live2D 角色（含程序化待机动画）、「lolimeow」紫罗兰浅/深主题视觉与音频交互。
+一个「注册/登录 → 粘贴链接 → 解析 → 选清晰度 → 下载」的全流程视频下载前端，并在解析结果页提供字幕读取、字幕翻译与 AI 总结。包含 PIXI 舞台背景、Live2D 角色（含程序化待机动画）、深色液态玻璃 + 樱花粉辉光主题视觉与音频交互。
 
 视觉采用三层设计 token（primitive→semantic→component），浅/深主题由 `document.documentElement.dataset.theme` 切换，CSS 与 PIXI 颜色单一来源为 `src/styles/global.css` 的 `:root` 语义 token。详见根 `docs/design.md` §14。
+
+当前方向以AI理解和总结内容为主；字幕读取/翻译是辅助能力，完整时间轴展示与导出不属于本轮交付。当前文档入口见 [交接文档](../docs/handoff.md) 和 [文档索引](../docs/README.md)。
 
 ## 工程约定（每次遵守）
 
@@ -23,7 +25,9 @@ npm run dev
 - 后端需先启动（FastAPI + uvicorn，默认 `http://localhost:8000`）：
 
   ```bash
-  uvicorn app.main:app --reload --port 8000
+  # 在仓库根目录另开终端；本机 .env 含被 Git 忽略的 DeepSeek 配置
+  cd backend
+  uv run uvicorn app.main:app --reload --port 8000 --env-file .env
   ```
 
 - 前端开发服务器默认 `http://localhost:5173`，通过 Vite 代理转发 `/api` 到后端。
@@ -34,6 +38,16 @@ npm run dev
 npm test        # vitest run，全量单测
 npm run test:watch
 ```
+
+最近实测前端66/66，生产构建通过。回归覆盖解析阶段未发现字幕时，用户仍可显式尝试总结；错误保留在视频智能面板，下载操作仍可用。v3实现和文档已提交到 `main`，当前验收边界见 [`docs/handoff.md`](../docs/handoff.md)。
+
+## 当前交互与数据边界
+
+- 登录后进入五屏滚动落地页；首页不移动到登录前。
+- 重型PIXI/Live2D在登录后初始化，登录表单立即可操作；退出会清理旧下载场景和AI请求。
+- `useVideoInsights` 通过 `api.js` 调用，结果组件只接收props；AI失败在面板就地展示，不替换下载状态机。
+- 移动端模型位置/高度由 `mascotConfig.js` 的 `mobile` 配置控制；账号条、主题开关与选择卡的安全间距已做375px验证。
+- `--insight-*` 样式token定义在 `global.css`；目标语言注册表位于 `state/insightConfig.js`。
 
 ## Live2D 模型署名与授权
 
@@ -48,6 +62,8 @@ npm run test:watch
    - `heightRatio` 为模型占屏幕高度的比例（0~1），渲染时按屏幕高等比缩放，任意尺寸屏幕都看到等比例模型；`x` / `y` 为相对屏幕宽高的占比（0~1）定位角色。
    - 角色随下载阶段切换情绪眼（`EXPRESSIONS.stage`），另有随机道具（`EXPRESSIONS.random`）与点击弹出的换装/表情菜单（`EXPRESSIONS.menu`），均数据驱动。
 
+当前只显示默认模型「白」，运行时模型切换UI已删除。追加注册项不会自动生成模型切换控件；新增模型若需默认使用，应同步调整默认注册/ID。换装、表情和缩放交互仍可用。
+
 > 说明：**点击角色会弹出换装/表情菜单**（换发型 / 换衣服 / 大小变 / 配饰 / 颜色 / 情绪），拖动角色仍可任意摆放。表情/道具映射见 `mascotConfig.js` 的 `EXPRESSIONS` 配置（阶段映射、随机节奏、菜单分组、装饰特效 `edle.motion3.json`），实现见 `docs/design.md` §14.8。46 个表情已全量暴露。
 
 ### 已知限制
@@ -61,4 +77,4 @@ npm run test:watch
 ## 已知限制
 
 - **直链模式为 best-effort**：`window.location.assign(d.url)` 无法附带后端返回的 `headers`（如 Referer/Cookie），因此带鉴权头的 CDN 直链可能被拒（403）。对这类链接请使用「强制走服务器」选项，走服务端模式（可带 headers）稳定下载。
-- **BGM 为占位**：`public/audio/bgm.mp3` 尚未提供真实音源，BGM 目前静默缺失（Web-Audio SFX 正常）。接入真实音源后自动生效。
+- **音频现状**：只有WebAudio操作音效；BGM已移除，接入背景音乐需要独立设计与实现。

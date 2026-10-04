@@ -1,13 +1,15 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
+from ..models import User
 from ..schemas import FormatOption, ParseRequest, ParseResponse
+from ..services.auth import get_current_user
 from ..services.ytdlp_service import classify_error, is_valid_url, parse_video
 
 router = APIRouter()
 
 
 @router.post("/api/parse", response_model=ParseResponse)
-def parse(req: ParseRequest) -> ParseResponse:
+def parse(req: ParseRequest, _user: User = Depends(get_current_user)) -> ParseResponse:
     if not is_valid_url(req.url):
         raise HTTPException(status_code=400, detail={"error_type": "invalid_url", "error": "无效链接"})
     try:

@@ -1,0 +1,61 @@
+{
+  "captured_at_utc": "2026-10-03T13:56:27.530395+00:00",
+  "url": "http://127.0.0.1:8021/quality-synthetic.mp4",
+  "pass": true,
+  "quota_before": {
+    "date": "2026-10-03",
+    "limit": 10,
+    "used": 0,
+    "remaining": 10
+  },
+  "parse_status": 200,
+  "parsed": {
+    "title": "quality-synthetic",
+    "thumbnail": null,
+    "duration": null,
+    "duration_string": "00:00",
+    "uploader": null,
+    "platform": "generic",
+    "view_count": null,
+    "upload_date": "20261003",
+    "description": "",
+    "subtitles": [],
+    "formats": [
+      {
+        "format_id": "best",
+        "label": "最佳",
+        "height": null,
+        "ext": "mp4",
+        "resolution": null,
+        "filesize": null,
+        "has_audio": true,
+        "vcodec": null,
+        "acodec": "merged",
+        "direct": false,
+        "note": null
+      }
+    ]
+  },
+  "download_status": 200,
+  "job": {
+    "id": "574e5301-ec78-40cb-9a64-d7004ea69316",
+    "status": "done",
+    "progress": 100.0,
+    "title": null,
+    "error_type": null,
+    "error": null
+  },
+  "file": {
+    "status": 200,
+    "bytes": 45117,
+    "sha256": "09b77ef3d41202282236d1cce31d02ac0eb62bc5a3059d343e4314e3b8fa4838",
+    "mp4_ftyp": true,
+    "content_disposition": "attachment; filename=\"quality-synthetic.mp4\""
+  },
+  "quota_after": {
+    "date": "2026-10-03",
+    "limit": 10,
+    "used": 1,
+    "remaining": 9
+  }
+}

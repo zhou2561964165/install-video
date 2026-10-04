@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from uuid import uuid4
 
 from fastapi.testclient import TestClient
 from sqlmodel import Session
@@ -9,6 +10,15 @@ from app.models import Job, JobStatus
 from app.services import ytdlp_service
 
 client = TestClient(app)
+
+
+def _auth_headers():
+    r = client.post(
+        "/api/auth/register",
+        json={"email": f"download-{uuid4()}@example.com", "password": "password123"},
+    )
+    assert r.status_code == 200
+    return {"Authorization": f"Bearer {r.json()['token']}"}
 
 
 def test_download_server_mode_creates_job(monkeypatch):
@@ -24,6 +34,7 @@ def test_download_server_mode_creates_job(monkeypatch):
     r = client.post(
         "/api/download",
         json={"url": "https://example.com/v", "format_id": "bestvideo[height<=1080]+bestaudio"},
+        headers=_auth_headers(),
     )
     assert r.status_code == 200
     data = r.json()
@@ -45,6 +56,7 @@ def test_download_direct_mode_returns_url(monkeypatch):
     r = client.post(
         "/api/download",
         json={"url": "https://example.com/v", "format_id": "18"},
+        headers=_auth_headers(),
     )
     assert r.status_code == 200
     data = r.json()
@@ -64,9 +76,19 @@ def test_download_falls_back_to_server_when_direct_fails(monkeypatch):
     r = client.post(
         "/api/download",
         json={"url": "https://example.com/v", "format_id": "18"},
+        headers=_auth_headers(),
     )
     assert r.status_code == 200
     assert r.json()["mode"] == "server"
+
+
+def test_download_requires_login():
+    r = client.post(
+        "/api/download",
+        json={"url": "https://example.com/v", "format_id": "18"},
+    )
+    assert r.status_code == 401
+    assert r.json()["detail"]["error_type"] == "login_required"
 
 
 def test_get_job_returns_status():

@@ -1,0 +1,12 @@
+{
+    "sample_id":  "IA-mnn_23214_387-en-vtt",
+    "source_id":  "mnn_23214_387",
+    "source_file":  "23214_387.asr.vtt",
+    "captured_at_utc":  "2026-10-03T08:43:04.5951132Z",
+    "method":  "PowerShell Invoke-WebRequest public HTTP GET to temporary staging; no login/cookies",
+    "status_code":  200,
+    "elapsed_ms":  702,
+    "bytes":  30975,
+    "sha256":  "437b955f04fa93c0a880c26d21ca199c68e8c014be2dd2b84e494cf09a941e4c",
+    "archive_md5":  "f04a6de099db3323c1889cf148924cc0"
+}
