@@ -30,6 +30,22 @@ _PATTERNS = [
 ]
 
 
+def _network_retry_options() -> dict:
+    backoff_seconds = settings.network_retry_backoff_seconds
+
+    def exponential_backoff(n: int) -> float:
+        return backoff_seconds * (2 ** max(0, n))
+
+    return {
+        "retries": settings.network_retries,
+        "extractor_retries": settings.network_retries,
+        "retry_sleep_functions": {
+            "http": exponential_backoff,
+            "extractor": exponential_backoff,
+        },
+    }
+
+
 def is_valid_url(url: str) -> bool:
     try:
         parsed = urlparse(url)
@@ -40,6 +56,7 @@ def is_valid_url(url: str) -> bool:
 
 def extract_info(url: str) -> dict:
     opts = {
+        **_network_retry_options(),
         "quiet": True,
         "no_warnings": True,
         "skip_download": True,
@@ -240,7 +257,13 @@ def parse_video(url: str) -> tuple[dict, list[dict]]:
 
 
 def get_direct_url(url: str, format_id: str) -> tuple[str | None, dict]:
-    opts = {"quiet": True, "no_warnings": True, "skip_download": True, "noplaylist": True}
+    opts = {
+        **_network_retry_options(),
+        "quiet": True,
+        "no_warnings": True,
+        "skip_download": True,
+        "noplaylist": True,
+    }
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=False)
         for f in info.get("formats") or []:
@@ -253,6 +276,7 @@ def get_direct_url(url: str, format_id: str) -> tuple[str | None, dict]:
 
 def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
     opts = {
+        **_network_retry_options(),
         "quiet": True,
         "no_warnings": True,
         "noplaylist": True,

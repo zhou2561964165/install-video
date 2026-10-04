@@ -79,6 +79,72 @@ def test_extract_info_calls_ydl(monkeypatch):
     assert info["title"] == "t"
 
 
+@pytest.mark.parametrize("operation", ["extract_info", "get_direct_url", "download"])
+def test_ydlp_calls_use_configured_finite_retries_and_exponential_backoff(
+    monkeypatch, tmp_path, operation
+):
+    captured = {}
+
+    class FakeYDL:
+        def __init__(self, opts):
+            captured["opts"] = opts
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def extract_info(self, url, download):
+            return {
+                "id": "x",
+                "formats": [{"format_id": "best", "url": "https://cdn.example/video.mp4"}],
+            }
+
+        def prepare_filename(self, info):
+            return "out.mp4"
+
+    monkeypatch.setattr(settings, "network_retries", 4)
+    monkeypatch.setattr(settings, "network_retry_backoff_seconds", 0.25)
+    monkeypatch.setattr("app.services.ytdlp_service.yt_dlp.YoutubeDL", FakeYDL)
+
+    if operation == "extract_info":
+        extract_info("https://example.com/v")
+    elif operation == "get_direct_url":
+        from app.services.ytdlp_service import get_direct_url
+
+        assert get_direct_url("https://example.com/v", "best")[0] == "https://cdn.example/video.mp4"
+    else:
+        output_dir = tmp_path / "job"
+        output_dir.mkdir()
+        (output_dir / "out.mp4").write_bytes(b"video")
+        download("https://example.com/v", "best", str(output_dir / "%(title)s.%(ext)s"), lambda _: None)
+
+    options = captured["opts"]
+    assert options["retries"] == 4
+    assert options["extractor_retries"] == 4
+    sleep_functions = options["retry_sleep_functions"]
+    assert sleep_functions["http"](0) == 0.25
+    assert sleep_functions["http"](1) == 0.5
+    assert sleep_functions["http"](2) == 1.0
+    assert sleep_functions["extractor"](0) == 0.25
+    assert sleep_functions["extractor"](1) == 0.5
+    assert sleep_functions["extractor"](2) == 1.0
+
+    delays = []
+    monkeypatch.setattr(yt_dlp.utils._utils.time, "sleep", delays.append)
+    for count in (1, 2):
+        yt_dlp.utils.RetryManager.report_retry(
+            Exception("temporary failure"),
+            count,
+            4,
+            sleep_func=sleep_functions["http"],
+            info=lambda _: None,
+            warn=lambda _: None,
+        )
+    assert delays == [0.25, 0.5]
+
+
 def test_extract_subtitle_tracks_normalizes_manual_and_auto(monkeypatch):
     monkeypatch.setattr(
         "app.services.ytdlp_service.extract_info",

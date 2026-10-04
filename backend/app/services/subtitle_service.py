@@ -12,6 +12,7 @@ from typing import Any
 import httpx
 
 from ..config import settings
+from . import network_retry
 from . import ytdlp_service
 
 _FORMAT_PRIORITY = {"vtt": 0, "srt": 1, "json3": 2, "ttml": 3, "srv3": 4}
@@ -166,14 +167,22 @@ def fetch_subtitle_document(
     owns_client = client is None
     http = client or httpx.Client(follow_redirects=True, timeout=float(settings.subtitle_timeout_seconds))
     try:
-        with http.stream("GET", selected_format["url"], headers=selected_format["http_headers"]) as response:
-            response.raise_for_status()
-            content = bytearray()
-            for chunk in response.iter_bytes():
-                if len(content) + len(chunk) > settings.subtitle_max_bytes:
-                    raise SubtitleServiceError("subtitle_too_large", "字幕文件超过大小限制")
-                content.extend(chunk)
-            raw = content.decode(response.encoding or "utf-8", errors="replace")
+        def get_caption() -> tuple[bytes, str | None]:
+            with http.stream("GET", selected_format["url"], headers=selected_format["http_headers"]) as response:
+                response.raise_for_status()
+                content = bytearray()
+                for chunk in response.iter_bytes():
+                    if len(content) + len(chunk) > settings.subtitle_max_bytes:
+                        raise SubtitleServiceError("subtitle_too_large", "字幕文件超过大小限制")
+                    content.extend(chunk)
+                return bytes(content), response.encoding
+
+        content, encoding = network_retry.retry_get(
+            get_caption,
+            max_retries=settings.network_retries,
+            backoff_seconds=settings.network_retry_backoff_seconds,
+        )
+        raw = content.decode(encoding or "utf-8", errors="replace")
     except httpx.HTTPError as exc:
         raise SubtitleServiceError("subtitle_fetch_failed", f"字幕获取失败：{exc}") from exc
     finally:

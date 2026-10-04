@@ -8,6 +8,7 @@ from urllib.parse import quote, unquote, urlparse
 import httpx
 
 from ..config import settings
+from . import network_retry
 
 _CAPTION_FORMATS = {"srt", "vtt", "json3", "ttml", "srv3"}
 _LANGUAGE_ALIASES = {
@@ -54,15 +55,24 @@ def _archive_tracks(url: str) -> dict:
     identifier = unquote(parts[1])
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", identifier) or identifier in {".", ".."}:
         return {"tracks": []}
+    metadata_url = f"https://archive.org/metadata/{quote(identifier, safe='')}"
     with httpx.Client(timeout=settings.subtitle_timeout_seconds, follow_redirects=True) as client:
-        with client.stream("GET", f"https://archive.org/metadata/{quote(identifier, safe='')}") as response:
-            response.raise_for_status()
-            body = bytearray()
-            for chunk in response.iter_bytes():
-                if len(body) + len(chunk) > settings.subtitle_max_bytes:
-                    raise ValueError("字幕来源元数据超过大小限制")
-                body.extend(chunk)
-            data = json.loads(body)
+        def get_metadata() -> bytes:
+            with client.stream("GET", metadata_url) as response:
+                response.raise_for_status()
+                body = bytearray()
+                for chunk in response.iter_bytes():
+                    if len(body) + len(chunk) > settings.subtitle_max_bytes:
+                        raise ValueError("字幕来源元数据超过大小限制")
+                    body.extend(chunk)
+                return bytes(body)
+
+        body = network_retry.retry_get(
+            get_metadata,
+            max_retries=settings.network_retries,
+            backoff_seconds=settings.network_retry_backoff_seconds,
+        )
+    data = json.loads(body)
     if not isinstance(data, dict) or data.get("is_dark"):
         return {"tracks": []}
     metadata = data.get("metadata", {})

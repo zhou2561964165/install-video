@@ -1,3 +1,4 @@
+import math
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -17,6 +18,8 @@ class Settings:
     db_url: str = field(default_factory=lambda: f"sqlite:///{(_BACKEND_DIR / 'jobs.db').as_posix()}")
     rate_limit_requests: int = 30
     rate_limit_window_seconds: int = 60
+    network_retries: int = 2
+    network_retry_backoff_seconds: float = 0.5
     # v2 账号 + 额度（生产环境务必用环境变量覆盖 JWT_SECRET）
     jwt_secret: str = "dev-secret-change-me-in-production"
     jwt_expire_minutes: int = 10080  # 7 天
@@ -35,11 +38,24 @@ class Settings:
     llm_summary_max_chunks: int = 16
     llm_summary_max_output_tokens: int = 4096
 
+    def __post_init__(self) -> None:
+        if self.network_retries < 0:
+            raise ValueError("network_retries must be >= 0")
+        if (
+            not math.isfinite(self.network_retry_backoff_seconds)
+            or self.network_retry_backoff_seconds < 0
+        ):
+            raise ValueError("network_retry_backoff_seconds must be finite and >= 0")
+
     @classmethod
     def from_env(cls) -> "Settings":
         def _int(name: str, default: int) -> int:
             v = os.environ.get(name)
             return int(v) if v else default
+
+        def _float(name: str, default: float) -> float:
+            v = os.environ.get(name)
+            return float(v) if v else default
 
         def _str(name: str, default: str) -> str:
             return os.environ.get(name) or default
@@ -53,6 +69,8 @@ class Settings:
             db_url=_str("DB_URL", f"sqlite:///{(_BACKEND_DIR / 'jobs.db').as_posix()}"),
             rate_limit_requests=_int("RATE_LIMIT", 30),
             rate_limit_window_seconds=_int("RATE_LIMIT_WINDOW", 60),
+            network_retries=_int("NETWORK_RETRIES", 2),
+            network_retry_backoff_seconds=_float("NETWORK_RETRY_BACKOFF_SECONDS", 0.5),
             jwt_secret=_str("JWT_SECRET", "dev-secret-change-me-in-production"),
             jwt_expire_minutes=_int("JWT_EXPIRE_MINUTES", 10080),
             default_quota_limit=_int("DEFAULT_QUOTA_LIMIT", 10),
