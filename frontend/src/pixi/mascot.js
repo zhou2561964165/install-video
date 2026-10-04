@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Live2DModel, MotionPriority } from 'pixi-live2d-display/cubism4';
-import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE, getModelLayout } from './mascotConfig.js';
+import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE, PLACEMENT, getModelPlacement, supportsModelTexture } from './mascotConfig.js';
 
 // 创建 Live2D 角色并接入「拖动角色」+「点击角色 → onTap（React 弹换装菜单）」。
 //   modelId   —— 初始模型 id（缺省/未命中回落 DEFAULT_MODEL_ID）
@@ -8,7 +8,7 @@ import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE, getModelLayout } fr
 // 返回 { getModelId, setExpression, setStageExpression, startRandomProps, resize, destroy }。
 // 表情/道具走「直接写参数」（setExpression：paramId 置 1 开 / 0 关），与待机正弦驱动（IDLE）
 // 参数不同、互不冲突；角色不随下载场景做奔跑/摆动位移，阶段反馈由表情+背景粒子+音频承担。
-export async function createMascot(app, modelId, { onTap } = {}) {
+export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
   window.PIXI = PIXI;                       // 插件依赖 window.PIXI.Ticker
   Live2DModel.registerTicker(PIXI.Ticker);
 
@@ -23,17 +23,23 @@ export async function createMascot(app, modelId, { onTap } = {}) {
   let scaleFactor = SCALE.initial;          // 等比缩放倍率（初始值来自 SCALE 配置，跨 resize 持久）
 
   const current = { model: null, cfg: null };
+  const cfg = MODELS.find((m) => m.id === modelId) || MODELS[0];
+  const gl = app.renderer.gl;
+  if (!supportsModelTexture(cfg, gl.getParameter(gl.MAX_TEXTURE_SIZE))) {
+    // 未请求模型/16K atlas，背景保留，避免在 8K GPU 上重复上传同一超限兜底纹理。
+    app.view.dataset.mascot = 'unsupported-texture';
+    return noopMascot();
+  }
 
   // 响应式摆放：按屏幕高度等比缩放（cfg.heightRatio）+ 相对位置（0~1），
   // 任意尺寸屏幕都看到等比例的完整模型。读 app.screen，窗口 resize 时重放 place 重新适配。
   function place(instance, cfg) {
-    const w = app.screen.width;
-    const h = app.screen.height;
-    const layout = getModelLayout(cfg, w);
     instance.anchor.set(0.5, 0.5);
-    instance.scale.set((h * layout.heightRatio * scaleFactor) / instance.getLocalBounds().height);
-    instance.x = w * layout.x;
-    instance.y = h * layout.y;
+    const p = getModelPlacement(cfg, app.screen, instance.getLocalBounds(), scaleFactor, getRegion?.());
+    instance.scale.set(p.scale);
+    instance.x = p.x;
+    instance.y = p.y;
+    instance.visible = p.visible;
   }
 
   // 交互：可拖动 + 点击（onTap，React 弹换装菜单）。
@@ -63,9 +69,10 @@ export async function createMascot(app, modelId, { onTap } = {}) {
     function onMove(e) {
       if (!dragging || disposed) return;
       const p = toStage(e.clientX, e.clientY);
-      if (!moved && Math.hypot(p.x - startX, p.y - startY) > 3) moved = true;
-      instance.x = p.x + offsetX;
-      instance.y = p.y + offsetY;
+      if (!moved && Math.hypot(p.x - startX, p.y - startY) > PLACEMENT.dragThreshold) moved = true;
+      const area = getModelPlacement(cfg, app.screen, instance.getLocalBounds(), scaleFactor, getRegion?.());
+      instance.x = Math.min(area.maxX, Math.max(area.minX, p.x + offsetX));
+      instance.y = Math.min(area.maxY, Math.max(area.minY, p.y + offsetY));
     }
     function endDrag(triggerTap) {
       if (!dragging) return;
@@ -73,10 +80,11 @@ export async function createMascot(app, modelId, { onTap } = {}) {
       instance.cursor = 'grab';
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
+      window.removeEventListener('pointercancel', onCancel);
       if (triggerTap && !moved) onTap?.();
     }
     function onUp() { endDrag(true); }
+    function onCancel() { endDrag(false); }
     function onDown(e) {
       if (disposed) return;
       const p = e.data.global;   // 舞台逻辑坐标，与 toStage 一致
@@ -89,7 +97,7 @@ export async function createMascot(app, modelId, { onTap } = {}) {
       instance.cursor = 'grabbing';
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup', onUp);
-      window.addEventListener('pointercancel', onUp);
+      window.addEventListener('pointercancel', onCancel);
     }
     instance.on('pointerdown', onDown);
 
@@ -229,13 +237,14 @@ export async function createMascot(app, modelId, { onTap } = {}) {
   // 初始加载；失败则整体降级为静态占位（与旧行为一致）
   const loaded = await loadModel(modelId);
   if (disposed || !app.stage) return noopMascot(); // app 已销毁：返回空句柄，不做任何渲染
-  if (!loaded.instance) return createFallback(app, modelId);
+  if (!loaded.instance) return createFallback(app, modelId, getRegion);
   current.cfg = loaded.cfg;
   current.model = loaded.instance;
   detachDrag = makeInteractive(loaded.instance, loaded.cfg);
   idle = startIdle(loaded.instance);
 
   return {
+    isAvailable() { return true; },
     getModelId() { return current.cfg.id; },
     setExpression,
     setStageExpression,
@@ -261,6 +270,7 @@ export async function createMascot(app, modelId, { onTap } = {}) {
 // app 已销毁时返回的空句柄：所有方法均 no-op
 function noopMascot() {
   return {
+    isAvailable() { return false; },
     getModelId() { return DEFAULT_MODEL_ID; },
     setExpression() {},
     setStageExpression() {},
@@ -271,7 +281,7 @@ function noopMascot() {
   };
 }
 
-async function createFallback(app, modelId) {
+async function createFallback(app, modelId, getRegion) {
   const cfg = MODELS.find((m) => m.id === modelId) || MODELS[0];
   const sprite = PIXI.Sprite.from(cfg.fallback.url);
   sprite.anchor.set(0.5, 0.5);
@@ -286,14 +296,16 @@ async function createFallback(app, modelId) {
   if (!app.stage) return noopMascot(); // await 期间 app 已销毁
   const naturalHeight = sprite.height;   // 纹理自然高（scale 仍为 1）
   const lay = () => {
-    const layout = getModelLayout(cfg, app.screen.width);
-    sprite.scale.set((app.screen.height * layout.heightRatio) / naturalHeight);
-    sprite.x = app.screen.width * layout.x;
-    sprite.y = app.screen.height * layout.y;
+    const p = getModelPlacement(cfg, app.screen, { width: bt.width, height: naturalHeight }, SCALE.initial, getRegion?.());
+    sprite.scale.set(p.scale);
+    sprite.x = p.x;
+    sprite.y = p.y;
+    sprite.visible = p.visible;
   };
   lay();
   app.stage.addChild(sprite);
   return {
+    isAvailable() { return false; },
     getModelId() { return cfg.id; },
     setExpression() {},
     setStageExpression() {},

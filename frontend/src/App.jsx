@@ -33,6 +33,9 @@ export default function App() {
   const stageRef = useRef(null);
   const bgRef = useRef(null);
   const mascotRef = useRef(null);
+  const mascotRegionRef = useRef(null);
+  const uiRef = useRef(null);
+  const [mascotAvailable, setMascotAvailable] = useState(false);
   const [webgl] = useState(() => webglSupported());
   const [tier] = useState(() => detectTier());
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'dark');
@@ -76,6 +79,7 @@ export default function App() {
   useEffect(() => {
     if (!webgl || status !== 'authed') {
       setReady(false);
+      setMascotAvailable(false);
       return;
     }
     const app = initStage(stageRef.current);
@@ -85,17 +89,24 @@ export default function App() {
       bg.resize();
       mascotRef.current?.resize();
     };
+    const onScroll = () => mascotRef.current?.resize();
     window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    const regionObserver = new ResizeObserver(onScroll);
+    if (uiRef.current) regionObserver.observe(uiRef.current);
     let stale = false; // StrictMode 双重挂载：旧挂载的 mascot 结果丢弃，不覆盖 ref / 不提前置 ready
-    createMascot(app, DEFAULT_MODEL_ID, { onTap: () => setMenuOpen(true) }).then((m) => {
+    createMascot(app, DEFAULT_MODEL_ID, { onTap: () => setMenuOpen(true), getRegion: () => mascotRegionRef.current?.getBoundingClientRect() }).then((m) => {
       if (stale) { m.destroy(); return; }
       mascotRef.current = m;
+      setMascotAvailable(m.isAvailable());
       m.startRandomProps();
       setReady(true);
     });
     return () => {
       stale = true;
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
+      regionObserver.disconnect();
       mascotRef.current?.destroy();
       bg.destroy();
       destroyStage(app);
@@ -112,7 +123,14 @@ export default function App() {
   // 随 scene 切换角色情绪眼（解析/下载→圈圈眼、选清晰度→煎蛋眼、完成→星星眼、出错→生气）
   useEffect(() => {
     mascotRef.current?.setStageExpression(state.scene);
+    mascotRef.current?.resize();
   }, [state.scene, webgl]);
+
+  const mascotSlot = webgl && <div className="mascot-region">
+    <div className="mascot-region__viewport" ref={mascotRegionRef} data-mascot-region />
+    <button type="button" className="mascot-menu-trigger mascot-menu-trigger--compact" disabled={!mascotAvailable}
+      onClick={() => setMenuOpen(true)} aria-haspopup="dialog" aria-expanded={menuOpen}>角色换装</button>
+  </div>;
 
   let scene;
   switch (state.scene) {
@@ -131,16 +149,17 @@ export default function App() {
     case SCENE.DONE: scene = <DoneScene job={state.job} fileUrl={state.job && fileUrl(state.job.id)} onReset={() => dispatch({ type: 'RESET' })} />; break;
     case SCENE.ERROR: scene = <ErrorScene error={state.error} onReset={() => dispatch({ type: 'RESET' })} />; break;
     case SCENE.ENTRY:
-    default: scene = <EntryScene onSubmit={handleSubmit} />;
+    default: scene = <EntryScene onSubmit={handleSubmit} mascotSlot={mascotSlot} />;
   }
 
   return (
     <>
       <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'} />
-      <div className="ui">
+      <div ref={uiRef} className="ui">
         {status === 'authed' ? (
           <>
             {scene}
+            {state.scene !== SCENE.ENTRY && mascotSlot}
             <AuthBar user={user} quota={quota} onLogout={logout} />
           </>
         ) : (
@@ -161,6 +180,8 @@ export default function App() {
         ))}
       </div>
       <ExpressionMenu open={menuOpen} onClose={() => setMenuOpen(false)} onExpression={(pid, v) => mascotRef.current?.setExpression(pid, v)} onScale={(dir) => mascotRef.current?.scaleBy(dir)} />
+      {status === 'authed' && webgl && <button type="button" className="mascot-menu-trigger mascot-menu-trigger--desktop"
+        disabled={!mascotAvailable} onClick={() => setMenuOpen(true)} aria-haspopup="dialog" aria-expanded={menuOpen}>角色换装</button>}
       {status === 'authed' && webgl && <Preloader done={ready} />}
     </>
   );

@@ -5,3 +5,16 @@ docs/acceptance-reports/2026-10-04-public-mobile-gpu/** -text whitespace=blank-a
 # These live sources are captured by the natural-quality provenance checks.
 backend/app/config.py text eol=lf
 backend/app/services/llm_service.py text eol=lf
+
+# Preserve this continuation's evaluation and layout evidence without newline conversion.
+docs/acceptance-reports/2026-10-04-schema-summary-quality/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/acceptance-reports/2026-10-04-responsive-mascot/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve the source bytes captured by the responsive-browser evidence.
+frontend/src/App.jsx text eol=lf
+frontend/src/components/EntryScene.jsx text eol=lf
+frontend/src/components/ui/ExpressionMenu.jsx text eol=lf
+frontend/src/pixi/mascot.js text eol=lf
+frontend/src/pixi/mascotConfig.js text eol=lf
+frontend/src/styles/global.css text eol=lf
+frontend/src/pixi/stage.js -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

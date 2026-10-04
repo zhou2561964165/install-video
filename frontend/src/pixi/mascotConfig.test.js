@@ -1,5 +1,32 @@
 import { describe, it, expect } from 'vitest';
-import { MODELS, DEFAULT_MODEL_ID, EXPRESSIONS, SCALE, getModelLayout } from './mascotConfig.js';
+import { MODELS, DEFAULT_MODEL_ID, EXPRESSIONS, SCALE, getModelLayout, getModelPlacement, supportsModelTexture } from './mascotConfig.js';
+
+describe('角色完整摆放与能力降级', () => {
+  const bounds = { width: 1400, height: 2000 };
+  it('桌面最大倍率仍完整落在视口内', () => {
+    const p = getModelPlacement(MODELS[0], { width: 1440, height: 900 }, bounds, SCALE.max);
+    expect(p.x - bounds.width * p.scale / 2).toBeGreaterThanOrEqual(0);
+    expect(p.x + bounds.width * p.scale / 2).toBeLessThanOrEqual(1440);
+    expect(p.y - bounds.height * p.scale / 2).toBeGreaterThanOrEqual(0);
+    expect(p.y + bounds.height * p.scale / 2).toBeLessThanOrEqual(900);
+  });
+  it.each([320, 375, 720])('窄屏 %i 仅在内容之后的装饰区摆放', (width) => {
+    const region = { left: 20, top: 590, width: width - 40, height: 300 };
+    const p = getModelPlacement(MODELS[0], { width, height: 812 }, bounds, SCALE.initial, region);
+    expect(p.y - bounds.height * p.scale / 2).toBeGreaterThanOrEqual(region.top);
+    expect(p.y + bounds.height * p.scale / 2).toBeLessThanOrEqual(region.top + region.height);
+    expect(p.x - bounds.width * p.scale / 2).toBeGreaterThanOrEqual(region.left);
+    expect(p.x + bounds.width * p.scale / 2).toBeLessThanOrEqual(region.left + region.width);
+  });
+  it('窄屏装饰区离开视口时隐藏角色', () => {
+    expect(getModelPlacement(MODELS[0], { width: 375, height: 812 }, bounds, 2,
+      { left: 20, top: -400, width: 335, height: 300 }).visible).toBe(false);
+  });
+  it('8K GPU 不会请求 16K 模型，16K GPU 保持可用', () => {
+    expect(supportsModelTexture(MODELS[0], 8192)).toBe(false);
+    expect(supportsModelTexture(MODELS[0], 16384)).toBe(true);
+  });
+});
 
 describe('MODELS 模型注册表', () => {
   it('仅注册「白」一个模型', () => {

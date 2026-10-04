@@ -31,7 +31,7 @@ const exampleLabel = (u) => {
   try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u.slice(0, 20); }
 };
 
-export default function EntryScene({ onSubmit }) {
+export default function EntryScene({ onSubmit, mascotSlot }) {
   const [url, setUrl] = useState('');
   const inputRef = useRef(null);
 
@@ -129,6 +129,7 @@ export default function EntryScene({ onSubmit }) {
               ))}
             </div>
           </div>
+          {mascotSlot}
           <div className="landing-hero__scroll" aria-hidden="true">
             <span>向下滚动</span>
           </div>

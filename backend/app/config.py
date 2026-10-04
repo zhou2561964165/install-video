@@ -39,6 +39,8 @@ class Settings:
     llm_summary_max_output_tokens: int = 4096
     llm_summary_response_format: str = "auto"
     llm_summary_thinking_mode: str = "auto"
+    llm_summary_max_point_chars: int = 240
+    llm_summary_source_context_chars: int = 1200
 
     def __post_init__(self) -> None:
         if self.network_retries < 0:
@@ -48,10 +50,14 @@ class Settings:
             or self.network_retry_backoff_seconds < 0
         ):
             raise ValueError("network_retry_backoff_seconds must be finite and >= 0")
-        if self.llm_summary_response_format not in {"auto", "text", "json_object"}:
-            raise ValueError("llm_summary_response_format must be auto, text or json_object")
+        if self.llm_summary_response_format not in {"auto", "text", "json_object", "json_schema", "strict_tool"}:
+            raise ValueError("llm_summary_response_format must be auto, text, json_object, json_schema or strict_tool")
         if self.llm_summary_thinking_mode not in {"auto", "enabled", "disabled"}:
             raise ValueError("llm_summary_thinking_mode must be auto, enabled or disabled")
+        if self.llm_summary_max_point_chars < 1:
+            raise ValueError("llm_summary_max_point_chars must be >= 1")
+        if self.llm_summary_source_context_chars < 0:
+            raise ValueError("llm_summary_source_context_chars must be >= 0")
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -94,6 +100,8 @@ class Settings:
             llm_summary_max_output_tokens=_int("LLM_SUMMARY_MAX_OUTPUT_TOKENS", 4096),
             llm_summary_response_format=_str("LLM_SUMMARY_RESPONSE_FORMAT", "auto"),
             llm_summary_thinking_mode=_str("LLM_SUMMARY_THINKING_MODE", "auto"),
+            llm_summary_max_point_chars=_int("LLM_SUMMARY_MAX_POINT_CHARS", 240),
+            llm_summary_source_context_chars=_int("LLM_SUMMARY_SOURCE_CONTEXT_CHARS", 1200),
         )
 
 

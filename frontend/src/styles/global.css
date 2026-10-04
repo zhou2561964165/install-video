@@ -81,6 +81,18 @@
   --insight-label-size: 11px;
   --insight-body-size: 13px;
   --insight-control-radius: 10px;
+  /* primitive → semantic → component：触控和角色独立区域 */
+  --size-touch: 44px;
+  --size-mascot-min: 240px;
+  --size-mascot-max: 340px;
+  --space-safe-header: 140px;
+  --space-safe-footer: 80px;
+  --control-touch-size: var(--size-touch);
+  --decoration-height: clamp(var(--size-mascot-min), 38svh, var(--size-mascot-max));
+  --mascot-region-height: var(--decoration-height);
+  --mascot-trigger-size: var(--control-touch-size);
+  --menu-control-size: var(--control-touch-size);
+  --mascot-inline-gap: 28px;
 
   /* 折射描边环：玻璃卡的 1px 彩虹描边（伪元素 + mask 只留环，不遮玻璃底；跨主题恒定） */
   --refract-ring: linear-gradient(135deg,
@@ -183,6 +195,20 @@ body {
   z-index: 0;
 }
 .stage canvas { pointer-events: auto; }
+
+.mascot-region { position: relative; }
+.mascot-menu-trigger {
+  position: fixed;
+  right: var(--mascot-inline-gap);
+  bottom: var(--mascot-inline-gap);
+  min-height: var(--mascot-trigger-size);
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+  z-index: 2;
+}
+.mascot-menu-trigger--compact { display: none; }
 
 /* UI 层：整体穿透，让点击落到下方 canvas；仅交互控件恢复接收事件 */
 .ui {
@@ -705,8 +731,9 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 32px;
-  height: 32px;
+  width: var(--menu-control-size);
+  height: var(--menu-control-size);
+  padding: 0;
   border: none;
   background: transparent;
   color: var(--text-muted);
@@ -737,7 +764,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 }
 .expression-menu__scale .expression-menu__pill { flex: 1; }
 .expression-menu__pill {
-  min-height: 34px;
+  min-height: var(--menu-control-size);
   padding: 6px 14px;
   border: 1px solid var(--border);
   border-radius: var(--pill-radius);
@@ -1296,6 +1323,14 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 
 /* 移动端：内容居中满宽堆叠（角色仍作背景装饰） */
 @media (max-width: 720px) {
+  html {
+    scroll-padding-top: var(--space-safe-header);
+    scroll-padding-bottom: var(--space-safe-footer);
+  }
+  .ui :is(button, input, select, textarea, a) {
+    scroll-margin-top: var(--space-safe-header);
+    scroll-margin-bottom: var(--space-safe-footer);
+  }
   .auth-bar {
     left: 12px;
     right: 12px;
@@ -1318,6 +1353,25 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   .video-insights { padding: 14px; }
   .video-insights__actions { grid-template-columns: 1fr; }
   .landing { padding: 0 20px; }
+  .landing-hero {
+    justify-content: flex-start;
+    padding-top: var(--space-safe-header);
+    padding-bottom: var(--space-safe-footer);
+  }
+  .mascot-region {
+    width: 100%;
+    height: calc(var(--mascot-region-height) + var(--mascot-trigger-size));
+    margin: 0 auto;
+  }
+  .mascot-region__viewport { height: var(--mascot-region-height); }
+  .ui > .mascot-region { max-width: min(100%, 560px); }
+  .mascot-menu-trigger {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  .mascot-menu-trigger--desktop { display: none; }
+  .mascot-menu-trigger--compact { display: block; }
   .landing-hero__content {
     max-width: 100%;
     align-items: center;
@@ -1327,6 +1381,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   .landing-hero__subtitle { max-width: 100%; }
   .landing-form input { min-width: 0; width: 100%; }
   .landing-examples__chip {
+    min-height: var(--control-touch-size);
     background: color-mix(in srgb, var(--surface) 82%, transparent);
   }
   .landing-steps { grid-template-columns: 1fr; max-width: 100%; }

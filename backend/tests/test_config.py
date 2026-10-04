@@ -90,3 +90,24 @@ def test_invalid_summary_output_controls_fail_at_startup(monkeypatch, name, valu
     monkeypatch.setenv(name, value)
     with pytest.raises(ValueError, match="llm_summary_"):
         Settings.from_env()
+
+
+def test_schema_summary_controls_are_loaded_from_env(monkeypatch):
+    monkeypatch.setenv("LLM_SUMMARY_RESPONSE_FORMAT", "json_schema")
+    monkeypatch.setenv("LLM_SUMMARY_MAX_POINT_CHARS", "180")
+    configured = Settings.from_env()
+    assert configured.llm_summary_response_format == "json_schema"
+    assert configured.llm_summary_max_point_chars == 180
+
+
+@pytest.mark.parametrize("value", [0, -1])
+def test_schema_point_length_must_be_positive(value):
+    with pytest.raises(ValueError, match="llm_summary_max_point_chars"):
+        Settings(llm_summary_max_point_chars=value)
+
+
+def test_summary_source_context_configuration_can_be_disabled(monkeypatch):
+    monkeypatch.setenv("LLM_SUMMARY_SOURCE_CONTEXT_CHARS", "0")
+    assert Settings.from_env().llm_summary_source_context_chars == 0
+    with pytest.raises(ValueError, match="llm_summary_source_context_chars"):
+        Settings(llm_summary_source_context_chars=-1)

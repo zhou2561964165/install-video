@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { hex, baseColor } from './theme.js';
+import { PLACEMENT } from './mascotConfig.js';
 
 export function webglSupported() {
   try {
@@ -34,6 +35,10 @@ export function initStage(container) {
   app.view.style.position = 'absolute';
   app.view.style.inset = '0';
   app.view.style.pointerEvents = 'auto'; // 角色点击切换需要 canvas 接收事件；UI 层通过 CSS 穿透（.ui pointer-events:none）
+  // PIXI 初始化会写 inline touchAction:none；在此按配置恢复原生纵向滚动。
+  app.view.style.touchAction = PLACEMENT.touchAction;
+  // TouchEvent 被 PIXI 归一化后默认 preventDefault；关闭它让允许的手势交给浏览器。
+  app.renderer.plugins.interaction.autoPreventDefault = PLACEMENT.autoPreventDefault;
   return app;
 }
 

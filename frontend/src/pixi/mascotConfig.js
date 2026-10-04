@@ -13,12 +13,13 @@ export const MODELS = [
     id: 'bai',
     name: '白',
     url: '/live2d/bai/白.model3.json',
+    textureSize: 16384,
     heightRatio: 0.49,
     x: 0.82,
     y: 0.62,
-    // 窄屏把角色收在右下装饰区，避免遮住标题、输入框和示例按钮。
-    // maxWidth 与 CSS 移动断点一致；初始 SCALE=2，因此 0.2 最终约占屏高 40%。
-    mobile: { maxWidth: 720, heightRatio: 0.2, x: 0.78, y: 0.78 },
+    // 窄屏相对文档流预留区居中，高度上限同时服从区域和视口比例。
+    // maxWidth 与 CSS 移动断点一致；位置不是固定视口坐标。
+    mobile: { maxWidth: 720, heightRatio: 0.2, x: 0.5, y: 0.5 },
     fallback: { url: '/live2d/bai/白.16384/texture_00.png' },
     hit: { width: 1400, height: 2000 },
   },
@@ -30,6 +31,31 @@ export const DEFAULT_MODEL_ID = MODELS[0].id;
 // 模型布局选择保持配置驱动：渲染与静态兜底共用同一入口，新增断点不改摆放算法。
 export function getModelLayout(model, viewportWidth) {
   return model.mobile && viewportWidth <= model.mobile.maxWidth ? model.mobile : model;
+}
+
+// 手机由文档流预留区承载；桌面保持原比例并限制在视口内。
+// paddingRatio 给轻微呼吸留边，所有渲染/拖动共用同一几何边界。
+export const PLACEMENT = { paddingRatio: 0.04, desktopFooterRatio: 0.1, dragThreshold: 3, touchAction: 'pan-y pinch-zoom', autoPreventDefault: false };
+export function getModelPlacement(model, viewport, bounds, scaleFactor, region) {
+  const layout = getModelLayout(model, viewport.width);
+  const compact = layout !== model;
+  const area = compact && region ? region : { left: 0, top: 0, width: viewport.width, height: viewport.height * (1 - PLACEMENT.desktopFooterRatio) };
+  const pad = Math.min(area.width, area.height) * PLACEMENT.paddingRatio;
+  const desiredHeight = compact ? Math.min(area.height * (scaleFactor / SCALE.max), viewport.height * layout.heightRatio * scaleFactor) : viewport.height * layout.heightRatio * scaleFactor;
+  const scale = Math.min(desiredHeight / bounds.height, (area.width - pad * 2) / bounds.width, (area.height - pad * 2) / bounds.height);
+  const halfWidth = bounds.width * scale / 2;
+  const halfHeight = bounds.height * scale / 2;
+  const minX = area.left + pad + halfWidth, maxX = area.left + area.width - pad - halfWidth;
+  const minY = area.top + pad + halfHeight, maxY = area.top + area.height - pad - halfHeight;
+  const x = compact ? area.left + area.width * layout.x : viewport.width * layout.x;
+  const y = compact ? area.top + area.height * layout.y : viewport.height * layout.y;
+  return { scale, x: Math.min(maxX, Math.max(minX, x)), y: Math.min(maxY, Math.max(minY, y)),
+    minX, maxX, minY, maxY,
+    visible: !compact || Boolean(region && region.top < viewport.height && region.top + region.height > 0) };
+}
+
+export function supportsModelTexture(model, maxTextureSize) {
+  return !model.textureSize || maxTextureSize >= model.textureSize;
 }
 
 // 程序化待机动画配置：「白」的 model3.json 的 Motions 只挂了 edle 装饰特效（单个星光特效，
