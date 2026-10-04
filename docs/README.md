@@ -1,6 +1,6 @@
 # 项目文档索引
 
-> 更新：2026-10-04。v3 AI内容总结、字幕来源适配、长文分段合并与跨平台验收已提交到 `main`；交接和验收边界见 [handoff.md](handoff.md)。
+> 更新：2026-10-04。v3和 TLS 有限重试已提交到 `main`（TLS提交 `96b0b59`）；后端121项、前端66项测试及生产构建通过。交接与验收边界见 [handoff.md](handoff.md)。
 
 ## 工程约定
 
@@ -22,7 +22,7 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 
 ## 证据阅读顺序
 
-- [平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)：最新，后端101/101、前端66/66、构建通过；汇总首轮及限次重试数据，区分字幕API与总结API结果。
+- [平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)：最新，后端121/121、前端66/66、构建通过；汇总首轮/限次重试，并单独记录 TLS 修复后的真实字幕复测。
 - [修复后AI总结回归](acceptance-reports/2026-10-03-ai-summary-regression/report.md)：此前结果，后端96/96、前端65/65、Archive.org内容获取3/3、原件解析5/5及真实DeepSeek长文总结。
 - [原始平台验收](acceptance-reports/2026-10-03-single-platform-subtitles/report.md)：修复前的0/3、4/5基线，原始文件和许可证据继续保留。
 

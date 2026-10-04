@@ -1,0 +1,67 @@
+{
+  "captured_at_utc": "2026-10-04T04:01:22.143361+00:00",
+  "samples": [
+    {
+      "id": "archive-short-en",
+      "platform": "Internet Archive",
+      "url": "https://archive.org/details/youtube-6k-kbg3_Drc",
+      "requested_language": "en",
+      "expected": "content",
+      "http_status": 200,
+      "title": "Imagine the Consequences",
+      "language": "en",
+      "is_auto": false,
+      "available_languages": [
+        "en",
+        "fr"
+      ],
+      "characters": 400,
+      "text_sha256": "b179534e6c48894ef5a03209e2fb17de51b2774f95b987144123f874bc27764f",
+      "content_pass": true,
+      "expectation_met": true,
+      "elapsed_seconds": 4.47
+    },
+    {
+      "id": "commons-climate-en",
+      "platform": "Wikimedia Commons",
+      "url": "https://commons.wikimedia.org/wiki/File:Die_Temperaturkurve_der_Erde_(ZDF,_Terra_X)_720p_HD_50FPS.webm",
+      "requested_language": "en",
+      "expected": "content",
+      "http_status": 200,
+      "title": "Die Temperaturkurve der Erde (ZDF, Terra X) 720p HD 50FPS",
+      "language": "en-GB",
+      "is_auto": false,
+      "available_languages": [
+        "de",
+        "en-GB",
+        "nl"
+      ],
+      "characters": 480,
+      "text_sha256": "d913a951c49d2d1c92876827b79f81bd6cd12077c2341129fa7ab0ebfbd24f5e",
+      "content_pass": true,
+      "expectation_met": true,
+      "elapsed_seconds": 4.75
+    }
+  ],
+  "summaries": [],
+  "unauthenticated": {
+    "/api/parse": 401,
+    "/api/download": 401,
+    "/api/subtitle": 401,
+    "/api/summary": 401,
+    "/api/subtitle/translate": 401
+  },
+  "quota_before": {
+    "date": "2026-10-04",
+    "limit": 10,
+    "used": 0,
+    "remaining": 10
+  },
+  "quota_after_ai": {
+    "date": "2026-10-04",
+    "limit": 10,
+    "used": 0,
+    "remaining": 10
+  },
+  "quota_unchanged_by_ai": true
+}

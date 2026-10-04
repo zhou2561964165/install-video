@@ -21,6 +21,21 @@
 
 YouTube 条目是公开自动字幕读取探针；仅记录正文长度与哈希，没有对其调用 LLM、保存全文或据此确认授权许可。TED、Commons 长片与 Samplelib 只记录访问结果。
 
+## TLS 有限重试复测（2026-10-04）
+
+沿用平台适配优先、yt-dlp回退的提取结构，对 Archive 元数据、字幕正文 GET 与 yt-dlp 请求增加配置化有限重试。默认 `NETWORK_RETRIES=2` 表示每个启用重试的请求/yt-dlp重试环节可额外尝试两次；`NETWORK_RETRY_BACKOFF_SECONDS=0.5` 为初始等待，下一次指数递增。项目自有 httpx GET 重试仅处理超时/网络传输错误、远端EOF及502/503/504；4xx、无字幕、格式错误与 LLM POST不重试。yt-dlp路径使用其原生 `retries` / `extractor_retries` 分类与退避回调。
+
+| 请求 | 修复前记录 | 修复后真实复测 |
+| --- | --- | --- |
+| Archive.org 已许可短片 `youtube-6k-kbg3_Drc` 英文字幕 | 字幕API 422 `network` | 200，400字符，4.47秒 |
+| Wikimedia Commons 气温短片英文字幕 | 字幕API 422 `network` | 200，`en-GB`，480字符，4.75秒 |
+
+结果见 [`retry-live.json`](retry-live.json)。这是修复后的端到端字幕请求复测；该记录未采集每个请求的尝试计数，因此不单独宣称这两次返回200都实际触发过重试。可确定重试行为的证据来自无公网的模拟故障回归：连接/读取超时、远端连接 EOF 与 502/503/504 重试成功；共享 httpx GET 层的4xx、无字幕/格式错误不重试；耗尽后原错误保留且错误响应流在重试前关闭。
+
+本轮全量验证：后端121/121、前端66/66、生产构建通过。Vitest既有jsdom navigation提示、构建的bundle大小提示和Starlette/httpx弃用提示仍存在。
+
+独立代码复审确认关键修复已覆盖：yt-dlp退避函数匹配真实 `n` 关键字；网关错误响应不做无界读取并在重试前关闭；配置拒绝负重试次数和负/非有限退避时间。复审未发现未处理的 Critical 或 Important。
+
 ## 修复与前端体验
 
 - 修复 LLM 兼容响应中畸形 `finish_reason` 和非字符串 text block 直接抛 `TypeError` 的情况；现在按契约映射 `llm_invalid_response`。四种畸形字段用例在修复前失败，修复后通过；有效多文本块拼接也有覆盖。
@@ -32,6 +47,6 @@ YouTube 条目是公开自动字幕读取探针；仅记录正文长度与哈希
 
 ## 运行状态与后续
 
-验收后端8010、前端5178和本机媒体服务器8021均已停止。实现、报告和交接文档已提交到 `main`（`Complete v3 video intelligence and acceptance`）。根目录的用户 `AGENTS.md` 保持未跟踪；`.env`、隔离 SQLite 数据库、`.planning/` 和本机合成媒体是忽略的本地验收数据，未进入提交。
+验收后端8010、前端5178、本机媒体服务器8021与 TLS 复测后端8011均已停止。TLS重试实现已提交为 `96b0b59`，本报告及复测结果在其后的文档提交中一并收录。根目录的用户 `AGENTS.md` 保持未跟踪；`.env`、隔离 SQLite 数据库、`.planning/` 和本机合成媒体未进入提交。
 
-用户曾在关机前暂停；恢复后已完成复审并提交。后续若开启新工作，从 [`docs/handoff.md`](../../handoff.md) 和项目文档索引继续。
+用户曾在关机前暂停此前的 v3 工作；该部分和 TLS 重试后续现均已本地提交。所有验收服务已停止。后续工作从 [`docs/handoff.md`](../../handoff.md) 和项目文档索引继续。

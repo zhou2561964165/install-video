@@ -50,7 +50,7 @@ cd frontend && npm run build
 
 | 最近验证 | 结果 | 证据范围 |
 | --- | --- | --- |
-| 后端全量 | 101/101通过 | 96项基线 + provider 畸形响应分类回归 |
+| 后端全量 | 121/121通过 | 包含provider格式回归、有限网络重试、yt-dlp真实退避调用、错误流及时关闭和配置边界测试 |
 | 前端全量 | 66/66通过 | 包含解析阶段未发现字幕时仍可显式尝试 AI 的集成回归 |
 | 生产构建 / diff check | 通过 | build 有 bundle 大小提示；diff check 只有 Windows 行尾提示 |
 | 原5份已许可文件 | 5/5解析通过，原件哈希不变 | 原始验收时为4/5 |
@@ -58,6 +58,7 @@ cd frontend && npm run build
 | 真实DeepSeek总结 | 首轮3/3成功，含 Archive.org 约7.2万字符演讲、Archive.org 短片和 Commons 短片 | 长文71,658字符，清理后71,214字符，4段归纳合并，72.67秒返回中文摘要与7要点；只抽查代表性事实和尾部内容，不代表完整语义准确率已测 |
 | 下载闭环 | 本机生成3秒 H.264/AAC 样本，经本机 HTTP、yt-dlp、下载任务和文件接口成功；ffprobe确认音视频轨、时长及分辨率 | 验证服务端核心闭环；公网 Samplelib 请求遇TLS错误，不能据此声称该公网样本下载通过 |
 | 鉴权/额度 | 5个未授权受保护API均返回401；AI总结前后下载额度不变 | 下载验收用独立临时用户和隔离数据库 |
+| TLS重试后真实字幕复测 | 此前失败的 Archive.org 短字幕与 Wikimedia Commons 英文字幕均返回200（2/2） | 是修复后的真实请求成功结果；没有记录每次请求内部实际重试次数。逐项结果见 `retry-live.json` |
 
 逐项平台请求、重试、总结响应与质量核查见[平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)及其 JSON 证据。此前桌面/375px浏览器验证覆盖注册、登录、刷新、退出、额度、落地页与视频智能面板；本轮补充了真实 insights hook 的前端集成回归。浏览器自动化的后续交互受工具审批阻断，因此不能宣称本轮完整浏览器 E2E 通过。
 
@@ -96,9 +97,11 @@ API：`POST /api/subtitle`、`POST /api/subtitle/translate`、`POST /api/summary
 
 - 当前默认：每用户每天下载10次（UTC日期），提交即扣；失败退款未实现。每IP限流独立保留。
 - AI：`LLM_MAX_INPUT_CHARS=60000`；总结分段默认20000字符、最多16段、每次输出最多4096 tokens；可通过 `LLM_SUMMARY_*` 配置调整。
+- 字幕/yt-dlp读取：`NETWORK_RETRIES=2`（每个启用重试的请求/yt-dlp重试环节可额外尝试2次）与 `NETWORK_RETRY_BACKOFF_SECONDS=0.5`（各次等待基数，指数递增），两者需为非负有效数。项目自有 httpx GET 重试仅处理超时/网络异常、远端EOF及502/503/504，不重试4xx、无字幕或格式错误；LLM POST不接入该重试器。yt-dlp同时使用其原生有限 `retries` / `extractor_retries`，重试按其错误分类在各环节内生效。
 - Archive内容获取不再先依赖视频网页；专用路径不可用时回退yt-dlp。多视频条目没有明确内容关联时要求具体视频文件链接。
 - 审查修复：`movie`不会混入`movie.part2`字幕；异常metadata/files/title不会绕过回退；SRT小数精度容错1–3位。
 - 本轮审查修复：LLM provider 的 `finish_reason` 与文本块字段格式异常时统一映射为 `llm_invalid_response`；解析阶段暂未发现字幕时，视频智能面板仍开放显式请求并使用“自动选择”语言来源。
+- TLS稳定性修复：字幕元数据和正文 GET、以及 `ytdlp_service.py` 内 yt-dlp 读取都使用有界重试；平台专用适配优先与yt-dlp通用回退顺序保持不变。设置见根README，真实字幕复测见 `retry-live.json`。
 - 服务端产物TTL清理、ffmpeg合并、直链HTTP请求头限制仍沿用既有下载契约。
 - 16K角色纹理的GPU兼容与原作者非商用/不二改限制仍存在；代码只调整布局，没有压缩原模型。
 - 原始字幕完整性、音画对齐、说话人、所有语言/编码/平台尚未全面验收；AI主目标不等于已经覆盖这些能力。
@@ -107,11 +110,12 @@ API：`POST /api/subtitle`、`POST /api/subtitle/translate`、`POST /api/summary
 
 ## 6. Git、产物与下一步
 
-- v3实现、验收与交接文档已本地提交；可用 `git log -1 --oneline` 查看提交号。原有根目录 `AGENTS.md` 保持未跟踪且未纳入提交；没有改主agent规则或参考项目。
+- v3实现、验收和交接文档已提交；TLS重试后续已在 `96b0b59`（`Add bounded retries for transient subtitle network failures`）提交。原有根目录 `AGENTS.md` 保持未跟踪且未纳入提交；没有改主agent规则或参考项目。
+- 最新全量验证：后端121/121、前端66/66、生产构建通过；Archive.org与Commons字幕真实复测2/2。独立复审未发现Critical/Important。
 - 原验收 [report.md](acceptance-reports/2026-10-03-single-platform-subtitles/report.md) 保留0/3与4/5历史结果；当前状态以修复后报告为准。
 - 原始来源、UTC采集时间、许可、哈希、脱敏副本与去重关联继续保留；历史证据不因修复而改写。
 - 验收期间临时服务已全部停止：后端8010、前端5178、本机媒体HTTP 8021均无监听。测试用户库 `backend/quality-online-acceptance.db`、本机生成媒体、pytest临时文件和工作计划均是 Git 忽略的本地验收产物；原 `backend/.env` 仍是被忽略的本地配置，没有复制进代码或报告。
-- 用户曾在关机前暂停本轮工作；恢复后已完成全量验证、复审和本地提交。联网验收服务已停止。本地未跟踪的 `AGENTS.md` 未纳入提交；忽略的 `.env` 和 SQLite 数据库也未进入提交。
+- 用户曾在关机前暂停此前的 v3 工作，恢复后该部分与 TLS 重试后续均已本地提交。验收服务已停止；未跟踪的 `AGENTS.md` 和忽略的 `.env`、SQLite 数据库均未提交。
 
 下一步仅为候选，不自动推进：按用户指令继续扩平台与AI总结质量样本；再考虑流式体验、AI独立额度或v4付费。滚动首页位置已定，不再反复询问。
 

@@ -77,6 +77,8 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `PASSWORD_ITERATIONS` | `100000` | PBKDF2密码哈希迭代次数 |
 | `SUBTITLE_MAX_BYTES` | `5242880` | 单个字幕文件大小上限 |
 | `SUBTITLE_TIMEOUT_SECONDS` | `30` | 字幕来源元数据及正文 HTTP 超时 |
+| `NETWORK_RETRIES` | `2` | 每个启用重试的请求/yt-dlp重试环节的额外次数（最多3次尝试）；需为非负整数 |
+| `NETWORK_RETRY_BACKOFF_SECONDS` | `0.5` | 各次网络重试的初始等待秒数；后续指数递增；需为有限非负数 |
 | `LLM_PROVIDER` | `openai-compatible` | 前端展示的供应商名称 |
 | `LLM_BASE_URL` | 空 | OpenAI-compatible API 根地址，如 `https://api.example.com/v1` |
 | `LLM_API_KEY` | 空 | LLM Bearer key；本地免鉴权服务可留空 |
@@ -102,7 +104,7 @@ uv run uvicorn app.main:app --reload --port 8000 --env-file .env
 
 ## 验证
 
-最近已完成的验证：后端101/101、前端66/66、生产构建通过；原5份已许可文件解析5/5且SHA-256不变。三平台真实字幕请求和三次真实 DeepSeek 总结的范围与网络限制见[平台与总结质量报告](docs/acceptance-reports/2026-10-03-platform-quality/report.md)。上一轮5份文件和3个Archive.org URL的通过记录见[AI总结修复报告](docs/acceptance-reports/2026-10-03-ai-summary-regression/report.md)，不同轮次的数字各自保留，不推断所有平台均可用。
+最近已完成的验证：后端121/121、前端66/66、生产构建通过；原5份已许可文件解析5/5且SHA-256不变。TLS重试修复提交于 `96b0b59`。三平台字幕请求、TLS重试后的真实字幕复测和三次真实 DeepSeek 总结见[平台与总结质量报告](docs/acceptance-reports/2026-10-03-platform-quality/report.md)。上一轮结果见[AI总结修复报告](docs/acceptance-reports/2026-10-03-ai-summary-regression/report.md)，各轮数据分别记录，不推断所有平台均可用。
 
 ### 自动化测试
 
