@@ -1,0 +1,24 @@
+{
+  "completed_at_utc": "2026-10-04T08:03:47.962000+00:00",
+  "manifest_and_facts_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "before-zh-short.json",
+      "sha256": "e04742ac0fb773661f800629708194e9a7f7acce1f1d1ec7b95a94a4cc0b997a"
+    },
+    {
+      "id": "en-medium",
+      "file": "before-en-medium.json",
+      "sha256": "219550ec0bdc7f34767e75109f2fffea8644e02981859071adfce565f62058a5"
+    },
+    {
+      "id": "en-long",
+      "file": "before-en-long.json",
+      "sha256": "abd2ea9bd90c0587e01f36c6bd64047a156cf9d32ac398e4811152c6432cd05c"
+    }
+  ],
+  "phase_requests_sha256": "02a8dcbc588596d2e7df83162cbdcfb5b9e66567e6aaf60bc58b7523c6c50c18",
+  "reserved_attempts": 5,
+  "confirmed_http_responses": 5
+}

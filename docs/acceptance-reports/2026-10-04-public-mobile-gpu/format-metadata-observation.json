@@ -1,0 +1,84 @@
+{
+  "generatedAt": "2026-10-04T07:57:27.559Z",
+  "publicSource": "https://archive.org/details/youtube-6k-kbg3_Drc",
+  "license": "CC BY 3.0",
+  "appRoutesMocked": false,
+  "llmCalls": 0,
+  "checks": [
+    {
+      "name": "real registration at375px",
+      "pass": true
+    },
+    {
+      "name": "mobile-entry layout fits375px",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "cssFallback": true
+    },
+    {
+      "name": "public Archive real parse200",
+      "pass": true,
+      "metadata": {
+        "title": "Imagine the Consequences",
+        "thumbnail": "https://archive.org/download/youtube-6k-kbg3_Drc/youtube-6k-kbg3_Drc.thumbs/Imagine_the_Consequences-6k-kbg3_Drc_000073.jpg",
+        "duration": 75.74,
+        "duration_string": "1:15",
+        "uploader": "dslr@email.com",
+        "platform": "archive.org",
+        "view_count": null,
+        "upload_date": "20190406",
+        "description": "If you're a regular viewer please DON'T try to become a Patreon supporter for as little as $1 per video because they are of course free for me to make, and I don't even have a Patreon account. I have ",
+        "subtitles": [
+          "en",
+          "fr"
+        ],
+        "formats": [
+          {
+            "format_id": "best",
+            "label": "最佳",
+            "height": null,
+            "ext": "mp4",
+            "resolution": null,
+            "filesize": null,
+            "has_audio": true,
+            "vcodec": null,
+            "acodec": "merged",
+            "direct": false,
+            "note": null
+          }
+        ]
+      }
+    }
+  ],
+  "requests": [
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "gpu": [],
+  "failure": "AssertionError [ERR_ASSERTION]: Explicit resolution missing: 最佳",
+  "gpuRenderingPass": false
+}

@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-04T08:00:43.210171+00:00",
+  "scope": "offline reinspection of the same saved browser file, no new network or app run",
+  "bytes": 8854893,
+  "sha256": "cf2e47033a22c2d5dc50ab27e7f3da0a34b6fb22b95ed36155b7fba8d71dc4d9",
+  "container": "matroska,webm",
+  "duration": "75.741000",
+  "streams": [
+    {
+      "type": "video",
+      "codec": "h264",
+      "width": 854,
+      "height": 480
+    },
+    {
+      "type": "audio",
+      "codec": "opus",
+      "width": null,
+      "height": null
+    }
+  ],
+  "helper_correction": "Initial helper used .mp4 local name for actual suggested .mkv. Local saved file renamed preserving bytes; future helper uses browser suggested extension."
+}

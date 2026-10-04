@@ -1,0 +1,14 @@
+{
+  "completed_at_utc": "2026-10-04T08:10:09.125697+00:00",
+  "manifest_and_facts_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+  "sample_results": [
+    {
+      "id": "en-long",
+      "file": "validation-long-en-long.json",
+      "sha256": "111498dea48b6f744f76a34accc02498216323863f1e1c218766a6b1bbc96670"
+    }
+  ],
+  "phase_requests_sha256": "1a61dc2f43ebd0597ebe7e31d2a3629991b1c5c4ef521cffd9d3f712e1675978",
+  "reserved_attempts": 3,
+  "confirmed_http_responses": 3
+}

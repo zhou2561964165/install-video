@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-10-04T07:56:24.857Z",
+  "publicSource": "https://archive.org/details/youtube-6k-kbg3_Drc",
+  "license": "CC BY 3.0",
+  "appRoutesMocked": false,
+  "llmCalls": 0,
+  "checks": [],
+  "requests": [
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "gpu": [],
+  "failure": "TimeoutError: page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:5187/\", waiting until \"load\"\u001b[22m\n",
+  "gpuRenderingPass": false
+}

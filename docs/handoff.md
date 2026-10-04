@@ -1,6 +1,6 @@
 ﻿# 交接 · 视频下载、平台字幕与AI总结
 
-> 更新：2026-10-04。新增Bilibili公开字幕、通用inline回退兼容与总结提示词改进已提交：`e7c29be`。基线TLS重试提交：`96b0b59`；本轮验收文档随后提交。
+> 更新：2026-10-04。摘要输出控制、主题指导及1–7条数量校验已提交：`05753e7`。此前Bilibili/inline增量 `e7c29be`、文档 `47a1ad8`；TLS重试 `96b0b59`。本轮文档与证据随后提交。
 
 ## 工程约定
 
@@ -15,9 +15,23 @@
 - AI内容总结是主目标；字幕是内容来源，可清理重复内容，长内容分段归纳再合并，保留尾部结论。
 - 滚动首页保留在登录后。没有新增时间轴导出、音频转写、问答、思维导图、支付或批量下载。
 - 用户授权多agent逐步完成平台覆盖、完整浏览器流程与总结质量。所有agent继承主agent的模型与推理设置。
-- 本轮平台、浏览器、质量三个工作线已交付，独立源码和证据复审没有遗留Critical/Important。旧 `real_platform_subtitle_acceptance` / `v3_review` 历史会话继续停用。
+- 此前平台、浏览器、质量三个工作线已交付；当前追加自然字幕实测、公网移动下载和GPU证据。长要点组织仍未达标，不将格式校验修复描述为全部质量问题解决。旧 `real_platform_subtitle_acceptance` / `v3_review` 历史会话继续停用。
 
 ## 最新验证与证据
+
+| 项目 | 结果 | 范围与限制 |
+| --- | --- | --- |
+| 后端全量 | 184/184通过 | 新增15项输出控制/配置/数量边界用例，含红→绿；原有平台、认证、下载和TLS测试保留 |
+| 前端全量 / 构建 | 66/66 / 通过 | 生产前端未改；已知jsdom navigation、Starlette弃用及大chunk提示仍存在 |
+| 自然字幕 | MIT OCW原生中文608、英文2199、英文长课34894字符 | 三份独立自然字幕，预先冻结4/4/6个主事实；未覆盖中文长课/六种语言×长度组合。CC BY-NC-SA4.0，仅非商业评测 |
+| 模型实测 | 六个profile共24次POST，HTTP均200；89567个供应商报告token | HTTP200不等于有效总结：漏JSON闭合、推理耗尽空正文、超限8/12/11点均保留。预算已耗尽，不重置或自动重试 |
+| 最终选择 | bounded版本三源返回5/6/7点；当前service/config字节与冻结快照一致 | 14个主事实概念语义覆盖不等于每个claim准确；中篇usually→always过强，长篇依赖变量例泛化有范围风险，末条426字比基线306更大。最后concise候选失败已回退，长组织/压缩未达标 |
+| 公网375px下载 | 9项检查、1个实际浏览器保存文件 | 854×480 H.264/Opus、75.741秒、Matroska、8854893字节；源仅提供“最佳”，不声称选择480p |
+| 默认GPU | Windows Edge桌面和375px均RTX4050/ANGLE D3D11，16K纹理驻留、角色可见 | 只覆盖当前硬件；移动示例按钮遮角色脸、桌面脚部出底边，真手机、低档GPU与完整角色交互未测 |
+
+优先读取[自然字幕与输出修复报告](acceptance-reports/2026-10-04-natural-subtitle-quality/report.md)、[独立来源/事实清单](acceptance-reports/2026-10-04-natural-subtitle-quality/source-report.md)及[公网移动/GPU报告](acceptance-reports/2026-10-04-public-mobile-gpu/report.md)。最后候选失败、回退原因与当前快照绑定见质量报告的delivery profile，不能拿失败候选的短句当作已交付改善。
+
+## 前轮验证与证据（历史）
 
 | 项目 | 结果 | 范围与限制 |
 | --- | --- | --- |
@@ -30,7 +44,7 @@
 | 总结受控质量 | 短/中/长before+after，共12次真实POST，全200 | 三个自编英语源→中文输出；提示词允许1–7个独立完整事实。短3碎片→1点，中重复改善，长7→6且尾部条件/数字保留；长内容日志计数和批准范围仍有冗余 |
 | 提示词/数据溯源 | before/after源码、prompt、语料和结果哈希已核对 | before基线b62f7d4；脚本发请求前校验对应prompt。真实质量不是完整准确率指标，mock仅证明数据路由与API消费契约 |
 
-优先读取本轮三个报告：
+读取前轮三个报告：
 
 - [平台扩展](acceptance-reports/2026-10-04-platform-expansion/report.md)：公开请求、许可/访问范围、源数据处理和红绿回归。
 - [浏览器完整流程](acceptance-reports/2026-10-04-browser-e2e/report.md)：本机40项、6下载和独立公网Archive桌面9项。
@@ -47,7 +61,7 @@
 | `services/bilibili_subtitle_source.py` | 匿名元数据、BV/分P/CID关联、可信HTTPS字幕来源、语言/类型校验 |
 | `services/subtitle_service.py` | 轨道选择、HTTP或inline正文、字节上限，SRT/VTT/JSON3/TTML/Bilibili JSON解析；native正文失败最多generic一次 |
 | `services/network_retry.py` | 只包裹幂等GET的有限瞬时网络/EOF/502/503/504重试，指数退避 |
-| `services/llm_service.py` | provider配置、去重/分段/分层合并、严格JSON和错误分类；1–7点完整事实指导，不填充短源 |
+| `services/llm_service.py` | provider配置、去重/分段/分层合并；摘要输出选项、主题指导、严格JSON/完成状态/1–7点数量校验，超限拒绝且不截断 |
 | `routes/subtitle.py` / `summary.py` | 登录鉴权、请求响应与局部错误映射；不依赖平台JSON |
 | `api.js` / `useAuth` / `useDownload` / `useVideoInsights` | 前端请求边界与分别独立的状态/请求生命周期 |
 | `VideoInsights.jsx` | 纯props展示；解析语言列表为空仍提供自动选源语言和显式操作 |
@@ -71,6 +85,7 @@
 - httpx GET处理瞬时传输/超时、远端EOF及502/503/504；4xx、无字幕、格式错误不进入该重试器。yt-dlp按原生错误分类使用有限retries；LLM POST不自动重试。
 - `LLM_MAX_INPUT_CHARS=60000`；分段默认20000字符、最多16段、每次最大输出4096 tokens。翻译仍有独立输入上限。
 - 配置供应商为deepseek、API模型ID `deepseek-flash`；凭据只在Git忽略的 `backend/.env`。
+- `LLM_SUMMARY_RESPONSE_FORMAT=auto|text|json_object`、`LLM_SUMMARY_THINKING_MODE=auto|enabled|disabled`。auto仅DeepSeek摘要发送json_object+disabled；通用供应商auto及翻译不发送摘要专用控制，明确值须供应商支持。用户`.env`未改；摘要默认变化由已配置provider决定。
 
 ```powershell
 # 在项目根首次准备依赖
@@ -97,14 +112,14 @@ npm test
 npm run build
 ```
 
-完整本机浏览器复跑：项目根运行 `.venv\Scripts\python.exe docs/acceptance-reports/2026-10-04-browser-e2e/local_harness.py`。真实模型质量脚本已耗尽本轮12次预算，不能覆盖或清空台账继续调用；before/after复现必须使用对应源码和prompt hash，详见质量报告。
+完整本机浏览器复跑：项目根运行 `.venv\Scripts\python.exe docs/acceptance-reports/2026-10-04-browser-e2e/local_harness.py`。新公网脚本使用新的输出目录并拒绝覆盖，命令见报告。历史12次与新自然字幕24次模型预算均已耗尽，不能清空台账继续调用；各profile复现需要对应源码、配置和prompt hash。无HTTP的delivery检查命令见新质量报告。
 
 ## 状态与下一步
 
-- 实现已本地提交 `e7c29be`；文档与三份验收证据随后提交。用户原有 `AGENTS.md` 仍未跟踪；没有提交 `.env`、数据库、`.planning/` 或临时媒体。
-- 本轮8051/8052/8053/5185及公网追加8061/5186测试服务均已停止；用户 `backend/jobs.db` 与原模型资源未改。
+- 实现已本地提交 `05753e7`；文档与本轮验收证据随后提交。用户原有 `AGENTS.md` 仍未跟踪；没有提交 `.env`、数据库、`.planning/` 或临时媒体。`.gitattributes`固定新证据原始字节和被快照源码LF，避免Windows checkout破坏SHA-256。
+- 历史8051/8052/8053/5185、8061/5186与本轮8062/5187测试服务均已停止；用户 `backend/jobs.db` 与原模型资源未改。
 - 源样本许可、SHA-256、历史原件和失败记录保持原样；新脚本不依赖ACL受限的旧raw目录，不更改其权限。
-- Live2D / 16K纹理仅有此前设备记录，本轮浏览器用无WebGL的既有CSS降级；GPU/原模型移动兼容未证明。
+- 当前Windows硬件GPU/16K角色已补实测；真手机/低GPU纹理上限、触摸角色菜单仍未证明，模型资源未改。
 - 下载失败额度退还、独立AI额度、支付、SSE、队列横向扩展和生产部署仍未实现。
 
-建议下一项：**自然字幕的独立质量评测与长内容冗余压缩**。用许可明确的真实中英文短/中/长源核查准确数字、条件、尾部结论与语义重复；根据实测再改进。其后扩大公网移动端/下载闭环与WebGL兼容，最后按需要考虑流式输出和AI独立额度。本轮已完成，等待用户下一步指示。
+建议下一项：**严格结构化输出与长内容重点取舍**。先分析供应商可约束数组数量的schema接口，保持通用回退和单次计费请求，再改进长文主题选择、频率限定与具体例子范围。真实字幕质量实测已完成，但长要点压缩仍待改进；不能仅加强提示词就宣称保证准确或简洁。之后按需要处理375px角色/按钮重叠与真手机、低档GPU兼容，再考虑SSE/独立AI额度。当前预算停止，等待用户下一步指示。

@@ -1,0 +1,663 @@
+{
+  "method": "A separate source-curation agent froze priorities, claims and source anchors before any model output. The quality agent and a separate read-only reviewer checked source fidelity. These are agent reviews, not independent external human ratings or statistical precision/recall.",
+  "manifest_and_facts_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+  "scoring_definition": "Essential core coverage means the listed teaching idea occurs somewhere in summary plus key_points; it does not prove every generated statement, number, qualifier or example scope is faithful. Detail_if_present omissions do not count as core coverage failures. Related points with distinct relevant supporting facts are not pure semantic duplicates.",
+  "samples": [
+    {
+      "id": "zh-short",
+      "phases": {
+        "before": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "zh1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                1
+              ]
+            },
+            {
+              "fact_id": "zh2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "fact_id": "zh3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                5
+              ]
+            },
+            {
+              "fact_id": "zh4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                6
+              ]
+            }
+          ],
+          "point_count": 6,
+          "point_chars": [
+            41,
+            64,
+            48,
+            46,
+            46,
+            63
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        },
+        "after": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "zh1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                1
+              ]
+            },
+            {
+              "fact_id": "zh2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2,
+                3
+              ]
+            },
+            {
+              "fact_id": "zh3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                4
+              ]
+            },
+            {
+              "fact_id": "zh4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                5
+              ]
+            }
+          ],
+          "point_count": 5,
+          "point_chars": [
+            43,
+            61,
+            80,
+            47,
+            65
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        },
+        "compatible": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "zh1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                1
+              ]
+            },
+            {
+              "fact_id": "zh2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "fact_id": "zh3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                5
+              ]
+            },
+            {
+              "fact_id": "zh4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                6
+              ]
+            }
+          ],
+          "point_count": 6,
+          "point_chars": [
+            43,
+            53,
+            64,
+            42,
+            50,
+            70
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        },
+        "bounded": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "zh1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                1
+              ]
+            },
+            {
+              "fact_id": "zh2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2,
+                3
+              ]
+            },
+            {
+              "fact_id": "zh3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                4
+              ]
+            },
+            {
+              "fact_id": "zh4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                5
+              ]
+            }
+          ],
+          "point_count": 5,
+          "point_chars": [
+            45,
+            70,
+            68,
+            51,
+            65
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        }
+      }
+    },
+    {
+      "id": "en-medium",
+      "phases": {
+        "before": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "en1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                1,
+                2
+              ]
+            },
+            {
+              "fact_id": "en2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                3
+              ]
+            },
+            {
+              "fact_id": "en3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                4
+              ]
+            },
+            {
+              "fact_id": "en4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                5,
+                6,
+                7
+              ]
+            }
+          ],
+          "point_count": 7,
+          "point_chars": [
+            45,
+            32,
+            45,
+            55,
+            44,
+            59,
+            56
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        },
+        "after": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "en1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                1
+              ]
+            },
+            {
+              "fact_id": "en2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2
+              ]
+            },
+            {
+              "fact_id": "en3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                3
+              ]
+            },
+            {
+              "fact_id": "en4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                4,
+                5,
+                6
+              ]
+            }
+          ],
+          "point_count": 6,
+          "point_chars": [
+            63,
+            60,
+            62,
+            49,
+            79,
+            62
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        },
+        "compatible": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "en1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                1
+              ]
+            },
+            {
+              "fact_id": "en2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2
+              ]
+            },
+            {
+              "fact_id": "en3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2
+              ]
+            },
+            {
+              "fact_id": "en4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "point_count": 5,
+          "point_chars": [
+            52,
+            57,
+            44,
+            57,
+            53
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        },
+        "bounded": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "en1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                1
+              ]
+            },
+            {
+              "fact_id": "en2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2
+              ]
+            },
+            {
+              "fact_id": "en3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                3
+              ]
+            },
+            {
+              "fact_id": "en4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                4,
+                5,
+                6
+              ]
+            }
+          ],
+          "point_count": 6,
+          "point_chars": [
+            64,
+            49,
+            57,
+            50,
+            61,
+            64
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        }
+      }
+    },
+    {
+      "id": "en-long",
+      "phases": {
+        "before": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "long1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2
+              ]
+            },
+            {
+              "fact_id": "long2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                3
+              ]
+            },
+            {
+              "fact_id": "long3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                4
+              ]
+            },
+            {
+              "fact_id": "long4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                6
+              ]
+            },
+            {
+              "fact_id": "long5",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                7
+              ]
+            },
+            {
+              "fact_id": "long6",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                7
+              ]
+            }
+          ],
+          "point_count": 7,
+          "point_chars": [
+            115,
+            71,
+            113,
+            121,
+            103,
+            103,
+            306
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        },
+        "compatible": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "long1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2
+              ]
+            },
+            {
+              "fact_id": "long2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2,
+                3
+              ]
+            },
+            {
+              "fact_id": "long3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                4,
+                5
+              ]
+            },
+            {
+              "fact_id": "long4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                7,
+                8
+              ]
+            },
+            {
+              "fact_id": "long5",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                9,
+                10
+              ]
+            },
+            {
+              "fact_id": "long6",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                11
+              ]
+            }
+          ],
+          "point_count": 12,
+          "point_chars": [
+            61,
+            82,
+            74,
+            62,
+            77,
+            69,
+            114,
+            70,
+            76,
+            106,
+            81,
+            98
+          ],
+          "schema_count_valid": false,
+          "pure_semantic_duplicate_pairs": []
+        },
+        "bounded": {
+          "essential_core_coverage": [
+            {
+              "fact_id": "long1",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                2
+              ]
+            },
+            {
+              "fact_id": "long2",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                3
+              ]
+            },
+            {
+              "fact_id": "long3",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                4
+              ]
+            },
+            {
+              "fact_id": "long4",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                6
+              ]
+            },
+            {
+              "fact_id": "long5",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                7
+              ]
+            },
+            {
+              "fact_id": "long6",
+              "coverage": "retained_in_summary_and_points_together",
+              "points": [
+                7
+              ]
+            }
+          ],
+          "point_count": 7,
+          "point_chars": [
+            92,
+            60,
+            75,
+            134,
+            81,
+            198,
+            426
+          ],
+          "schema_count_valid": true,
+          "pure_semantic_duplicate_pairs": []
+        }
+      }
+    }
+  ],
+  "source_fidelity_issues": [
+    {
+      "phase": "compatible",
+      "sample": "en-long",
+      "point": 2,
+      "kind": "quantity_and_terminology",
+      "observed": "计算机只执行指令：每秒可执行数十亿次计算并将结果存储在数百GB内存中，没有自主意识；知识分为声明性知识（事实）和命令性知识（步骤或配方），计算机只能执行命令性知识。",
+      "source": "a billion calculations per second is probably not far off. / hundreds of gigabytes of storage.",
+      "finding": "Changes approximate one billion to several billion and conflates storage with memory."
+    },
+    {
+      "phase": "bounded",
+      "sample": "en-medium",
+      "point": 2,
+      "kind": "frequency_qualifier",
+      "observed": "每节课后教师都会对学生的课堂表现提供反馈，涵盖语言和文化行为两方面，让学生知道下次课需要改进之处。",
+      "source": "So usually, after class, we provide feedback",
+      "finding": "Strengthens usually to always; listed feedback-content core remains covered but this statement is too strong."
+    },
+    {
+      "phase": "before_and_compatible_and_bounded",
+      "sample": "en-long",
+      "kind": "example_scope",
+      "observed": "Generalized other/dependent variables not automatically updating",
+      "source": "Worked scalar radius/area rebinding example; precomputed area is not recalculated unless told to recalculate.",
+      "finding": "Core no-automatic-recomputation idea is retained, but the concrete example scope is omitted/generalized. This is a remaining source-fidelity risk, not a verified universal rule."
+    },
+    {
+      "phase": "concise-long",
+      "sample": "en-long",
+      "response": 22,
+      "kind": "static_semantics_example",
+      "finding": "Rejected candidate section notes characterize 3.2*5 as semantically unclear, although the source asks what it means while treating it as valid. Do not promote these candidate notes as accurate delivered output."
+    }
+  ],
+  "organization_findings": [
+    {
+      "sample": "zh-short",
+      "baseline_points": 6,
+      "chosen_points": 5,
+      "finding": "Supporting schedule/consequence details are combined, but the preparation principle still appears contextually in two points. Limited consolidation, no claim of pure duplicate removal."
+    },
+    {
+      "sample": "en-medium",
+      "baseline_points": 7,
+      "chosen_points": 6,
+      "finding": "Two assessment reasons combined; later cultural examples/material-based feedback remain separate with different details. Limited consolidation."
+    },
+    {
+      "sample": "en-long",
+      "baseline_last_point_chars": 306,
+      "compatible_point_count": 12,
+      "chosen_last_point_chars": 426,
+      "chosen_point_count": 7,
+      "finding": "The chosen strict-contract profile returns seven points, but its final point is longer and still a catch-all. Long organization/concision goal was not achieved."
+    }
+  ],
+  "failed_or_invalid_candidates": [
+    {
+      "phase": "after",
+      "response": 8,
+      "classification": "llm_invalid_response",
+      "finding": "HTTP200 content omits key_points closing bracket; no retry."
+    },
+    {
+      "phase": "validation-long",
+      "response": 11,
+      "classification": "llm_incomplete_response",
+      "finding": "finish_reason length; empty answer; 4096 completion tokens all reported as reasoning; no retry."
+    },
+    {
+      "phase": "compatible",
+      "responses": [
+        14,
+        16
+      ],
+      "classification": "posthoc_schema_count_violation",
+      "point_counts": [
+        8,
+        12
+      ],
+      "finding": "Old parser accepted these lists; final parser now rejects over seven rather than truncating them."
+    },
+    {
+      "phase": "concise-long",
+      "response": 24,
+      "classification": "llm_invalid_response",
+      "point_count": 11,
+      "finding": "Valid JSON and stop finish reason still violate count. Strict parser rejected it; candidate merge guidance rolled back to the tested bounded profile."
+    }
+  ],
+  "chosen_profile": "bounded",
+  "delivery_commit": "05753e7fd828a82e1ad2cec0112c15d639c7050c",
+  "limits": [
+    "Three natural videos from two MIT courses; one selected comparison output per source/profile, not a broad benchmark or repeated stability study.",
+    "Final comparison changes organization guidance, a JSON-shape example, provider JSON/thinking controls and count validation; no isolated causal claim about a single prompt or option.",
+    "Summary and key_points are scored together; each field individually may omit a fact.",
+    "Raw invalid candidate outputs are diagnostics, not application successes.",
+    "No stronger long-summary quality, universal numeric fidelity or guaranteed model compliance established."
+  ],
+  "engineering_rules": "Skills outrank plans; UI skills and three-layer tokens; configurable abilities; stable narrow interfaces; yt-dlp only through ytdlp_service.py; visuals read-only."
+}

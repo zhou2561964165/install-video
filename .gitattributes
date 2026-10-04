@@ -1,6 +1,6 @@
 # Keep frozen acceptance bytes and their recorded SHA-256 stable across checkouts.
-docs/acceptance-reports/2026-10-04-natural-subtitle-quality/** -text
-docs/acceptance-reports/2026-10-04-public-mobile-gpu/** -text
+docs/acceptance-reports/2026-10-04-natural-subtitle-quality/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/acceptance-reports/2026-10-04-public-mobile-gpu/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # These live sources are captured by the natural-quality provenance checks.
 backend/app/config.py text eol=lf

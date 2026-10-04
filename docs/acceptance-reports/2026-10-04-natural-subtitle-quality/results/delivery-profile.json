@@ -1,0 +1,59 @@
+{
+  "captured_at_utc": "2026-10-04T08:34:47.083986+00:00",
+  "chosen_phase": "bounded",
+  "service_sha256": "df73e7f83724e8d03913121028bf52040a0152e68bc2326784234250a09e3e85",
+  "settings_source_sha256": "17162baebd902e35cd03ce02c408bd0b1d14c347a30d202c77bade3bcd8519f4",
+  "model": "deepseek-flash",
+  "provider": "deepseek",
+  "config": {
+    "llm_summary_chunk_chars": 20000,
+    "llm_max_input_chars": 60000,
+    "llm_summary_max_chunks": 16,
+    "llm_summary_max_output_tokens": 4096
+  },
+  "summary_output_controls": {
+    "llm_summary_response_format": "auto",
+    "llm_summary_thinking_mode": "auto"
+  },
+  "resolved_summary_options": {
+    "response_format": {
+      "type": "json_object"
+    },
+    "thinking": {
+      "type": "disabled"
+    }
+  },
+  "manifest_and_facts_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+  "bounded_index_sha256": "279145f5c1769aba224017e41bf597712494dc6ba6d7a004d460c12c73fc809d",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "bounded-zh-short.json",
+      "sha256": "3f69038ebfe0d0f79f6a7db08b1bc338e61838a53a5f28d3985ee21530ae95c4"
+    },
+    {
+      "id": "en-medium",
+      "file": "bounded-en-medium.json",
+      "sha256": "d253238817217ac78147b49a86f85b4b374d4b077a30d2be8be167ed9d92f837"
+    },
+    {
+      "id": "en-long",
+      "file": "bounded-en-long.json",
+      "sha256": "ba83250506a748f1bbc658531d1c6c646e2bf6746788a79cf2e7ef6aa576c1d4"
+    }
+  ],
+  "reason": "Keep the byte-identical profile with successful 5/6/7-point application results for all three fixed natural sources; restore its merge guidance after the final concise-long candidate returned eleven points and was correctly rejected. JSON/thinking compatibility and strict count validation remain.",
+  "long_organization_goal_met": false,
+  "remaining_limits": [
+    "The long catch-all point grew from 306 to 426 characters; organization improvement is not established.",
+    "Medium output overstates usually-after-class feedback as every-class feedback.",
+    "The long scalar rebinding example is generalized without its concrete scope.",
+    "Core-fact coverage is not full claim-level accuracy or a reliability estimate."
+  ],
+  "reserved_attempts_total": 24,
+  "confirmed_http_responses_total": 24,
+  "reported_tokens_total": 89567,
+  "budget_ceiling": 24,
+  "more_provider_calls_authorized_in_this_run": false,
+  "delivery_commit": "05753e7fd828a82e1ad2cec0112c15d639c7050c"
+}

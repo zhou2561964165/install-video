@@ -79,7 +79,7 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `SUBTITLE_TIMEOUT_SECONDS` | `30` | 字幕来源元数据及正文 HTTP 超时 |
 | `NETWORK_RETRIES` | `2` | 每个启用重试的请求/yt-dlp重试环节的额外次数（最多3次尝试）；需为非负整数 |
 | `NETWORK_RETRY_BACKOFF_SECONDS` | `0.5` | 各次网络重试的初始等待秒数；后续指数递增；需为有限非负数 |
-| `LLM_PROVIDER` | `openai-compatible` | 前端展示的供应商名称 |
+| `LLM_PROVIDER` | `openai-compatible` | 供应商名称；`deepseek`同时选择摘要输出兼容默认值，其他名称的auto保持通用请求 |
 | `LLM_BASE_URL` | 空 | OpenAI-compatible API 根地址，如 `https://api.example.com/v1` |
 | `LLM_API_KEY` | 空 | LLM Bearer key；本地免鉴权服务可留空 |
 | `LLM_MODEL` | 空 | 总结/翻译使用的模型；为空时返回 `llm_unconfigured` |
@@ -88,6 +88,8 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `LLM_SUMMARY_CHUNK_CHARS` | `20000` | 总结分段大小；先清理重复内容，再分段归纳并合并 |
 | `LLM_SUMMARY_MAX_CHUNKS` | `16` | 单次总结最多的原始分段数，限制一次请求的模型调用规模 |
 | `LLM_SUMMARY_MAX_OUTPUT_TOKENS` | `4096` | 每次分段或合并总结的最大输出 token 数 |
+| `LLM_SUMMARY_RESPONSE_FORMAT` | `auto` | `auto` / `text` / `json_object`；auto仅DeepSeek摘要发送JSON输出控制；text不发送该字段 |
+| `LLM_SUMMARY_THINKING_MODE` | `auto` | `auto` / `enabled` / `disabled`；auto仅DeepSeek摘要关闭推理，避免推理消耗正文预算；明确值由操作者确保供应商支持 |
 
 默认路径（`TEMP_DIR` / `DB_URL`）已锚定到后端目录，与启动时的工作目录无关。
 
@@ -102,11 +104,15 @@ uv run uvicorn app.main:app --reload --port 8000 --env-file .env
 
 新环境需自行创建 `.env`，设置 `LLM_PROVIDER=deepseek`、`LLM_BASE_URL=https://api.deepseek.com`、`LLM_MODEL=deepseek-flash` 和 `LLM_API_KEY`。后续兼容供应商只需更改这些环境变量。
 
+摘要的默认兼容选项由供应商名驱动：DeepSeek使用`response_format=json_object`及`thinking=disabled`，两项可分别覆盖；翻译请求不携带摘要专用字段。JSON模式仍需通过字段与结束状态校验，空结果或截断继续报错，不自动重发模型POST。相关协议见[DeepSeek JSON输出](https://api-docs.deepseek.com/guides/json_mode/)及[推理模式](https://api-docs.deepseek.com/guides/thinking_mode/)。
+
 ## 验证
 
-最新全量验证：后端169/169、前端66/66、生产构建通过。新增公开Bilibili字幕适配，保留元数据/正文失败后的yt-dlp回退并支持通用inline字幕；总结输出允许1–7个完整独立要点。实现提交 `e7c29be`。
+最新全量验证：后端184/184、前端66/66、生产构建通过。摘要输出控制、主题指导及严格1–7点校验已提交 `05753e7`；公开Bilibili适配、inline兼容和yt-dlp回退保持。
 
-证据见[平台扩展](docs/acceptance-reports/2026-10-04-platform-expansion/report.md)、[浏览器闭环](docs/acceptance-reports/2026-10-04-browser-e2e/report.md)与[总结质量](docs/acceptance-reports/2026-10-04-summary-quality/report.md)：本机桌面/375px共40项、6个下载文件通过，公网Archive桌面解析→总结9项通过；12次受控真实模型评测显示短要点改善，但长内容冗余仍有残余。公网下载、GPU角色渲染及所有平台可用性尚未全面证明。
+新证据见[自然字幕质量](docs/acceptance-reports/2026-10-04-natural-subtitle-quality/report.md)与[公网移动/GPU](docs/acceptance-reports/2026-10-04-public-mobile-gpu/report.md)：三份许可字幕预先冻结事实，新预算24次POST用尽；当前选定版本三源5/6/7点合格，但长末条426字、部分限定与例子泛化仍待优化，格式合格不等于全部准确。公网375px真实保存854×480视频，默认Windows RTX4050上传16K纹理且角色可见；真手机与低档GPU未测。MIT OCW语料仅按CC BY-NC-SA4.0用于非商业评测，与软件许可分开。
+
+前轮[平台扩展](docs/acceptance-reports/2026-10-04-platform-expansion/report.md)、[浏览器闭环](docs/acceptance-reports/2026-10-04-browser-e2e/report.md)与[人工场景总结评测](docs/acceptance-reports/2026-10-04-summary-quality/report.md)保留：当时169/66，本机40项/6下载、公网桌面9项总结，以及独立12次模型台账。各轮范围不混算为全平台或全部质量成功。
 
 此前[平台/TLS报告](docs/acceptance-reports/2026-10-03-platform-quality/report.md)和[AI修复报告](docs/acceptance-reports/2026-10-03-ai-summary-regression/report.md)按原采集时间保留，各轮结果不相互改写。
 

@@ -1,0 +1,21 @@
+{
+  "ordinal": 10,
+  "phase": "validation-long",
+  "sample": "en-long",
+  "stage": "section",
+  "content": "{\n  \"summary\": \"本讲介绍计算与 Python 基础：程序由定义和命令组成，表达式求值，Python 中一切皆对象且有类型；内容涵盖标量/非标量对象、类型转换、print、运算符、变量赋值与重新绑定，并强调程序只有唯一含义、计算机只执行明确指令，未显式重算则变量不会更新。\",\n  \"key_points\": [\n    \"程序的表达式需语法和静态语义正确；同一英语句子可有多种含义，但程序只有一种含义，计算机只执行所写指令；错误可能表现为语法错误、静态语义错误（仅当执行到相关分支时可能被捕获）、结果与预期不符、崩溃或不停止。\",\n    \"Python 程序由定义和命令组成；表达式会被求值，命令告诉解释器做事；可以在 shell 中输入简单命令测试，也可以在编辑器中写较复杂程序并运行。\",\n    \"Python 中一切皆对象，对象有类型，类型决定可对其执行的操作；对象分标量对象（不可细分，如数字 5）和非标量对象（有内部结构，如列表 [5,6,7,8]）。\",\n    \"标量类型包括 int、float、bool（仅 True 和 False，首字母大写）和 NoneType（仅 None，表示类型缺失）；可用 type() 查类型，也可转换类型，float(3) 得到 3.0，float 转 int 会截断小数而非四舍五入。\",\n    \"在 shell 中输入表达式会显示值，但这不算打印；要输出到控制台必须使用 print；在编辑器中只运行表达式不会输出，shell 中无 Out 表示已打印到控制台。\",\n    \"表达式由对象和运算符组成并求值为值；运算符包括 +、-、*、/、%、**；+、-、* 的结果类型取决于操作数（均为 int 则为 int，至少一个 float 则为 float），/ 始终返回 float，% 取余，** 为幂，优先级同数学，括号可改变优先级。\",\n    \"赋值 = 将右侧值绑定到左侧变量名，命名应描述性并可重用；编程中右侧是表达式、左侧是变量，不同于数学解 x；重新绑定如 radius=radius+1 会替换旧绑定，旧值可能被垃圾回收；area 未显式重算则不会改变。下讲将加入控制流。\"\n  ]\n}",
+  "usage": {
+    "prompt_tokens": 3987,
+    "completion_tokens": 2002,
+    "total_tokens": 5989,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1480
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 3987
+  },
+  "finish_reason": "stop"
+}

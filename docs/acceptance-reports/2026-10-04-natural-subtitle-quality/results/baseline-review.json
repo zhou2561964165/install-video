@@ -1,0 +1,33 @@
+{
+  "captured_before_production_change": true,
+  "method": "Quality agent checks separately curated source-anchored facts frozen before model calls; no independent external human rating or full precision metric.",
+  "manifest_and_facts_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+  "samples": [
+    {
+      "id": "zh-short",
+      "essential_facts_retained": ["zh1", "zh2", "zh3", "zh4"],
+      "point_count": 6,
+      "point_chars": [41, 64, 48, 46, 46, 63],
+      "pure_semantic_duplicate_pairs": [],
+      "observation": "Points 2/3/4 split the preparation/class-task principle and its weekly schedule/English fallback supporting details. The supporting facts are distinct, so these are not scored as pure semantic duplicates. 45/5 timing and the tail question options are retained."
+    },
+    {
+      "id": "en-medium",
+      "essential_facts_retained": ["en1", "en2", "en3", "en4"],
+      "point_count": 7,
+      "point_chars": [45, 32, 45, 55, 44, 59, 56],
+      "pure_semantic_duplicate_pairs": [],
+      "observation": "Assessment reasons, feedback contents, private delivery and cultural illustration have distinct supporting facts. No fixed scores, current Engrade endorsement or universal claim about all people detected."
+    },
+    {
+      "id": "en-long",
+      "essential_facts_retained": ["long1", "long2", "long3", "long4", "long5", "long6"],
+      "point_count": 7,
+      "point_chars": [115, 71, 113, 121, 103, 103, 306],
+      "pure_semantic_duplicate_pairs": [],
+      "observation": "The final 306-character point packs object types, conversion, arithmetic, assignment/rebinding, print and shell/editor usage into one catch-all. The final area-not-recomputed conclusion exists in section 2 and final merge; no routing/merge omission of an essential fact measured. Different consequences of explicit instruction are not counted as repetition."
+    }
+  ],
+  "single_fix_hypothesis": "Explicit main-topic grouping can combine a principle with its supporting reasons/conditions/examples, and prioritize core content without a catch-all point, while retaining important facts and conditions. Measure on unchanged sources/facts/model/configuration; no semantic deletion heuristic or hard length cap.",
+  "engineering_rules": "Skills outrank plans; UI skills and three-layer tokens; configurable abilities; stable narrow service interfaces; yt-dlp only through ytdlp_service.py; visuals read-only."
+}

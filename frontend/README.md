@@ -43,6 +43,8 @@ npm run test:watch
 
 2026-10-04增量验收已补齐桌面与375px的真实应用API浏览器流程：40项检查、6个保存文件，720p/360p选择与ffprobe高度匹配；无字幕和LLM模拟upstream503均只影响AI面板。独立公网Archive桌面解析→真实模型总结另有9项通过。详见[浏览器报告](../docs/acceptance-reports/2026-10-04-browser-e2e/report.md)。本轮使用既有无WebGL的CSS降级，未验证16K角色的GPU或手机硬件兼容。
 
+后续[公网移动/GPU报告](../docs/acceptance-reports/2026-10-04-public-mobile-gpu/report.md)补齐375px页面真实下载保存：9项检查、一个854×480 H.264/Opus、75.741秒Matroska文件，来源仅列“最佳”，并非用户选择480p。独立默认Edge桌面/375px均使用RTX4050/ANGLE D3D11，MAX_TEXTURE_SIZE=16384、16K纹理已上传、截图角色可见。仅覆盖当前Windows设备，不证明真手机或低档GPU兼容；移动示例按钮与角色脸部有视觉重叠、桌面脚部超出屏幕底边，完整角色菜单/触摸交互未测。生产前端未改。
+
 ## 当前交互与数据边界
 
 - 登录后进入五屏滚动落地页；首页不移动到登录前。

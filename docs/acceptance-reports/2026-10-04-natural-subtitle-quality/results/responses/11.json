@@ -1,0 +1,21 @@
+{
+  "ordinal": 11,
+  "phase": "validation-long",
+  "sample": "en-long",
+  "stage": "merge",
+  "content": "",
+  "usage": {
+    "prompt_tokens": 1311,
+    "completion_tokens": 4096,
+    "total_tokens": 5407,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 4096
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1311
+  },
+  "finish_reason": "length"
+}

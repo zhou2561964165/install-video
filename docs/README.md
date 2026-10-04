@@ -1,6 +1,6 @@
 # 项目文档索引
 
-> 更新：2026-10-04。平台扩展、浏览器闭环和总结质量增量已完成；实现提交 `e7c29be`，后端169项、前端66项测试及生产构建通过。当前状态见 [handoff.md](handoff.md)。
+> 更新：2026-10-04。自然字幕实测、公网移动下载与GPU验收已完成；输出控制/数量校验提交 `05753e7`，后端184项、前端66项及构建通过。长要点组织仍未达标，见 [handoff.md](handoff.md)。
 
 ## 工程约定
 
@@ -16,7 +16,11 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 | [v3实现计划](superpowers/plans/2026-10-03-v3-video-intelligence.md) | 当前v3 API、分层和验证范围 |
 | [扩展路线](superpowers/plans/2026-09-21-extension-plan.md) | v2/v3已实现状态及后续候选，不作为自动执行授权 |
 | [参考实现分析](reference-summary-implementation.md) | 参考项目观察、独立实现选择与已测限制 |
-| [本轮增量计划](superpowers/plans/2026-10-04-platform-browser-summary.md) | 用户已授权范围、文件分工与完成结果 |
+| [本轮追加计划](superpowers/plans/2026-10-04-natural-quality-mobile-gpu.md) | 自然字幕、输出控制/数量修复、公网移动/GPU与未达质量目标 |
+| [自然字幕实测与输出修复](acceptance-reports/2026-10-04-natural-subtitle-quality/report.md) | 新24次POST，6个profile/失败原件/选定bounded源码，质量残余 |
+| [独立自然字幕来源](acceptance-reports/2026-10-04-natural-subtitle-quality/source-report.md) | 原生中英文608/2199/34894字符，许可、hash与预先事实锚点 |
+| [公网移动与GPU](acceptance-reports/2026-10-04-public-mobile-gpu/report.md) | 375px 9项/1保存文件；RTX4050 16K纹理/角色，真手机与布局限制 |
+| [前轮增量计划](superpowers/plans/2026-10-04-platform-browser-summary.md) | 前轮已授权范围、文件分工与完成结果 |
 | [真实平台扩展](acceptance-reports/2026-10-04-platform-expansion/report.md) | Bili匿名正文、inline/native回退、访问限制与确定性回归 |
 | [完整浏览器验收](acceptance-reports/2026-10-04-browser-e2e/report.md) | 本机双视口40项/6保存文件，与独立公网Archive桌面9项 |
 | [总结质量评测](acceptance-reports/2026-10-04-summary-quality/report.md) | 固定语料、真实模型12次before/after、prompt溯源与残余问题 |
@@ -26,7 +30,8 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 
 ## 证据阅读顺序
 
-- [真实平台扩展](acceptance-reports/2026-10-04-platform-expansion/report.md) → [浏览器闭环](acceptance-reports/2026-10-04-browser-e2e/report.md) → [质量评测](acceptance-reports/2026-10-04-summary-quality/report.md)：本轮结果，169/66及构建通过；单条平台结果不推广为全站支持，模拟LLM页面结果不计模型准确率。
+- [自然字幕实测](acceptance-reports/2026-10-04-natural-subtitle-quality/report.md) → [来源与冻结事实](acceptance-reports/2026-10-04-natural-subtitle-quality/source-report.md) → [公网移动/GPU](acceptance-reports/2026-10-04-public-mobile-gpu/report.md)：最新184/66和构建通过。24个HTTP200不等于有效总结；选定5/6/7点不等于每条claim准确，长末条仍过度打包；移动视口不当作真手机兼容。
+- [真实平台扩展](acceptance-reports/2026-10-04-platform-expansion/report.md) → [浏览器闭环](acceptance-reports/2026-10-04-browser-e2e/report.md) → [质量评测](acceptance-reports/2026-10-04-summary-quality/report.md)：前轮169/66及构建通过；单条平台结果不推广为全站支持，模拟LLM页面结果不计模型准确率。
 - [平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)：较早121/66轮结果；保留首轮/限次重试及 TLS 修复后字幕复测。
 - [修复后AI总结回归](acceptance-reports/2026-10-03-ai-summary-regression/report.md)：此前结果，后端96/96、前端65/65、Archive.org内容获取3/3、原件解析5/5及真实DeepSeek长文总结。
 - [原始平台验收](acceptance-reports/2026-10-03-single-platform-subtitles/report.md)：修复前的0/3、4/5基线，原始文件和许可证据继续保留。
@@ -39,4 +44,4 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 
 `handover-phase1.md`、2026-09-20/21前后端旧实现计划、2026-09-22电影感计划与霓虹规范、pidanai分析报告保留设计过程。它们的任务列表、测试数量和配色描述代表当时状态，接手先读当前交接。
 
-本轮三个实现工作线及独立复审均已交付，沿用主agent模型与推理；旧两个完成会话的历史记录保留。测试服务已停止，主agent规则未修改。
+本轮采集、质量、浏览器与独立复审均沿用主agent模型和推理。新24次模型预算耗尽，失败原件和回退原因保留；旧两个完成会话停用。测试服务已停止，主agent规则未修改。

@@ -1,0 +1,427 @@
+{
+  "generatedAt": "2026-10-04T07:58:28.165Z",
+  "publicSource": "https://archive.org/details/youtube-6k-kbg3_Drc",
+  "license": "CC BY 3.0",
+  "appRoutesMocked": false,
+  "llmCalls": 0,
+  "checks": [
+    {
+      "name": "real registration at375px",
+      "pass": true
+    },
+    {
+      "name": "mobile-entry layout fits375px",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "cssFallback": true
+    },
+    {
+      "name": "public Archive real parse200",
+      "pass": true,
+      "metadata": {
+        "title": "Imagine the Consequences",
+        "thumbnail": "https://archive.org/download/youtube-6k-kbg3_Drc/youtube-6k-kbg3_Drc.thumbs/Imagine_the_Consequences-6k-kbg3_Drc_000073.jpg",
+        "duration": 75.74,
+        "duration_string": "1:15",
+        "uploader": "dslr@email.com",
+        "platform": "archive.org",
+        "view_count": null,
+        "upload_date": "20190406",
+        "description": "If you're a regular viewer please DON'T try to become a Patreon supporter for as little as $1 per video because they are of course free for me to make, and I don't even have a Patreon account. I have ",
+        "subtitles": [
+          "en",
+          "fr"
+        ],
+        "formats": [
+          {
+            "format_id": "best",
+            "label": "最佳",
+            "height": null,
+            "ext": "mp4",
+            "resolution": null,
+            "filesize": null,
+            "has_audio": true,
+            "vcodec": null,
+            "acodec": "merged",
+            "direct": false,
+            "note": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "available public format selected explicitly",
+      "pass": true,
+      "selectedLabel": "最佳",
+      "expectedHeight": null,
+      "resolutionKnownBeforeDownload": false
+    },
+    {
+      "name": "mobile-selecting layout fits375px",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "cssFallback": true
+    },
+    {
+      "name": "public download submission200",
+      "pass": true,
+      "job": {
+        "mode": "server",
+        "url": null,
+        "headers": {},
+        "job_id": "24f72b55-402e-4f9b-a086-3d5df789d2da"
+      }
+    },
+    {
+      "name": "public server download reaches actual browser saved file",
+      "pass": true,
+      "selectedLabel": "最佳",
+      "expectedHeight": null,
+      "fileAPI": "/api/file/24f72b55-402e-4f9b-a086-3d5df789d2da",
+      "bytes": 8854893,
+      "sha256": "cf2e47033a22c2d5dc50ab27e7f3da0a34b6fb22b95ed36155b7fba8d71dc4d9",
+      "duration": "75.741000",
+      "streams": [
+        {
+          "type": "video",
+          "codec": "h264",
+          "width": 854,
+          "height": 480
+        },
+        {
+          "type": "audio",
+          "codec": "opus"
+        }
+      ],
+      "suggestedFilename": "Imagine the Consequences.mkv"
+    },
+    {
+      "name": "mobile-done layout fits375px",
+      "pass": true,
+      "width": 375,
+      "documentWidth": 375,
+      "cssFallback": true
+    },
+    {
+      "name": "no AI API called in download acceptance",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "POST",
+      "path": "/api/download",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/api/job/24f72b55-402e-4f9b-a086-3d5df789d2da",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/api/job/24f72b55-402e-4f9b-a086-3d5df789d2da",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/api/job/24f72b55-402e-4f9b-a086-3d5df789d2da",
+      "status": 200
+    },
+    {
+      "scope": "public-mobile375",
+      "method": "GET",
+      "path": "/api/job/24f72b55-402e-4f9b-a086-3d5df789d2da",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-desktop",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-desktop",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-desktop",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-desktop",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-desktop",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-desktop",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-desktop",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-mobile375",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-mobile375",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-mobile375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-mobile375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-mobile375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-mobile375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "gpu-default-mobile375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "gpu": [
+    {
+      "label": "gpu-default-desktop",
+      "args": [],
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "waitedMilliseconds": 8045,
+      "cssFallback": false,
+      "canvas": {
+        "width": 1440,
+        "height": 900
+      },
+      "preloaderVisible": false,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "maxTextureSize": 16384,
+      "textures": [
+        {
+          "key": "/live2d/bai/白.16384/texture_00.png",
+          "valid": true,
+          "width": 16384,
+          "height": 16384,
+          "residentContexts": [
+            "1"
+          ]
+        }
+      ],
+      "live2dCore": true,
+      "hardwareConcurrency": 16,
+      "deviceMemory": 16,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
+      "gpuDevices": [
+        {
+          "vendorId": 4318,
+          "deviceId": 10465,
+          "subSysId": 347279427,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce RTX 4050 Laptop GPU",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.16.1692"
+        },
+        {
+          "vendorId": 4098,
+          "deviceId": 5567,
+          "subSysId": 347279427,
+          "revision": 193,
+          "vendorString": "",
+          "deviceString": "AMD Radeon 780M Graphics",
+          "driverVendor": "",
+          "driverVersion": "32.0.31035.1003"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.26100.9278"
+        }
+      ],
+      "gpuFeatureStatus": {
+        "2d_canvas": "enabled",
+        "direct_rendering_display_compositor": "disabled_off_ok",
+        "gpu_compositing": "enabled",
+        "multiple_raster_threads": "enabled_on",
+        "opengl": "enabled_on",
+        "rasterization": "enabled",
+        "raw_draw": "disabled_off_ok",
+        "skia_graphite": "disabled_off",
+        "trees_in_viz": "disabled_off",
+        "video_decode": "enabled",
+        "video_encode": "enabled",
+        "webgl": "enabled",
+        "webgpu": "enabled",
+        "webnn": "disabled_off"
+      },
+      "visualReviewRequired": true
+    },
+    {
+      "label": "gpu-default-mobile375",
+      "args": [],
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "waitedMilliseconds": 8074,
+      "cssFallback": false,
+      "canvas": {
+        "width": 375,
+        "height": 812
+      },
+      "preloaderVisible": false,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "maxTextureSize": 16384,
+      "textures": [
+        {
+          "key": "/live2d/bai/白.16384/texture_00.png",
+          "valid": true,
+          "width": 16384,
+          "height": 16384,
+          "residentContexts": [
+            "1"
+          ]
+        }
+      ],
+      "live2dCore": true,
+      "hardwareConcurrency": 16,
+      "deviceMemory": 16,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
+      "gpuDevices": [
+        {
+          "vendorId": 4318,
+          "deviceId": 10465,
+          "subSysId": 347279427,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce RTX 4050 Laptop GPU",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.16.1692"
+        },
+        {
+          "vendorId": 4098,
+          "deviceId": 5567,
+          "subSysId": 347279427,
+          "revision": 193,
+          "vendorString": "",
+          "deviceString": "AMD Radeon 780M Graphics",
+          "driverVendor": "",
+          "driverVersion": "32.0.31035.1003"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.26100.9278"
+        }
+      ],
+      "gpuFeatureStatus": {
+        "2d_canvas": "enabled",
+        "direct_rendering_display_compositor": "disabled_off_ok",
+        "gpu_compositing": "enabled",
+        "multiple_raster_threads": "enabled_on",
+        "opengl": "enabled_on",
+        "rasterization": "enabled",
+        "raw_draw": "disabled_off_ok",
+        "skia_graphite": "disabled_off",
+        "trees_in_viz": "disabled_off",
+        "video_decode": "enabled",
+        "video_encode": "enabled",
+        "webgl": "enabled",
+        "webgpu": "enabled",
+        "webnn": "disabled_off"
+      },
+      "visualReviewRequired": true
+    }
+  ],
+  "downloadPass": true,
+  "gpuRenderingPass": true
+}

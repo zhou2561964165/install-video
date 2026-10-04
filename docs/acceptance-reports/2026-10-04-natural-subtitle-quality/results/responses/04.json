@@ -1,0 +1,20 @@
+{
+  "ordinal": 4,
+  "phase": "before",
+  "sample": "en-long",
+  "stage": "section",
+  "content": "{\"summary\": \"本讲介绍计算与编程基础：区分语法、静态语义和程序意图，说明 Python 中一切皆对象、对象有类型，讲解表达式、运算符、变量赋值与重绑、print 输出，以及 shell 与编辑器的用途。核心强调计算机只执行明确指令，错误可能表现为语法错误、静态语义错误、意外结果、崩溃或不停止；下一讲将加入控制流。\", \"key_points\": [\"编程表达式需语法正确且静态语义正确；与自然语言不同，程序只有一种含义，但可能与程序员本意不同，从而导致错误。\", \"Python 能捕获语法错误；静态语义错误仅在执行到相关分支时被捕获；程序还可能给出意外结果、崩溃或不停止。\", \"Python 程序由定义和命令组成，表达式会被求值，命令让解释器执行操作；shell 适合测试简单命令，编辑器适合编写更复杂程序。\", \"Python 中一切皆对象，对象有类型并决定可用操作；对象分标量（如 int、float、bool、NoneType）和非标量（如列表），可用 type() 查类型并转换类型，float 转 int 会截断而非四舍五入。\", \"print 用于向控制台输出；在 shell 中直接输入表达式会显示值但不算打印，运行程序若不调用 print 则无输出。\", \"表达式由对象和运算符组成并求值为值；加减乘等运算中两个操作数均为 int 时结果为 int，至少一个为 float 时结果为 float，除法总是 float，% 为余数，** 为幂，优先级可用括号调整。\", \"赋值 = 将右侧表达式的值绑定到左侧变量名；变量可重绑，旧值无引用时会被垃圾回收，且未重新计算时其他变量不会自动更新，如 radius 改变后 area 不变。\"]}",
+  "usage": {
+    "prompt_tokens": 3941,
+    "completion_tokens": 1744,
+    "total_tokens": 5685,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1345
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 3941
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "ports": [
+    8062,
+    5187
+  ],
+  "processes_stopped": true,
+  "llm_configured": false,
+  "temporary_work": ".planning\\2026-10-04-public-mobile-gpu",
+  "proxy_from_system": true
+}

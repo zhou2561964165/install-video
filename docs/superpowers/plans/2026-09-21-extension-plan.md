@@ -65,7 +65,7 @@ v1 通过「接口隔离 + 配置外置 + 模块边界」为后续扩展留了�
 
 > 实际实现：`ytdlp_service.py` 只读暴露字幕轨道；`subtitle_service.py` 负责获取与 VTT/SRT/JSON3/TTML 文本化；`llm_service.py` 封装可配置 OpenAI-compatible 接口；路由为用户显式触发的同步 `def`，由 FastAPI 线程池执行。前端用独立 `useVideoInsights`，不修改下载 reducer。
 
-用户方向已定：AI理解内容优先，允许去掉重复片段；长文分段归纳再合并。先用DeepSeek-V4.1-Flash（`deepseek-flash`），后续兼容供应商通过配置切换。96/65、101/66、121/66及旧Archive结果分别属于早期轮次；本轮Bili适配/浏览器闭环/总结质量增量后169项后端、66项前端及构建通过，最新证据见[文档索引](../../README.md)。
+用户方向已定：AI理解内容优先，允许去掉重复片段；长文分段归纳再合并。先用DeepSeek-V4.1-Flash（`deepseek-flash`），后续兼容供应商通过配置切换。96/65、101/66、121/66及旧Archive结果属于早期轮次；此前Bili/浏览器/人工场景增量169/66，最新自然字幕与输出控制/数量校验增量184项后端、66项前端及构建通过。24次模型实测已停止，长要点组织仍未达标，下一项候选是严格结构化输出和重点取舍，不能将候选作为自动授权。证据见[文档索引](../../README.md)。
 
 **建议实现**
 - 新增 `services/llm_service.py` 封装 LLM 调用（provider/模型可配置），独立于下载。✅

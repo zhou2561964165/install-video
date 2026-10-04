@@ -29,6 +29,8 @@ UI 改动先使用 `ui-ux-pro-max` + `design-system`，skill 优先于计划；�
 
 2026-10-04增量：在既有注册式接口中独立加入Bilibili公开view/dm字幕适配；同时适配本机yt-dlp返回的inline SRT与AI语言标记，补充原生正文失败后的单次通用恢复。真实匿名正文1973字符与访问限制分开留证，见[平台扩展](acceptance-reports/2026-10-04-platform-expansion/report.md)。完整[浏览器验收](acceptance-reports/2026-10-04-browser-e2e/report.md)和[总结质量评测](acceptance-reports/2026-10-04-summary-quality/report.md)另列证据。实现 `e7c29be`，全量169/66与构建通过。
 
+后续输出控制/数量修复 `05753e7`，最新184/66与构建通过。三份MIT OCW自然字幕经独立事实冻结，24次POST保留格式、推理耗尽和数量超限失败，摘要DeepSeek默认JSONmode/disabled且可覆盖；最终选定bounded返回5/6/7点。长要点组织仍未改善，中篇频率限定和长篇范围泛化仍有风险，不宣称完整准确或去冗余成功；见[自然字幕报告](acceptance-reports/2026-10-04-natural-subtitle-quality/report.md)。[公网移动/GPU报告](acceptance-reports/2026-10-04-public-mobile-gpu/report.md)另补一条真实下载保存和当前RTX4050角色纹理证据，不复制参考代码或修改模型资产。
+
 > 本节下列96/65及3/3数据是本报告对应的上一轮记录。后续101/66回归、三平台字幕样本以及有限TLS重试后的121/66复验，见[平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md)；TLS重试实现提交于 `96b0b59`。
 
 - 后端96项、前端65项通过，生产构建通过。

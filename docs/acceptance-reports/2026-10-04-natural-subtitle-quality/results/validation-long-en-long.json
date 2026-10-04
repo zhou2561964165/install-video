@@ -1,0 +1,14 @@
+{
+  "id": "en-long",
+  "phase": "validation-long",
+  "source_sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7",
+  "input_chars": 34894,
+  "cleaned_chars": 34658,
+  "sections": 2,
+  "output_language": "zh-CN",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "proxy_used": true,
+  "error_type": "llm_incomplete_response",
+  "elapsed_seconds": 39.88
+}

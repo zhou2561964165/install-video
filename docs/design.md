@@ -210,6 +210,18 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 
 浏览器验收使用隔离账户/数据库和可控外部HTTP服务；应用API及其真实请求编排参与运行。本机LLM协议夹具用于稳定验证页面行为，实际配置模型用于独立内容质量评测；两类报告提供各自的数据与限制。平台、浏览器和LLM实现工作线分配不同文件，主agent集中整合与复审。
 
+### 12.3 自然字幕评测与摘要输出控制
+
+自然语料和事实清单由独立采集agent在模型输出前冻结，模型实现与独立复审分工，源码、提示词、模型、配置和请求台账可核对。原始字幕清洗保持来源与许可，本轮MIT OCW语料单独遵守CC BY-NC-SA4.0，不并入无约束软件许可。
+
+本轮真实HTTP200出现两类失败：正文JSON漏闭合符号；合并请求4096输出token全部用于推理，finish_reason=length而content为空。仍按`llm_invalid_response`或`llm_incomplete_response`拒绝，不增加自动POST重试或修复残缺JSON。
+
+`llm_service.py`在摘要请求内部按配置生成输出选项：`LLM_SUMMARY_RESPONSE_FORMAT=auto|text|json_object`与`LLM_SUMMARY_THINKING_MODE=auto|enabled|disabled`。auto读取供应商能力表，DeepSeek摘要使用json_object与disabled；其他供应商的auto不加专有字段，翻译不继承摘要选项。明确覆盖由使用者依据供应商协议选择。配置启动时验证，接口及分段上限不变，两个控制均作用于分段与合并。模型内容仍作为不可信结构经原解析器校验；JSON模式不保证非空或完整，见[官方说明](https://api-docs.deepseek.com/guides/json_mode/)。
+
+JSON模式也不保证要点数量。实测完整JSON包含12条要点，原解析器只验证类型与非空；本轮补齐1–7条数量约束，超过上限返回`llm_invalid_response`，不截断删除尾部。最终合并请求明确按最多7个主题归纳，原因、条件和具体例子归入相关主题；字段与数量验证都由服务承担，不能仅相信提示词。
+
+兼容模式与原默认推理模式分别留证；它同时改变了提示词和输出控制，不能将其结果全部归因于提示词。公网375px下载、默认GPU纹理驻留与角色截图各自验证；Windows移动视口与真手机兼容范围分开，详情见[公网移动/GPU报告](acceptance-reports/2026-10-04-public-mobile-gpu/report.md)。
+
 ## 13. 第二阶段：前端视觉表现层（fx）架构
 
 > 本节为历史方案，所列 `Subtitle` / `Frame` / `TransitionOverlay` / `Cursor` / `PathProgress` 不代表当前组件已实现。当前实际文件见§3、交接文件地图与v3计划；本轮不扩展这条视觉演进线。
