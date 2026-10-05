@@ -1,0 +1,29 @@
+{
+  "ordinal": 18,
+  "phase": "natural-tool",
+  "sample": "en-long",
+  "stage": "section",
+  "content": "",
+  "finish_reason": "tool_calls",
+  "tool_calls": [
+    {
+      "index": 0,
+      "id": "call_00_uB6q2dXLjFhy4aH7Rsyh1214",
+      "type": "function",
+      "function": {
+        "name": "emit_video_summary",
+        "arguments": "{\"summary\": \"本讲介绍计算与Python基础：语法与静态语义正确性、程序只有一种含义、对象与类型、表达式与运算符、赋值与变量绑定，以及\\\"计算机只做你让它做的事\\\"这一核心结论。\", \"point_1\": \"语法正确指符合\\\"操作数-运算符-操作数\\\"结构；静态语义正确指含义合理，如给数字加单词虽语法正确但无意义。Python能捕获语法错误，静态语义错误仅当程序执行到该分支时才被捕获。\", \"point_2\": \"英语句子可有多种含义（如\\\"flying planes can be dangerous\\\"），但程序只有一种含义；问题在于这含义可能不是程序员的本意，导致结果不符预期、程序崩溃或不停机，这属于调试问题。\", \"point_3\": \"Python中一切皆对象，每个对象都有类型，类型决定可做的操作。对象分两类：标量对象不可再分（如数字5），非标量对象有内部结构（如列表[5,6,7,8]）。\", \"point_4\": \"Python标量类型有四种：int（整数）、float（实数/带小数）、bool（仅True和False，首字母大写）、NoneType（仅None，表示类型缺失）。可用type()查类型，用float()、int()等转换；转int只截断不舍入。\", \"point_5\": \"print用于向用户输出；在shell中直接输入\\\"3+2\\\"只显示值供程序员查看，不算打印，在编辑器中运行则什么都不输出。表达式由对象与运算符组成并求值为一个值。\", \"point_6\": \"int与float运算中，前三种运算若两操作数均为int则结果为int，至少一个为float则结果为float；除法结果始终为float。%取余，**为幂运算，优先级同数学，可用括号改变。\", \"point_7\": \"赋值用等号把右侧的值绑定到左侧变量名，值存于内存；与数学不同，左侧只能是变量，右侧必须是求值为值的表达式。重绑定（如radius=radius+1）后旧值失去引用，可能被垃圾回收；area不会自动重算，因为计算机只做你告诉它的事。\"}"
+      }
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 4763,
+    "completion_tokens": 573,
+    "total_tokens": 5336,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 3995
+  }
+}

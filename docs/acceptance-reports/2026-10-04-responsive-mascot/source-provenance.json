@@ -1,0 +1,61 @@
+{
+  "historical_method": "Retrospective exact inverse of unique source edits recorded in this session; not hashes captured during old browser runs",
+  "reconstruction_limit": "Historical JSON was not source-instrumented; these hashes identify reconstructed source variants, not independent proof of which bytes executed",
+  "final_method": "Read current bytes and compare to SHA256 captured at final browser run startup",
+  "final_sha256": {
+    "App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+    "components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+    "components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+    "pixi/mascot.js": "3c9c25add0dad27674189c747e83f35a470e0708ab7a55383a241109d278b6f1",
+    "pixi/mascotConfig.js": "3a39b72a0452f69562ed6a1982b6261b35ad943dd586060235f9224b21a355ab",
+    "pixi/stage.js": "e741269a0f38be21d6f44b0b282a7502e8ac6788d06f46dd6517c642cfa1917f",
+    "styles/global.css": "29ddf969d8584e69fe143fbba17f2fc540f816581379945667dc9076b5cfe71c"
+  },
+  "reconstructed_sha256": {
+    "main-matrix": {
+      "App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+      "components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+      "components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+      "pixi/mascot.js": "9aee0ca0b7f90bee144e3a6db42448fe70601ca48bb5accb0afdaccb29a87596",
+      "pixi/mascotConfig.js": "55c9d532076ecd8f44ec75ff58b6486ec8b3aef1036b998ea78bd1b2b9e5c6f1",
+      "pixi/stage.js": "90a9f9b0e8951788a2fc1803dc37ef0362ccf40c302c7405e447c47be1a0278f",
+      "styles/global.css": "0557121769626880edf163ebeb1adc84e8373aa147b9a7d31dfe9ef8b0bcd9a1"
+    },
+    "native-focus-before": {
+      "App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+      "components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+      "components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+      "pixi/mascot.js": "9aee0ca0b7f90bee144e3a6db42448fe70601ca48bb5accb0afdaccb29a87596",
+      "pixi/mascotConfig.js": "55c9d532076ecd8f44ec75ff58b6486ec8b3aef1036b998ea78bd1b2b9e5c6f1",
+      "pixi/stage.js": "90a9f9b0e8951788a2fc1803dc37ef0362ccf40c302c7405e447c47be1a0278f",
+      "styles/global.css": "0557121769626880edf163ebeb1adc84e8373aa147b9a7d31dfe9ef8b0bcd9a1"
+    },
+    "native-focus-after": {
+      "App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+      "components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+      "components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+      "pixi/mascot.js": "9aee0ca0b7f90bee144e3a6db42448fe70601ca48bb5accb0afdaccb29a87596",
+      "pixi/mascotConfig.js": "55c9d532076ecd8f44ec75ff58b6486ec8b3aef1036b998ea78bd1b2b9e5c6f1",
+      "pixi/stage.js": "90a9f9b0e8951788a2fc1803dc37ef0362ccf40c302c7405e447c47be1a0278f",
+      "styles/global.css": "c96cdeebc621995732c77ce2cafa80015ca91a6d613a4e68f804bb5fe1b558f8"
+    },
+    "gesture-cancel-before": {
+      "App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+      "components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+      "components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+      "pixi/mascot.js": "9aee0ca0b7f90bee144e3a6db42448fe70601ca48bb5accb0afdaccb29a87596",
+      "pixi/mascotConfig.js": "55c9d532076ecd8f44ec75ff58b6486ec8b3aef1036b998ea78bd1b2b9e5c6f1",
+      "pixi/stage.js": "90a9f9b0e8951788a2fc1803dc37ef0362ccf40c302c7405e447c47be1a0278f",
+      "styles/global.css": "c96cdeebc621995732c77ce2cafa80015ca91a6d613a4e68f804bb5fe1b558f8"
+    },
+    "gesture-cancel-after-before-native": {
+      "App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+      "components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+      "components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+      "pixi/mascot.js": "3c9c25add0dad27674189c747e83f35a470e0708ab7a55383a241109d278b6f1",
+      "pixi/mascotConfig.js": "55c9d532076ecd8f44ec75ff58b6486ec8b3aef1036b998ea78bd1b2b9e5c6f1",
+      "pixi/stage.js": "90a9f9b0e8951788a2fc1803dc37ef0362ccf40c302c7405e447c47be1a0278f",
+      "styles/global.css": "c96cdeebc621995732c77ce2cafa80015ca91a6d613a4e68f804bb5fe1b558f8"
+    }
+  }
+}

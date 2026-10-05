@@ -1,0 +1,624 @@
+{
+  "generatedAt": "2026-10-04T14:24:38.123Z",
+  "httpMocks": false,
+  "appStateWrites": false,
+  "llmCalls": 0,
+  "physicalDeviceDebugChannel": "adb not discovered on PATH; physical phone availability unknown",
+  "checks": [
+    {
+      "name": "real touchStart→touchCancel without movement does not open menu",
+      "pass": true,
+      "cancelledOpenedMenu": false,
+      "touchStart": {
+        "x": 187.5,
+        "y": 577.3359375
+      },
+      "movement": false
+    },
+    {
+      "name": "real ordinary touch tap still opens menu after cancellation fix",
+      "pass": true
+    },
+    {
+      "name": "real horizontal touch drag moves model >=3px, stays in region and does not scroll document",
+      "pass": true,
+      "beforeX": 187.5,
+      "afterX": 126.96291666666667,
+      "movement": 60.53708333333333,
+      "scrollBefore": 178,
+      "scrollAfter": 178,
+      "menuOpened": false
+    },
+    {
+      "name": "real vertical finger gesture scrolls document and does not open menu",
+      "pass": true,
+      "scrollBefore": 178,
+      "scrollAfter": 363,
+      "scrollDistance": 185,
+      "verticalOpenedMenu": false,
+      "touchStart": {
+        "x": 126.96291666666666,
+        "y": 580.3359375
+      },
+      "canvasTouchAction": {
+        "inline": "pan-y pinch-zoom",
+        "computed": "pan-y pinch-zoom"
+      }
+    },
+    {
+      "name": "no AI API, pageerror or unexpected console warning/error",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "captures": [],
+  "sourceSha256": {
+    "App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+    "components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+    "components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+    "pixi/mascot.js": "3c9c25add0dad27674189c747e83f35a470e0708ab7a55383a241109d278b6f1",
+    "pixi/mascotConfig.js": "3a39b72a0452f69562ed6a1982b6261b35ad943dd586060235f9224b21a355ab",
+    "pixi/stage.js": "e741269a0f38be21d6f44b0b282a7502e8ac6788d06f46dd6517c642cfa1917f",
+    "styles/global.css": "29ddf969d8584e69fe143fbba17f2fc540f816581379945667dc9076b5cfe71c"
+  },
+  "proxyFromSystem": true,
+  "gpuDevices": [
+    {
+      "vendorId": 4318,
+      "deviceId": 10465,
+      "subSysId": 347279427,
+      "revision": 161,
+      "vendorString": "",
+      "deviceString": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "driverVendor": "NVIDIA",
+      "driverVersion": "32.0.16.1692"
+    },
+    {
+      "vendorId": 4098,
+      "deviceId": 5567,
+      "subSysId": 347279427,
+      "revision": 193,
+      "vendorString": "",
+      "deviceString": "AMD Radeon 780M Graphics",
+      "driverVendor": "",
+      "driverVersion": "32.0.31035.1003"
+    },
+    {
+      "vendorId": 5140,
+      "deviceId": 140,
+      "subSysId": 0,
+      "revision": 0,
+      "vendorString": "",
+      "deviceString": "Microsoft Basic Render Driver",
+      "driverVendor": "",
+      "driverVersion": "10.0.26100.9278"
+    }
+  ],
+  "touchEvents": [
+    {
+      "type": "pointerdown",
+      "clientX": 187.5,
+      "clientY": 577.3359375,
+      "pointerId": 2,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 180,
+      "time": 11174.20000000298
+    },
+    {
+      "type": "touchstart",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 187.5,
+      "touchY": 577.3359375,
+      "scrollY": 180,
+      "time": 11175.89999999851
+    },
+    {
+      "type": "pointercancel",
+      "clientX": 187.5,
+      "clientY": 577.3359375,
+      "pointerId": 2,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 180,
+      "time": 11202
+    },
+    {
+      "type": "touchcancel",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 180,
+      "time": 11202.60000000149
+    },
+    {
+      "type": "pointerdown",
+      "clientX": 187.5,
+      "clientY": 577.3359375,
+      "pointerId": 3,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 180,
+      "time": 11495.70000000298
+    },
+    {
+      "type": "touchstart",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 187.5,
+      "touchY": 577.3359375,
+      "scrollY": 180,
+      "time": 11496.10000000149
+    },
+    {
+      "type": "pointerup",
+      "clientX": 187.5,
+      "clientY": 577.3359375,
+      "pointerId": 3,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 180,
+      "time": 11496.20000000298
+    },
+    {
+      "type": "touchend",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 180,
+      "time": 11501.60000000149
+    },
+    {
+      "type": "scroll",
+      "defaultPrevented": false,
+      "scrollY": 178,
+      "time": 11697
+    },
+    {
+      "type": "pointerdown",
+      "clientX": 187.5,
+      "clientY": 579.3359375,
+      "pointerId": 4,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 12099.20000000298
+    },
+    {
+      "type": "touchstart",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 187.5,
+      "touchY": 579.3359375,
+      "scrollY": 178,
+      "time": 12099.79999999702
+    },
+    {
+      "type": "pointermove",
+      "clientX": 147.5,
+      "clientY": 579.3359375,
+      "pointerId": 4,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 12125
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 147.5,
+      "touchY": 579.3359375,
+      "scrollY": 178,
+      "time": 12125.5
+    },
+    {
+      "type": "pointermove",
+      "clientX": 107.5,
+      "clientY": 579.3359375,
+      "pointerId": 4,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 12337.89999999851
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 107.5,
+      "touchY": 579.3359375,
+      "scrollY": 178,
+      "time": 12338.29999999702
+    },
+    {
+      "type": "pointermove",
+      "clientX": 67.5,
+      "clientY": 579.3359375,
+      "pointerId": 4,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 12550
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 67.5,
+      "touchY": 579.3359375,
+      "scrollY": 178,
+      "time": 12551
+    },
+    {
+      "type": "pointermove",
+      "clientX": 27.5,
+      "clientY": 579.3359375,
+      "pointerId": 4,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 12777.20000000298
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 27.5,
+      "touchY": 579.3359375,
+      "scrollY": 178,
+      "time": 12777.79999999702
+    },
+    {
+      "type": "pointerup",
+      "clientX": 27.5,
+      "clientY": 579.3359375,
+      "pointerId": 4,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 12990
+    },
+    {
+      "type": "touchend",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 12990.60000000149
+    },
+    {
+      "type": "pointerdown",
+      "clientX": 126.9629135131836,
+      "clientY": 580.3359375,
+      "pointerId": 5,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 13329.79999999702
+    },
+    {
+      "type": "touchstart",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 126.9629135131836,
+      "touchY": 580.3359375,
+      "scrollY": 178,
+      "time": 13330.20000000298
+    },
+    {
+      "type": "pointermove",
+      "clientX": 126.9629135131836,
+      "clientY": 547.0026245117188,
+      "pointerId": 5,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 13354.29999999702
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 126.9629135131836,
+      "touchY": 547.0026245117188,
+      "scrollY": 178,
+      "time": 13354.70000000298
+    },
+    {
+      "type": "pointercancel",
+      "clientX": 0,
+      "clientY": 0,
+      "pointerId": 5,
+      "pointerType": "touch",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 178,
+      "time": 13362.39999999851
+    },
+    {
+      "type": "scroll",
+      "defaultPrevented": false,
+      "scrollY": 196,
+      "time": 13363
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 126.9629135131836,
+      "touchY": 513.6692504882812,
+      "scrollY": 230,
+      "time": 13445
+    },
+    {
+      "type": "scroll",
+      "defaultPrevented": false,
+      "scrollY": 230,
+      "time": 13445.29999999702
+    },
+    {
+      "type": "scroll",
+      "defaultPrevented": false,
+      "scrollY": 263,
+      "time": 13512.29999999702
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 126.9629135131836,
+      "touchY": 447.0025634765625,
+      "scrollY": 263,
+      "time": 13582.79999999702
+    },
+    {
+      "type": "scroll",
+      "defaultPrevented": false,
+      "scrollY": 296,
+      "time": 13588.39999999851
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 126.9629135131836,
+      "touchY": 413.6693115234375,
+      "scrollY": 330,
+      "time": 13667.10000000149
+    },
+    {
+      "type": "scroll",
+      "defaultPrevented": false,
+      "scrollY": 330,
+      "time": 13667.39999999851
+    },
+    {
+      "type": "scroll",
+      "defaultPrevented": false,
+      "scrollY": 363,
+      "time": 13743.5
+    },
+    {
+      "type": "touchmove",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "touchX": 126.9629135131836,
+      "touchY": 380.3359375,
+      "scrollY": 363,
+      "time": 13809.79999999702
+    },
+    {
+      "type": "touchend",
+      "defaultPrevented": false,
+      "target": "CANVAS",
+      "scrollY": 363,
+      "time": 13810.10000000149
+    }
+  ],
+  "cancelProbe": {
+    "cancelledOpenedMenu": false,
+    "touchStart": {
+      "x": 187.5,
+      "y": 577.3359375
+    },
+    "movement": false
+  },
+  "horizontalBefore": {
+    "state": {
+      "screen": {
+        "width": 375,
+        "height": 812
+      },
+      "model": {
+        "visible": true,
+        "x": 187.5,
+        "y": 579.3359375,
+        "scale": 0.047310520833333335,
+        "bounds": {
+          "x": 92.87895833333333,
+          "y": 437.40437499999996,
+          "width": 189.2420833333333,
+          "height": 283.86312499999997
+        },
+        "local": {
+          "width": 4000,
+          "height": 6000
+        }
+      }
+    },
+    "geometry": {
+      "width": 375,
+      "height": 812,
+      "documentWidth": 375,
+      "scrollY": 178,
+      "rects": {
+        ".landing-hero__content": {
+          "x": 20,
+          "y": -38,
+          "width": 335,
+          "height": 435.0625,
+          "right": 355,
+          "bottom": 397.0625
+        },
+        ".landing-examples": {
+          "x": 20,
+          "y": 301.0625,
+          "width": 335,
+          "height": 96,
+          "right": 355,
+          "bottom": 397.0625
+        },
+        ".landing-form": {
+          "x": 43.5,
+          "y": 185.0625,
+          "width": 288,
+          "height": 96,
+          "right": 331.5,
+          "bottom": 281.0625
+        },
+        "[data-mascot-region]": {
+          "x": 20,
+          "y": 425.0625,
+          "width": 335,
+          "height": 308.546875,
+          "right": 355,
+          "bottom": 733.609375
+        },
+        ".mascot-menu-trigger": {
+          "x": 253,
+          "y": 733.609375,
+          "width": 102,
+          "height": 44,
+          "right": 355,
+          "bottom": 777.609375
+        },
+        ".auth-bar": {
+          "x": 12,
+          "y": 16,
+          "width": 351,
+          "height": 42.1875,
+          "right": 363,
+          "bottom": 58.1875
+        },
+        ".theme-switch": {
+          "x": 205,
+          "y": 88,
+          "width": 158,
+          "height": 36.1875,
+          "right": 363,
+          "bottom": 124.1875
+        }
+      },
+      "chipHeights": [
+        44,
+        44,
+        44
+      ]
+    }
+  },
+  "horizontalTrace": [
+    {
+      "step": 1,
+      "modelX": 147.5,
+      "modelY": 579.3359375,
+      "scrollY": 178
+    },
+    {
+      "step": 2,
+      "modelX": 126.96291666666667,
+      "modelY": 579.3359375,
+      "scrollY": 178
+    },
+    {
+      "step": 3,
+      "modelX": 187.5,
+      "modelY": 580.3359375,
+      "scrollY": 178
+    },
+    {
+      "step": 4,
+      "modelX": 126.96291666666667,
+      "modelY": 580.3359375,
+      "scrollY": 178
+    }
+  ],
+  "horizontalProbe": {
+    "beforeX": 187.5,
+    "afterX": 126.96291666666667,
+    "movement": 60.53708333333333,
+    "scrollBefore": 178,
+    "scrollAfter": 178,
+    "menuOpened": false
+  },
+  "verticalProbe": {
+    "scrollBefore": 178,
+    "scrollAfter": 363,
+    "scrollDistance": 185,
+    "verticalOpenedMenu": false,
+    "touchStart": {
+      "x": 126.96291666666666,
+      "y": 580.3359375
+    },
+    "canvasTouchAction": {
+      "inline": "pan-y pinch-zoom",
+      "computed": "pan-y pinch-zoom"
+    }
+  },
+  "pass": true
+}

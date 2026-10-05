@@ -1,0 +1,395 @@
+{
+  "generatedAt": "2026-10-04T13:19:43.755Z",
+  "httpMocks": false,
+  "appStateWrites": false,
+  "llmCalls": 0,
+  "physicalDeviceDebugChannel": "adb not discovered on PATH; physical phone availability unknown",
+  "checks": [
+    {
+      "name": "gpu-320 real registration and model ready",
+      "pass": true
+    },
+    {
+      "name": "gpu-320 example chip accessible and fills input",
+      "pass": true
+    },
+    {
+      "name": "gpu-320 dedicated region follows controls and chips >=44px",
+      "pass": true,
+      "width": 320,
+      "height": 568,
+      "documentWidth": 320,
+      "scrollY": 37,
+      "rects": {
+        ".landing-hero__content": {
+          "x": 20,
+          "y": 103,
+          "width": 280,
+          "height": 464.953125,
+          "right": 300,
+          "bottom": 567.953125
+        },
+        ".landing-examples": {
+          "x": 20,
+          "y": 471.953125,
+          "width": 280,
+          "height": 96,
+          "right": 300,
+          "bottom": 567.953125
+        },
+        ".landing-form": {
+          "x": 20,
+          "y": 354.953125,
+          "width": 280,
+          "height": 97,
+          "right": 300,
+          "bottom": 451.953125
+        },
+        "[data-mascot-region]": {
+          "x": 20,
+          "y": 595.953125,
+          "width": 280,
+          "height": 240,
+          "right": 300,
+          "bottom": 835.953125
+        },
+        ".mascot-menu-trigger": {
+          "x": 198,
+          "y": 835.953125,
+          "width": 102,
+          "height": 44,
+          "right": 300,
+          "bottom": 879.953125
+        },
+        ".auth-bar": {
+          "x": 12,
+          "y": 16,
+          "width": 296,
+          "height": 42.1875,
+          "right": 308,
+          "bottom": 58.1875
+        },
+        ".theme-switch": {
+          "x": 150,
+          "y": 88,
+          "width": 158,
+          "height": 36.1875,
+          "right": 308,
+          "bottom": 124.1875
+        }
+      },
+      "chipHeights": [
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "name": "gpu-320 real RTX4050 16K texture resident",
+      "pass": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "maxTextureSize": 16384,
+      "textures": [
+        {
+          "key": "/live2d/bai/白.16384/texture_00.png",
+          "width": 16384,
+          "height": 16384,
+          "valid": true,
+          "residentContexts": [
+            "1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gpu-320 real model entirely within allocated area",
+      "pass": true,
+      "bounds": {
+        "x": 86.4,
+        "y": 173.55312500000002,
+        "width": 147.2,
+        "height": 220.79999999999995
+      },
+      "region": {
+        "x": 20,
+        "y": 163.953125,
+        "width": 280,
+        "height": 240,
+        "right": 300,
+        "bottom": 403.953125
+      }
+    },
+    {
+      "name": "gpu-320 actual model tap opens menu",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "captures": [
+    {
+      "label": "gpu-320-entry-top",
+      "geometry": {
+        "width": 320,
+        "height": 568,
+        "documentWidth": 320,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": 140,
+            "width": 280,
+            "height": 464.953125,
+            "right": 300,
+            "bottom": 604.953125
+          },
+          ".landing-examples": {
+            "x": 20,
+            "y": 508.953125,
+            "width": 280,
+            "height": 96,
+            "right": 300,
+            "bottom": 604.953125
+          },
+          ".landing-form": {
+            "x": 20,
+            "y": 391.953125,
+            "width": 280,
+            "height": 97,
+            "right": 300,
+            "bottom": 488.953125
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 632.953125,
+            "width": 280,
+            "height": 240,
+            "right": 300,
+            "bottom": 872.953125
+          },
+          ".mascot-menu-trigger": {
+            "x": 198,
+            "y": 872.953125,
+            "width": 102,
+            "height": 44,
+            "right": 300,
+            "bottom": 916.953125
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 296,
+            "height": 42.1875,
+            "right": 308,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 150,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 308,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 320,
+          "height": 568
+        },
+        "model": {
+          "visible": false,
+          "x": 160,
+          "y": 752.953125,
+          "scale": 0.0368,
+          "bounds": {
+            "x": 86.4,
+            "y": 642.553125,
+            "width": 147.2,
+            "height": 220.79999999999995
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-320-whole-character",
+      "geometry": {
+        "width": 320,
+        "height": 568,
+        "documentWidth": 320,
+        "scrollY": 469,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": -329,
+            "width": 280,
+            "height": 464.953125,
+            "right": 300,
+            "bottom": 135.953125
+          },
+          ".landing-examples": {
+            "x": 20,
+            "y": 39.953125,
+            "width": 280,
+            "height": 96,
+            "right": 300,
+            "bottom": 135.953125
+          },
+          ".landing-form": {
+            "x": 20,
+            "y": -77.046875,
+            "width": 280,
+            "height": 97,
+            "right": 300,
+            "bottom": 19.953125
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 163.953125,
+            "width": 280,
+            "height": 240,
+            "right": 300,
+            "bottom": 403.953125
+          },
+          ".mascot-menu-trigger": {
+            "x": 198,
+            "y": 403.953125,
+            "width": 102,
+            "height": 44,
+            "right": 300,
+            "bottom": 447.953125
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 296,
+            "height": 42.1875,
+            "right": 308,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 150,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 308,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 320,
+          "height": 568
+        },
+        "model": {
+          "visible": true,
+          "x": 160,
+          "y": 283.953125,
+          "scale": 0.0368,
+          "bounds": {
+            "x": 86.4,
+            "y": 173.55312500000002,
+            "width": 147.2,
+            "height": 220.79999999999995
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    }
+  ],
+  "gpuDevices": [
+    {
+      "vendorId": 4318,
+      "deviceId": 10465,
+      "subSysId": 347279427,
+      "revision": 161,
+      "vendorString": "",
+      "deviceString": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "driverVendor": "NVIDIA",
+      "driverVersion": "32.0.16.1692"
+    },
+    {
+      "vendorId": 4098,
+      "deviceId": 5567,
+      "subSysId": 347279427,
+      "revision": 193,
+      "vendorString": "",
+      "deviceString": "AMD Radeon 780M Graphics",
+      "driverVendor": "",
+      "driverVersion": "32.0.31035.1003"
+    },
+    {
+      "vendorId": 5140,
+      "deviceId": 140,
+      "subSysId": 0,
+      "revision": 0,
+      "vendorString": "",
+      "deviceString": "Microsoft Basic Render Driver",
+      "driverVendor": "",
+      "driverVersion": "10.0.26100.9278"
+    }
+  ],
+  "failure": "TimeoutError: locator.getAttribute: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '短发', exact: true })\u001b[22m\n"
+}

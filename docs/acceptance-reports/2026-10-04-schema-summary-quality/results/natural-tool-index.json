@@ -1,0 +1,20 @@
+{
+  "completed_utc": "2026-10-04T13:46:33.277843+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "natural-tool-zh-short.json",
+      "sha256": "4d3703270cfc385cf3f75f339b163881a109dad1c71af51db425f041bb32c3f4"
+    },
+    {
+      "id": "en-medium",
+      "file": "natural-tool-en-medium.json",
+      "sha256": "3ca7cf7f3c3a3bc1e158b047449f84537b097f492747b89dfd7f7f0533a75e56"
+    },
+    {
+      "id": "en-long",
+      "file": "natural-tool-en-long.json",
+      "sha256": "11b96f2257e882ec24534747ddb3c76ddffe73e058b6337c598bfa27756b6510"
+    }
+  ]
+}

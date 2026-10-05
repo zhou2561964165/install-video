@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "frozen_before_new_outputs": true,
+  "source_manifest": "../2026-10-04-natural-subtitle-quality/corpus/manifest.json",
+  "baseline_commit": "05753e7fd828a82e1ad2cec0112c15d639c7050c",
+  "baseline_phase": "bounded",
+  "essential_facts": "All 14 original essential expectations assessed semantically across summary and key_points; optional facts scored only if present. Keywords alone never establish correctness.",
+  "specific_accuracy": [
+    "Preserve numeric quantities if included: around a billion calculations, 45 minutes and five minutes; storage is not conflated with working memory.",
+    "Usually after class must not become always or every class.",
+    "Instructor opinions about culture or teaching should stay attributed, rather than become universal factual claims.",
+    "Concrete scalar radius/area rebinding must not be presented as a universal rule about every dependent object or calculation.",
+    "Algorithm termination conditions and near-tail already-computed-area consequence must remain."
+  ],
+  "organization": {
+    "baseline_long_catch_all_characters": 426,
+    "target": "Replace catch-all packing with distinct compact thematic points, without losing any essential fact, condition, or near-tail consequence.",
+    "length_is_not_quality": true,
+    "duplicates": "A repeated theme with a new relevant condition or consequence is not pure semantic duplication. Count repetition only when the same proposition adds no new relevant fact."
+  },
+  "schema": "Separate transport HTTP success, valid JSON, complete fields, point-count bounds, and string-length bounds. Conflicting empty and excessive requests test opposite boundaries; any unsupported response stops that phase without paid fallback.",
+  "limitations": "Three samples from two MIT courses, one inference per profile, agent factual review, no independent external human ratings, no universal accuracy or stability claim.",
+  "licensing": "MIT OCW source captions and derived summaries/review retain attribution and CC BY-NC-SA 4.0; noncommercial evaluation, ShareAlike; scripts and product code are not relicensed."
+}

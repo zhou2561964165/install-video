@@ -1,0 +1,82 @@
+{
+  "model": "deepseek-flash",
+  "temperature": 0.2,
+  "messages": [
+    {
+      "role": "system",
+      "content": "Follow the user's output request exactly. Return a JSON object containing summary and key_points only. This is a self-authored schema capability probe, not source-grounded summary evaluation."
+    },
+    {
+      "role": "user",
+      "content": "Output language: zh-CN\nThis source says there are no important conclusions. For this test, return an empty summary string and an empty key_points array. Do not provide placeholder text or any point."
+    }
+  ],
+  "max_tokens": 4096,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "emit_video_summary",
+        "strict": true,
+        "description": "Return a source-grounded summary. Use up to seven thematic points; unused trailing point slots must be empty strings.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string",
+              "pattern": "^\\S[\\s\\S]*$"
+            },
+            "point_1": {
+              "type": "string",
+              "pattern": "^\\S[\\s\\S]{0,239}$"
+            },
+            "point_2": {
+              "type": "string",
+              "pattern": "^(\\S[\\s\\S]{0,239})?$"
+            },
+            "point_3": {
+              "type": "string",
+              "pattern": "^(\\S[\\s\\S]{0,239})?$"
+            },
+            "point_4": {
+              "type": "string",
+              "pattern": "^(\\S[\\s\\S]{0,239})?$"
+            },
+            "point_5": {
+              "type": "string",
+              "pattern": "^(\\S[\\s\\S]{0,239})?$"
+            },
+            "point_6": {
+              "type": "string",
+              "pattern": "^(\\S[\\s\\S]{0,239})?$"
+            },
+            "point_7": {
+              "type": "string",
+              "pattern": "^(\\S[\\s\\S]{0,239})?$"
+            }
+          },
+          "required": [
+            "summary",
+            "point_1",
+            "point_2",
+            "point_3",
+            "point_4",
+            "point_5",
+            "point_6",
+            "point_7"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  ],
+  "tool_choice": {
+    "type": "function",
+    "function": {
+      "name": "emit_video_summary"
+    }
+  },
+  "thinking": {
+    "type": "disabled"
+  }
+}

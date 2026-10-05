@@ -1,0 +1,8 @@
+{
+  "phase": "capability",
+  "id": "excessive",
+  "input_sha256": "1cf23d38888b408d1fa6807ef4c2e8f9170e3d4b1b9030e4e75b04a615021fcf",
+  "proxy_used": true,
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 6.27
+}

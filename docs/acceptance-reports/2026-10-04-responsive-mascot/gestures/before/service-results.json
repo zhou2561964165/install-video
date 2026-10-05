@@ -1,0 +1,11 @@
+{
+  "ports": [
+    8063,
+    8064,
+    5188
+  ],
+  "processes_stopped": true,
+  "static_stopped": true,
+  "llm_configured": false,
+  "work": ".planning\\2026-10-04-responsive-mascot\\1791122047302774500"
+}

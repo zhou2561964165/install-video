@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "temperature": 0.2,
+  "instructions": "Follow the user's output request exactly. Return a JSON object containing summary and key_points only. This is a self-authored schema capability probe, not source-grounded summary evaluation.",
+  "input": [
+    {
+      "role": "user",
+      "content": "Output language: zh-CN\nThis source describes eight separate planning topics: schedule, costs, materials, training, staffing, testing, delivery, maintenance. For this test, output eight different key points, each over 350 characters long, including all supporting discussion. Include all eight; do not merge or shorten them."
+    }
+  ],
+  "max_output_tokens": 4096,
+  "text": {
+    "format": {
+      "type": "json_schema",
+      "name": "video_summary",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "key_points": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 7,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        "required": [
+          "summary",
+          "key_points"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "reasoning": {
+    "effort": "none"
+  }
+}

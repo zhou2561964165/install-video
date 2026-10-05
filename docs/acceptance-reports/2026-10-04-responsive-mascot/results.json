@@ -1,0 +1,2237 @@
+{
+  "generatedAt": "2026-10-04T13:34:57.152Z",
+  "httpMocks": false,
+  "appStateWrites": false,
+  "llmCalls": 0,
+  "physicalDeviceDebugChannel": "adb not discovered on PATH; physical phone availability unknown",
+  "checks": [
+    {
+      "name": "gpu-320 real registration and model ready",
+      "pass": true
+    },
+    {
+      "name": "gpu-320 example chip accessible and fills input",
+      "pass": true
+    },
+    {
+      "name": "gpu-320 dedicated region follows controls and chips >=44px",
+      "pass": true,
+      "width": 320,
+      "height": 568,
+      "documentWidth": 320,
+      "scrollY": 37,
+      "rects": {
+        ".landing-hero__content": {
+          "x": 20,
+          "y": 103,
+          "width": 280,
+          "height": 464.953125,
+          "right": 300,
+          "bottom": 567.953125
+        },
+        ".landing-examples": {
+          "x": 20,
+          "y": 471.953125,
+          "width": 280,
+          "height": 96,
+          "right": 300,
+          "bottom": 567.953125
+        },
+        ".landing-form": {
+          "x": 20,
+          "y": 354.953125,
+          "width": 280,
+          "height": 97,
+          "right": 300,
+          "bottom": 451.953125
+        },
+        "[data-mascot-region]": {
+          "x": 20,
+          "y": 595.953125,
+          "width": 280,
+          "height": 240,
+          "right": 300,
+          "bottom": 835.953125
+        },
+        ".mascot-menu-trigger": {
+          "x": 198,
+          "y": 835.953125,
+          "width": 102,
+          "height": 44,
+          "right": 300,
+          "bottom": 879.953125
+        },
+        ".auth-bar": {
+          "x": 12,
+          "y": 16,
+          "width": 296,
+          "height": 42.1875,
+          "right": 308,
+          "bottom": 58.1875
+        },
+        ".theme-switch": {
+          "x": 150,
+          "y": 88,
+          "width": 158,
+          "height": 36.1875,
+          "right": 308,
+          "bottom": 124.1875
+        }
+      },
+      "chipHeights": [
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "name": "gpu-320 real RTX4050 16K texture resident",
+      "pass": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "maxTextureSize": 16384,
+      "textures": [
+        {
+          "key": "/live2d/bai/白.16384/texture_00.png",
+          "width": 16384,
+          "height": 16384,
+          "valid": true,
+          "residentContexts": [
+            "1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gpu-320 real model entirely within allocated area",
+      "pass": true,
+      "bounds": {
+        "x": 86.4,
+        "y": 173.55312500000002,
+        "width": 147.2,
+        "height": 220.79999999999995
+      },
+      "region": {
+        "x": 20,
+        "y": 163.953125,
+        "width": 280,
+        "height": 240,
+        "right": 300,
+        "bottom": 403.953125
+      }
+    },
+    {
+      "name": "gpu-320 actual model tap opens menu",
+      "pass": true
+    },
+    {
+      "name": "gpu-320 visible menu entry, focus loop, outfit and scale operate; focus restored",
+      "pass": true
+    },
+    {
+      "name": "gpu-320 real drag remains inside area without accidental menu",
+      "pass": true,
+      "bounds": {
+        "x": 29.599999999999994,
+        "y": 189.28645833333331,
+        "width": 126.22222222222223,
+        "height": 189.33333333333331
+      }
+    },
+    {
+      "name": "gpu-320 scroll removes offscreen character",
+      "pass": true
+    },
+    {
+      "name": "gpu-320 actual owned yt-dlp parse200 and format selection remains usable",
+      "pass": true
+    },
+    {
+      "name": "gpu-375 real registration and model ready",
+      "pass": true
+    },
+    {
+      "name": "gpu-375 example chip accessible and fills input",
+      "pass": true
+    },
+    {
+      "name": "gpu-375 dedicated region follows controls and chips >=44px",
+      "pass": true,
+      "width": 375,
+      "height": 812,
+      "documentWidth": 375,
+      "scrollY": 0,
+      "rects": {
+        ".landing-hero__content": {
+          "x": 20,
+          "y": 140,
+          "width": 335,
+          "height": 436.0625,
+          "right": 355,
+          "bottom": 576.0625
+        },
+        ".landing-examples": {
+          "x": 20,
+          "y": 480.0625,
+          "width": 335,
+          "height": 96,
+          "right": 355,
+          "bottom": 576.0625
+        },
+        ".landing-form": {
+          "x": 31,
+          "y": 363.0625,
+          "width": 313,
+          "height": 97,
+          "right": 344,
+          "bottom": 460.0625
+        },
+        "[data-mascot-region]": {
+          "x": 20,
+          "y": 604.0625,
+          "width": 335,
+          "height": 308.546875,
+          "right": 355,
+          "bottom": 912.609375
+        },
+        ".mascot-menu-trigger": {
+          "x": 253,
+          "y": 912.609375,
+          "width": 102,
+          "height": 44,
+          "right": 355,
+          "bottom": 956.609375
+        },
+        ".auth-bar": {
+          "x": 12,
+          "y": 16,
+          "width": 351,
+          "height": 42.1875,
+          "right": 363,
+          "bottom": 58.1875
+        },
+        ".theme-switch": {
+          "x": 205,
+          "y": 88,
+          "width": 158,
+          "height": 36.1875,
+          "right": 363,
+          "bottom": 124.1875
+        }
+      },
+      "chipHeights": [
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "name": "gpu-375 real RTX4050 16K texture resident",
+      "pass": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "maxTextureSize": 16384,
+      "textures": [
+        {
+          "key": "/live2d/bai/白.16384/texture_00.png",
+          "width": 16384,
+          "height": 16384,
+          "valid": true,
+          "residentContexts": [
+            "1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gpu-375 real model entirely within allocated area",
+      "pass": true,
+      "bounds": {
+        "x": 92.87895833333333,
+        "y": 515.404375,
+        "width": 189.2420833333333,
+        "height": 283.86312499999997
+      },
+      "region": {
+        "x": 20,
+        "y": 503.0625,
+        "width": 335,
+        "height": 308.546875,
+        "right": 355,
+        "bottom": 811.609375
+      }
+    },
+    {
+      "name": "gpu-375 actual model tap opens menu",
+      "pass": true
+    },
+    {
+      "name": "gpu-375 visible menu entry, focus loop, outfit and scale operate; focus restored",
+      "pass": true
+    },
+    {
+      "name": "gpu-375 real drag remains inside area without accidental menu",
+      "pass": true,
+      "bounds": {
+        "x": 32.341875,
+        "y": 484.7747395833333,
+        "width": 171.4149305555556,
+        "height": 257.1223958333334
+      }
+    },
+    {
+      "name": "gpu-375 scroll removes offscreen character",
+      "pass": true
+    },
+    {
+      "name": "gpu-375 actual owned yt-dlp parse200 and format selection remains usable",
+      "pass": true
+    },
+    {
+      "name": "gpu-720 real registration and model ready",
+      "pass": true
+    },
+    {
+      "name": "gpu-720 example chip accessible and fills input",
+      "pass": true
+    },
+    {
+      "name": "gpu-720 dedicated region follows controls and chips >=44px",
+      "pass": true,
+      "width": 720,
+      "height": 900,
+      "documentWidth": 720,
+      "scrollY": 0,
+      "rects": {
+        ".landing-hero__content": {
+          "x": 20,
+          "y": 140,
+          "width": 680,
+          "height": 316.90625,
+          "right": 700,
+          "bottom": 456.90625
+        },
+        ".landing-examples": {
+          "x": 135.671875,
+          "y": 412.90625,
+          "width": 448.640625,
+          "height": 44,
+          "right": 584.3125,
+          "bottom": 456.90625
+        },
+        ".landing-form": {
+          "x": 203.5,
+          "y": 295.90625,
+          "width": 313,
+          "height": 97,
+          "right": 516.5,
+          "bottom": 392.90625
+        },
+        "[data-mascot-region]": {
+          "x": 20,
+          "y": 484.90625,
+          "width": 680,
+          "height": 340,
+          "right": 700,
+          "bottom": 824.90625
+        },
+        ".mascot-menu-trigger": {
+          "x": 598,
+          "y": 824.90625,
+          "width": 102,
+          "height": 44,
+          "right": 700,
+          "bottom": 868.90625
+        },
+        ".auth-bar": {
+          "x": 12,
+          "y": 16,
+          "width": 696,
+          "height": 42.1875,
+          "right": 708,
+          "bottom": 58.1875
+        },
+        ".theme-switch": {
+          "x": 550,
+          "y": 88,
+          "width": 158,
+          "height": 36.1875,
+          "right": 708,
+          "bottom": 124.1875
+        }
+      },
+      "chipHeights": [
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "name": "gpu-720 real RTX4050 16K texture resident",
+      "pass": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "maxTextureSize": 16384,
+      "textures": [
+        {
+          "key": "/live2d/bai/白.16384/texture_00.png",
+          "width": 16384,
+          "height": 16384,
+          "valid": true,
+          "residentContexts": [
+            "1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gpu-720 real model entirely within allocated area",
+      "pass": true,
+      "bounds": {
+        "x": 255.73333333333332,
+        "y": 498.50625,
+        "width": 208.53333333333333,
+        "height": 312.80000000000007
+      },
+      "region": {
+        "x": 20,
+        "y": 484.90625,
+        "width": 680,
+        "height": 340,
+        "right": 700,
+        "bottom": 824.90625
+      }
+    },
+    {
+      "name": "gpu-720 actual model tap opens menu",
+      "pass": true
+    },
+    {
+      "name": "gpu-720 visible menu entry, focus loop, outfit and scale operate; focus restored",
+      "pass": true
+    },
+    {
+      "name": "gpu-720 real drag remains inside area without accidental menu",
+      "pass": true,
+      "bounds": {
+        "x": 33.599999999999994,
+        "y": 513.2395833333333,
+        "width": 188.8888888888889,
+        "height": 283.33333333333337
+      }
+    },
+    {
+      "name": "gpu-720 scroll removes offscreen character",
+      "pass": true
+    },
+    {
+      "name": "gpu-720 actual owned yt-dlp parse200 and format selection remains usable",
+      "pass": true
+    },
+    {
+      "name": "gpu-1440 real registration and model ready",
+      "pass": true
+    },
+    {
+      "name": "gpu-1440 example chip accessible and fills input",
+      "pass": true
+    },
+    {
+      "name": "gpu-1440 real RTX4050 16K texture resident",
+      "pass": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4050 Laptop GPU (0x000028E1) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "maxTextureSize": 16384,
+      "textures": [
+        {
+          "key": "/live2d/bai/白.16384/texture_00.png",
+          "width": 16384,
+          "height": 16384,
+          "valid": true,
+          "residentContexts": [
+            "1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gpu-1440 real model entirely within allocated area",
+      "pass": true,
+      "bounds": {
+        "x": 910.7999999999998,
+        "y": 32.39999999999998,
+        "width": 496.80000000000007,
+        "height": 745.2
+      },
+      "region": {
+        "x": 186.390625,
+        "y": 661.0625,
+        "width": 1067.21875,
+        "height": 0,
+        "right": 1253.609375,
+        "bottom": 661.0625
+      }
+    },
+    {
+      "name": "gpu-1440 actual model tap opens menu",
+      "pass": true
+    },
+    {
+      "name": "gpu-1440 visible menu entry, focus loop, outfit and scale operate; focus restored",
+      "pass": true
+    },
+    {
+      "name": "gpu-1440 real drag remains inside area without accidental menu",
+      "pass": true,
+      "bounds": {
+        "x": 32.39999999999998,
+        "y": 32.39999999999998,
+        "width": 490,
+        "height": 735
+      }
+    },
+    {
+      "name": "gpu-1440 actual owned yt-dlp parse200 and format selection remains usable",
+      "pass": true
+    },
+    {
+      "name": "same live GPU stage resizes desktop to375px without overlap or model reload",
+      "pass": true
+    },
+    {
+      "name": "simulated 8K capability skips 16K model request, clears loader and allows parse200",
+      "pass": true,
+      "simulated": true,
+      "realLowCapDevice": false
+    },
+    {
+      "name": "no AI API, pageerror or unexpected console warning/error",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-320",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "scope": "gpu-375",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "gpu-375",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "gpu-375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "gpu-375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "gpu-375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "gpu-375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-375",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "scope": "gpu-720",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "gpu-720",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "gpu-720",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "gpu-720",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-720",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "gpu-720",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "gpu-720",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-720",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "scope": "gpu-1440",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "gpu-1440",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "gpu-1440",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "gpu-1440",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-1440",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "gpu-1440",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "gpu-1440",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    },
+    {
+      "scope": "gpu-1440",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "scope": "simulated-8K",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "simulated-8K",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "simulated-8K",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "simulated-8K",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "captures": [
+    {
+      "label": "gpu-320-entry-top",
+      "geometry": {
+        "width": 320,
+        "height": 568,
+        "documentWidth": 320,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": 140,
+            "width": 280,
+            "height": 464.953125,
+            "right": 300,
+            "bottom": 604.953125
+          },
+          ".landing-examples": {
+            "x": 20,
+            "y": 508.953125,
+            "width": 280,
+            "height": 96,
+            "right": 300,
+            "bottom": 604.953125
+          },
+          ".landing-form": {
+            "x": 20,
+            "y": 391.953125,
+            "width": 280,
+            "height": 97,
+            "right": 300,
+            "bottom": 488.953125
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 632.953125,
+            "width": 280,
+            "height": 240,
+            "right": 300,
+            "bottom": 872.953125
+          },
+          ".mascot-menu-trigger": {
+            "x": 198,
+            "y": 872.953125,
+            "width": 102,
+            "height": 44,
+            "right": 300,
+            "bottom": 916.953125
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 296,
+            "height": 42.1875,
+            "right": 308,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 150,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 308,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 320,
+          "height": 568
+        },
+        "model": {
+          "visible": false,
+          "x": 160,
+          "y": 752.953125,
+          "scale": 0.0368,
+          "bounds": {
+            "x": 86.4,
+            "y": 642.553125,
+            "width": 147.2,
+            "height": 220.79999999999995
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-320-whole-character",
+      "geometry": {
+        "width": 320,
+        "height": 568,
+        "documentWidth": 320,
+        "scrollY": 469,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": -329,
+            "width": 280,
+            "height": 464.953125,
+            "right": 300,
+            "bottom": 135.953125
+          },
+          ".landing-examples": {
+            "x": 20,
+            "y": 39.953125,
+            "width": 280,
+            "height": 96,
+            "right": 300,
+            "bottom": 135.953125
+          },
+          ".landing-form": {
+            "x": 20,
+            "y": -77.046875,
+            "width": 280,
+            "height": 97,
+            "right": 300,
+            "bottom": 19.953125
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 163.953125,
+            "width": 280,
+            "height": 240,
+            "right": 300,
+            "bottom": 403.953125
+          },
+          ".mascot-menu-trigger": {
+            "x": 198,
+            "y": 403.953125,
+            "width": 102,
+            "height": 44,
+            "right": 300,
+            "bottom": 447.953125
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 296,
+            "height": 42.1875,
+            "right": 308,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 150,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 308,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 320,
+          "height": 568
+        },
+        "model": {
+          "visible": true,
+          "x": 160,
+          "y": 283.953125,
+          "scale": 0.0368,
+          "bounds": {
+            "x": 86.4,
+            "y": 173.55312500000002,
+            "width": 147.2,
+            "height": 220.79999999999995
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-320-drag-constrained",
+      "geometry": {
+        "width": 320,
+        "height": 568,
+        "documentWidth": 320,
+        "scrollY": 469,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": -329,
+            "width": 280,
+            "height": 464.953125,
+            "right": 300,
+            "bottom": 135.953125
+          },
+          ".landing-examples": {
+            "x": 20,
+            "y": 39.953125,
+            "width": 280,
+            "height": 96,
+            "right": 300,
+            "bottom": 135.953125
+          },
+          ".landing-form": {
+            "x": 20,
+            "y": -77.046875,
+            "width": 280,
+            "height": 97,
+            "right": 300,
+            "bottom": 19.953125
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 163.953125,
+            "width": 280,
+            "height": 240,
+            "right": 300,
+            "bottom": 403.953125
+          },
+          ".mascot-menu-trigger": {
+            "x": 198,
+            "y": 403.953125,
+            "width": 102,
+            "height": 44,
+            "right": 300,
+            "bottom": 447.953125
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 296,
+            "height": 42.1875,
+            "right": 308,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 150,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 308,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 320,
+          "height": 568
+        },
+        "model": {
+          "visible": true,
+          "x": 92.71111111111111,
+          "y": 283.953125,
+          "scale": 0.03155555555555556,
+          "bounds": {
+            "x": 29.599999999999994,
+            "y": 189.28645833333331,
+            "width": 126.22222222222223,
+            "height": 189.33333333333331
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-320-selecting",
+      "geometry": {
+        "width": 320,
+        "height": 568,
+        "documentWidth": 320,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": null,
+          ".landing-examples": null,
+          ".landing-form": null,
+          "[data-mascot-region]": {
+            "x": 0,
+            "y": 1005.21875,
+            "width": 320,
+            "height": 240,
+            "right": 320,
+            "bottom": 1245.21875
+          },
+          ".mascot-menu-trigger": {
+            "x": 218,
+            "y": 1245.21875,
+            "width": 102,
+            "height": 44,
+            "right": 320,
+            "bottom": 1289.21875
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 296,
+            "height": 42.1875,
+            "right": 308,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 150,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 308,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": []
+      },
+      "runtime": {
+        "screen": {
+          "width": 320,
+          "height": 568
+        },
+        "model": {
+          "visible": false,
+          "x": 160,
+          "y": 1125.21875,
+          "scale": 0.03155555555555556,
+          "bounds": {
+            "x": 96.88888888888889,
+            "y": 1030.5520833333333,
+            "width": 126.22222222222223,
+            "height": 189.33333333333326
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-375-entry-top",
+      "geometry": {
+        "width": 375,
+        "height": 812,
+        "documentWidth": 375,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": 140,
+            "width": 335,
+            "height": 436.0625,
+            "right": 355,
+            "bottom": 576.0625
+          },
+          ".landing-examples": {
+            "x": 20,
+            "y": 480.0625,
+            "width": 335,
+            "height": 96,
+            "right": 355,
+            "bottom": 576.0625
+          },
+          ".landing-form": {
+            "x": 31,
+            "y": 363.0625,
+            "width": 313,
+            "height": 97,
+            "right": 344,
+            "bottom": 460.0625
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 604.0625,
+            "width": 335,
+            "height": 308.546875,
+            "right": 355,
+            "bottom": 912.609375
+          },
+          ".mascot-menu-trigger": {
+            "x": 253,
+            "y": 912.609375,
+            "width": 102,
+            "height": 44,
+            "right": 355,
+            "bottom": 956.609375
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 351,
+            "height": 42.1875,
+            "right": 363,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 205,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 363,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 375,
+          "height": 812
+        },
+        "model": {
+          "visible": true,
+          "x": 187.5,
+          "y": 758.3359375,
+          "scale": 0.047310520833333335,
+          "bounds": {
+            "x": 92.87895833333333,
+            "y": 616.404375,
+            "width": 189.2420833333333,
+            "height": 283.86312499999997
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-375-whole-character",
+      "geometry": {
+        "width": 375,
+        "height": 812,
+        "documentWidth": 375,
+        "scrollY": 101,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": 39,
+            "width": 335,
+            "height": 436.0625,
+            "right": 355,
+            "bottom": 475.0625
+          },
+          ".landing-examples": {
+            "x": 20,
+            "y": 379.0625,
+            "width": 335,
+            "height": 96,
+            "right": 355,
+            "bottom": 475.0625
+          },
+          ".landing-form": {
+            "x": 31,
+            "y": 262.0625,
+            "width": 313,
+            "height": 97,
+            "right": 344,
+            "bottom": 359.0625
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 503.0625,
+            "width": 335,
+            "height": 308.546875,
+            "right": 355,
+            "bottom": 811.609375
+          },
+          ".mascot-menu-trigger": {
+            "x": 253,
+            "y": 811.609375,
+            "width": 102,
+            "height": 44,
+            "right": 355,
+            "bottom": 855.609375
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 351,
+            "height": 42.1875,
+            "right": 363,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 205,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 363,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 375,
+          "height": 812
+        },
+        "model": {
+          "visible": true,
+          "x": 187.5,
+          "y": 657.3359375,
+          "scale": 0.047310520833333335,
+          "bounds": {
+            "x": 92.87895833333333,
+            "y": 515.404375,
+            "width": 189.2420833333333,
+            "height": 283.86312499999997
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-375-drag-constrained",
+      "geometry": {
+        "width": 375,
+        "height": 812,
+        "documentWidth": 375,
+        "scrollY": 145,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": -5,
+            "width": 335,
+            "height": 436.0625,
+            "right": 355,
+            "bottom": 431.0625
+          },
+          ".landing-examples": {
+            "x": 20,
+            "y": 335.0625,
+            "width": 335,
+            "height": 96,
+            "right": 355,
+            "bottom": 431.0625
+          },
+          ".landing-form": {
+            "x": 31,
+            "y": 218.0625,
+            "width": 313,
+            "height": 97,
+            "right": 344,
+            "bottom": 315.0625
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 459.0625,
+            "width": 335,
+            "height": 308.546875,
+            "right": 355,
+            "bottom": 767.609375
+          },
+          ".mascot-menu-trigger": {
+            "x": 253,
+            "y": 767.609375,
+            "width": 102,
+            "height": 44,
+            "right": 355,
+            "bottom": 811.609375
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 351,
+            "height": 42.1875,
+            "right": 363,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 205,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 363,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 375,
+          "height": 812
+        },
+        "model": {
+          "visible": true,
+          "x": 118.0493402777778,
+          "y": 613.3359375,
+          "scale": 0.0428537326388889,
+          "bounds": {
+            "x": 32.341875,
+            "y": 484.7747395833333,
+            "width": 171.4149305555556,
+            "height": 257.1223958333334
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-375-selecting",
+      "geometry": {
+        "width": 375,
+        "height": 812,
+        "documentWidth": 375,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": null,
+          ".landing-examples": null,
+          ".landing-form": null,
+          "[data-mascot-region]": {
+            "x": 0,
+            "y": 978.03125,
+            "width": 375,
+            "height": 308.546875,
+            "right": 375,
+            "bottom": 1286.578125
+          },
+          ".mascot-menu-trigger": {
+            "x": 273,
+            "y": 1286.578125,
+            "width": 102,
+            "height": 44,
+            "right": 375,
+            "bottom": 1330.578125
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 351,
+            "height": 42.1875,
+            "right": 363,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 205,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 363,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": []
+      },
+      "runtime": {
+        "screen": {
+          "width": 375,
+          "height": 812
+        },
+        "model": {
+          "visible": false,
+          "x": 187.5,
+          "y": 1132.3046875,
+          "scale": 0.0428537326388889,
+          "bounds": {
+            "x": 101.7925347222222,
+            "y": 1003.7434895833333,
+            "width": 171.41493055555563,
+            "height": 257.12239583333326
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-720-entry-top",
+      "geometry": {
+        "width": 720,
+        "height": 900,
+        "documentWidth": 720,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": 140,
+            "width": 680,
+            "height": 316.90625,
+            "right": 700,
+            "bottom": 456.90625
+          },
+          ".landing-examples": {
+            "x": 135.671875,
+            "y": 412.90625,
+            "width": 448.640625,
+            "height": 44,
+            "right": 584.3125,
+            "bottom": 456.90625
+          },
+          ".landing-form": {
+            "x": 203.5,
+            "y": 295.90625,
+            "width": 313,
+            "height": 97,
+            "right": 516.5,
+            "bottom": 392.90625
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 484.90625,
+            "width": 680,
+            "height": 340,
+            "right": 700,
+            "bottom": 824.90625
+          },
+          ".mascot-menu-trigger": {
+            "x": 598,
+            "y": 824.90625,
+            "width": 102,
+            "height": 44,
+            "right": 700,
+            "bottom": 868.90625
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 696,
+            "height": 42.1875,
+            "right": 708,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 550,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 708,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 720,
+          "height": 900
+        },
+        "model": {
+          "visible": true,
+          "x": 360,
+          "y": 654.90625,
+          "scale": 0.05213333333333334,
+          "bounds": {
+            "x": 255.73333333333332,
+            "y": 498.50625,
+            "width": 208.53333333333333,
+            "height": 312.80000000000007
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-720-whole-character",
+      "geometry": {
+        "width": 720,
+        "height": 900,
+        "documentWidth": 720,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": 140,
+            "width": 680,
+            "height": 316.90625,
+            "right": 700,
+            "bottom": 456.90625
+          },
+          ".landing-examples": {
+            "x": 135.671875,
+            "y": 412.90625,
+            "width": 448.640625,
+            "height": 44,
+            "right": 584.3125,
+            "bottom": 456.90625
+          },
+          ".landing-form": {
+            "x": 203.5,
+            "y": 295.90625,
+            "width": 313,
+            "height": 97,
+            "right": 516.5,
+            "bottom": 392.90625
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 484.90625,
+            "width": 680,
+            "height": 340,
+            "right": 700,
+            "bottom": 824.90625
+          },
+          ".mascot-menu-trigger": {
+            "x": 598,
+            "y": 824.90625,
+            "width": 102,
+            "height": 44,
+            "right": 700,
+            "bottom": 868.90625
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 696,
+            "height": 42.1875,
+            "right": 708,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 550,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 708,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 720,
+          "height": 900
+        },
+        "model": {
+          "visible": true,
+          "x": 360,
+          "y": 654.90625,
+          "scale": 0.05213333333333334,
+          "bounds": {
+            "x": 255.73333333333332,
+            "y": 498.50625,
+            "width": 208.53333333333333,
+            "height": 312.80000000000007
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-720-drag-constrained",
+      "geometry": {
+        "width": 720,
+        "height": 900,
+        "documentWidth": 720,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 20,
+            "y": 140,
+            "width": 680,
+            "height": 316.90625,
+            "right": 700,
+            "bottom": 456.90625
+          },
+          ".landing-examples": {
+            "x": 135.671875,
+            "y": 412.90625,
+            "width": 448.640625,
+            "height": 44,
+            "right": 584.3125,
+            "bottom": 456.90625
+          },
+          ".landing-form": {
+            "x": 203.5,
+            "y": 295.90625,
+            "width": 313,
+            "height": 97,
+            "right": 516.5,
+            "bottom": 392.90625
+          },
+          "[data-mascot-region]": {
+            "x": 20,
+            "y": 484.90625,
+            "width": 680,
+            "height": 340,
+            "right": 700,
+            "bottom": 824.90625
+          },
+          ".mascot-menu-trigger": {
+            "x": 598,
+            "y": 824.90625,
+            "width": 102,
+            "height": 44,
+            "right": 700,
+            "bottom": 868.90625
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 696,
+            "height": 42.1875,
+            "right": 708,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 550,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 708,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": [
+          44,
+          44,
+          44
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 720,
+          "height": 900
+        },
+        "model": {
+          "visible": true,
+          "x": 128.04444444444445,
+          "y": 654.90625,
+          "scale": 0.04722222222222223,
+          "bounds": {
+            "x": 33.599999999999994,
+            "y": 513.2395833333333,
+            "width": 188.8888888888889,
+            "height": 283.33333333333337
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-720-selecting",
+      "geometry": {
+        "width": 720,
+        "height": 900,
+        "documentWidth": 720,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": null,
+          ".landing-examples": null,
+          ".landing-form": null,
+          "[data-mascot-region]": {
+            "x": 80,
+            "y": 920.25,
+            "width": 560,
+            "height": 340,
+            "right": 640,
+            "bottom": 1260.25
+          },
+          ".mascot-menu-trigger": {
+            "x": 538,
+            "y": 1260.25,
+            "width": 102,
+            "height": 44,
+            "right": 640,
+            "bottom": 1304.25
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 696,
+            "height": 42.1875,
+            "right": 708,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 550,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 708,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": []
+      },
+      "runtime": {
+        "screen": {
+          "width": 720,
+          "height": 900
+        },
+        "model": {
+          "visible": false,
+          "x": 360,
+          "y": 1090.25,
+          "scale": 0.04722222222222223,
+          "bounds": {
+            "x": 265.55555555555554,
+            "y": 948.5833333333333,
+            "width": 188.8888888888889,
+            "height": 283.33333333333326
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-1440-entry-top",
+      "geometry": {
+        "width": 1440,
+        "height": 900,
+        "documentWidth": 1440,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 186.390625,
+            "y": 238.9375,
+            "width": 640,
+            "height": 394.125,
+            "right": 826.390625,
+            "bottom": 633.0625
+          },
+          ".landing-examples": {
+            "x": 186.390625,
+            "y": 600.875,
+            "width": 448.640625,
+            "height": 32.1875,
+            "right": 635.03125,
+            "bottom": 633.0625
+          },
+          ".landing-form": {
+            "x": 186.390625,
+            "y": 536.875,
+            "width": 442,
+            "height": 44,
+            "right": 628.390625,
+            "bottom": 580.875
+          },
+          "[data-mascot-region]": {
+            "x": 186.390625,
+            "y": 661.0625,
+            "width": 1067.21875,
+            "height": 0,
+            "right": 1253.609375,
+            "bottom": 661.0625
+          },
+          ".mascot-menu-trigger": {
+            "x": 1310,
+            "y": 828,
+            "width": 102,
+            "height": 44,
+            "right": 1412,
+            "bottom": 872
+          },
+          ".auth-bar": {
+            "x": 16,
+            "y": 16,
+            "width": 520.546875,
+            "height": 46.1875,
+            "right": 536.546875,
+            "bottom": 62.1875
+          },
+          ".theme-switch": {
+            "x": 1266,
+            "y": 56,
+            "width": 158,
+            "height": 36.1875,
+            "right": 1424,
+            "bottom": 92.1875
+          }
+        },
+        "chipHeights": [
+          32.1875,
+          32.1875,
+          32.1875
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 1440,
+          "height": 900
+        },
+        "model": {
+          "visible": true,
+          "x": 1159.1999999999998,
+          "y": 405,
+          "scale": 0.1242,
+          "bounds": {
+            "x": 910.7999999999998,
+            "y": 32.39999999999998,
+            "width": 496.80000000000007,
+            "height": 745.2
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-1440-whole-character",
+      "geometry": {
+        "width": 1440,
+        "height": 900,
+        "documentWidth": 1440,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 186.390625,
+            "y": 238.9375,
+            "width": 640,
+            "height": 394.125,
+            "right": 826.390625,
+            "bottom": 633.0625
+          },
+          ".landing-examples": {
+            "x": 186.390625,
+            "y": 600.875,
+            "width": 448.640625,
+            "height": 32.1875,
+            "right": 635.03125,
+            "bottom": 633.0625
+          },
+          ".landing-form": {
+            "x": 186.390625,
+            "y": 536.875,
+            "width": 442,
+            "height": 44,
+            "right": 628.390625,
+            "bottom": 580.875
+          },
+          "[data-mascot-region]": {
+            "x": 186.390625,
+            "y": 661.0625,
+            "width": 1067.21875,
+            "height": 0,
+            "right": 1253.609375,
+            "bottom": 661.0625
+          },
+          ".mascot-menu-trigger": {
+            "x": 1310,
+            "y": 828,
+            "width": 102,
+            "height": 44,
+            "right": 1412,
+            "bottom": 872
+          },
+          ".auth-bar": {
+            "x": 16,
+            "y": 16,
+            "width": 520.546875,
+            "height": 46.1875,
+            "right": 536.546875,
+            "bottom": 62.1875
+          },
+          ".theme-switch": {
+            "x": 1266,
+            "y": 56,
+            "width": 158,
+            "height": 36.1875,
+            "right": 1424,
+            "bottom": 92.1875
+          }
+        },
+        "chipHeights": [
+          32.1875,
+          32.1875,
+          32.1875
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 1440,
+          "height": 900
+        },
+        "model": {
+          "visible": true,
+          "x": 1159.1999999999998,
+          "y": 405,
+          "scale": 0.1242,
+          "bounds": {
+            "x": 910.7999999999998,
+            "y": 32.39999999999998,
+            "width": 496.80000000000007,
+            "height": 745.2
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-1440-drag-constrained",
+      "geometry": {
+        "width": 1440,
+        "height": 900,
+        "documentWidth": 1440,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": {
+            "x": 186.390625,
+            "y": 238.9375,
+            "width": 640,
+            "height": 394.125,
+            "right": 826.390625,
+            "bottom": 633.0625
+          },
+          ".landing-examples": {
+            "x": 186.390625,
+            "y": 600.875,
+            "width": 448.640625,
+            "height": 32.1875,
+            "right": 635.03125,
+            "bottom": 633.0625
+          },
+          ".landing-form": {
+            "x": 186.390625,
+            "y": 536.875,
+            "width": 442,
+            "height": 44,
+            "right": 628.390625,
+            "bottom": 580.875
+          },
+          "[data-mascot-region]": {
+            "x": 186.390625,
+            "y": 661.0625,
+            "width": 1067.21875,
+            "height": 0,
+            "right": 1253.609375,
+            "bottom": 661.0625
+          },
+          ".mascot-menu-trigger": {
+            "x": 1310,
+            "y": 828,
+            "width": 102,
+            "height": 44,
+            "right": 1412,
+            "bottom": 872
+          },
+          ".auth-bar": {
+            "x": 16,
+            "y": 16,
+            "width": 520.546875,
+            "height": 46.1875,
+            "right": 536.546875,
+            "bottom": 62.1875
+          },
+          ".theme-switch": {
+            "x": 1266,
+            "y": 56,
+            "width": 158,
+            "height": 36.1875,
+            "right": 1424,
+            "bottom": 92.1875
+          }
+        },
+        "chipHeights": [
+          32.1875,
+          32.1875,
+          32.1875
+        ]
+      },
+      "runtime": {
+        "screen": {
+          "width": 1440,
+          "height": 900
+        },
+        "model": {
+          "visible": true,
+          "x": 277.4,
+          "y": 399.9,
+          "scale": 0.1225,
+          "bounds": {
+            "x": 32.39999999999998,
+            "y": 32.39999999999998,
+            "width": 490,
+            "height": 735
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-1440-selecting",
+      "geometry": {
+        "width": 1440,
+        "height": 900,
+        "documentWidth": 1440,
+        "scrollY": 0,
+        "rects": {
+          ".landing-hero__content": null,
+          ".landing-examples": null,
+          ".landing-form": null,
+          "[data-mascot-region]": {
+            "x": 0,
+            "y": 900,
+            "width": 1440,
+            "height": 0,
+            "right": 1440,
+            "bottom": 900
+          },
+          ".mascot-menu-trigger": {
+            "x": 1310,
+            "y": 828,
+            "width": 102,
+            "height": 44,
+            "right": 1412,
+            "bottom": 872
+          },
+          ".auth-bar": {
+            "x": 16,
+            "y": 16,
+            "width": 520.546875,
+            "height": 46.1875,
+            "right": 536.546875,
+            "bottom": 62.1875
+          },
+          ".theme-switch": {
+            "x": 1266,
+            "y": 56,
+            "width": 158,
+            "height": 36.1875,
+            "right": 1424,
+            "bottom": 92.1875
+          }
+        },
+        "chipHeights": []
+      },
+      "runtime": {
+        "screen": {
+          "width": 1440,
+          "height": 900
+        },
+        "model": {
+          "visible": true,
+          "x": 1162.6,
+          "y": 410.1,
+          "scale": 0.1225,
+          "bounds": {
+            "x": 917.5999999999999,
+            "y": 42.60000000000002,
+            "width": 490,
+            "height": 735
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    },
+    {
+      "label": "gpu-desktop-resized375",
+      "geometry": {
+        "width": 375,
+        "height": 812,
+        "documentWidth": 375,
+        "scrollY": 519,
+        "rects": {
+          ".landing-hero__content": null,
+          ".landing-examples": null,
+          ".landing-form": null,
+          "[data-mascot-region]": {
+            "x": 0,
+            "y": 459.03125,
+            "width": 375,
+            "height": 308.546875,
+            "right": 375,
+            "bottom": 767.578125
+          },
+          ".mascot-menu-trigger": {
+            "x": 273,
+            "y": 767.578125,
+            "width": 102,
+            "height": 44,
+            "right": 375,
+            "bottom": 811.578125
+          },
+          ".auth-bar": {
+            "x": 12,
+            "y": 16,
+            "width": 351,
+            "height": 42.1875,
+            "right": 363,
+            "bottom": 58.1875
+          },
+          ".theme-switch": {
+            "x": 205,
+            "y": 88,
+            "width": 158,
+            "height": 36.1875,
+            "right": 363,
+            "bottom": 124.1875
+          }
+        },
+        "chipHeights": []
+      },
+      "runtime": {
+        "screen": {
+          "width": 375,
+          "height": 812
+        },
+        "model": {
+          "visible": true,
+          "x": 187.5,
+          "y": 613.3046875,
+          "scale": 0.0428537326388889,
+          "bounds": {
+            "x": 101.7925347222222,
+            "y": 484.7434895833333,
+            "width": 171.41493055555563,
+            "height": 257.1223958333334
+          },
+          "local": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      }
+    }
+  ],
+  "proxyFromSystem": true,
+  "gpuDevices": [
+    {
+      "vendorId": 4318,
+      "deviceId": 10465,
+      "subSysId": 347279427,
+      "revision": 161,
+      "vendorString": "",
+      "deviceString": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "driverVendor": "NVIDIA",
+      "driverVersion": "32.0.16.1692"
+    },
+    {
+      "vendorId": 4098,
+      "deviceId": 5567,
+      "subSysId": 347279427,
+      "revision": 193,
+      "vendorString": "",
+      "deviceString": "AMD Radeon 780M Graphics",
+      "driverVendor": "",
+      "driverVersion": "32.0.31035.1003"
+    },
+    {
+      "vendorId": 5140,
+      "deviceId": 140,
+      "subSysId": 0,
+      "revision": 0,
+      "vendorString": "",
+      "deviceString": "Microsoft Basic Render Driver",
+      "driverVendor": "",
+      "driverVersion": "10.0.26100.9278"
+    }
+  ],
+  "pass": true
+}

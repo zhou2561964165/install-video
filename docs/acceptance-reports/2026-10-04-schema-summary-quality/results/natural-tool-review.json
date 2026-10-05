@@ -1,0 +1,70 @@
+{
+  "phase": "natural-tool",
+  "purpose": "Final explicit strict_tool smoke test on normal natural inputs; not a second prompt refinement and not a promotion to production auto.",
+  "same_product_source_and_config_as": "natural-refined",
+  "only_control_change": "auto/json_object -> explicit strict_tool",
+  "endpoint": {"host": "api.deepseek.com", "path": "/beta/chat/completions"},
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "source_context_chars": 1200,
+  "actual_http_posts": 5,
+  "confirmed_http_200": 5,
+  "samples": [
+    {
+      "id": "zh-short",
+      "application_success": true,
+      "point_count": 7,
+      "point_chars": [50,50,61,38,45,39,33],
+      "facts": [
+        {"id": "zh1", "status": "retained", "points": [1]},
+        {"id": "zh2", "status": "retained", "points": [2,3,4]},
+        {"id": "zh3", "status": "retained", "points": [5]},
+        {"id": "zh4", "status": "retained", "points": [6,7]}
+      ],
+      "numbers_conditions": "Forty-five/five minutes and English-question alternatives retained.",
+      "pure_duplicate_pairs": [],
+      "organization_goal_met": false,
+      "note": "Short source uses all seven slots, with a related preparation theme and question alternatives split across points. New supporting conditions are not pure duplicates."
+    },
+    {
+      "id": "en-medium",
+      "application_success": true,
+      "point_count": 6,
+      "point_chars": [57,46,60,45,68,63],
+      "facts": [
+        {"id": "en1", "status": "retained", "points": [1,2]},
+        {"id": "en2", "status": "retained", "points": [2,6]},
+        {"id": "en3", "status": "retained", "points": [3], "note": "Both entering grades and private comments now explicit."},
+        {"id": "en4", "status": "retained", "points": [4,5,6]}
+      ],
+      "frequency_correct": true,
+      "accuracy_issues": [{"type": "attribution", "point": 5, "note": "Cultural contrast remains a generic culture assertion rather than clearly the instructor's illustrative view."}],
+      "pure_duplicate_pairs": []
+    },
+    {
+      "id": "en-long",
+      "application_success": false,
+      "error_type": "llm_invalid_response",
+      "valid_section_response_ordinals": [17,18],
+      "section_point_counts": [7,7],
+      "section_max_point_chars": [68,124],
+      "failed_merge_response_ordinal": 19,
+      "raw_merge_point_chars": [58,53,89,75,92,143,294],
+      "violated_constraint": "point_7 pattern maximum 240 characters",
+      "final_facts_scored_as_application_result": false,
+      "note": "Provider returned required fields and seven slot values, but final point was 294 characters. Local validator correctly refused. Raw failed output is evidence, not a delivered summary or a valid complete quality result."
+    }
+  ],
+  "normal_inputs_do_not_prove_pattern_guarantee": true,
+  "tools_executed": false,
+  "additional_tool_conversation_posts": 0,
+  "auto_promoted": false,
+  "paid_calls_stopped": true,
+  "further_paid_profiles_planned": false,
+  "total_reserved_attempts": 19,
+  "total_confirmed_http_responses": 18,
+  "transport_failures_without_http_response": 1,
+  "budget_ceiling": 20,
+  "limitations": "One normal-input run per sample, agent fact review only, no external human rating or complete claim-level accuracy guarantee.",
+  "attribution_license": "MIT OCW source/derived summaries and review retain original manifest authors/URLs and CC BY-NC-SA 4.0 noncommercial ShareAlike."
+}

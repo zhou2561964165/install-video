@@ -222,6 +222,20 @@ JSON模式也不保证要点数量。实测完整JSON包含12条要点，原解�
 
 兼容模式与原默认推理模式分别留证；它同时改变了提示词和输出控制，不能将其结果全部归因于提示词。公网375px下载、默认GPU纹理驻留与角色截图各自验证；Windows移动视口与真手机兼容范围分开，详情见[公网移动/GPU报告](acceptance-reports/2026-10-04-public-mobile-gpu/report.md)。
 
+### 12.4 实验schema协议与原文证据贯穿
+
+`json_schema`显式选择Responses的text.format，检查response/message完成状态、字段、数量和可配置点长；`strict_tool`显式选择Beta chat严格工具，用summary及七个必需字符串槽位表示结果，空尾槽表示未用，再转换为原API，不执行工具或发工具结果第二轮。实测Responses仍返回8点，Beta仍可返回空首槽/294字点，因此auto继续json_object，本地拒绝而不是静默降级重发；协议名不等于上游保证。
+
+段摘要是有损中间件，实测重要结尾事实在进入merge前已丢失。每原分段通过`LLM_SUMMARY_SOURCE_CONTEXT_CHARS`保留原文头尾边界，在notes中标记source_context；分层合并将这些原始证据继续携带，组大小计入JSON及证据，无进展时明确报容量错误，不删证据来凑预算。`0`恢复旧notes形状。源事实与提示联合作用的结果只由实测评价，不将恢复单独归因某一项。
+
+兼容模式240字符是提示目标；实验模式240字符为本地校验，超限拒绝。频率、模态、讲者观点归因与案例范围仍要独立检查，schema只能校验结构。边界片段不是全文备份，遗漏中部事实仍可能发生。
+
+### 12.5 响应式角色的几何接口
+
+App只把视觉区的矩形通过getRegion传给角色；手机在控件后预留文档流区域，滚动后定位/隐藏，桌面按视口和入口底边空间限制包围盒。拖动、比例、触控默认和纹理需求由配置统一驱动，model资产不改。纹理能力不足时跳过模型目录请求，视觉失败不阻塞解析。
+
+菜单具有可见入口、焦点循环/恢复和标准inert；触摸取消不能视作点击。PIXI会覆写canvas touchAction且默认preventDefault，原生纵向触摸须通过配置恢复pan-y/pinch-zoom及公共interaction设置，不能仅凭程序scrollTo声称触摸滚动正常。GPU、模拟8K、聚焦控件避开固定栏、真实touch/cancel验证各自留证，真机范围另列。
+
 ## 13. 第二阶段：前端视觉表现层（fx）架构
 
 > 本节为历史方案，所列 `Subtitle` / `Frame` / `TransitionOverlay` / `Cursor` / `PathProgress` 不代表当前组件已实现。当前实际文件见§3、交接文件地图与v3计划；本轮不扩展这条视觉演进线。

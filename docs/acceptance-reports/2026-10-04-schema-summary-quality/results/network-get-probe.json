@@ -1,0 +1,24 @@
+{
+  "read_only_gets": true,
+  "post_count": 0,
+  "probes": [
+    {
+      "target": "provider_root",
+      "method": "GET",
+      "system_proxy_used": true,
+      "credentials_sent": false,
+      "started_utc": "2026-10-04T13:10:49.706080+00:00",
+      "http_status": 401,
+      "tls_http_reached": true
+    },
+    {
+      "target": "provider_models",
+      "method": "GET",
+      "system_proxy_used": true,
+      "credentials_sent": false,
+      "started_utc": "2026-10-04T13:10:54.597496+00:00",
+      "http_status": 401,
+      "tls_http_reached": true
+    }
+  ]
+}

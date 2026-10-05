@@ -1,0 +1,19 @@
+{
+  "ordinal": 13,
+  "phase": "natural-refined",
+  "sample": "en-long",
+  "stage": "section",
+  "content": "{\"summary\":\"本讲介绍计算的基本概念：Python程序由定义和命令组成，一切皆对象且有类型；表达式求值、赋值绑定名称到内存值，程序只按指令执行，因此语义错误（非预期结果）最难排查。\",\"key_points\":[\"程序需语法正确且静态语义正确；语法错误Python易捕获，静态语义错误仅当执行到该分支时才被捕获。\",\"编程语言中程序只有一种含义（计算机只执行所写指令），但可能不是程序员本意，导致输出不符、崩溃或程序不停止，这将在后续调试讲座讨论。\",\"Python中一切皆对象，对象分标量（不可再分，如5）与非标量（有内部结构，如列表[5,6,7,8]）；标量类型有int、float、bool（True/False）和NoneType（值None）。\",\"可用type()查类型，用float(3)得3.0等方式转换类型；转int只截断小数、不四舍五入。\",\"表达式为“对象 运算符 对象”并求值为一个值；int与float运算中若两操作数均为int则结果为int，否则为float，而除法结果始终为float；%取余，**为幂，优先级同数学并可用括号改变。\",\"赋值用等号把右侧值绑定到左侧变量名，值存于内存；重新赋值会解除旧绑定（旧值可能被垃圾回收），且不会自动重算其他变量，如改radius后area不变。\",\"print用于向控制台输出；在shell中直接输入表达式只显示值（Out），不算打印。\"]}",
+  "finish_reason": "stop",
+  "tool_calls": null,
+  "usage": {
+    "prompt_tokens": 4238,
+    "completion_tokens": 349,
+    "total_tokens": 4587,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 3982
+  }
+}

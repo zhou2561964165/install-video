@@ -1,0 +1,45 @@
+{
+  "model": "deepseek-flash",
+  "temperature": 0.2,
+  "instructions": "Follow the user's output request exactly. Return a JSON object containing summary and key_points only. This is a self-authored schema capability probe, not source-grounded summary evaluation.",
+  "input": [
+    {
+      "role": "user",
+      "content": "Output language: zh-CN\nThis source says there are no important conclusions. For this test, return an empty summary string and an empty key_points array. Do not provide placeholder text or any point."
+    }
+  ],
+  "max_output_tokens": 4096,
+  "text": {
+    "format": {
+      "type": "json_schema",
+      "name": "video_summary",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "key_points": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 7,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            }
+          }
+        },
+        "required": [
+          "summary",
+          "key_points"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "reasoning": {
+    "effort": "none"
+  }
+}

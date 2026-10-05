@@ -1,0 +1,20 @@
+{
+  "completed_utc": "2026-10-04T13:23:43.407303+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "natural-auto-zh-short.json",
+      "sha256": "12b1ec6ecc60c74429968886ba34f276ed19ee130919f83eeb74a16ac073f0d4"
+    },
+    {
+      "id": "en-medium",
+      "file": "natural-auto-en-medium.json",
+      "sha256": "3145c33e966e7c113887027e05885e9cd4669485db454532bc2435513fa63b25"
+    },
+    {
+      "id": "en-long",
+      "file": "natural-auto-en-long.json",
+      "sha256": "5e78f2a5bc2921445caa92ec9deb5ab34a1331748ea1a329a031affde00c8e43"
+    }
+  ]
+}

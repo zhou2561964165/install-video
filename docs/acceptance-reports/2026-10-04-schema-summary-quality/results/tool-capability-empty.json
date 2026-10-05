@@ -1,0 +1,8 @@
+{
+  "phase": "tool-capability",
+  "id": "empty",
+  "input_sha256": "8a14b1d1d885edc7618b551c4ecbb7aad90020a32ebb88434b8bdc974ab7fa7f",
+  "proxy_used": true,
+  "error_type": "llm_error",
+  "elapsed_seconds": 28.09
+}

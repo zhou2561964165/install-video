@@ -88,8 +88,10 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `LLM_SUMMARY_CHUNK_CHARS` | `20000` | 总结分段大小；先清理重复内容，再分段归纳并合并 |
 | `LLM_SUMMARY_MAX_CHUNKS` | `16` | 单次总结最多的原始分段数，限制一次请求的模型调用规模 |
 | `LLM_SUMMARY_MAX_OUTPUT_TOKENS` | `4096` | 每次分段或合并总结的最大输出 token 数 |
-| `LLM_SUMMARY_RESPONSE_FORMAT` | `auto` | `auto` / `text` / `json_object`；auto仅DeepSeek摘要发送JSON输出控制；text不发送该字段 |
+| `LLM_SUMMARY_RESPONSE_FORMAT` | `auto` | `auto` / `text` / `json_object` / `json_schema` / `strict_tool`；auto保持DeepSeek JSON模式。后两项仅显式实验协议，供应商实测有违约，本地严格拒绝，失败不追加请求 |
 | `LLM_SUMMARY_THINKING_MODE` | `auto` | `auto` / `enabled` / `disabled`；auto仅DeepSeek摘要关闭推理，避免推理消耗正文预算；明确值由操作者确保供应商支持 |
+| `LLM_SUMMARY_MAX_POINT_CHARS` | `240` | Unicode字符数；兼容模式只是精简目标，实验schema/工具模式为本地硬上限；超限拒绝，不裁切 |
+| `LLM_SUMMARY_SOURCE_CONTEXT_CHARS` | `1200` | 每分段原文头尾各保留至多该字符数随notes合并；跨层保留，容量计算包含证据；`0`关闭 |
 
 默认路径（`TEMP_DIR` / `DB_URL`）已锚定到后端目录，与启动时的工作目录无关。
 
@@ -106,11 +108,15 @@ uv run uvicorn app.main:app --reload --port 8000 --env-file .env
 
 摘要的默认兼容选项由供应商名驱动：DeepSeek使用`response_format=json_object`及`thinking=disabled`，两项可分别覆盖；翻译请求不携带摘要专用字段。JSON模式仍需通过字段与结束状态校验，空结果或截断继续报错，不自动重发模型POST。相关协议见[DeepSeek JSON输出](https://api-docs.deepseek.com/guides/json_mode/)及[推理模式](https://api-docs.deepseek.com/guides/thinking_mode/)。
 
+显式`json_schema`走Responses接口，`strict_tool`通过官方Beta工具参数返回固定七个槽位并映射回摘要/要点，不执行工具。实测供应商仍会返回数量、非空或长度违约，因此未提升为默认；本地验证和失败提示继续生效，`strict_tool`在DeepSeek开启推理时会预先拒绝。API根地址应不带query/fragment，实验协议及能力记录见[本轮报告](docs/acceptance-reports/2026-10-04-schema-summary-quality/report.md)。原始分段边界用于补充有损notes，不能保证源中所有事实都被保留。
+
 ## 验证
 
-最新全量验证：后端184/184、前端66/66、生产构建通过。摘要输出控制、主题指导及严格1–7点校验已提交 `05753e7`；公开Bilibili适配、inline兼容和yt-dlp回退保持。
+最新全量验证：后端234/234、前端73/73、生产构建通过。原文证据贯穿摘要合并、实验协议及响应式角色/触摸修复已提交 `be2bdd5`；公开Bilibili适配、inline兼容和yt-dlp回退保持。
 
-新证据见[自然字幕质量](docs/acceptance-reports/2026-10-04-natural-subtitle-quality/report.md)与[公网移动/GPU](docs/acceptance-reports/2026-10-04-public-mobile-gpu/report.md)：三份许可字幕预先冻结事实，新预算24次POST用尽；当前选定版本三源5/6/7点合格，但长末条426字、部分限定与例子泛化仍待优化，格式合格不等于全部准确。公网375px真实保存854×480视频，默认Windows RTX4050上传16K纹理且角色可见；真手机与低档GPU未测。MIT OCW语料仅按CC BY-NC-SA4.0用于非商业评测，与软件许可分开。
+本轮证据见[摘要协议与质量](docs/acceptance-reports/2026-10-04-schema-summary-quality/report.md)和[响应式角色](docs/acceptance-reports/2026-10-04-responsive-mascot/report.md)：19次预占、18次HTTP200、1次连接失败；默认三源5/5/7点，结尾事实恢复但12条完整/2条部分保留，长末点365字仍过度打包。实验协议上游仍违约，未切默认；不截断或自动重发。基础GPU布局41项、最终375px真实触摸5项各自通过；焦点几何修复通过但该专测有外部字体错误，未将其混为全浏览器成功。Windows视口和8K模拟不是手机/低GPU真机。
+
+前轮[自然字幕质量](docs/acceptance-reports/2026-10-04-natural-subtitle-quality/report.md)和[公网移动/GPU](docs/acceptance-reports/2026-10-04-public-mobile-gpu/report.md)保留184/66、24次台账、5/6/7点及426字末点，公网保存854×480视频。MIT OCW语料及衍生评测按CC BY-NC-SA4.0非商业再用，与软件许可分开。
 
 前轮[平台扩展](docs/acceptance-reports/2026-10-04-platform-expansion/report.md)、[浏览器闭环](docs/acceptance-reports/2026-10-04-browser-e2e/report.md)与[人工场景总结评测](docs/acceptance-reports/2026-10-04-summary-quality/report.md)保留：当时169/66，本机40项/6下载、公网桌面9项总结，以及独立12次模型台账。各轮范围不混算为全平台或全部质量成功。
 

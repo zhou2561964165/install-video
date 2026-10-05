@@ -1,0 +1,71 @@
+{
+  "phase": "natural-auto",
+  "reviewer": "Independent quality agent; no external independent human rating",
+  "rubric_preexisted_outputs": true,
+  "basis": "Frozen original MIT source facts plus source caption excerpts; summary and points assessed together semantically, not by matching keywords.",
+  "overall": "Application JSON/count contract succeeded, but quality goal failed: relevant content disappears already in second section, before merge. Smaller final catch-all is not an improvement when important tail consequence is lost.",
+  "samples": [
+    {
+      "id": "zh-short",
+      "point_count_before": 5,
+      "point_count_after": 6,
+      "facts": [
+        {"id": "zh1", "status": "retained", "points": [1], "note": "Day two Chinese instruction and day-one preparation/syllabus/expectations retained."},
+        {"id": "zh2", "status": "retained", "points": [2,3,4], "note": "Comprehensible classroom language and alignment of preparation with exercises retained, spread across three points."},
+        {"id": "zh3", "status": "retained", "points": [5], "note": "Fixed classroom wording and repeat-once formulations retained."},
+        {"id": "zh4", "status": "retained", "points": [6], "note": "First forty-five minutes Chinese, last five minutes/after-class/email English questions retained."}
+      ],
+      "pure_duplicate_pairs": [],
+      "organization_note": "Same preparation theme is fragmented; mismatch consequence is a distinct relevant condition, not a pure duplicate.",
+      "accuracy_issues": []
+    },
+    {
+      "id": "en-medium",
+      "point_count_before": 6,
+      "point_count_after": 5,
+      "facts": [
+        {"id": "en1", "status": "retained", "points": [1], "note": "Daily grading and persistent effort teaching rationale retained, but expected competence is worded strongly."},
+        {"id": "en2", "status": "retained", "points": [2,5], "note": "Written feedback on language/culture and next improvement retained; usually-after-class retained."},
+        {"id": "en3", "status": "partial", "points": [2], "note": "Engrade/private comments/account retained; explicit ability to record grades omitted."},
+        {"id": "en4", "status": "retained", "points": [3,4,5], "note": "Performance-dependent pronunciation/compliments/course-material feedback retained, but cultural contrast loses speaker attribution."}
+      ],
+      "pure_duplicate_pairs": [],
+      "accuracy_issues": [
+        {"type": "attribution", "point": 4, "note": "Chinese humility versus American thanks stated as general culture rather than the instructor's illustrative view."},
+        {"type": "modality_risk", "point": 1, "note": "If sustained effort then can show skill reads as a guarantee; source frames this as instructor belief/expectation."}
+      ],
+      "observed_improvement": "Usually-after-class qualifier is preserved in point 2, unlike old bounded output."
+    },
+    {
+      "id": "en-long",
+      "point_count_before": 7,
+      "point_count_after": 7,
+      "point_chars_after": [87,70,68,130,65,148,304],
+      "catch_all_chars_before": 426,
+      "catch_all_chars_after": 304,
+      "facts": [
+        {"id": "long1", "status": "retained", "points": [1,2], "note": "Calculation/storage and explicit instruction retained."},
+        {"id": "long2", "status": "retained", "points": [2,3], "note": "Declarative versus imperative, steps, control flow and stopping condition retained; tolerances introduced as examples."},
+        {"id": "long3", "status": "retained", "points": [4], "note": "Stored changeable instruction sequences and control-flow changes retained."},
+        {"id": "long4", "status": "partial", "points": [6], "note": "Syntax/static semantics/intended meaning retained, but crash/failure-to-stop behavior absent."},
+        {"id": "long5", "status": "retained", "points": [7], "note": "Typed scalar/structured objects, constrained operations and expressions evaluating to values retained."},
+        {"id": "long6", "status": "partial", "points": [], "note": "Summary retains generic name binding, but specific radius rebinding and already-calculated area staying unchanged are absent."}
+      ],
+      "pure_duplicate_pairs": [],
+      "tail_loss_stage": "Second section response ordinal 8; merge ordinal 9 cannot recover omitted source fact from notes.",
+      "input_tail_available": {"payload_ordinal": 8, "user_message_chars": 15124, "area_example_present": true, "next_lecture_tail_present": true},
+      "accuracy_issues": [
+        {"type": "coverage_loss", "note": "Important final scalar assignment example absent from second section and final result."},
+        {"type": "terminology_risk", "point": 1, "note": "Result storage is called memory next to hundreds-of-GB storage. Do not infer this validates exact memory/storage distinction."}
+      ],
+      "organization_note": "Last point still packs object types, conversions, output and many operators, and exceeds 240 soft-target characters. Less text with lost essential tail is not successful compression."
+    }
+  ],
+  "essential_facts_total": 14,
+  "fully_retained": 11,
+  "partially_retained": 3,
+  "fully_missing": 0,
+  "important_tail_consequence_missing": true,
+  "limitations": "One inference per sample/profile from two MIT courses; review is an agent assessment and does not establish complete claim precision or statistical reliability.",
+  "attribution_license": "Source and derived review retain MIT OCW authors/links in original manifest and CC BY-NC-SA 4.0, noncommercial, ShareAlike."
+}

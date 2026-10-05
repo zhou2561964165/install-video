@@ -1,0 +1,129 @@
+{
+  "bound_utc": "2026-10-04T13:53:00.373738+00:00",
+  "selected_default_profile": "natural-refined",
+  "service_sha256": "07a45b8e929247d707393ee70b6a8475b341d6ca234b8ca4d5cacac2af02f048",
+  "settings_source_sha256": "82a4e8dac584424b1e3dd79022fcd6ab9f444816d56e17eb9a3eb539c5a255e9",
+  "selected_provenance_sha256": "3e870053f4312e2da81bb4aa4bb6180f5dbc5d06617fd0e50706e6f9cf71129f",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "response_format": "auto",
+  "thinking_mode": "auto",
+  "max_point_chars": 240,
+  "source_context_chars": 1200,
+  "evaluation_process_config": {
+    "llm_summary_chunk_chars": 20000,
+    "llm_max_input_chars": 60000,
+    "llm_summary_max_chunks": 16,
+    "llm_summary_max_output_tokens": 4096
+  },
+  "env_file_changed": false,
+  "resolved_request_options": {
+    "model": "deepseek-flash",
+    "temperature": 0.2,
+    "max_tokens": 4096,
+    "response_format": {
+      "type": "json_object"
+    },
+    "thinking": {
+      "type": "disabled"
+    }
+  },
+  "actual_default_endpoint_metadata": {
+    "host": "api.deepseek.com",
+    "path": "/chat/completions"
+  },
+  "system_prompt_sha256": "d49114b23f0ba129d228ec8bbe70f59107aea8d28c19a718551c663e42b7f922",
+  "manifest_and_facts_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+  "rubric_sha256": "1e0081f23b737f77a817011dd182ea4728100b9dab4dfed8cfe65a9ceb3349aa",
+  "baseline": {
+    "commit": "05753e7fd828a82e1ad2cec0112c15d639c7050c",
+    "service_sha256": "df73e7f83724e8d03913121028bf52040a0152e68bc2326784234250a09e3e85",
+    "delivery_profile_sha256": "836cc39c4bf29ca5ba7b9d049aa7b2e2c54ba112fd434b641f2e936bd5aac91e",
+    "sample_results": [
+      {
+        "id": "zh-short",
+        "file": "bounded-zh-short.json",
+        "sha256": "3f69038ebfe0d0f79f6a7db08b1bc338e61838a53a5f28d3985ee21530ae95c4"
+      },
+      {
+        "id": "en-medium",
+        "file": "bounded-en-medium.json",
+        "sha256": "d253238817217ac78147b49a86f85b4b374d4b077a30d2be8be167ed9d92f837"
+      },
+      {
+        "id": "en-long",
+        "file": "bounded-en-long.json",
+        "sha256": "ba83250506a748f1bbc658531d1c6c646e2bf6746788a79cf2e7ef6aa576c1d4"
+      }
+    ]
+  },
+  "phase_indexes": [
+    {
+      "file": "capability-index.json",
+      "sha256": "b10d8d2b04363155960242bb590815a365c46521aaef15050747005bc767b8cd"
+    },
+    {
+      "file": "natural-auto-index.json",
+      "sha256": "fc519eaaae406a6f0fc56991504d2b9724d9277453df772c4fbb8c1009c7eb18"
+    },
+    {
+      "file": "natural-refined-index.json",
+      "sha256": "27e2127de650b4e463205147c1f1764c8d59665f55dababe75097bc18b7afab0"
+    },
+    {
+      "file": "natural-tool-index.json",
+      "sha256": "9dffd64cc305e8d7110f6e7e991c025d02bdb3c22f516bcdaaf2dc5440005e78"
+    },
+    {
+      "file": "tool-capability-index.json",
+      "sha256": "335c2faaedce9bbac490f0095cafe07c46db84c67e001d9e83c5d8a35f12ad3d"
+    },
+    {
+      "file": "tool-capability-verified-index.json",
+      "sha256": "409a2411771393aa97737752664093310bde370d1083da60ca59f4f36e1e0562"
+    }
+  ],
+  "derived_reviews": [
+    {
+      "file": "natural-auto-review.json",
+      "sha256": "66b3c4a1221167ff8ef24370b6b80ed89bbf975515a7a645bacea20508b80757"
+    },
+    {
+      "file": "natural-refined-review.json",
+      "sha256": "ead97908d19a599cb10247d6282e549a021d47d7b10fbfcb9a98e13479532faf"
+    },
+    {
+      "file": "natural-tool-review.json",
+      "sha256": "d4bf09395b029d1828170ba67563963385ac35325e6379a57043757d9bf04db1"
+    }
+  ],
+  "request_ledger_sha256": "7e7006ce8086fccb46974281a7d7888ff0e14ce616dfec70e98738f1ccbf8bed",
+  "reserved_attempts": 19,
+  "confirmed_http_responses": 18,
+  "reported_tokens": 52062,
+  "ceiling": 20,
+  "calls_stopped": true,
+  "more_calls_planned": false,
+  "default_valid_sample_point_counts": [
+    5,
+    5,
+    7
+  ],
+  "essential_compound_facts_fully_retained": 12,
+  "essential_compound_facts_partial": 2,
+  "long_catch_all_chars": 365,
+  "long_organization_goal_met": false,
+  "legacy_point_length_limit_is_soft": true,
+  "explicit_modes_promoted_to_default": false,
+  "explicit_mode_results": {
+    "json_schema": "Responses adversarial eight-point request returned eight points; local refusal.",
+    "strict_tool": "Normal short/medium succeeded, long final point 294 exceeded pattern 240 and local refusal; empty adversarial first slot also failed."
+  },
+  "limitations": [
+    "Joint section guidance/context change; no isolated mechanism causal estimate.",
+    "Cultural attribution and scope issues remain; not universal factual accuracy.",
+    "No upstream hard schema/pattern guarantee established.",
+    "One transport error has no received HTTP response; not 19 successful summaries."
+  ],
+  "attribution_license": "MIT-derived source/results/review retain original authors, URLs and CC BY-NC-SA 4.0 noncommercial ShareAlike; product/scripts not relicensed."
+}

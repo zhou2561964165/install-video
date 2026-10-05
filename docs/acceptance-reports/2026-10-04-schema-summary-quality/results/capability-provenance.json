@@ -1,0 +1,103 @@
+{
+  "frozen_utc": "2026-10-04T10:37:48.070795+00:00",
+  "git_head": "8713862d1e2e69b973810c41f327587dbbbfb0bc",
+  "service_sha256": "865249b42e324a55eab1f836b04ddb89b0f0138abfb2da67040e98276998e00d",
+  "settings_source_sha256": "af01f8efcda8fe43414d7fc2653e08c87afbe2cc1e557f41bdeb9b5746cba5ae",
+  "manifest_and_facts_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+  "rubric_sha256": "1e0081f23b737f77a817011dd182ea4728100b9dab4dfed8cfe65a9ceb3349aa",
+  "samples": [
+    {
+      "id": "zh-short",
+      "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+      "cleaned_chars": 608,
+      "sections": 1
+    },
+    {
+      "id": "en-medium",
+      "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+      "cleaned_chars": 2199,
+      "sections": 1
+    },
+    {
+      "id": "en-long",
+      "sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7",
+      "cleaned_chars": 34658,
+      "sections": 2
+    }
+  ],
+  "config": {
+    "llm_summary_chunk_chars": 20000,
+    "llm_max_input_chars": 60000,
+    "llm_summary_max_chunks": 16,
+    "llm_summary_max_output_tokens": 4096
+  },
+  "model": "deepseek-flash",
+  "provider": "deepseek",
+  "max_point_chars": 240,
+  "response_format": "json_schema",
+  "thinking_mode": "auto",
+  "output_language": "zh-CN",
+  "baseline": {
+    "commit": "05753e7fd828a82e1ad2cec0112c15d639c7050c",
+    "service_sha256": "df73e7f83724e8d03913121028bf52040a0152e68bc2326784234250a09e3e85",
+    "delivery_profile_sha256": "836cc39c4bf29ca5ba7b9d049aa7b2e2c54ba112fd434b641f2e936bd5aac91e",
+    "sample_results": [
+      {
+        "id": "zh-short",
+        "file": "bounded-zh-short.json",
+        "sha256": "3f69038ebfe0d0f79f6a7db08b1bc338e61838a53a5f28d3985ee21530ae95c4"
+      },
+      {
+        "id": "en-medium",
+        "file": "bounded-en-medium.json",
+        "sha256": "d253238817217ac78147b49a86f85b4b374d4b077a30d2be8be167ed9d92f837"
+      },
+      {
+        "id": "en-long",
+        "file": "bounded-en-long.json",
+        "sha256": "ba83250506a748f1bbc658531d1c6c646e2bf6746788a79cf2e7ef6aa576c1d4"
+      }
+    ]
+  },
+  "endpoint_kind": "responses",
+  "system_prompt": "Follow the user's output request exactly. Return a JSON object containing summary and key_points only. This is a self-authored schema capability probe, not source-grounded summary evaluation.",
+  "system_prompt_sha256": "43eb89dbbab3278d5efa11d195ca86afde761321c163370a8622de1046559222",
+  "request_options": {
+    "model": "deepseek-flash",
+    "temperature": 0.2,
+    "max_output_tokens": 4096,
+    "text": {
+      "format": {
+        "type": "json_schema",
+        "name": "video_summary",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "key_points": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 7,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              }
+            }
+          },
+          "required": [
+            "summary",
+            "key_points"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "reasoning": {
+      "effort": "none"
+    }
+  }
+}

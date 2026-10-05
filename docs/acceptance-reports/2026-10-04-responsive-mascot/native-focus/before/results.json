@@ -1,0 +1,124 @@
+{
+  "generatedAt": "2026-10-04T13:41:44.866Z",
+  "httpMocks": false,
+  "appStateWrites": false,
+  "llmCalls": 0,
+  "physicalDeviceDebugChannel": "adb not discovered on PATH; physical phone availability unknown",
+  "checks": [],
+  "requests": [
+    {
+      "scope": "native-focus375",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "native-focus375",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "native-focus375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "native-focus375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "native-focus375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "native-focus375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "native-focus375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    },
+    {
+      "scope": "native-focus375",
+      "method": "POST",
+      "path": "/api/parse",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "captures": [],
+  "proxyFromSystem": true,
+  "gpuDevices": [
+    {
+      "vendorId": 4318,
+      "deviceId": 10465,
+      "subSysId": 347279427,
+      "revision": 161,
+      "vendorString": "",
+      "deviceString": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "driverVendor": "NVIDIA",
+      "driverVersion": "32.0.16.1692"
+    },
+    {
+      "vendorId": 4098,
+      "deviceId": 5567,
+      "subSysId": 347279427,
+      "revision": 193,
+      "vendorString": "",
+      "deviceString": "AMD Radeon 780M Graphics",
+      "driverVendor": "",
+      "driverVersion": "32.0.31035.1003"
+    },
+    {
+      "vendorId": 5140,
+      "deviceId": 140,
+      "subSysId": 0,
+      "revision": 0,
+      "vendorString": "",
+      "deviceString": "Microsoft Basic Render Driver",
+      "driverVendor": "",
+      "driverVersion": "10.0.26100.9278"
+    }
+  ],
+  "focusProbe": {
+    "focused": true,
+    "rect": {
+      "x": 158,
+      "y": 109.03125,
+      "width": 157,
+      "height": 40
+    },
+    "bars": [
+      {
+        "x": 12,
+        "y": 16,
+        "width": 351,
+        "height": 42.1875
+      },
+      {
+        "x": 205,
+        "y": 88,
+        "width": 158,
+        "height": 36.1875
+      }
+    ],
+    "hitsAtCenter": [
+      "SELECT",
+      "LABEL",
+      "CANVAS",
+      "stage"
+    ]
+  },
+  "failure": "AssertionError [ERR_ASSERTION]: {\"focused\":true,\"rect\":{\"x\":158,\"y\":109.03125,\"width\":157,\"height\":40},\"bars\":[{\"x\":12,\"y\":16,\"width\":351,\"height\":42.1875},{\"x\":205,\"y\":88,\"width\":158,\"height\":36.1875}],\"hitsAtCenter\":[\"SELECT\",\"LABEL\",\"CANVAS\",\"stage\"]}"
+}

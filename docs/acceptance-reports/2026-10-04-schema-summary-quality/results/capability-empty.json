@@ -1,0 +1,15 @@
+{
+  "phase": "capability",
+  "id": "empty",
+  "input_sha256": "8a14b1d1d885edc7618b551c4ecbb7aad90020a32ebb88434b8bdc974ab7fa7f",
+  "proxy_used": true,
+  "result": {
+    "summary": "源材料未提供可总结的内容，且明确说明没有重要结论。",
+    "key_points": [
+      "源材料声明没有重要结论，因此无可提取的要点。"
+    ],
+    "provider": "deepseek",
+    "model": "deepseek-flash"
+  },
+  "elapsed_seconds": 0.8
+}

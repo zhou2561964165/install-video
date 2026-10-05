@@ -1,0 +1,19 @@
+{
+  "ordinal": 10,
+  "phase": "natural-refined",
+  "sample": "zh-short",
+  "stage": "section",
+  "content": "{\"summary\":\"MIT中文课从第二天起全中文授课，第一天说明课程准备与大纲。维持全中文课堂的关键是课堂用语学生能听懂，且课前备课与课堂练习一致；学生有疑问可课后、邮件或在最后五分钟用英文提问。\",\"key_points\":[\"MIT中文课从第二天开始全中文授课；第一天会告知学生课程准备、大纲和期望。\",\"用中文上课的两个关键：课堂用语学生要听得懂（如“请跟我再说一遍”“请你回答问题”“很好”）；学生的课前备课要反映在课堂练习上。\",\"课前有weekly schedule告知每天准备内容，上课就练这些；若练学生没准备的内容，他们会转用英文，因此备课与上课任务必须一致。\",\"课堂用语不能“出圈”：如“请你再说一遍”与“请你再说一次”被视为不同，老师需注意用词一致。\",\"学生听不懂需用英文提问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课问或用电子邮件问，以维持课堂中文气氛。\"]}",
+  "finish_reason": "stop",
+  "tool_calls": null,
+  "usage": {
+    "prompt_tokens": 798,
+    "completion_tokens": 219,
+    "total_tokens": 1017,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 542
+  }
+}

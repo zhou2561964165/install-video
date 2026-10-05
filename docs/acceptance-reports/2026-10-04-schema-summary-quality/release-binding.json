@@ -1,0 +1,22 @@
+{
+  "verified_at_utc": "2026-10-05T03:51:36.171633+00:00",
+  "purpose": "Offline archival binding after shutdown; no model/browser/test rerun",
+  "implementation_commit": "be2bdd57d67c2e4e2d172902d33a1435145fccd3",
+  "production_source_sha256": {
+    "backend/app/services/llm_service.py": "07a45b8e929247d707393ee70b6a8475b341d6ca234b8ca4d5cacac2af02f048",
+    "backend/app/config.py": "82a4e8dac584424b1e3dd79022fcd6ab9f444816d56e17eb9a3eb539c5a255e9",
+    "frontend/src/App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+    "frontend/src/components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+    "frontend/src/components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+    "frontend/src/pixi/mascot.js": "3c9c25add0dad27674189c747e83f35a470e0708ab7a55383a241109d278b6f1",
+    "frontend/src/pixi/mascotConfig.js": "3a39b72a0452f69562ed6a1982b6261b35ad943dd586060235f9224b21a355ab",
+    "frontend/src/pixi/stage.js": "e741269a0f38be21d6f44b0b282a7502e8ac6788d06f46dd6517c642cfa1917f",
+    "frontend/src/styles/global.css": "29ddf969d8584e69fe143fbba17f2fc540f816581379945667dc9076b5cfe71c"
+  },
+  "quality_delivery_profile_sha256": "1aec41af0507dd056fae7e07cb393f741386a6bdb9ff5adc5a779ffe3f0d9d87",
+  "selected_default_profile": "natural-refined",
+  "ui_source_provenance_sha256": "a91f3aa8c186ee6ffa2478c80fe721fa4677b30bd3452ab34c3dc6c2f5f96244",
+  "evidence_captured_on": "2026-10-04",
+  "old_frozen_files_changed": false,
+  "external_http_or_model_calls": 0
+}

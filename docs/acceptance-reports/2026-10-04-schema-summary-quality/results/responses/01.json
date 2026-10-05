@@ -1,0 +1,25 @@
+{
+  "ordinal": 1,
+  "phase": "capability",
+  "sample": "empty",
+  "stage": "section",
+  "content": "{\"summary\": \"源材料未提供可总结的内容，且明确说明没有重要结论。\", \"key_points\": [\"源材料声明没有重要结论，因此无可提取的要点。\"]}",
+  "status": "completed",
+  "message_statuses": [
+    "completed"
+  ],
+  "output_types": [
+    "message"
+  ],
+  "usage": {
+    "input_tokens": 185,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 40,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 225
+  }
+}

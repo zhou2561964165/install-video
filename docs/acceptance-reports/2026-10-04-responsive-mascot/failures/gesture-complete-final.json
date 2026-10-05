@@ -1,0 +1,129 @@
+{
+  "generatedAt": "2026-10-04T14:09:07.078Z",
+  "httpMocks": false,
+  "appStateWrites": false,
+  "llmCalls": 0,
+  "physicalDeviceDebugChannel": "adb not discovered on PATH; physical phone availability unknown",
+  "checks": [
+    {
+      "name": "real touchStart→touchCancel without movement does not open menu",
+      "pass": true,
+      "cancelledOpenedMenu": false,
+      "touchStart": {
+        "x": 187.5,
+        "y": 577.3359375
+      },
+      "movement": false
+    },
+    {
+      "name": "real ordinary touch tap still opens menu after cancellation fix",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/live2dcubismcore.min.js",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "POST",
+      "path": "/api/auth/register",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/api/auth/me",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.model3.json",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.16384/texture_00.png",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.moc3",
+      "status": 200
+    },
+    {
+      "scope": "real-touch375",
+      "method": "GET",
+      "path": "/live2d/bai/%E7%99%BD.physics3.json",
+      "status": 200
+    }
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "captures": [],
+  "sourceSha256": {
+    "App.jsx": "7fb60fdc2749edd075c6b61c03408e539ca2d532432a2c5144a8d542d8ee30a2",
+    "components/EntryScene.jsx": "3dd6dea4a2f2039db91555c6ee921639a58ad63780dc6029421f5d69e455e8c3",
+    "components/ui/ExpressionMenu.jsx": "8cc3f28656d1b984696496075ad74785716a4decf66319cd2f125054d9876535",
+    "pixi/mascot.js": "3c9c25add0dad27674189c747e83f35a470e0708ab7a55383a241109d278b6f1",
+    "pixi/mascotConfig.js": "3a39b72a0452f69562ed6a1982b6261b35ad943dd586060235f9224b21a355ab",
+    "pixi/stage.js": "e741269a0f38be21d6f44b0b282a7502e8ac6788d06f46dd6517c642cfa1917f",
+    "styles/global.css": "29ddf969d8584e69fe143fbba17f2fc540f816581379945667dc9076b5cfe71c"
+  },
+  "proxyFromSystem": true,
+  "gpuDevices": [
+    {
+      "vendorId": 4318,
+      "deviceId": 10465,
+      "subSysId": 347279427,
+      "revision": 161,
+      "vendorString": "",
+      "deviceString": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "driverVendor": "NVIDIA",
+      "driverVersion": "32.0.16.1692"
+    },
+    {
+      "vendorId": 4098,
+      "deviceId": 5567,
+      "subSysId": 347279427,
+      "revision": 193,
+      "vendorString": "",
+      "deviceString": "AMD Radeon 780M Graphics",
+      "driverVendor": "",
+      "driverVersion": "32.0.31035.1003"
+    },
+    {
+      "vendorId": 5140,
+      "deviceId": 140,
+      "subSysId": 0,
+      "revision": 0,
+      "vendorString": "",
+      "deviceString": "Microsoft Basic Render Driver",
+      "driverVendor": "",
+      "driverVersion": "10.0.26100.9278"
+    }
+  ],
+  "cancelProbe": {
+    "cancelledOpenedMenu": false,
+    "touchStart": {
+      "x": 187.5,
+      "y": 577.3359375
+    },
+    "movement": false
+  },
+  "horizontalProbe": {
+    "beforeX": 187.5,
+    "afterX": 187.5,
+    "movement": 0,
+    "scrollBefore": 178,
+    "scrollAfter": 178,
+    "menuOpened": false
+  },
+  "failure": "AssertionError [ERR_ASSERTION]: {\"beforeX\":187.5,\"afterX\":187.5,\"movement\":0,\"scrollBefore\":178,\"scrollAfter\":178,\"menuOpened\":false}"
+}

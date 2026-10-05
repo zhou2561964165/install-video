@@ -1,6 +1,6 @@
 ﻿# 交接 · 视频下载、平台字幕与AI总结
 
-> 更新：2026-10-04。摘要输出控制、主题指导及1–7条数量校验已提交：`05753e7`。此前Bilibili/inline增量 `e7c29be`、文档 `47a1ad8`；TLS重试 `96b0b59`。本轮文档与证据随后提交。
+> 更新：2026-10-05（关机后恢复，完成文档归档）。实验协议、原文证据贯穿合并、响应式角色/触摸修复已提交：`be2bdd5`。前轮实现/文档 `05753e7` / `8713862`；此前Bilibili/inline `e7c29be`、TLS重试 `96b0b59`。验收数据仍为2026-10-04采集，恢复后没有重跑模型。
 
 ## 工程约定
 
@@ -15,9 +15,24 @@
 - AI内容总结是主目标；字幕是内容来源，可清理重复内容，长内容分段归纳再合并，保留尾部结论。
 - 滚动首页保留在登录后。没有新增时间轴导出、音频转写、问答、思维导图、支付或批量下载。
 - 用户授权多agent逐步完成平台覆盖、完整浏览器流程与总结质量。所有agent继承主agent的模型与推理设置。
-- 此前平台、浏览器、质量三个工作线已交付；当前追加自然字幕实测、公网移动下载和GPU证据。长要点组织仍未达标，不将格式校验修复描述为全部质量问题解决。旧 `real_platform_subtitle_acceptance` / `v3_review` 历史会话继续停用。
+- 当前已完成实验协议/源证据、独立质量评测、响应式布局与手势，并交叉复审。默认保持json_object；供应商严格约束、长文组织与部分归因仍未达标。旧 `real_platform_subtitle_acceptance` / `v3_review` 历史会话继续停用。
 
 ## 最新验证与证据
+
+| 项目 | 结果 | 范围与限制 |
+| --- | --- | --- |
+| 后端 / 前端 / 构建 | 234/234、73/73、通过 | 新协议/状态/槽位/容量/证据贯穿与既有平台认证下载；布局/菜单回归。已知弃用/navigation/大chunk提示保留 |
+| 新模型台账 | 19次预占，18次HTTP200，1次ConnectError；52062报告tokens | 六profile；剩余1次不用。HTTP成功不等于契约或质量成功，没有自动付费重试/降级 |
+| 选定默认 | natural-refined，5/5/7点，12条完整/2条部分保留 | 原文边界和提示联合恢复首轮遗漏的末尾radius/area、崩溃/不停后果；长末点365字仍混装，文化归因和范围/成绩录入等仍有不足 |
+| 实验协议 | Responses可返回8点，Beta可返回空首槽和294字末点；本地严格拒绝 | json_schema/strict_tool仅显式可选，auto未切。工具只序列化参数不执行、无第二轮POST；240在默认模式只是softtarget |
+| 基础角色矩阵 | 320/375/720/1440真实RTX4050布局/GPU41项、22截图 | 较早源码阶段，各尺寸16K驻留、实际控件/角色交互/尺寸调整；Windows视口不是真机 |
+| 最终375触摸 | 5项通过，0pageerror/console/failedRequest | 取消不误开、tap菜单、横拖60.54px且文档不滚、原生竖滚185px；七源hash在该run开始直接采集 |
+| 焦点修复 | select y109..149→280..320，几何1项通过 | 该专测整体仍有Google字体网络1错误，不算全clean，不与41/5混为47全成功 |
+| 降级与已知限制 | 8K模拟跳过16K模型目录/parse可用；原模型未改 | 没有真手机调试通道证明，未真机/低GPU实测。异步字体/UI尺寸变化可能使拖动短暂重新居中 |
+
+优先读[本轮摘要协议与质量](acceptance-reports/2026-10-04-schema-summary-quality/report.md)、[协议设计](acceptance-reports/2026-10-04-schema-summary-quality/provider-design.md)与[响应式角色](acceptance-reports/2026-10-04-responsive-mascot/report.md)。UI历史源码hash是事后逆向重建，最终触摸源码hash才在运行开始直接捕获，两者明确区分。MIT原语料/事实及衍生评测继续按NC/SA，旧证据未改。
+
+## 前轮验证（184/66）
 
 | 项目 | 结果 | 范围与限制 |
 | --- | --- | --- |
@@ -25,7 +40,7 @@
 | 前端全量 / 构建 | 66/66 / 通过 | 生产前端未改；已知jsdom navigation、Starlette弃用及大chunk提示仍存在 |
 | 自然字幕 | MIT OCW原生中文608、英文2199、英文长课34894字符 | 三份独立自然字幕，预先冻结4/4/6个主事实；未覆盖中文长课/六种语言×长度组合。CC BY-NC-SA4.0，仅非商业评测 |
 | 模型实测 | 六个profile共24次POST，HTTP均200；89567个供应商报告token | HTTP200不等于有效总结：漏JSON闭合、推理耗尽空正文、超限8/12/11点均保留。预算已耗尽，不重置或自动重试 |
-| 最终选择 | bounded版本三源返回5/6/7点；当前service/config字节与冻结快照一致 | 14个主事实概念语义覆盖不等于每个claim准确；中篇usually→always过强，长篇依赖变量例泛化有范围风险，末条426字比基线306更大。最后concise候选失败已回退，长组织/压缩未达标 |
+| 当时最终选择 | bounded版本三源返回5/6/7点；当时service/config字节与冻结快照一致 | 14个主事实概念语义覆盖不等于每个claim准确；中篇usually→always过强，长篇依赖变量例泛化有范围风险，末条426字比基线306更大。最后concise候选失败已回退，长组织/压缩未达标 |
 | 公网375px下载 | 9项检查、1个实际浏览器保存文件 | 854×480 H.264/Opus、75.741秒、Matroska、8854893字节；源仅提供“最佳”，不声称选择480p |
 | 默认GPU | Windows Edge桌面和375px均RTX4050/ANGLE D3D11，16K纹理驻留、角色可见 | 只覆盖当前硬件；移动示例按钮遮角色脸、桌面脚部出底边，真手机、低档GPU与完整角色交互未测 |
 
@@ -61,12 +76,12 @@
 | `services/bilibili_subtitle_source.py` | 匿名元数据、BV/分P/CID关联、可信HTTPS字幕来源、语言/类型校验 |
 | `services/subtitle_service.py` | 轨道选择、HTTP或inline正文、字节上限，SRT/VTT/JSON3/TTML/Bilibili JSON解析；native正文失败最多generic一次 |
 | `services/network_retry.py` | 只包裹幂等GET的有限瞬时网络/EOF/502/503/504重试，指数退避 |
-| `services/llm_service.py` | provider配置、去重/分段/分层合并；摘要输出选项、主题指导、严格JSON/完成状态/1–7点数量校验，超限拒绝且不截断 |
+| `services/llm_service.py` | 摘要/翻译窄接口；显式实验协议、严格本地状态/槽/数量/长度校验，原文边界贯穿分层merge；不执行工具、不截断、不自动POST重试 |
 | `routes/subtitle.py` / `summary.py` | 登录鉴权、请求响应与局部错误映射；不依赖平台JSON |
 | `api.js` / `useAuth` / `useDownload` / `useVideoInsights` | 前端请求边界与分别独立的状态/请求生命周期 |
 | `VideoInsights.jsx` | 纯props展示；解析语言列表为空仍提供自动选源语言和显式操作 |
 | `styles/global.css` / `pixi/theme.js` | 三层样式token与PIXI颜色桥接 |
-| `pixi/mascotConfig.js` / `mascot.js` | 白模型、待机和窄屏布局；登录后初始化重资源 |
+| `pixi/mascotConfig.js` / `mascot.js` / `stage.js` | 区域几何、纹理能力、触控默认配置；角色只读矩形/scene，取消非点击，浏览器原生滚动保留，模型资源不改 |
 
 ### 平台回退边界
 
@@ -85,7 +100,8 @@
 - httpx GET处理瞬时传输/超时、远端EOF及502/503/504；4xx、无字幕、格式错误不进入该重试器。yt-dlp按原生错误分类使用有限retries；LLM POST不自动重试。
 - `LLM_MAX_INPUT_CHARS=60000`；分段默认20000字符、最多16段、每次最大输出4096 tokens。翻译仍有独立输入上限。
 - 配置供应商为deepseek、API模型ID `deepseek-flash`；凭据只在Git忽略的 `backend/.env`。
-- `LLM_SUMMARY_RESPONSE_FORMAT=auto|text|json_object`、`LLM_SUMMARY_THINKING_MODE=auto|enabled|disabled`。auto仅DeepSeek摘要发送json_object+disabled；通用供应商auto及翻译不发送摘要专用控制，明确值须供应商支持。用户`.env`未改；摘要默认变化由已配置provider决定。
+- `LLM_SUMMARY_RESPONSE_FORMAT=auto|text|json_object|json_schema|strict_tool`、`LLM_SUMMARY_THINKING_MODE=auto|enabled|disabled`。auto继续DeepSeek json_object+disabled；后两格式显式实验、本地拒绝违约，不设为默认；DeepSeek strict_tool不能enabled推理。通用auto和翻译不加摘要专用控制，用户`.env`未改。
+- `LLM_SUMMARY_MAX_POINT_CHARS=240`：兼容模式精简目标、实验模式本地硬校验。`LLM_SUMMARY_SOURCE_CONTEXT_CHARS=1200`：每原分段头尾证据穿层保留，组大小包含JSON/context；`0`恢复旧notes形状，无容量时明确失败而非删证据。原文中部仍可能有未被notes/边界保留的事实。
 
 ```powershell
 # 在项目根首次准备依赖
@@ -112,14 +128,14 @@ npm test
 npm run build
 ```
 
-完整本机浏览器复跑：项目根运行 `.venv\Scripts\python.exe docs/acceptance-reports/2026-10-04-browser-e2e/local_harness.py`。新公网脚本使用新的输出目录并拒绝覆盖，命令见报告。历史12次与新自然字幕24次模型预算均已耗尽，不能清空台账继续调用；各profile复现需要对应源码、配置和prompt hash。无HTTP的delivery检查命令见新质量报告。
+完整本机浏览器复跑命令见对应报告，新输出必须独立且不能覆盖。历史12/24台账耗尽且不改；本轮20上限使用19预占后停止，剩余1次不继续调用或重置。各profile须对应源码/config/hash，不能仅改标签冒充复现；只读check_evidence命令见质量报告。
 
 ## 状态与下一步
 
-- 实现已本地提交 `05753e7`；文档与本轮验收证据随后提交。用户原有 `AGENTS.md` 仍未跟踪；没有提交 `.env`、数据库、`.planning/` 或临时媒体。`.gitattributes`固定新证据原始字节和被快照源码LF，避免Windows checkout破坏SHA-256。
-- 历史8051/8052/8053/5185、8061/5186与本轮8062/5187测试服务均已停止；用户 `backend/jobs.db` 与原模型资源未改。
+- 实现已本地提交 `be2bdd5`，文档与本轮证据已归档提交。用户`AGENTS.md`仍未跟踪，未提交.env/db/.planning/临时媒体。`.gitattributes`保留新证据及被实时捕获源码字节；stage.js混合EOL按原字节保存，不规范化后假称当时源码。
+- 历史8051/8052/8053/5185、8061/5186、8062/5187及本轮8063/8064/5188测试服务均已停止；用户jobs.db与原模型资源未改。
 - 源样本许可、SHA-256、历史原件和失败记录保持原样；新脚本不依赖ACL受限的旧raw目录，不更改其权限。
-- 当前Windows硬件GPU/16K角色已补实测；真手机/低GPU纹理上限、触摸角色菜单仍未证明，模型资源未改。
+- 当前Windows硬件GPU/16K角色及模拟视口触摸菜单已补实测；真手机触摸菜单、真实低GPU纹理上限仍未证明，模型资源未改。
 - 下载失败额度退还、独立AI额度、支付、SSE、队列横向扩展和生产部署仍未实现。
 
-建议下一项：**严格结构化输出与长内容重点取舍**。先分析供应商可约束数组数量的schema接口，保持通用回退和单次计费请求，再改进长文主题选择、频率限定与具体例子范围。真实字幕质量实测已完成，但长要点压缩仍待改进；不能仅加强提示词就宣称保证准确或简洁。之后按需要处理375px角色/按钮重叠与真手机、低档GPU兼容，再考虑SSE/独立AI额度。当前预算停止，等待用户下一步指示。
+建议下一项：**事实/主题层与逐声明校验**。先用可追溯原文建立带限定与归因的主题/事实中间结构，再选择重点，避免段摘要过度省略和最后一点收纳剩余内容；不能靠字符串截断或继续声称供应商schema保证。随后在可用真机通道上验键盘/触摸/低内存，并按授权许可考虑轻量模型和字体本地化。端点query/fragment配置未支持、异步布局拖动重居中列已知Minor。当前调用停止，等待用户指示。

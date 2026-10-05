@@ -1,0 +1,10 @@
+{
+  "completed_utc": "2026-10-04T13:05:38.513784+00:00",
+  "sample_results": [
+    {
+      "id": "empty",
+      "file": "tool-capability-empty.json",
+      "sha256": "be1a4493072c09eb942437a5b48a0e6cc4199d5350b1b49939bf2aeb51672e22"
+    }
+  ]
+}

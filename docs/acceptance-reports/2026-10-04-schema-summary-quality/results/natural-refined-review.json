@@ -1,0 +1,82 @@
+{
+  "phase": "natural-refined",
+  "reviewer": "Independent quality agent; no external independent human rating",
+  "rubric_preexisted_outputs": true,
+  "comparison": "Original bounded 05753e7 results are reused byte-for-byte; natural-auto failure remains unchanged.",
+  "overall": "Important tail consequence and program crash/nontermination are restored after the combined section guidance and original-boundary mechanism. Organization and attribution/specific-scope targets remain unmet.",
+  "samples": [
+    {
+      "id": "zh-short",
+      "point_count_before": 5,
+      "point_count_after": 5,
+      "point_chars_after": [37,63,67,45,58],
+      "facts": [
+        {"id": "zh1", "status": "retained", "points": [1], "note": "Day two Chinese instruction and day-one preparation/syllabus/expectations retained."},
+        {"id": "zh2", "status": "retained", "points": [2,3], "note": "Two classroom requirements and preparation/exercise alignment retained."},
+        {"id": "zh3", "status": "retained", "points": [4], "note": "Fixed classroom wording and repeat-once formulations retained."},
+        {"id": "zh4", "status": "retained", "points": [5], "note": "Forty-five/five minutes and after-class/email question alternatives retained."}
+      ],
+      "pure_duplicate_pairs": [],
+      "organization_note": "Five points match original bounded count. Preparation topic spans two points, but second adds a relevant consequence; not pure duplication.",
+      "accuracy_issues": []
+    },
+    {
+      "id": "en-medium",
+      "point_count_before": 6,
+      "point_count_after": 5,
+      "point_chars_after": [50,60,43,48,57],
+      "facts": [
+        {"id": "en1", "status": "retained", "points": [1], "note": "Daily grading and sustained-effort rationale retained, though instructor belief/expectation attribution absent."},
+        {"id": "en2", "status": "retained", "points": [2,5], "note": "Usually-after-class language/cultural feedback and next improvements retained."},
+        {"id": "en3", "status": "partial", "points": [2], "note": "Engrade/private comments/account access retained; entering grades capability omitted."},
+        {"id": "en4", "status": "retained", "points": [3,4,5], "note": "Performance-based pronunciation/cultural examples and course-material grounding retained, with attribution issue."}
+      ],
+      "pure_duplicate_pairs": [],
+      "accuracy_issues": [
+        {"type": "attribution", "point": 4, "note": "The instructor's cultural illustration is stated as a general culture rule; output says Chinese compliment recipients do not say thanks without attribution."},
+        {"type": "modality_attribution_risk", "point": 1, "note": "Conditional effort-to-skills assertion lacks source's explicit we-are-convinced frame; do not present it as an established universal guarantee."}
+      ],
+      "observed_improvement": "Usually-after-class qualifier remains correct. Fewer points do not establish complete accuracy."
+    },
+    {
+      "id": "en-long",
+      "point_count_before": 7,
+      "point_count_after": 7,
+      "point_chars_after": [59,65,102,132,62,102,365],
+      "catch_all_chars_before": 426,
+      "catch_all_chars_after": 365,
+      "facts": [
+        {"id": "long1", "status": "retained", "points": [1], "note": "Calculation/storage and explicit instructions retained, including billion-scale and hundreds-of-GB quantities."},
+        {"id": "long2", "status": "retained", "points": [2,3], "note": "Declarative/imperative and steps/control flow/stopping retained; numerical square-root example accurate and tolerance is exemplary."},
+        {"id": "long3", "status": "retained", "points": [4], "note": "Changeable stored instruction sequences and control-flow changes retained."},
+        {"id": "long4", "status": "retained", "points": [6], "note": "Syntax/static semantics/intended meaning plus wrong output/crash/nontermination restored."},
+        {"id": "long5", "status": "partial", "points": [7], "note": "Typed scalar/structured objects and expression values retained; original principle that types constrain available kinds of operations is not explicitly preserved. Numeric result-type examples alone do not establish the whole compound fact."},
+        {"id": "long6", "status": "retained", "points": [7], "note": "Name binding plus changing radius while computed area stays unchanged is now specific and retained; a preceding general-other-variables phrase still risks broad scope."}
+      ],
+      "optional_details": [
+        {"id": "long7", "status": "accurate_if_present", "note": "16, initial 3, averaging formula, sufficient-closeness stop and example tolerances retained."},
+        {"id": "long8", "status": "accurate_if_present", "note": "float(3)=3.0 and truncation not rounding retained."},
+        {"id": "long9", "status": "accurate_if_present", "note": "True/False and None retained."},
+        {"id": "long10", "status": "scope_risk", "note": "Source restricts operand-result type rule to first three operators (+,-,*); output describes int/float arithmetic broadly with a separate division exception, then includes remainder/power. The precise original scope is not retained."},
+        {"id": "long11", "status": "not_included", "note": "Exact radius 2.2-to-3.2 values omitted; optional omission is not core coverage failure."}
+      ],
+      "pure_duplicate_pairs": [],
+      "tail_trace": "Second section ordinal 13 already retains radius/area consequence; final merge ordinal 14 includes both notes and original boundary evidence. No single-change causal attribution is justified.",
+      "accuracy_issues": [
+        {"type": "scope_risk", "point": 7, "note": "The concrete radius/area example is restored, but no automatic recalculation of other variables is broader than its scalar worked situation."},
+        {"type": "operator_scope", "point": 7, "note": "Exact scope of original first-three-operators rule is lost."}
+      ],
+      "organization_note": "Last point still contains unrelated objects/types/conversions/operators/binding/output material, is 365 characters versus 240 soft target, and carries two distinct essential themes in a catch-all. Target not met."
+    }
+  ],
+  "essential_facts_total": 14,
+  "fully_retained": 12,
+  "partially_retained": 2,
+  "fully_missing": 0,
+  "important_tail_consequence_restored": true,
+  "organization_goal_met": false,
+  "all_claims_accurate": false,
+  "further_paid_profiles_planned": false,
+  "limitations": "One inference per sample/profile; both source-guidance and context transport changed in refinement. Agent review, no external human scoring, no exhaustive claim precision, no statistical stability or universal performance guarantee.",
+  "attribution_license": "MIT OCW source, model-generated derivative summaries and review retain original authors/URLs/changes in old manifest and CC BY-NC-SA 4.0 noncommercial ShareAlike."
+}

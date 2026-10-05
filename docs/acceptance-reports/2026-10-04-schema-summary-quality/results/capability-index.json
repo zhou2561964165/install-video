@@ -1,0 +1,15 @@
+{
+  "completed_utc": "2026-10-04T10:38:03.901275+00:00",
+  "sample_results": [
+    {
+      "id": "empty",
+      "file": "capability-empty.json",
+      "sha256": "18ae74f1666b2c9f81b71cc71800cae7a1546d6a7576d3d618368e24782df7ee"
+    },
+    {
+      "id": "excessive",
+      "file": "capability-excessive.json",
+      "sha256": "0102000b4562a26006ed61979da7dadd16b979db152107310cc02f47ef1ed113"
+    }
+  ]
+}

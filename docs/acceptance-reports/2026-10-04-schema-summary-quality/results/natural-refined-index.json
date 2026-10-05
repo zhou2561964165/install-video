@@ -1,0 +1,20 @@
+{
+  "completed_utc": "2026-10-04T13:40:01.337162+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "natural-refined-zh-short.json",
+      "sha256": "fa7ecd45940a5ff26eddc7306cabc164881d9ebeae25f1bbdbde750cb2ec1526"
+    },
+    {
+      "id": "en-medium",
+      "file": "natural-refined-en-medium.json",
+      "sha256": "3718184d8b01571a8d7c18951759e5b54402b97cabb7c59d6bba7277ea9a1fc7"
+    },
+    {
+      "id": "en-long",
+      "file": "natural-refined-en-long.json",
+      "sha256": "3b2e52f62a2ad8026cd1116f28ac5364a47d1ee7ccaa03d97d1bcf5cb6e4a140"
+    }
+  ]
+}
