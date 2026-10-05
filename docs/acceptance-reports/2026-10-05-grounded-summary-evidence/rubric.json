@@ -1,0 +1,571 @@
+{
+  "version": 1,
+  "frozen_utc": "2026-10-05T04:52:40.327647+00:00",
+  "frozen_before_any_new_output": true,
+  "new_provider_calls_at_freeze": 0,
+  "manifest_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+  "samples": [
+    {
+      "id": "zh-short",
+      "title": "Creating an Immersive Classroom Environment (Chinese)",
+      "creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+      "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_immersive_environment_chinese-2/",
+      "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/50e5414eeb1e526bbb94593453e9c84a_MIT21G_101F14_Immersive_Environment_Chinese.vtt",
+      "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare; Creating an Immersive Classroom Environment (Chinese); https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_immersive_environment_chinese-2/",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "file": "zh-short.txt",
+      "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+      "expectations": [
+        {
+          "id": "zh1",
+          "priority": "essential",
+          "claim": "MIT中文课从第二天开始全中文教学；第一天讲准备方法、大纲及期望。",
+          "evidence": [
+            {
+              "line_start": 1,
+              "line_end": 4,
+              "char_start": 0,
+              "char_end": 83,
+              "excerpt": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的\n当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么"
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "zh2",
+          "priority": "essential",
+          "claim": "维持全中文课堂有两个关键：学生听懂固定课堂用语，课前准备与课堂练习任务一致。",
+          "evidence": [
+            {
+              "line_start": 5,
+              "line_end": 13,
+              "char_start": 84,
+              "char_end": 390,
+              "excerpt": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。"
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "zh3",
+          "priority": "essential",
+          "claim": "课堂用语不能随意换说法；请你再说一遍与请你再说一次对初学者不同。",
+          "evidence": [
+            {
+              "line_start": 14,
+              "line_end": 16,
+              "char_start": 391,
+              "char_end": 477,
+              "excerpt": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意"
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "zh4",
+          "priority": "essential",
+          "claim": "前45分钟用中文；英文问题可在最后5分钟、下课后或邮件中提出。",
+          "evidence": [
+            {
+              "line_start": 17,
+              "line_end": 21,
+              "char_start": 478,
+              "char_end": 608,
+              "excerpt": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。\n第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛"
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        }
+      ],
+      "forbidden_inventions": [
+        "全英文或中英各一半教学",
+        "从第一天就全中文",
+        "永远禁止英文提问",
+        "45分钟中文加15分钟英文",
+        "教授改变课堂用语是鼓励而非约束"
+      ],
+      "semantic_duplicate_groups": [
+        {
+          "id": "zh-preparation",
+          "meaning": "课前准备与课堂任务一致",
+          "facts": [
+            "zh2"
+          ],
+          "rule": "Do not split synonyms of preparation/task consistency into multiple points."
+        }
+      ],
+      "content_limitations": "Original speech contains fillers and repetition; no manual wording correction."
+    },
+    {
+      "id": "en-medium",
+      "title": "Daily Grading System",
+      "creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+      "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/daily-grading-system/",
+      "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/e9d389e4d81e5391b948a1981fc7ef4c_hNUoYTJl3j4.vtt",
+      "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare; Daily Grading System; https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/daily-grading-system/",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "file": "en-medium.txt",
+      "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+      "expectations": [
+        {
+          "id": "en1",
+          "priority": "essential",
+          "claim": "The instructor adopts daily grading: evaluate each class performance; persistent consistent effort is expected to yield good Chinese skills.",
+          "evidence": [
+            {
+              "line_start": 7,
+              "line_end": 20,
+              "char_start": 143,
+              "char_end": 482,
+              "excerpt": "We want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "en2",
+          "priority": "essential",
+          "claim": "Written after-class feedback covers language and cultural behavior to show students what to improve next time.",
+          "evidence": [
+            {
+              "line_start": 21,
+              "line_end": 29,
+              "char_start": 483,
+              "char_end": 715,
+              "excerpt": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "en3",
+          "priority": "essential",
+          "claim": "Engrade allows both grades and private comments; each student reads feedback through their own account.",
+          "evidence": [
+            {
+              "line_start": 30,
+              "line_end": 40,
+              "char_start": 716,
+              "char_end": 984,
+              "excerpt": "So we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "en4",
+          "priority": "essential",
+          "claim": "Feedback depends on performance: pronunciation or culturally appropriate compliment responses; the instructor contrasts American thanks with Chinese humility, and grounds feedback in course/textbook material.",
+          "evidence": [
+            {
+              "line_start": 41,
+              "line_end": 53,
+              "char_start": 985,
+              "char_end": 1252,
+              "excerpt": "So the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?"
+            },
+            {
+              "line_start": 56,
+              "line_end": 80,
+              "char_start": 1312,
+              "char_end": 1872,
+              "excerpt": "In American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble."
+            },
+            {
+              "line_start": 81,
+              "line_end": 95,
+              "char_start": 1873,
+              "char_end": 2199,
+              "excerpt": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        }
+      ],
+      "forbidden_inventions": [
+        "Automatically generated grading or comments",
+        "Public class-wide disclosure of private student comments",
+        "Fixed numeric scoring weights or named grades absent from the captions",
+        "The cultural example is a universal rule applying to every Chinese or American person",
+        "Engrade is a current recommendation verified in 2026"
+      ],
+      "semantic_duplicate_groups": [
+        {
+          "id": "en-feedback",
+          "meaning": "Daily individualized feedback",
+          "facts": [
+            "en1",
+            "en2",
+            "en3"
+          ],
+          "rule": "Daily assessment, feedback contents and private delivery are distinct details; repetition of generic individualized improvement without new detail is duplication."
+        },
+        {
+          "id": "en-culture",
+          "meaning": "Compliment humility example",
+          "facts": [
+            "en4"
+          ],
+          "rule": "Do not spend separate points repeating the same compliment/humility example."
+        }
+      ],
+      "content_limitations": "Original speech contains fillers and repetition; no manual wording correction."
+    },
+    {
+      "id": "en-long",
+      "title": "Lecture 1: What is Computation?",
+      "creator": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare",
+      "page": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+      "caption": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/a746f6bc380f5e6d807ffff5f56cd877_nykOeWgQcHM.vtt",
+      "attribution": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare; Lecture 1: What is Computation?; https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "file": "en-long.txt",
+      "sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7",
+      "expectations": [
+        {
+          "id": "long1",
+          "priority": "essential",
+          "claim": "Computers calculate and remember results; the programmer must explicitly specify the operations.",
+          "evidence": [
+            {
+              "line_start": 275,
+              "line_end": 292,
+              "char_start": 6352,
+              "char_end": 6768,
+              "excerpt": "Let's start by talking at a high\nlevel what does a computer do.\nFundamentally, it\ndoes two things.\nOne, performs calculations.\nIt performs a lot\nof calculations.\nComputers these days\nare really, really fast,\na billion calculations per\nsecond is probably not far off.\nIt performs these\ncalculations and it\nhas to store them somewhere.\nRight?\nStores them in computer memory.\nSo a computer also has\nto remember results."
+            },
+            {
+              "line_start": 319,
+              "line_end": 336,
+              "char_start": 7357,
+              "char_end": 7757,
+              "excerpt": "I think, one thing\nI want to stress--\nand we're going to\ncome back to this\nagain during this entire\nlecture, actually--\nis computers only know\nwhat you tell them.\nComputers only do what\nyou tell them to do.\nThey're not magical.\nThey don't have a mind.\nThey just know how to\nperform calculations really,\nreally quickly.\nBut you have to tell them\nwhat calculations to do.\nComputers don't know anything."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long2",
+          "priority": "essential",
+          "claim": "Declarative knowledge states facts; imperative knowledge gives a recipe/sequence of steps. An algorithm needs steps, control flow, and a stopping condition.",
+          "evidence": [
+            {
+              "line_start": 340,
+              "line_end": 344,
+              "char_start": 7807,
+              "char_end": 7926,
+              "excerpt": "types of knowledge.\nThe first type of knowledge\nis declarative knowledge.\nAnd those are things\nlike statements of fact."
+            },
+            {
+              "line_start": 373,
+              "line_end": 382,
+              "char_start": 8533,
+              "char_end": 8745,
+              "excerpt": "That's where imperative\nknowledge comes in.\nImperative knowledge is\nthe recipe, or the how-to,\nor the sequence of steps.\nSorry.\nThat's just my\nfunny for that one.\nSo the sequence of steps\nis imperative knowledge."
+            },
+            {
+              "line_start": 554,
+              "line_end": 588,
+              "char_start": 12376,
+              "char_end": 13212,
+              "excerpt": "What were the three\nparts of the recipe?\nOne was a simple\nsequence of steps.\nThere were four steps.\nThe other was a flow of\ncontrol, so there were\nparts where we made decisions.\nAre we close enough?\nThere were parts where\nwe repeated some steps.\nAt the end, we said,\nrepeat steps 1, 2, 3.\nThat's the flow of control.\nAnd the last part of the\nrecipe was a way to stop.\nYou don't want a program\nthat keeps going and going.\nOr for a recipe, you don't want\nto keep baking bread forever.\nYou want to stop at some point.\nLike 10 breads is enough, right?\nSo you have to have\na way of stopping.\nIn the previous example,\nthe way of stopping\nwas that we decided\nwe were close enough.\nClose enough was maybe\nbeing within .01, .001,\nwhatever you pick.\nThis recipe is there\nfor an algorithm.\nIn computer science speak,\nit's going to be an algorithm."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long3",
+          "priority": "essential",
+          "claim": "Stored-program computers store changeable instruction sequences and execute them; tests/control flow can skip or repeat instructions.",
+          "evidence": [
+            {
+              "line_start": 628,
+              "line_end": 642,
+              "char_start": 14183,
+              "char_end": 14570,
+              "excerpt": "That's when stored-program\ncomputers came into play.\nAnd these were machines\nthat could store\na sequence of instructions.\nAnd these machines could execute\nthe sequence of instructions.\nAnd you could change the\nsequence of instructions\nand execute this different\nsequence of instructions.\nYou could do different\ntasks in the same machine.\nAnd that's the computer\nas we know it these days."
+            },
+            {
+              "line_start": 735,
+              "line_end": 754,
+              "char_start": 16692,
+              "char_end": 17206,
+              "excerpt": "Just to recap, you have\nthe stored program computer\nthat contains these\nsequences of instructions.\nThe primitive operations\nthat it can do\nare addition, subtraction,\nlogic operations, tests--\nwhich are something equal\nto something else, something\nless than, and so\non-- and moving data,\nso storing data, moving data\naround, and things like that.\nAnd the interpreter goes\nthrough every instruction\nand decides whether you're going\nto go to the next instruction,\nskip instructions, or repeat\ninstructions, and so on."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long4",
+          "priority": "essential",
+          "claim": "Programming expressions have syntax, static semantics, and intended meaning; a program can execute exactly as written yet produce an unintended result, crash, or fail to stop.",
+          "evidence": [
+            {
+              "line_start": 854,
+              "line_end": 889,
+              "char_start": 19546,
+              "char_end": 20426,
+              "excerpt": "So once you've created these\nphrases, or these expressions,\nthat are syntactically\nvalid, you\nhave to think about the static\nsemantics of your phrase,\nor of your expression.\nFor example, in English, \"I\nare hungry\" is good syntax.\nBut it's weird to say.\nWe have a pronoun, a verb,\nand an adjective, which\ndoesn't really make sense.\n\"I am hungry\" is better.\nThis does not have\ngood static semantics.\nSimilarly, in\nprogramming languages--\nand you'll get the\nhang of this the more\nyou do it-- something like\nthis, \"3.2 times 5, is OK.\nBut what does it mean?\nWhat's the meaning to have\na word added to a number?\nThere's no meaning behind that.\nIts syntax is OK,\nbecause you have\noperator, operand, operator.\nBut it doesn't really make\nsense to add a number to a word,\nfor example.\nOnce you have created\nthese expressions that\nare syntactically correct and\nstatic, semantically correct,"
+            },
+            {
+              "line_start": 920,
+              "line_end": 943,
+              "char_start": 21085,
+              "char_end": 21654,
+              "excerpt": "But in programming languages,\nthe program that you write,\nthe set of instructions that\nyou write, only has one meaning.\nRemember, we're coming\nback to the fact\nthat the computer only does\nwhat you tell it to do.\nIt's not going to\nsuddenly decide\nto add another variable\nfor some reason.\nIt's just going to execute\nwhatever statements you've\nput up.\nIn programming languages,\nthere's only one meaning.\nBut the problem that comes into\nplay in programming languages\nis it's not the meaning\nthat you might have\nintended, as the programmer.\nThat's where things\ncan go wrong."
+            },
+            {
+              "line_start": 991,
+              "line_end": 1022,
+              "char_start": 22671,
+              "char_end": 23401,
+              "excerpt": "The program might do\nsomething different than what\nyou expected it to do.\nAnd that's not because the\nprogram suddenly-- for example,\nyou expected the program\nto give you an output of 0\nfor a certain test case, and\nthe output that you got was 10.\nWell, the program\ndidn't suddenly\ndecide to change\nits answer to 10.\nIt just executed the\nprogram that you wrote.\nThat's the case where\nthe program gave you\na different answer\nthan expected.\nPrograms might crash, which\nmeans they stop running.\nThat's OK.\nJust go back to your code and\nfigure out what was wrong.\nAnd another example\nof a different meaning\nthan what you intended was\nmaybe the program won't stop.\nIt's also OK.\nThere are ways to stop\nit besides restarting\nthe computer."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long5",
+          "priority": "essential",
+          "claim": "Python manipulates typed objects, including scalar and structured non-scalar objects; object types constrain available operations and expressions evaluate to values.",
+          "evidence": [
+            {
+              "line_start": 1054,
+              "line_end": 1066,
+              "char_start": 24153,
+              "char_end": 24467,
+              "excerpt": "Now we're going to start\ntalking about Python.\nAnd in Python, we're going\nto come back to this,\neverything is an object.\nAnd Python programs\nmanipulate these data objects.\nAll objects in Python\nare going to have a type.\nAnd the type is going to tell\nPython the kinds of operations\nthat you can do\non these objects."
+            },
+            {
+              "line_start": 1090,
+              "line_end": 1114,
+              "char_start": 24960,
+              "char_end": 25552,
+              "excerpt": "There are actually\ntwo types of objects.\nOne are scalar objects.\nThat means these are very basic\nobjects in Python from which\neverything can be made.\nThese are scalar objects.\nThat can't be subdivided.\nThe other type of object\nis a non-scalar object.\nAnd these are objects that\nhave some internal structure.\nFor example, the\nnumber five is a scalar\nobject because it\ncan't be subdivided.\nBut a list of numbers,\nfor example, 5, 6,\n7,8, is going to be\na non-scalar object\nbecause you can subdivide it.\nYou can subdivide it into--\nyou can find parts to it.\nIt's made up of a\nsequence of numbers."
+            },
+            {
+              "line_start": 1229,
+              "line_end": 1241,
+              "char_start": 28151,
+              "char_end": 28442,
+              "excerpt": "We talked a little\nbit about objects.\nOnce you have objects, you can\ncombine objects and operators\nto form these expressions.\nAnd each expression is\ngoing to have a value.\nSo an expression\nevaluates to a value.\nThe syntax for an\nexpression is going\nto be object, operator,\nobject, like that."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long6",
+          "priority": "essential",
+          "claim": "Assignment binds a name to a value; rebinding radius alone does not recalculate the already computed area. This is the final example before next lecture's control flow.",
+          "evidence": [
+            {
+              "line_start": 1307,
+              "line_end": 1336,
+              "char_start": 29977,
+              "char_end": 30664,
+              "excerpt": "To save a value to a variable\nname, you use the equal sign.\nAnd the equal sign\nis an assignment.\nIt assigns the\nright-hand side, which\nis a value, to the\nleft-hand side, which\nis going to be a variable name.\nIn this case, I assigned\nthe float 3.14159\nto the variable pi.\nAnd in the second\nline, I'm going\nto take this expression,\n22 divided by 7,\nI'm going to evaluate it.\nIt's going to come up\nwith some decimal number.\nAnd I'm going to save it\ninto the variable pi_approx.\nvalues are stored in memory.\nAnd this assignment\nin Python, we\nsay the assignment binds\nthe name to the value.\nWhen you use that name\nlater on in your program,\nyou're going to be referring\nto the value in memory."
+            },
+            {
+              "line_start": 1460,
+              "line_end": 1472,
+              "char_start": 33537,
+              "char_end": 33849,
+              "excerpt": "Now, let's say we rebind\nradius to be something else.\nRadius i is bound\nto the value 2.2.\nBut when we do this line, radius\nis equal to radius plus 1,\nwe're going to take\naway the binding to 2.2.\nWe're going to do\nthis calculation.\nThe new value is 3.2.\nAnd we're going to rebind that\nvalue to that same variable."
+            },
+            {
+              "line_start": 1493,
+              "line_end": 1515,
+              "char_start": 34295,
+              "char_end": 34883,
+              "excerpt": "The value of area-- notice,\nthis is very important.\nThe value of area\ndid not change.\nAnd it did not change because\nthese are all the instructions\nwe told the computer to do.\nWe just told it to change\nradius to be radius plus 1.\nWe never told it to\nrecalculate the value of area.\nIf I copied that line down\nhere, then the value of area\nwould change.\nBut we never told it to do that.\nThe computer only does\nwhat we tell it to do.\nThat's the last thing.\nNext lecture, we're going\nto talk about adding control\nflow to our programs, so\nhow do you tell the computer\nto do one thing or another?"
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long7",
+          "priority": "detail_if_present",
+          "claim": "The square-root example uses x=16 and initial guess g=3; average g with x/g repeatedly and stop when g*g is sufficiently close to x; .01/.001 are possible tolerances, not a mandatory fixed tolerance.",
+          "evidence": [
+            {
+              "line_start": 507,
+              "line_end": 547,
+              "char_start": 11305,
+              "char_end": 12247,
+              "excerpt": "To find the square\nroot of a number x,\nlet's say x is originally\n16, if a computer follows\nthis algorithm, it's going\nto start with a guess, g,\nlet's say, 3.\nWe're trying to find\nthe square root of 16.\nWe're going to calculate\ng times g is 9.\nAnd we're going to\nask is if g times g\nis close enough to x, then\nstop and say, g is the answer.\nI'm not really happy with\n9 being really close to 16.\nSo I'm going to say,\nI'm not stopping here.\nI'm going to keep going.\nIf it's not close\nenough, then I'm\ngoing to make a new guess\nby averaging g and x over g.\nThat's x over g here.\nAnd that's the\naverage over there.\nAnd the new average is\ngoing to be my new guess.\nAnd that's what it says.\nAnd then, the last step\nis using the new guess,\nrepeat the process.\nThen we go back to the beginning\nand repeat the whole process\nover and over again.\nAnd that's what the\nrest of the rows do.\nAnd you keep doing\nthis until you decide\nthat you're close enough."
+            },
+            {
+              "line_start": 578,
+              "line_end": 584,
+              "char_start": 12963,
+              "char_end": 13115,
+              "excerpt": "In the previous example,\nthe way of stopping\nwas that we decided\nwe were close enough.\nClose enough was maybe\nbeing within .01, .001,\nwhatever you pick."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long8",
+          "priority": "detail_if_present",
+          "claim": "Converting a float to int truncates rather than rounds; float(3) becomes 3.0.",
+          "evidence": [
+            {
+              "line_start": 1149,
+              "line_end": 1167,
+              "char_start": 26299,
+              "char_end": 26774,
+              "excerpt": "If you happen to want to convert\nbetween two different types,\nPython allows you to do that.\nAnd to do that, you\nput the type that you\nwant to convert to\nright before the object\nthat you want to convert to.\nSo float(3) will convert the\ninteger 3 to the float 3.0.\nAnd similarly, you can convert\nany float into an integer.\nAnd converting to an\ninteger just truncates.\nIt just takes away the\ndecimal and whatever's\nafter it-- it does not round--\nand keeps just the integer\npart."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long9",
+          "priority": "detail_if_present",
+          "claim": "True and False are the two Boolean values; NoneType has the single value None.",
+          "evidence": [
+            {
+              "line_start": 1122,
+              "line_end": 1134,
+              "char_start": 25734,
+              "char_end": 25991,
+              "excerpt": "Bools are Booleans.\nThere's only two\nvalues to Booleans.\nThat's True and False.\nNote the capitalization,\ncapital T and capital F.\nAnd this other thing\ncalled NoneType.\nIt's special.\nIt has only one\nvalue called None.\nAnd it represents the\nabsence of a type."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long10",
+          "priority": "detail_if_present",
+          "claim": "The lecture says Python / division produces a float regardless of operand types; +,-,* preserve int for int operands and yield float if an operand is float.",
+          "evidence": [
+            {
+              "line_start": 1242,
+              "line_end": 1265,
+              "char_start": 28443,
+              "char_end": 29035,
+              "excerpt": "And these are some operators\nyou can do on ints and floats.\nThere's the typical ones,\naddition, subtraction,\nmultiplication, and division.\nIf, for the first\nthree, the answer\nthat you get-- the type of\nthe answer that you get--\nis going to depend on the\ntype of your variables.\nIf both of the variables of\nthe operands are integers,\nthen the result you're going\nto get is of type integer.\nBut if at least one of\nthem is a float, then\nthe result you're going\nto get is a float.\nDivision is a little\nbit special in that\nno matter what the\noperands are, the result\nis always going to be a float."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        },
+        {
+          "id": "long11",
+          "priority": "detail_if_present",
+          "claim": "In the final rebinding example radius starts at 2.2 and radius=radius+1 yields 3.2 while area stays unchanged until explicitly recomputed.",
+          "evidence": [
+            {
+              "line_start": 1437,
+              "line_end": 1442,
+              "char_start": 33047,
+              "char_end": 33180,
+              "excerpt": "Next line, radius\nis equal to 2.2.\nIn memory, we're\ncreating this value 2.2.\nAnd we're going to bind it\nto the variable named radius."
+            },
+            {
+              "line_start": 1460,
+              "line_end": 1472,
+              "char_start": 33537,
+              "char_end": 33849,
+              "excerpt": "Now, let's say we rebind\nradius to be something else.\nRadius i is bound\nto the value 2.2.\nBut when we do this line, radius\nis equal to radius plus 1,\nwe're going to take\naway the binding to 2.2.\nWe're going to do\nthis calculation.\nThe new value is 3.2.\nAnd we're going to rebind that\nvalue to that same variable."
+            },
+            {
+              "line_start": 1493,
+              "line_end": 1507,
+              "char_start": 34295,
+              "char_end": 34677,
+              "excerpt": "The value of area-- notice,\nthis is very important.\nThe value of area\ndid not change.\nAnd it did not change because\nthese are all the instructions\nwe told the computer to do.\nWe just told it to change\nradius to be radius plus 1.\nWe never told it to\nrecalculate the value of area.\nIf I copied that line down\nhere, then the value of area\nwould change.\nBut we never told it to do that."
+            }
+          ],
+          "scoring": "essential: semantic retained/partial/missing; detail_if_present: correctness only, omission is not a coverage failure"
+        }
+      ],
+      "forbidden_inventions": [
+        "Rebinding radius automatically updates the previously calculated area",
+        "int conversion rounds to nearest integer",
+        "Square-root iteration always uses a mandatory .001 tolerance",
+        "The course is primarily neural-network training",
+        "An invented course date, grade weight, test score, or implementation outcome",
+        "Treating incidental raffle numbers as a final settled range when the spoken range changes (266,271,272)"
+      ],
+      "semantic_duplicate_groups": [
+        {
+          "id": "long-explicit",
+          "meaning": "Computer only executes instructions",
+          "facts": [
+            "long1",
+            "long4",
+            "long6"
+          ],
+          "rule": "Different implications (error semantics, no automatic recomputation) are distinct; repeated generic obedience claim with no new implication is duplicate."
+        },
+        {
+          "id": "long-assignment",
+          "meaning": "Name binding and rebinding",
+          "facts": [
+            "long6",
+            "long11"
+          ],
+          "rule": "A worked numeric illustration can support one concept point; separate points restating the same rebinding consequence are duplicate."
+        }
+      ],
+      "content_limitations": "Transcript contains self-corrections (raffle ranges, syntactically correct/incorrect), deictic references to slides and pedagogical simplifications. Expectations evaluate source fidelity, not independent correctness of all lecture claims."
+    }
+  ],
+  "baseline": {
+    "commit": "be2bdd5",
+    "phase": "natural-refined",
+    "directory": "../2026-10-04-schema-summary-quality/results",
+    "delivery_profile_sha256": "1aec41af0507dd056fae7e07cb393f741386a6bdb9ff5adc5a779ffe3f0d9d87",
+    "review_sha256": "ead97908d19a599cb10247d6282e549a021d47d7b10fbfcb9a98e13479532faf",
+    "sample_results": [
+      {
+        "id": "zh-short",
+        "file": "natural-refined-zh-short.json",
+        "sha256": "fa7ecd45940a5ff26eddc7306cabc164881d9ebeae25f1bbdbde750cb2ec1526"
+      },
+      {
+        "id": "en-medium",
+        "file": "natural-refined-en-medium.json",
+        "sha256": "3718184d8b01571a8d7c18951759e5b54402b97cabb7c59d6bba7277ea9a1fc7"
+      },
+      {
+        "id": "en-long",
+        "file": "natural-refined-en-long.json",
+        "sha256": "3b2e52f62a2ad8026cd1116f28ac5364a47d1ee7ccaa03d97d1bcf5cb6e4a140"
+      }
+    ],
+    "fully_retained": 12,
+    "partially_retained": 2,
+    "missing": 0,
+    "long_catch_all_chars": 365
+  },
+  "coverage": "Unchanged 14 original compound essential facts across final summary/key_points. Each clause required for retained; incomplete is partial. Optional detail omission is not coverage failure. No keyword grading.",
+  "precision": [
+    "Daily-grading belief/effort assertion attributed to instructor, not universal guarantee.",
+    "Usually after class stays usually, not always/every class.",
+    "Engrade stores comments/private account access AND entering grades; all needed for en3 full.",
+    "Cultural response illustration remains lecturer/course illustration, not universal Chinese rule.",
+    "Object types constrain available operations; scalar/non-scalar and expression values alone cannot fully retain long5.",
+    "First-three operator result-type rule scope limited to +,-,*; / exception distinct; avoid generalization to all arithmetic.",
+    "Radius/previously computed area concrete example stays specific; no universal rule about arbitrary dependent objects.",
+    "Program consequences include unintended result, crash, nontermination; tail unchanged-area consequence must survive.",
+    "Included numerical quantities and examples/tolerances exact and scoped; optional absence not failure."
+  ],
+  "organization": {
+    "max_points": 7,
+    "min_points": 1,
+    "point_chars_limit": 240,
+    "criterion": "Distinct concise thematic points without losing essential conditions or consequences; unrelated last-point packing fails even below 240.",
+    "duplicates": "Same proposition without new relevant condition/consequence is duplicate; distinct implications sharing a theme are not."
+  },
+  "trace": {
+    "quote_lexical_check": "Whitespace-only normalization mapped to caller-cleaned input spans/hash, not original VTT timestamps. Every extracted and audit-added fact independently rechecked offline.",
+    "semantic_check": "Valid quote, known ID and model checks=true do not prove entailment, factual precision, complete coverage or independent human review. Inspect claims and source independently.",
+    "audit": "Check repairs/new facts must be caller-validated; all stages, including failures, count against 24 durable POST ceiling."
+  },
+  "limitations": "Three samples/two MIT courses; one inference per candidate; agent review, no independent external human raters, exhaustive truth guarantee, model training or statistical stability claim.",
+  "licensing": "MIT OCW original source, fact excerpts and derived summaries/review CC BY-NC-SA 4.0. Noncommercial local inference evaluation; attribution and ShareAlike retained; product/scripts not relicensed. Original creator/page/caption supplied per sample."
+}

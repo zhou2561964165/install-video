@@ -41,6 +41,11 @@ class Settings:
     llm_summary_thinking_mode: str = "auto"
     llm_summary_max_point_chars: int = 240
     llm_summary_source_context_chars: int = 1200
+    llm_summary_strategy: str = "legacy"
+    llm_summary_facts_max_source_chars: int = 40_000
+    llm_summary_facts_chunk_chars: int = 8_000
+    llm_summary_facts_max_per_chunk: int = 12
+    llm_summary_facts_max_evidence_sentences: int = 128
 
     def __post_init__(self) -> None:
         if self.network_retries < 0:
@@ -58,6 +63,15 @@ class Settings:
             raise ValueError("llm_summary_max_point_chars must be >= 1")
         if self.llm_summary_source_context_chars < 0:
             raise ValueError("llm_summary_source_context_chars must be >= 0")
+        if self.llm_summary_strategy not in {"auto", "legacy", "facts"}:
+            raise ValueError("llm_summary_strategy must be auto, legacy or facts")
+        for name, maximum in (("llm_summary_facts_max_source_chars", 1_000_000),
+                              ("llm_summary_facts_chunk_chars", 1_000_000),
+                              ("llm_summary_facts_max_per_chunk", 48),
+                              ("llm_summary_facts_max_evidence_sentences", 256)):
+            value = getattr(self, name)
+            if type(value) is not int or not 1 <= value <= maximum:
+                raise ValueError(f"{name} must be an integer between 1 and {maximum}")
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -102,6 +116,11 @@ class Settings:
             llm_summary_thinking_mode=_str("LLM_SUMMARY_THINKING_MODE", "auto"),
             llm_summary_max_point_chars=_int("LLM_SUMMARY_MAX_POINT_CHARS", 240),
             llm_summary_source_context_chars=_int("LLM_SUMMARY_SOURCE_CONTEXT_CHARS", 1200),
+            llm_summary_strategy=_str("LLM_SUMMARY_STRATEGY", "legacy"),
+            llm_summary_facts_max_source_chars=_int("LLM_SUMMARY_FACTS_MAX_SOURCE_CHARS", 40_000),
+            llm_summary_facts_chunk_chars=_int("LLM_SUMMARY_FACTS_CHUNK_CHARS", 8_000),
+            llm_summary_facts_max_per_chunk=_int("LLM_SUMMARY_FACTS_MAX_PER_CHUNK", 12),
+            llm_summary_facts_max_evidence_sentences=_int("LLM_SUMMARY_FACTS_MAX_EVIDENCE_SENTENCES", 128),
         )
 
 

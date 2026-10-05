@@ -1,0 +1,18 @@
+{
+  "ordinal": 40,
+  "phase": "evidence-wide",
+  "sample": "en-medium",
+  "stage": "extract",
+  "content": "{\"facts\":[{\"topic\":\"日常评分系统的采用理由\",\"claim\":\"由于人际互动会留下印象并受到评价，且相信只要学生坚持并持续努力修读该课程就能展现良好的中文技能，因此采用日常评分系统。\",\"evidence\":[1,2,3,4,7,8,9,12,13,14,15,16,17,18,19,20],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"课后反馈的内容与目的\",\"claim\":\"通常课后会针对每位学生的课堂表现提供反馈，包括语言和文化行为，让学生知道下次课需要改进之处。\",\"evidence\":[21,22,23,24,25,26,27,28],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"书面反馈与Engrade网站\",\"claim\":\"通常采用书面反馈，使用名为Engrade的网站，除录入成绩外还可私下给每位学生留言；学生只要登录其账户就能读到教师的评论。\",\"evidence\":[29,30,31,32,33,34,35,36,37,38,39,40],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"评论内容的灵活程度\",\"claim\":\"评论内容取决于学生表现，可以简单到提醒注意某些发音，也可以更详细。\",\"evidence\":[41,42,43,44,45,46,47,48,49],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"中文文化中应对赞美的示例\",\"claim\":\"评论可举例让学生思考如何用中文应对赞美，例如在美国文化中收到赞美自然会说谢谢，而中文文化中收到赞美时要保持谦逊，不以说谢谢来接受。\",\"evidence\":[50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"谦逊回应的具体说法\",\"claim\":\"有时会说类似“我还有很长的路要走，所以差得远”或“我不知道这些赞美从何而来”这样的话。\",\"evidence\":[71,72,73,74,75,76],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"中文文化赞美观的核心\",\"claim\":\"中文文化中关于赞美的根本观念是保持谦逊。\",\"evidence\":[77,78,79,80],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"基于L1表现的反馈方式\",\"claim\":\"如果学生的课堂表现来自其母语（L1），教师会鼓励他们，并依据课堂上所覆盖材料的教科书，让他们思考在中文文化中如何应对赞美，从而知道这是可以努力改进的地方。\",\"evidence\":[81,82,83,84,85,86,87,88,89,90,91,92,93,94,95],\"attribution\":\"source\",\"importance\":\"core\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1444,
+    "completion_tokens": 604,
+    "total_tokens": 2048,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 1060
+  }
+}

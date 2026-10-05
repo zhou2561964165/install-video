@@ -1,0 +1,17 @@
+{
+  "ended_utc": "2026-10-05T12:17:50.308639+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "evidence-chunks-zh-short.json",
+      "sha256": "9069efbef07ee0a9fc2b2df7faed2d3be1dc6a6e835a707ebdc4aada31fc7b87",
+      "posts": 3
+    },
+    {
+      "id": "en-medium",
+      "file": "evidence-chunks-en-medium.json",
+      "sha256": "0ba3536f500cc0391b483fa8b0b766df7469fe2cac2dde5592d6b03f4b06e9b9",
+      "posts": 1
+    }
+  ]
+}

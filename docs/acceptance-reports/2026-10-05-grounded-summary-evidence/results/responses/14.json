@@ -1,0 +1,18 @@
+{
+  "ordinal": 14,
+  "phase": "evidence-lines",
+  "sample": "zh-short",
+  "stage": "audit",
+  "content": "{\"additional_facts\":[],\"output\":{\"summary\":[{\"text\":\"在MIT的中文课从第二天起就用全中文上课，第一天会说明课程准备方式与大纲，让学生清楚期望。要让一堂课能够用中文上课，最重要的有两个环节：一是课堂用语学生要听得懂，二是学生的备课要反映在课堂练习上。学生课前会收到weekly schedule，知道每天要准备哪些环节，上课就是练这些东西；一旦练的东西是学生没有准备到的，他们就会跑出英文来，所以每天他的备课跟他每天上课的任务一定要一致。此外，课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师第一个得注意。当学生真的有问题、听不懂要用英文问的时候，常常做几件事：第一他可以在课堂最后五分钟问，所以前四十五分钟都用中文上课；第二他可以下课问，或用电子邮件问。通过上述方式，可以在课堂上维持住中文的气氛。\",\"fact_ids\":[\"F1_1\",\"F1_2\",\"F1_3\",\"F1_4\",\"F1_5\",\"F1_6\",\"F1_7\",\"F1_8\"]}],\"key_points\":[{\"topic\":\"MIT中文课从第二天起全中文授课\",\"text\":\"MIT中文课从第二天起用全中文上课，第一天说明准备方式与大纲，让学生清楚期望。\",\"fact_ids\":[\"F1_1\"]},{\"topic\":\"全中文上课的两个关键环节\",\"text\":\"要让一堂课能用中文上课，最重要的有两个环节：课堂用语学生要听得懂，以及学生的备课要反映在课堂练习上。\",\"fact_ids\":[\"F1_2\",\"F1_3\"]},{\"topic\":\"备课与上课任务必须一致\",\"text\":\"学生课前收到weekly schedule，知道每天要准备哪些环节，上课就是练这些东西；一旦练到没准备的内容，他们就会跑出英文来，所以备课与上课任务一定要一致。\",\"fact_ids\":[\"F1_4\",\"F1_5\"]},{\"topic\":\"课堂用语不能出圈\",\"text\":\"课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师第一个得注意。\",\"fact_ids\":[\"F1_6\"]},{\"topic\":\"学生听不懂时的处理方式\",\"text\":\"学生真有问题、听不懂要用英文问时，可以在课堂最后五分钟问，所以前四十五分钟都用中文上课；也可以下课问或用电子邮件问。\",\"fact_ids\":[\"F1_7\"]},{\"topic\":\"维持课堂中文气氛\",\"text\":\"通过上述方式，可以在课堂上维持住中文的气氛。\",\"fact_ids\":[\"F1_8\"]}]},\"checks\":[{\"item_id\":\"S1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P2\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P3\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P4\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P5\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P6\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 2528,
+    "completion_tokens": 787,
+    "total_tokens": 3315,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 2400
+  }
+}

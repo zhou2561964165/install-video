@@ -26,6 +26,7 @@ def _configure(monkeypatch):
     monkeypatch.setattr(settings, "llm_api_key", "secret")
     monkeypatch.setattr(settings, "llm_model", "model-x")
     monkeypatch.setattr(settings, "llm_provider", "compatible")
+    monkeypatch.setattr(settings, "llm_summary_strategy", "legacy")
 
 
 def test_unconfigured_llm_has_explicit_error(monkeypatch):

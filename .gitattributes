@@ -18,3 +18,8 @@ frontend/src/pixi/mascot.js text eol=lf
 frontend/src/pixi/mascotConfig.js text eol=lf
 frontend/src/styles/global.css text eol=lf
 frontend/src/pixi/stage.js -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Fact-layer source and this round's frozen evaluation artifacts.
+backend/app/services/summary_facts.py text eol=lf
+docs/acceptance-reports/2026-10-05-grounded-summary/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/acceptance-reports/2026-10-05-grounded-summary-evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

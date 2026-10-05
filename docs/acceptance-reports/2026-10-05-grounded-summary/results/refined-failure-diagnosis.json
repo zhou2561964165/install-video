@@ -1,0 +1,54 @@
+{
+  "phase": "refined",
+  "offline": true,
+  "provider_calls": 0,
+  "codec_source": "refined-facts.py",
+  "max_quote_chars": 600,
+  "records": [
+    {
+      "fact": 1,
+      "quote_chars": 83,
+      "codec_reason": "valid",
+      "qualifiers_not_in_quote": []
+    },
+    {
+      "fact": 2,
+      "quote_chars": 41,
+      "codec_reason": "valid",
+      "qualifiers_not_in_quote": []
+    },
+    {
+      "fact": 3,
+      "quote_chars": 83,
+      "codec_reason": "qualifier_not_found",
+      "qualifiers_not_in_quote": [
+        "第一个"
+      ]
+    },
+    {
+      "fact": 4,
+      "quote_chars": 100,
+      "codec_reason": "valid",
+      "qualifiers_not_in_quote": []
+    },
+    {
+      "fact": 5,
+      "quote_chars": 79,
+      "codec_reason": "valid",
+      "qualifiers_not_in_quote": []
+    },
+    {
+      "fact": 6,
+      "quote_chars": 86,
+      "codec_reason": "valid",
+      "qualifiers_not_in_quote": []
+    },
+    {
+      "fact": 7,
+      "quote_chars": 130,
+      "codec_reason": "valid",
+      "qualifiers_not_in_quote": []
+    }
+  ],
+  "finding": "Record3 qualifier 第一个 is not quoted text 一个就是. Whole extraction refused qualifier_not_found; no partial salvage, repair stage or provider retry. Metadescription count-only fact persists despite refined prompt. No accepted source spans or delivered result for this candidate."
+}

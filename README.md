@@ -112,6 +112,8 @@ uv run uvicorn app.main:app --reload --port 8000 --env-file .env
 
 ## 验证
 
+> 当前事实/主题层开发已按用户要求暂停（2026-10-05）。工作区代码/测试/证据未提交、默认legacy未变；新5次模型请求仅首轮短篇有最终结果，中/长未完成。下方234/73与构建属于已提交基线，本轮暂停进度见[交接文档](docs/handoff.md)。后续只听用户指示。
+
 最新全量验证：后端234/234、前端73/73、生产构建通过。原文证据贯穿摘要合并、实验协议及响应式角色/触摸修复已提交 `be2bdd5`；公开Bilibili适配、inline兼容和yt-dlp回退保持。
 
 本轮证据见[摘要协议与质量](docs/acceptance-reports/2026-10-04-schema-summary-quality/report.md)和[响应式角色](docs/acceptance-reports/2026-10-04-responsive-mascot/report.md)：19次预占、18次HTTP200、1次连接失败；默认三源5/5/7点，结尾事实恢复但12条完整/2条部分保留，长末点365字仍过度打包。实验协议上游仍违约，未切默认；不截断或自动重发。基础GPU布局41项、最终375px真实触摸5项各自通过；焦点几何修复通过但该专测有外部字体错误，未将其混为全浏览器成功。Windows视口和8K模拟不是手机/低GPU真机。

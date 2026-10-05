@@ -1,6 +1,6 @@
 # 项目文档索引
 
-> 更新：2026-10-05，完成2026-10-04工作的文档归档。实现提交 `be2bdd5`，后端234项、前端73项及构建通过。实验schema上游仍违约、长要点组织仍未全部达标，见 [handoff.md](handoff.md)。
+> 更新：2026-10-05，用户要求暂停。事实/主题层代码与证据已保存在工作区但未提交，当前默认legacy；5次模型请求后两个候选均遇来源字段校验失败。已提交基线仍为`be2bdd5` / `1315b31`，234/73/构建是该基线验证，不是本轮完成声明。当前状态见[handoff.md](handoff.md)。
 
 ## 工程约定
 
@@ -16,6 +16,9 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 | [v3实现计划](superpowers/plans/2026-10-03-v3-video-intelligence.md) | 当前v3 API、分层和验证范围 |
 | [扩展路线](superpowers/plans/2026-09-21-extension-plan.md) | v2/v3已实现状态及后续候选，不作为自动执行授权 |
 | [参考实现分析](reference-summary-implementation.md) | 参考项目观察、独立实现选择与已测限制 |
+| [暂停中的事实/主题设计](superpowers/specs/2026-10-05-grounded-summary-design.md) | 来源位置、私有事实/声明/核查合同及语义限制，尚未交付 |
+| [暂停中的实现计划](superpowers/plans/2026-10-05-grounded-summary.md) | 纯合同、编排和评测分工，后续仅听用户指示 |
+| [事实/主题本轮实测](acceptance-reports/2026-10-05-grounded-summary/report.md) | 新5预占/5HTTP，短篇首轮成功、中/长未完成、默认未推广 |
 | [本轮schema/布局计划](superpowers/plans/2026-10-04-schema-quality-responsive-layout.md) | 协议实测、原始证据贯穿、角色布局/触摸和未达目标 |
 | [摘要协议与质量](acceptance-reports/2026-10-04-schema-summary-quality/report.md) | 19预占/18HTTP/1连接失败，默认与实验模式各自质量/契约边界 |
 | [响应式角色/手势](acceptance-reports/2026-10-04-responsive-mascot/report.md) | 基础41项、最终触摸5项、焦点局部成功/字体网络失败、GPU与模拟范围 |

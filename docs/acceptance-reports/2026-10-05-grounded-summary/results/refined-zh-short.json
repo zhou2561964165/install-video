@@ -1,0 +1,9 @@
+{
+  "phase": "refined",
+  "id": "zh-short",
+  "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+  "proxy_used": true,
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 3.58,
+  "trace_sha256": "565582e751e46acf6ee6295b4a5cae33c9a90b83a357116fcb97ded7c2dd1b8d"
+}

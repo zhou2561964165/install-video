@@ -1,0 +1,84 @@
+{
+  "bound_utc": "2026-10-05T05:30:52.287145+00:00",
+  "module_sha256": {
+    "service": "9684eea8b9a6a4bd5360568b15747cb17b0a4a88a0122e4d49b07c917d60221d",
+    "config": "1ab42d988ca56eb0c435f2aa2b293a51ee09e62ab57392fbfc25333d5cb0fe72",
+    "facts": "5c402307d23a6551765b0fb910505daf719741b720e0a588d6e084b203bd8680"
+  },
+  "default_strategy": "legacy",
+  "measured_strategy": "facts",
+  "default_promotion": false,
+  "final_measured_profile": "refined",
+  "final_profile_delivered_valid_output": false,
+  "baseline": {
+    "commit": "be2bdd5",
+    "phase": "natural-refined",
+    "directory": "../2026-10-04-schema-summary-quality/results",
+    "delivery_profile_sha256": "1aec41af0507dd056fae7e07cb393f741386a6bdb9ff5adc5a779ffe3f0d9d87",
+    "review_sha256": "ead97908d19a599cb10247d6282e549a021d47d7b10fbfcb9a98e13479532faf",
+    "sample_results": [
+      {
+        "id": "zh-short",
+        "file": "natural-refined-zh-short.json",
+        "sha256": "fa7ecd45940a5ff26eddc7306cabc164881d9ebeae25f1bbdbde750cb2ec1526"
+      },
+      {
+        "id": "en-medium",
+        "file": "natural-refined-en-medium.json",
+        "sha256": "3718184d8b01571a8d7c18951759e5b54402b97cabb7c59d6bba7277ea9a1fc7"
+      },
+      {
+        "id": "en-long",
+        "file": "natural-refined-en-long.json",
+        "sha256": "3b2e52f62a2ad8026cd1116f28ac5364a47d1ee7ccaa03d97d1bcf5cb6e4a140"
+      }
+    ],
+    "fully_retained": 12,
+    "partially_retained": 2,
+    "missing": 0,
+    "long_catch_all_chars": 365
+  },
+  "legacy_function_ast_sha256_unchanged_from_baseline": {
+    "_endpoint": "67edaa2adeb2cccd659e023a1126045fb41bd7d19380461280ef6b05d099e6a8",
+    "_complete": "87395f7c2c300536d6a309106c4135a4c8da35db86902d34c2b4d6250bfe840d",
+    "_summary_options": "d2471542d123c8df71d16ad37f8e13ae5755b4cb6ef7721fd9032d4b5b9c1e65",
+    "_summary_request": "eda0c47e388f6a53e94b712f8ed6ccde60d1bd2863541b0efe1fa3951d0f5495",
+    "_parse_summary_json": "355ca20fdcf42eb73b5411d1cb8eb50a69bb9f0391829cf7f2a0c974ae744b81",
+    "_summary_input": "a919c9a29b7c498181b9791a03c8dc0efa8e7633d026190635d435575c2fdf26",
+    "_summary_chunks": "0a51d8f49525e454d830c6825bc46639ed6051c2a5763e48a69b3a0e4b464148",
+    "_section_notes": "f40140362e88e9f8497395b6753b5c76e73dffd52acb0a881d2e2f1f7e63e042",
+    "_source_context": "1537d6cb9bd2718d1a227422dbdb8bc9e9ff441df8715563a5d020fcc0cce8d6"
+  },
+  "legacy_summarize_wrapper_changed": true,
+  "legacy_preservation_scope": "Named original transport/summary/cleanup helpers AST-identical; wrapper adds preselected strategy routing and private callback. Full API tests are separate root verification, not proven by AST hash.",
+  "reserved_attempts": 5,
+  "http_200": 5,
+  "reported_tokens": 11426,
+  "ceiling": 24,
+  "remaining_not_used": 19,
+  "calls_stopped": true,
+  "more_calls_planned": false,
+  "valid_delivered_samples": 1,
+  "independently_verified_new_essential_facts": 4,
+  "all14_coverage_measured": false,
+  "long_organization_goal_met": false,
+  "env_file_changed": false,
+  "model_assets_or_ui_changed": false,
+  "artifacts_sha256": {
+    "rubric.json": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49",
+    "results/request-ledger.json": "9b3039efd07fe786c49ccfc8617b10a48d0063e65a59d7a6c9aceaa23a938e75",
+    "results/budget-safety.json": "8cfa222d2eff32fe7b9f9461175b1654a9e68b10eb3242d78d75b0cab2f5f8c8",
+    "results/initial-provenance.json": "fb5ced0374fc59ee10e0b5fc0e63e21d095827ea557bbd10dc27c5399d87a30c",
+    "results/initial-contract-provenance.json": "449f7eb1b0a93d721355663904c8f3a06ae4e49f19b261c3f7bda3e302e736cc",
+    "results/refined-provenance.json": "b212ddec7680437c338eb28c299a27940d2bac012e03a193a05b93f3ed4701c7",
+    "results/initial-contract-index.json": "555327a732f867d6b1cf04ce4593bdb1ebf1e1da9903d41dc48d92faf0b72b48",
+    "results/refined-index.json": "5fa85b6a3bee5256eb60a18142846da2f57bf595171eaffe71c132732ef1673a",
+    "results/initial-contract-review.json": "e7e05981ac4061d85055eb93b341412c319670ac62737cabd48febcf8d487af4",
+    "results/refined-review.json": "47f6b8512e5af8dd991a3d3c0f776693d2d6dad6d88c43a9e327673063e2daa7",
+    "results/initial-contract-failure-diagnosis.json": "82b2e5f212c8008d0d66e319ce8ccad7f789c3cc9c382362fa3c5b7784f21148",
+    "results/refined-failure-diagnosis.json": "de8af86fab64ad6b1d09c87eacf5467fa15d00d0fa9383967ab413c70ef87ece",
+    "results/initial-contract-offline-check.json": "e035cdd862a0fa5e2fd57043acabf599032778584f19aa6cdded17bfe5be0f87",
+    "results/refined-offline-check.json": "d89a681f1f1b4cd3cb3e62824a3cf46cd8879c8e2b12d8c9ec6e700248dbaf3a"
+  },
+  "licensing": "MIT OCW authors/page/caption URLs retained in original manifest and rubric. Source excerpts and model-derived summaries/review CC BY-NC-SA4.0, noncommercial ShareAlike; product/scripts not relicensed."
+}

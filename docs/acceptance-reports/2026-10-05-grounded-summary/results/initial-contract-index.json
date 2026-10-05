@@ -1,0 +1,17 @@
+{
+  "ended_utc": "2026-10-05T05:14:13.603063+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "initial-contract-zh-short.json",
+      "sha256": "ae35521561d4287ef7cf2a9dd2a0938b06f467508c27d3e0309d1aab5ef1017c",
+      "posts": 3
+    },
+    {
+      "id": "en-medium",
+      "file": "initial-contract-en-medium.json",
+      "sha256": "6942b1c72d7918e3786f86933ac6ee1b7dc4c8a0133794a16f26b32817192943",
+      "posts": 1
+    }
+  ]
+}

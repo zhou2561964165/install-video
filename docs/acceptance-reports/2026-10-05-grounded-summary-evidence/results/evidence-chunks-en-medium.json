@@ -1,0 +1,9 @@
+{
+  "phase": "evidence-chunks",
+  "id": "en-medium",
+  "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+  "proxy_used": true,
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 2.8,
+  "trace_sha256": "763b7ee4e619981419f56e1d1074f7efed7245bd5560bde838b790f657e50730"
+}

@@ -1,0 +1,18 @@
+{
+  "ordinal": 22,
+  "phase": "evidence-chunks",
+  "sample": "en-medium",
+  "stage": "extract",
+  "content": "{\"facts\":[{\"topic\":\"日常评分系统的两个理由\",\"claim\":\"由于与人互动会留下印象并受到评价，且相信只要学生坚持不懈、始终如一地努力修读该课程就能展示出很好的中文技能，这两个原因促使他们采用日常评分系统。\",\"evidence\":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"课后反馈内容与目的\",\"claim\":\"通常课后会针对每位学生的课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。\",\"evidence\":[20,21,22,23,24,25,26,27],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"书面反馈与Engrade网站\",\"claim\":\"他们通常做书面反馈，使用一个叫Engrade的网站，除了录入成绩外还可以私下给每位学生留言，学生只要登录自己的账户就能读到教师的评论。\",\"evidence\":[28,29,30,31,32,33,34,35,36,37,38,39],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"评论内容取决于学生表现\",\"claim\":\"评论内容取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。\",\"evidence\":[40,41,42,43,44,45,46,47,48],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"中文文化中应对称赞的示例\",\"claim\":\"评论可以更详细，例如思考如何用中文应对称赞；在美国文化中收到称赞时自然会说谢谢，而在中国文化中保持谦逊才是应对称赞的方式，有时会说还有很长的路要走、还差得远，或不知道称赞从何而来。\",\"evidence\":[49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"中文文化称赞的核心观念\",\"claim\":\"中文文化中关于称赞的基本观念是保持谦逊。\",\"evidence\":[77,78,79,80],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"基于课堂材料的反馈方式\",\"claim\":\"如果学生的课堂表现来自其母语，他们会鼓励学生，并依据课堂所覆盖材料的教科书，让学生思考如何按照中文文化应对称赞，从而知道这是可以努力改进的地方。\",\"evidence\":[81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97],\"attribution\":\"source\",\"importance\":\"core\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1179,
+    "completion_tokens": 586,
+    "total_tokens": 1765,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 155
+  }
+}

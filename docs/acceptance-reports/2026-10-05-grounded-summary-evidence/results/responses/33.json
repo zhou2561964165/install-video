@@ -1,0 +1,18 @@
+{
+  "ordinal": 33,
+  "phase": "evidence-noncontig",
+  "sample": "en-medium",
+  "stage": "extract",
+  "content": "{\"facts\":[{\"topic\":\"日常评分系统的两个理由\",\"claim\":\"讲者认为，与人互动会留下印象并受到评价，因此希望给学生的每次表现（即每节课）做出评价；同时讲者确信，只要学生坚持并持续努力修这门课，就能展示出很好的中文技能；基于这两个理由，他们采用日常评分系统。\",\"evidence\":[1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"课后反馈的内容与目的\",\"claim\":\"通常课后会就每个学生的课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。\",\"evidence\":[21,22,23,24,25,26,27,28],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"书面反馈与Engrade网站\",\"claim\":\"反馈通常以书面形式进行，使用一个名为Engrade的网站；除了录入成绩，教师还可以私下给每个学生留言，学生只要登录自己的账户就能读到教师的评论。\",\"evidence\":[29,30,31,32,33,34,35,36,37,38,39,40],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"评论内容依学生表现而定\",\"claim\":\"评论内容取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。\",\"evidence\":[41,42,43,44,45,46,47,48,49],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"中美文化对赞美的不同回应\",\"claim\":\"讲者举例说，在美国文化中收到赞美时自然会说谢谢，例如别人说你的中文很好或英文很好，你会回答谢谢；而在中国文化中收到赞美时要保持谦虚，不以说谢谢来接受，有时会说还有很长的路要走、还差得远，或不知道赞美从何而来。\",\"evidence\":[50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"中国文化中赞美回应的核心是谦虚\",\"claim\":\"讲者指出，中国文化中关于赞美的根本理念是保持谦虚。\",\"evidence\":[77,78,79,80],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"基于L1表现的文化反馈\",\"claim\":\"如果学生的课堂表现来自其母语（L1），讲者会鼓励他们，并依据课堂上所覆盖材料的教科书，围绕在中国文化中如何应对赞美来给予反馈，让学生知道这是他们可以努力改进的地方。\",\"evidence\":[81,82,83,84,85,86,87,88,89,90,91,92,93,94,95],\"attribution\":\"source\",\"importance\":\"core\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1444,
+    "completion_tokens": 625,
+    "total_tokens": 2069,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 1060
+  }
+}

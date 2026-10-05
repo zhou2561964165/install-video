@@ -111,3 +111,33 @@ def test_summary_source_context_configuration_can_be_disabled(monkeypatch):
     assert Settings.from_env().llm_summary_source_context_chars == 0
     with pytest.raises(ValueError, match="llm_summary_source_context_chars"):
         Settings(llm_summary_source_context_chars=-1)
+
+
+def test_grounded_summary_controls_load_from_environment(monkeypatch):
+    monkeypatch.setenv("LLM_SUMMARY_STRATEGY", "facts")
+    monkeypatch.setenv("LLM_SUMMARY_FACTS_MAX_SOURCE_CHARS", "35000")
+    monkeypatch.setenv("LLM_SUMMARY_FACTS_CHUNK_CHARS", "6000")
+    monkeypatch.setenv("LLM_SUMMARY_FACTS_MAX_PER_CHUNK", "8")
+    monkeypatch.setenv("LLM_SUMMARY_FACTS_MAX_EVIDENCE_SENTENCES", "16")
+    configured = Settings.from_env()
+    assert configured.llm_summary_strategy == "facts"
+    assert configured.llm_summary_facts_max_source_chars == 35000
+    assert configured.llm_summary_facts_chunk_chars == 6000
+    assert configured.llm_summary_facts_max_per_chunk == 8
+    assert configured.llm_summary_facts_max_evidence_sentences == 16
+
+
+@pytest.mark.parametrize("changes", [
+    {"llm_summary_strategy": "retry"},
+    {"llm_summary_facts_max_source_chars": 0},
+    {"llm_summary_facts_max_source_chars": True},
+    {"llm_summary_facts_chunk_chars": 0},
+    {"llm_summary_facts_chunk_chars": True},
+    {"llm_summary_facts_max_per_chunk": 0},
+    {"llm_summary_facts_max_per_chunk": 100},
+    {"llm_summary_facts_max_evidence_sentences": 0},
+    {"llm_summary_facts_max_evidence_sentences": 257},
+])
+def test_grounded_configuration_rejects_invalid_limits(changes):
+    with pytest.raises(ValueError, match="llm_summary_"):
+        Settings(**changes)

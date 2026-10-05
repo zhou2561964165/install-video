@@ -1,0 +1,31 @@
+{
+  "phase": "refined",
+  "reviewer": "Independent QA agent, no independent external human scoring",
+  "rubric_preceded_new_outputs": true,
+  "baseline_unchanged": "natural-refined:12 fully/2 partially retained compound essentials, long final365chars",
+  "samples": [
+    {
+      "id": "zh-short",
+      "output_valid": false,
+      "stage_failed": "extract",
+      "reason": "Fact3 qualifier 第一个 absent within corresponding quote 一个就是; strict lexical qualifier_not_found rejects whole payload.",
+      "raw_fact_count": 7,
+      "raw_metadescription_persists": true,
+      "all_facts_semantically_scored": false,
+      "note": "Raw facts are not delivered summary. Does not demonstrate fewer thematic points, concision, audit efficacy or quality improvement. No compose/audit request."
+    },
+    {"id": "en-medium", "run": false, "note": "First failure stops candidate; old466/name constraint change not shown by new medium request."},
+    {"id": "en-long", "run": false, "note": "Long type/scope/errors/tail/organization remains unmeasured, not declared14/14 retained."}
+  ],
+  "reserved_posts_this_phase": 1,
+  "http_200_this_phase": 1,
+  "total_reserved_posts": 5,
+  "total_http_200": 5,
+  "valid_delivered_samples_this_phase": 0,
+  "default_promotion_recommended": false,
+  "organization_goal_met": false,
+  "all_14_facts_verified": false,
+  "further_paid_profiles_planned": false,
+  "limitations": "Only one output from initial short candidate, two stopped candidate extractions; no broad reliability or semantic quality improvement demonstrated. Quote/qualifier traces protect boundary but are brittle against model paraphrase; modelchecks/source IDs are not independent truth guarantees.",
+  "licensing": "MIT OCW creators/URLs retained original manifest/rubric; source excerpts/outputs/derivative reviews CC BY-NC-SA4.0, noncommercial ShareAlike."
+}

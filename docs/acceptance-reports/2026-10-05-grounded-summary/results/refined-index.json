@@ -1,0 +1,11 @@
+{
+  "ended_utc": "2026-10-05T05:26:59.287474+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "refined-zh-short.json",
+      "sha256": "336de023b65460dd36c6b640d279426dbd1282c774fd87bb5f28b48595bb6ad5",
+      "posts": 1
+    }
+  ]
+}

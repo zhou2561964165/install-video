@@ -1,0 +1,18 @@
+{
+  "ordinal": 17,
+  "phase": "evidence-lines",
+  "sample": "en-medium",
+  "stage": "audit",
+  "content": "{\"additional_facts\":[],\"output\":{\"summary\":[{\"text\":\"该课程采用日常评分系统，原因有二：人际互动会留下印象并受到评价，因此希望每次课都对学生表现给予评价；同时相信只要学生坚持并持续努力修读该课程，就能展现良好的中文技能。通常课后会就每位学生的课堂表现提供反馈，包括语言和文化行为，以便学生知道下次课需要改进之处。反馈通常采用书面形式，使用名为Engrade的网站，除录入成绩外还可私下给每位学生留言，学生登录账户即可读到教师的评论。评论内容取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细，例如思考如何用中文应对恭维。\",\"fact_ids\":[\"F1_1\",\"F1_2\",\"F1_3\",\"F1_4\",\"F1_5\"]}],\"key_points\":[{\"topic\":\"日常评分系统的两个理由\",\"text\":\"因人际互动会留下印象并受评价，且相信学生只要坚持并持续努力就能展现良好中文技能，故采用日常评分系统。\",\"fact_ids\":[\"F1_1\"]},{\"topic\":\"课后反馈与Engrade书面留言\",\"text\":\"通常课后就每位学生的语言和文化行为表现提供反馈，通过Engrade网站以书面形式私下留言，学生登录账户即可读到。\",\"fact_ids\":[\"F1_2\",\"F1_3\"]},{\"topic\":\"评论内容与详细反馈示例\",\"text\":\"评论内容取决于学生表现，可简单到提醒发音，也可更详细，例如思考如何用中文应对恭维。\",\"fact_ids\":[\"F1_4\",\"F1_5\"]},{\"topic\":\"中美文化应对恭维的差异\",\"text\":\"在美国文化中收到恭维自然说谢谢；在中国文化中则要保持谦虚，不通过说谢谢来接受，有时会说还有很长的路要走、还差得远，或不知道恭维从何而来。\",\"fact_ids\":[\"F1_6\",\"F1_7\",\"F1_8\"]},{\"topic\":\"针对L1表现的反馈方式\",\"text\":\"若学生的课堂表现来自其母语（L1），会鼓励他们，并依据课堂所覆盖材料的教科书，让他们思考如何按中国文化应对恭维，从而知道可改进之处。\",\"fact_ids\":[\"F1_9\"]}]},\"checks\":[{\"item_id\":\"S1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P2\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P3\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P4\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P5\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 3007,
+    "completion_tokens": 684,
+    "total_tokens": 3691,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    },
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 2367
+  }
+}

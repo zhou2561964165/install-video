@@ -1,0 +1,23 @@
+{
+  "ended_utc": "2026-10-05T12:39:38.337099+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "evidence-wide-zh-short.json",
+      "sha256": "bf9bf92355d3297ddcbd9566f69642b530a79eb8d8c9993e9e603ad830f2bf1c",
+      "posts": 3
+    },
+    {
+      "id": "en-medium",
+      "file": "evidence-wide-en-medium.json",
+      "sha256": "ce167a984813fc24bfbb37632a7ab57f4f55e4dc37328387a12a4819eebe1ec1",
+      "posts": 3
+    },
+    {
+      "id": "en-long",
+      "file": "evidence-wide-en-long.json",
+      "sha256": "484edc6414a15f4352f3d0b899f0f52a5864a12b3b4bbc2a497122d83a87b881",
+      "posts": 6
+    }
+  ]
+}

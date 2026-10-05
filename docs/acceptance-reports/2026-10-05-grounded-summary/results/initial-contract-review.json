@@ -1,0 +1,56 @@
+{
+  "phase": "initial-contract",
+  "reviewer": "Independent QA agent, no independent external human rating",
+  "rubric_preceded_new_outputs": true,
+  "baseline_unchanged": "natural-refined: 12 full/2 partial essential compounds and365-char long final catch-all",
+  "samples": [
+    {
+      "id": "zh-short",
+      "output_valid": true,
+      "point_count": 7,
+      "baseline_point_count": 5,
+      "facts": [
+        {"id": "zh1", "status": "retained", "points": [1], "note": "Second-day Chinese-only teaching and first-day preparation/syllabus/expectations retained."},
+        {"id": "zh2", "status": "retained", "points": [3,4,5], "note": "Both intelligible fixed classroom phrases and preparation/class-task consistency retained; point5 adds the English-reversion consequence."},
+        {"id": "zh3", "status": "retained", "points": [6], "note": "Cannot freely vary fixed formulations; repeat-once alternative explicitly retained."},
+        {"id": "zh4", "status": "retained", "points": [7], "note": "45 minutes Chinese/last5 minutes plus afterclass/email alternatives retained."}
+      ],
+      "coverage_full": 4,
+      "coverage_partial": 0,
+      "accuracy_issues": [],
+      "organization_issues": [
+        {"point": 2, "type": "metadescription", "note": "Standalone two-important-elements announcement consumes a point without delivering the elements; should be folded into substantive conditions."},
+        {"points": [4,5], "type": "topic_fragmentation", "note": "Preparation consistency principle and its consequence occupy separate points. New consequence means not pure duplication, but less concise than baseline's five-point organization."},
+        {"type": "summary_verbosity", "note": "Summary largely echoes the same details as points, with repeated 'most important/two important' formulations rather than compact overview."}
+      ],
+      "pure_duplicate_pairs": [],
+      "lexical_quote_spans_valid": 7,
+      "audit_added_facts": 0,
+      "audit_flags_all_positive": true,
+      "positive_audit_flags_prove_semantics": false,
+      "organization_improvement": false
+    },
+    {
+      "id": "en-medium",
+      "output_valid": false,
+      "stage_failed": "extract",
+      "reason": "First quote466>400 codec invalid_text; first attribution HAOHSIANG LIAO absent from its quote additionally contradicts contract.",
+      "all_facts_semantically_scored": false,
+      "note": "Raw incomplete-stage extraction is not a delivered summary. Grade-entry/usually/cultural attribution cannot be declared delivered successes from these raw facts. No compose/audit executed."
+    },
+    {
+      "id": "en-long",
+      "run": false,
+      "all_facts_semantically_scored": false,
+      "note": "Phase stopped immediately after medium extraction failure. Long scope/type constraint/error/tail/organization not measured in this candidate."
+    }
+  ],
+  "reserved_posts": 4,
+  "http_200": 4,
+  "valid_delivered_samples": 1,
+  "default_promotion_recommended": false,
+  "organization_goal_met": false,
+  "all_14_facts_verified": false,
+  "followup": "Only root-approved separately frozen general refinement may be measured; no retry of this phase or ledger reset.",
+  "licensing": "MIT OCW originals/authors/URLs preserved in rubric and original manifest; derived review and model outputs CC BY-NC-SA4.0, noncommercial ShareAlike."
+}

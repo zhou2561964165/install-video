@@ -1,0 +1,9 @@
+{
+  "phase": "initial-contract",
+  "id": "en-medium",
+  "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+  "proxy_used": true,
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 4.78,
+  "trace_sha256": "7f76e829434454bad699dda477f02bbadd3c1d21317f7ca625edfc62953216bd"
+}

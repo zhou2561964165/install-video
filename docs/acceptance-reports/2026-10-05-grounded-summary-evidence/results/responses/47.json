@@ -1,0 +1,18 @@
+{
+  "ordinal": 47,
+  "phase": "evidence-wide",
+  "sample": "en-long",
+  "stage": "extract",
+  "content": "{\"facts\":[{\"topic\":\"赋值语句的结构\",\"claim\":\"在编程中，等号右侧总是一个会被求值为值的表达式，而左侧总是一个变量，等号代表赋值；这与数学不同，数学中等号两侧可以有很多东西，而这里等号左侧只能有一个变量。\",\"evidence\":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"变量重绑定\",\"claim\":\"创建表达式和赋值后，可以用新的赋值语句重新绑定变量名。\",\"evidence\":[21,22,23,24,25],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"内存绑定示例\",\"claim\":\"在示例中，pi 等于 3.14 会在内存中创建值 3.14 并绑定到变量 pi，radius 等于 2.2 会创建值 2.2 并绑定到变量 radius。\",\"evidence\":[28,29,30,31,32,33,34,35,36,37,38,39,40,41],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"表达式求值与赋值\",\"claim\":\"表达式会从内存中替换 pi 和 radius 的值，计算表达式求值结果，将其放入内存，并因为使用等号而把该值赋给相应变量区域。\",\"evidence\":[42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"重绑定与旧值丢失\",\"claim\":\"当执行 radius 等于 radius 加 1 时，会解除对 2.2 的绑定，计算得到新值 3.2 并重新绑定到同一变量；内存中仍会有 2.2 这个值，但已失去指向它的句柄，无法再取回。\",\"evidence\":[59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"垃圾回收\",\"claim\":\"在 Python 中，这些丢失的值在某个时候可能会被所谓的垃圾回收器收集，回收后用于新值等用途。\",\"evidence\":[81,82,83,84,85,86,87],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"area 值不变\",\"claim\":\"area 的值没有改变，因为计算机只执行了所给的指令：只告诉它把 radius 改为 radius 加 1，从未告诉它重新计算 area 的值；如果把那一行复制下来，area 的值才会改变。\",\"evidence\":[92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"下一讲预告\",\"claim\":\"下一讲将讨论如何给程序添加控制流，即如何告诉计算机做一件事或另一件事。\",\"evidence\":[110,111,112,113,114],\"attribution\":\"source\",\"importance\":\"support\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1707,
+    "completion_tokens": 703,
+    "total_tokens": 2410,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 1323
+  }
+}

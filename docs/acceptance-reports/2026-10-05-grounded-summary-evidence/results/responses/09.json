@@ -1,0 +1,18 @@
+{
+  "ordinal": 9,
+  "phase": "evidence-id",
+  "sample": "en-medium",
+  "stage": "extract",
+  "content": "{\"facts\":[{\"topic\":\"日常评分系统的两个理由\",\"claim\":\"讲者提出采用日常评分系统的两个理由：一是人与人互动时会留下印象、会被评价，因此希望每次课堂表现都给予学生评价；二是相信只要学生坚持并持续努力修读该课程，就能展示出很好的中文技能。\",\"evidence\":[\"part1_s1\",\"part1_s2\",\"part1_s3\",\"part1_s4\",\"part1_s5\",\"part1_s6\",\"part1_s7\",\"part1_s8\",\"part1_s9\",\"part1_s10\",\"part1_s11\",\"part1_s12\",\"part1_s13\",\"part1_s14\",\"part1_s15\",\"part1_s16\",\"part1_s17\",\"part1_s18\",\"part1_s19\",\"part1_s20\"],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"课后反馈的内容与目的\",\"claim\":\"通常课后会就每位学生的课堂表现提供反馈，包括语言和文化行为，目的是让学生知道下几次课要改进什么。\",\"evidence\":[\"part1_s21\",\"part1_s22\",\"part1_s23\",\"part1_s24\",\"part1_s25\",\"part1_s26\",\"part1_s27\",\"part1_s28\"],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"通过Engrade网站提供书面反馈\",\"claim\":\"通常采用书面反馈，使用名为Engrade的网站，除录入成绩外还可私下给每位学生留言；学生只要登录自己的账户就能读到教师的评论。\",\"evidence\":[\"part1_s29\",\"part1_s30\",\"part1_s31\",\"part1_s32\",\"part1_s33\",\"part1_s34\",\"part1_s35\",\"part1_s36\",\"part1_s37\",\"part1_s38\",\"part1_s39\",\"part1_s40\"],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"评论内容依学生表现而定\",\"claim\":\"评论内容取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。\",\"evidence\":[\"part1_s41\",\"part1_s42\",\"part1_s43\",\"part1_s44\",\"part1_s45\",\"part1_s46\",\"part1_s47\",\"part1_s48\",\"part1_s49\"],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"详细反馈示例：如何应对中文里的称赞\",\"claim\":\"较详细的反馈示例是让学生思考如何用中文应对称赞。\",\"evidence\":[\"part1_s50\",\"part1_s51\",\"part1_s52\",\"part1_s53\"],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"美国文化中接受称赞的方式\",\"claim\":\"在美国文化中，收到称赞时很自然地说谢谢，例如别人说你的中文很好或英文很好，就回答谢谢。\",\"evidence\":[\"part1_s56\",\"part1_s57\",\"part1_s58\",\"part1_s59\",\"part1_s60\",\"part1_s61\",\"part1_s62\",\"part1_s63\",\"part1_s64\"],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"中国文化中应对称赞的核心是保持谦逊\",\"claim\":\"在中国文化中，收到称赞时要保持谦逊，不以说谢谢来接受，有时会说诸如自己还有很长的路要走、还差得远，或不知道称赞从何而来之类的话；中国文化中关于称赞的根本观念就是保持谦逊。\",\"evidence\":[\"part1_s65\",\"part1_s66\",\"part1_s67\",\"part1_s68\",\"part1_s69\",\"part1_s70\",\"part1_s71\",\"part1_s72\",\"part1_s73\",\"part1_s74\",\"part1_s75\",\"part1_s76\",\"part1_s77\",\"part1_s78\",\"part1_s79\",\"part1_s80\"],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"针对受母语影响表现的反馈方式\",\"claim\":\"如果学生的课堂表现来自其母语（L1），教师会鼓励他们，并依据课堂所覆盖材料为基础的教科书，通过让他们思考如何按中国文化应对称赞来给予反馈，使学生知道这是可以努力改进的地方。\",\"evidence\":[\"part1_s81\",\"part1_s82\",\"part1_s83\",\"part1_s84\",\"part1_s85\",\"part1_s86\",\"part1_s87\",\"part1_s88\",\"part1_s89\",\"part1_s90\",\"part1_s91\",\"part1_s92\",\"part1_s93\",\"part1_s94\",\"part1_s95\"],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 2350,
+    "completion_tokens": 1006,
+    "total_tokens": 3356,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 2094
+  }
+}

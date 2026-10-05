@@ -1,0 +1,23 @@
+{
+  "ended_utc": "2026-10-05T12:28:28.279044+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "evidence-noncontig-zh-short.json",
+      "sha256": "812b23dcc22cae3b8b9a41e0f9214a9e3ace8a561f459bb91128b57415adf750",
+      "posts": 3
+    },
+    {
+      "id": "en-medium",
+      "file": "evidence-noncontig-en-medium.json",
+      "sha256": "b923740a041d07f991e3f9c2711101a46226dba1c20a77a0507f421b23712044",
+      "posts": 3
+    },
+    {
+      "id": "en-long",
+      "file": "evidence-noncontig-en-long.json",
+      "sha256": "6db66e163ebe6aa3e8040479908a7ff438a02586c0c8a33fc033b3e1f1eeed0a",
+      "posts": 1
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "offline": true,
+  "actual_network_posts": 0,
+  "durable_reservation_observed_before_fake_send": true,
+  "failure_consumes_reservation": true,
+  "ceiling_25th_refused": true,
+  "hidden_retry_refused": true,
+  "options_change_refused": true,
+  "second_caller_lock_refused": true,
+  "reproduction": ".venv/Scripts/python.exe docs/acceptance-reports/2026-10-05-grounded-summary/scripts/check_safety.py",
+  "method": "Fresh synthetic fake HTTP checks; temporary ledger isolated from real four-request ledger; no actual provider access."
+}

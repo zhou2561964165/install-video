@@ -1,0 +1,44 @@
+{
+  "phase": "initial-contract",
+  "id": "en-medium",
+  "events": [
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nSo that's a very basic,\nfundamental idea.\nWe want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.\nSo usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.\nSo the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?\nFor example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.\nSo if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on.",
+          "global_start": 0,
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "requesting"
+        }
+      ]
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nSo that's a very basic,\nfundamental idea.\nWe want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.\nSo usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.\nSo the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?\nFor example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.\nSo if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on.",
+          "global_start": 0,
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "received"
+        }
+      ],
+      "status": "failed",
+      "error_type": "llm_invalid_response"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "phase": "evidence-id",
+  "id": "en-long",
+  "source_sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7",
+  "proxy_used": true,
+  "error_type": "llm_input_too_large",
+  "elapsed_seconds": 0.0,
+  "trace_sha256": "af68cf9040c537abcc19f3a4e2eb391fd06a1516fab6353b368297de622b11d3"
+}

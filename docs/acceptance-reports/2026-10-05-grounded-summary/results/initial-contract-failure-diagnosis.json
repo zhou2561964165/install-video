@@ -1,0 +1,56 @@
+{
+  "phase": "initial-contract",
+  "offline": true,
+  "provider_calls": 0,
+  "records": [
+    {
+      "fact": 1,
+      "quote_chars": 466,
+      "codec_reason": "invalid_text",
+      "named_attribution_in_quote": false
+    },
+    {
+      "fact": 2,
+      "quote_chars": 200,
+      "codec_reason": "valid",
+      "named_attribution_in_quote": true
+    },
+    {
+      "fact": 3,
+      "quote_chars": 300,
+      "codec_reason": "valid",
+      "named_attribution_in_quote": true
+    },
+    {
+      "fact": 4,
+      "quote_chars": 186,
+      "codec_reason": "valid",
+      "named_attribution_in_quote": true
+    },
+    {
+      "fact": 5,
+      "quote_chars": 80,
+      "codec_reason": "valid",
+      "named_attribution_in_quote": true
+    },
+    {
+      "fact": 6,
+      "quote_chars": 188,
+      "codec_reason": "valid",
+      "named_attribution_in_quote": true
+    },
+    {
+      "fact": 7,
+      "quote_chars": 371,
+      "codec_reason": "valid",
+      "named_attribution_in_quote": true
+    },
+    {
+      "fact": 8,
+      "quote_chars": 326,
+      "codec_reason": "valid",
+      "named_attribution_in_quote": true
+    }
+  ],
+  "finding": "Whole extraction refused at first invalid record, without partial salvage or provider retry. First quote exceeds400 and named attribution is outside its quote; offline per-record reasons preserve all violations."
+}

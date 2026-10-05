@@ -1,0 +1,19 @@
+{
+  "phase": "refined",
+  "offline_only": true,
+  "samples": [
+    {
+      "id": "zh-short",
+      "quote_spans_checked": 0,
+      "named_attribution_spans_checked": 0,
+      "audit_added_facts": 0,
+      "pipeline_status": "failed",
+      "error_type": "llm_invalid_response",
+      "semantic_entailment_proven": false
+    }
+  ],
+  "reserved_all_phases": 5,
+  "ceiling": 24,
+  "trace_lexically_valid": true,
+  "semantic_accuracy_not_proven_by_this_check": true
+}

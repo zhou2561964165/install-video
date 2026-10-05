@@ -1,0 +1,9 @@
+{
+  "phase": "evidence-lines",
+  "id": "en-long",
+  "source_sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7",
+  "proxy_used": true,
+  "error_type": "llm_incomplete_response",
+  "elapsed_seconds": 10.94,
+  "trace_sha256": "ab53559bcacbc4a2e3a56322ea5b179305de02bd13a76cf60d3ca2ac874c199c"
+}
