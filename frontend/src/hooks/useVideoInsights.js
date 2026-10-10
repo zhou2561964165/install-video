@@ -29,7 +29,13 @@ export function useVideoInsights(url) {
     controller.current?.abort();
     const currentController = new AbortController();
     controller.current = currentController;
-    setState((current) => ({ ...current, loading: kind, error: null }));
+    setState((current) => ({
+      ...current,
+      [kind]: null,
+      active: current.active === kind ? null : current.active,
+      loading: kind,
+      error: null,
+    }));
     try {
       const value = await operation(currentController.signal);
       if (id !== requestId.current) return;

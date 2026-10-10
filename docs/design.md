@@ -1,19 +1,20 @@
 # 方案设计文档 · 万能视频下载网站
 
-> 版本：v3（2026-10-03；历史视觉方案另作标记）
+> 版本：v3（2026-10-10 成熟方案整改同步；历史视觉与模型实验另作标记）
 > 对应需求：见 `docs/requirements.md`
-> 本文档是**技术设计基准**。所有「预留扩展点」在实现时通过接口隔离，后续拓展不触碰下载核心。
+> 本文档是**技术设计基准**。当前实现见 §1–12，§13–14 保留历史视觉决策；模型历史阶段见 §12.3–12.4，当前默认与验收状态见 §12.6。所有「预留扩展点」在实现时通过接口隔离，后续拓展不触碰下载核心。
 
 ---
 
 ## 0. 工程约定（每次遵守）
 
-> 与根目录 `CLAUDE.md` 一致（最高优先级）。
+> 遵循当前 `AGENTS.md`、有效用户指令及上级指令。`CLAUDE.md` 是项目补充说明，不具有最高优先级；历史计划不能覆盖后续用户要求。
 
 1. **UI 必须用 skill**：配色/字体/动效/无障碍/组件先调用 `ui-ux-pro-max` + `design-system`。
 2. **skill 优先于计划**：冲突时以 skill 为准（如「每屏最多动 1–2 个关键元素」> 常驻动画清单）。
 3. **不写死、保留扩展**：颜色/字体/时长走 `:root` token；新增能力数据驱动、可配置，避免大规模重构。
 4. **解耦**：核心模块对外只暴露窄接口（后端 `ytdlp_service.py` 唯一接触 yt-dlp；前端视觉层只读 `scene`、不改下载状态、不 import 下载核心）；层与模块通过稳定接口通信，扩展不触碰既有核心。
+5. **成熟方案优先，避免重复造轮子**：设计前复用已确认资料、调研成熟库/框架/官方方案，适用时优先集成；自研聚焦业务差异与适配。选型记录来源、版本、兼容性、维护/许可证/资源成本及不适用的具体原因。执行 [AGENTS.md §10](../AGENTS.md)，既有自研实现不构成跳过成熟方案评估的理由。
 
 ---
 
@@ -29,7 +30,7 @@
                         │  extract_info / download │  （任务状态落 SQLite）
                         └─────────────┼─────────────┘
                                       │
-                                临时文件目录（TTL 自动清理）
+                                临时文件目录（下载提交时懒触发 TTL 清理）
 ```
 
 **选型理由**：yt-dlp 是 Python，进程内用其官方 API 代码最少、结构化 format 信息直接可用、进度与错误处理干净；下载为阻塞 I/O，用线程池即可支撑 v1 并发。
@@ -42,9 +43,12 @@
 
 | 层 | 选型 | 说明 |
 | --- | --- | --- |
-| 后端 | Python 3.12 + FastAPI | 与 yt-dlp 同语言 |
+| 后端 | Python >=3.12 + FastAPI | `pyproject.toml`声明最低版本，与yt-dlp同语言 |
 | 下载核心 | yt-dlp（Python API） | 进程内调用 |
 | 任务存储 | SQLite + SQLModel | 轻量，后续可换 PostgreSQL |
+| 总结结构校验 | Pydantic v2（已有依赖；本机2.13.5） | `summary_output.py`统一严格字段类型与JSON Schema生成；生成组织采用来源优先、要点先写/概览后写的指导，内容质量另行验收 |
+| 候选总结串行编排 | langchain-core 1.6.9（锁定，约束>=1,<2） | staged候选使用实际RunnableSequence/RunnableLambda两步骤，供应商HTTP仍在llm_service；默认single保留至候选验证 |
+| 追踪上下文控制 | langsmith 0.14.7（直接依赖，约束>=0.3,<1） | 仅用tracing_context(enabled=False)禁用整个管线外部追踪；不启用LangSmith服务、账号或数据上传 |
 | 前端 | React + Vite | 二次元交互式视觉 |
 | 视觉/动效 | CSS + PIXI v6 + pixi-live2d-display | 单一PIXI管线与Live2D；未引入Three.js/Lottie |
 | 媒体合并 | ffmpeg | 视频流+音频流合并出高清（必需） |
@@ -70,10 +74,20 @@ install_video/
 │   │       ├── ytdlp_service.py   # 封装 yt-dlp（解析/下载/进度/错误分类）
 │   │       ├── jobs.py            # 线程池 + 任务生命周期 + 临时文件清理
 │   │       ├── auth.py / quota.py  # 鉴权与路由层每日额度
+│   │       ├── quota_policy.py    # 指定用户开发豁免窄接口；保留计数、无效策略恢复有限额度
 │   │       ├── subtitle_sources.py # 公开平台来源适配，由ytdlp_service调用
 │   │       ├── bilibili_subtitle_source.py # 匿名BV/分P字幕元数据，可信来源与输入校验
 │   │       ├── subtitle_service.py # 正文HTTP与文本化
-│   │       └── llm_service.py      # 去重、分段归纳、分层合并与兼容传输
+│   │       ├── llm_service.py      # 默认legacy字幕分段/合并、自适应预算；facts实验编排与传输
+│   │       ├── summary_output.py   # 已有Pydantic严格字段类型与JSON Schema；无配置/HTTP依赖
+│   │       ├── summary_pipeline.py # 候选LCEL points→overview串行角色边界，关闭外部追踪
+│   │       ├── summary_facts.py    # facts实验的来源/事实/候选结果严格合同
+│   │       ├── summary_normalization.py # facts raw输出独立规范化，保留内容与ID提示
+│   │       ├── summary_references.py # facts程序关联引用，未决候选交核查
+│   │       ├── summary_quality.py  # facts主题/重复/关键事实/归因检查
+│   │       ├── summary_audit_contract.py # facts compat/compact核查包解析
+│   │       ├── summary_retry.py    # facts分类修复预算；格式/语义分别计数
+│   │       └── network_retry.py    # 下载/字幕网络策略，与LLM分类修复分离
 │   └── scripts/install_ffmpeg.*   # 一键下载 ffmpeg
 ├── frontend/                      # React + Vite
 │   └── src/
@@ -95,33 +109,38 @@ install_video/
 
 ```
 1. POST /api/parse {url}（Authorization: Bearer <token> 必需）
-   → ytdlp_service.extract_info(url, download=False)
+   → ytdlp_service.parse_video(url)（内部extract_info只读提取）
    → 返回 {title, thumbnail, duration, duration_string, uploader, platform,
            view_count, upload_date, description, subtitles,
            formats:[{format_id, label, height, ext, resolution, filesize,
                      has_audio, vcodec, acodec, direct(是否有直链), note}]}
 
-2. POST /api/download {url, format_id, mode?}（Authorization: Bearer <token> 必需）
+2. POST /api/download {url, format_id, force_server:false}（Authorization: Bearer <token> 必需）
    → 判定下载方式（见 §5）
-   → 建 Job（status=queued）→ 线程池执行下载
+   → 服务端模式建 Job（status=queued）→ 线程池执行下载
    → 返回 {mode:"direct", url, headers} 或 {mode:"server", job_id}
 
 3. GET /api/job/{id}（前端轮询进度 / 后续可换 SSE）
-   → {status, progress, title, error_type, error}
+   → {id, status, progress, title, error_type, error}
 
 4. GET /api/file/{job_id}（服务端模式下）
    → 文件流（Content-Disposition 触发浏览器/手机保存）
 ```
 
+**鉴权边界（按当前路由）**：注册/登录无需已有 token；`/api/auth/me`、解析、下载、字幕、翻译与总结要求 Bearer token。`GET /api/job/{id}` 和 `GET /api/file/{job_id}` 当前未接 `get_current_user`，也未校验任务归属；不能把登录入口表述为所有任务读取接口均有账户隔离。前端退出清除本地 token，没有服务端 logout/refresh API。
+
+**视频智能 API**：`POST /api/subtitle {url, language?}` 返回标题、语言、自动字幕标记、可选语言和正文；`POST /api/subtitle/translate {url, source_language?, target_language:"zh-CN"}` 返回译文及 provider/model；`POST /api/summary {url, subtitle_language?, output_language:"zh-CN"}` 返回标题、源语言、`summary`、`key_points`、provider/model。公开总结响应不包含 facts、trace 或模型修复计数；这些仅在显式诊断中使用。
+
 ## 5. 下载方式：直链 + 服务端自动切换
 
-- **解析时**：为每个清晰度标记直链是否可用及所需请求头（`format['url']` + `http_headers`）。
+- **解析时**：返回清晰度与 `direct` 标记；公开格式列表不返回直链 URL 或请求头。下载提交时由 `get_direct_url` 重新提取该格式的 URL 和请求头。
 - **下载时**：
   1. 直链可用 → 返回 `{mode:"direct", url, headers}`，前端直接浏览器下载；
-  2. 直链不可用/过期/需 cookie → 自动落到服务端下载 `{mode:"server", job_id}`；
+  2. 直链探测无结果或抛错 → 自动落到服务端下载 `{mode:"server", job_id}`；
   3. UI 提供「强制走服务器」开关兜底。
-- **服务端下载**：`YoutubeDL.download()` 到临时目录，`progress_hooks` 更新 Job 进度；完成后由 `/api/file/{id}` 流式回传。前端轮询到 `done` 后经 `lib/saveFile.js`（`<a download>`）自动触发浏览器保存，无需手动点链接。
-- **ffmpeg 合并阈值（`FFMPEG_MIN_HEIGHT = 1080`）**：音视频分离流需 ffmpeg 合并，仅对 `>= 1080p` 的档位开放；低于 1080p 的档位只用渐进式直链，无直链则跳过该档（不触发 ffmpeg）。
+- **服务端下载**：`ytdlp_service.download()` 内用 `YoutubeDL.extract_info(download=True)` 下载到任务临时目录，`progress_hooks` 更新 Job 进度；完成后由 `/api/file/{id}` 流式回传。前端轮询到 `done` 后经 `lib/saveFile.js`（`<a download>`）自动触发浏览器保存，无需手动点链接。
+- **现有直链边界**：前端用 `window.location.assign(url)`，不附服务端返回的 `headers`；浏览器侧过期、请求头限制或保存失败不会自动重新提交服务端任务，需要用户使用强制服务器选项。下载路由会在探测前扣额度，失败不自动返还。
+- **ffmpeg 合并阈值（`FFMPEG_MIN_HEIGHT = 1080`）**：有分辨率的清晰度档位优先使用渐进式直链；无直链时，仅对 `>= 1080p` 的档位生成音视频合并格式，低于1080p跳过该档。若最终没有候选，仍提供无指定分辨率的 `best` 兜底；阈值是格式列表策略，不是下载路由对任意format_id的硬限制。
 
 ## 6. 数据模型
 
@@ -134,14 +153,15 @@ Job:
 
 【v2 已建表（2026-09-24）】
 User:   id(uuid) · email(unique) · password_hash · created_at
-Quota:  user_id(FK→User) · date(UTC 日期串) · downloads_used · limit  — (user_id, date) 复合唯一
+Quota:  id(uuid) · user_id(FK→User) · date(UTC 日期串) · downloads_used · limit  — (user_id, date) 复合唯一
 ```
 
 ## 7. 临时文件与防滥用
 
-- 临时目录按任务隔离；完成后 **TTL 自动删除**（默认 1 小时），防止磁盘被吃满。
-- **并发上限**（默认 3）+ **每 IP 限流** + **文件大小上限**：轻量中间件实现（内存/DB 计数）。
-- 接口层隔离，后续接账号额度时不动下载核心。
+- 临时目录按任务隔离；完成后设置过期时间（默认 1 小时），下一次下载提交调用 `cleanup_expired()` 删除过期文件与任务行。当前无定时清理任务，不能承诺 TTL 到点即删。
+- **并发执行上限**默认 3，由 `ThreadPoolExecutor` 控制；超出的任务排队，当前没有队列长度拒绝机制。**每 IP 限流**是 `/api/` 内存窗口，默认 60 秒 30 次；多进程不共享计数。**文件大小上限**默认 2 GiB，在服务端下载完成后检查，并非下载前磁盘预留。
+- **账号额度已实现**：`quota.py` 按 UTC 日统计，默认每用户每日 10 次，`check_and_reserve` 在下载探测/创建任务前提交计数，直链与服务端同计。解析、字幕、翻译、总结不扣下载额度。
+- **开发指定账号豁免已实现**：`quota_policy.is_unlimited_user(user_id)` 每次按显式 ID 读取本地策略；缺失、不可读或无效策略恢复有限额度。豁免只绕过耗尽判断，仍累计 `downloads_used`，不改其他用户的额度行；`/api/auth/me` 对豁免用户返回 `unlimited=true`、`limit/remaining=null`。下载豁免不解除 IP 限流、并发、磁盘或模型预算。
 
 ## 8. 错误处理（统一分类）
 
@@ -157,14 +177,14 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 | login_required | 需登录 |
 | ffmpeg_missing | 缺少 ffmpeg |
 | network | 网络错误 |
-| quota | 达到额度/并发上限 |
+| quota | 每日额度耗尽、IP请求限流或完成文件超出大小上限 |
 
 ## 9. 预留扩展点（后续拓展的关键）
 
 | 未来功能 | 现有隔离边界 | 扩展方式（不碰下载核心） |
 | --- | --- | --- |
 | 账号 / 登录 | ✅ 已实现（v2） | `routes/auth.py` + `services/auth.py`（JWT + `Depends(get_current_user)`；解析/下载必须登录） |
-| 每用户额度 | ✅ 已实现（v2） | `services/quota.py` `check_and_reserve`，路由层提交即扣（直链/服务端同计） |
+| 每用户额度 | ✅ 已实现（v2，含开发豁免） | `services/quota.py` `check_and_reserve`，路由层提交即扣（直链/服务端同计）；`quota_policy.is_unlimited_user`隔离豁免策略 |
 | 任务队列扩展 | 当前 `JobManager.submit_download` + `ThreadPoolExecutor` | 未来先定义TaskRunner窄协议，再接Celery/Redis；当前未实现这些类 |
 | 视频总结 | ✅ v3 MVP | `routes/summary.py` → `llm_service.py`，显式请求、独立于下载任务 |
 | 字幕翻译 | ✅ v3 MVP | `routes/subtitle.py` → `subtitle_service.py` / `llm_service.py` |
@@ -197,6 +217,7 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 - `subtitle_service.py` 负责轨道选择、HTTP 获取和 VTT/SRT/JSON3/TTML 文本化，不感知下载任务。
 - `llm_service.py` 定义总结/翻译窄接口，OpenAI-compatible 传输细节封装在内部；配置缺失返回 `llm_unconfigured`。
 - AI 总结先清理重复行，再按 `LLM_SUMMARY_CHUNK_CHARS` 分段归纳；超长结果分层合并，保持全局输出为现有摘要与要点结构。字幕源文件和翻译流程不做全局去重。
+- legacy共用请求提示已修订：summary提供高层主题/关系概览，要点展开完整机制、条件、互补能力与例子；每处断言保留限定和频率/对象/事件/单位。该提示同样用于单段与合并，属于生成指导而非确定性语义验证，不新增调用、输出删除器或API字段。
 - `subtitle_sources.py` 提供注册式公开平台适配器，由 `ytdlp_service.py` 唯一调用。Archive.org 总结内容优先从官方字幕附件元数据获取，无需先解析视频下载信息；不可用时回退 yt-dlp。文件级字幕使用去除已识别后缀后的精确内容关联，避免混入其他视频。
 - `routes/subtitle.py` 与 `routes/summary.py` 使用 `Depends(get_current_user)`，同步路由交由 FastAPI 线程池执行。
 - 前端通过 `api.js` + `useVideoInsights` 调用，`VideoInsights` 只接收 props；现有下载 reducer 和 `useDownload` 不变。
@@ -212,29 +233,59 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 
 ### 12.3 自然字幕评测与摘要输出控制
 
+> 历史阶段：记录 2026-10-04 的失败与当时修复决策，不是当前待办或默认长度合同。后续规范化/分类修复与自适应输出已覆盖下述「不修复格式」「最多7点」结论；当前行为见 §12.6。历史请求与失败原件保留。
+
 自然语料和事实清单由独立采集agent在模型输出前冻结，模型实现与独立复审分工，源码、提示词、模型、配置和请求台账可核对。原始字幕清洗保持来源与许可，本轮MIT OCW语料单独遵守CC BY-NC-SA4.0，不并入无约束软件许可。
 
-本轮真实HTTP200出现两类失败：正文JSON漏闭合符号；合并请求4096输出token全部用于推理，finish_reason=length而content为空。仍按`llm_invalid_response`或`llm_incomplete_response`拒绝，不增加自动POST重试或修复残缺JSON。
+当时真实HTTP200出现两类失败：正文JSON漏闭合符号；合并请求4096输出token全部用于推理，finish_reason=length而content为空。当时按`llm_invalid_response`或`llm_incomplete_response`拒绝；当前默认legacy路径仍不自动追加付费请求，facts实验路径已增加独立规范化与有限分类修复（§12.6），不能将历史禁止所有修复当作当前统一规则。
 
 `llm_service.py`在摘要请求内部按配置生成输出选项：`LLM_SUMMARY_RESPONSE_FORMAT=auto|text|json_object`与`LLM_SUMMARY_THINKING_MODE=auto|enabled|disabled`。auto读取供应商能力表，DeepSeek摘要使用json_object与disabled；其他供应商的auto不加专有字段，翻译不继承摘要选项。明确覆盖由使用者依据供应商协议选择。配置启动时验证，接口及分段上限不变，两个控制均作用于分段与合并。模型内容仍作为不可信结构经原解析器校验；JSON模式不保证非空或完整，见[官方说明](https://api-docs.deepseek.com/guides/json_mode/)。
 
-JSON模式也不保证要点数量。实测完整JSON包含12条要点，原解析器只验证类型与非空；本轮补齐1–7条数量约束，超过上限返回`llm_invalid_response`，不截断删除尾部。最终合并请求明确按最多7个主题归纳，原因、条件和具体例子归入相关主题；字段与数量验证都由服务承担，不能仅相信提示词。
+JSON模式也不保证要点数量。当时实测完整JSON包含12条要点，原解析器只验证类型与非空；当时补齐1–7条数量约束，不截断删除尾部。当前默认adaptive按字幕规模计算有限主题上限，旧7点约束仅适用于fixed或facts显式实验；字段与本次预算仍由服务校验，不能仅相信提示词。
 
 兼容模式与原默认推理模式分别留证；它同时改变了提示词和输出控制，不能将其结果全部归因于提示词。公网375px下载、默认GPU纹理驻留与角色截图各自验证；Windows移动视口与真手机兼容范围分开，详情见[公网移动/GPU报告](acceptance-reports/2026-10-04-public-mobile-gpu/report.md)。
 
 ### 12.4 实验schema协议与原文证据贯穿
 
-`json_schema`显式选择Responses的text.format，检查response/message完成状态、字段、数量和可配置点长；`strict_tool`显式选择Beta chat严格工具，用summary及七个必需字符串槽位表示结果，空尾槽表示未用，再转换为原API，不执行工具或发工具结果第二轮。实测Responses仍返回8点，Beta仍可返回空首槽/294字点，因此auto继续json_object，本地拒绝而不是静默降级重发；协议名不等于上游保证。
+> 历史协议验收：以下「七槽」「240字符」描述针对当时fixed预算。接口仍保留显式实验选项；当前legacy-adaptive的schema/工具槽数跟随本次主题预算，默认不按点长硬拒。facts保留自己的固定合同，不能作为默认总结质量门槛。
+
+`json_schema`显式选择Responses的text.format，检查response/message完成状态、字段、数量；`strict_tool`显式选择Beta chat严格工具，用summary及本次预算数量的必需字符串槽位表示结果，空尾槽表示未用，再转换为原API，不执行工具或发工具结果第二轮。fixed模式额外校验配置点长；历史七槽实测Responses仍返回8点，Beta仍可返回空首槽/294字点，因此当时DeepSeek auto继续json_object，本地拒绝而不是静默降级重发；协议名不等于上游保证。
 
 段摘要是有损中间件，实测重要结尾事实在进入merge前已丢失。每原分段通过`LLM_SUMMARY_SOURCE_CONTEXT_CHARS`保留原文头尾边界，在notes中标记source_context；分层合并将这些原始证据继续携带，组大小计入JSON及证据，无进展时明确报容量错误，不删证据来凑预算。`0`恢复旧notes形状。源事实与提示联合作用的结果只由实测评价，不将恢复单独归因某一项。
 
-兼容模式240字符是提示目标；实验模式240字符为本地校验，超限拒绝。频率、模态、讲者观点归因与案例范围仍要独立检查，schema只能校验结构。边界片段不是全文备份，遗漏中部事实仍可能发生。
+当时fixed兼容模式240字符是提示目标，fixed实验协议为本地校验；当前adaptive不按该字符数硬拒。频率、模态、讲者观点归因与案例范围仍要独立检查，schema只能校验结构。边界片段不是全文备份，遗漏中部事实仍可能发生。
 
 ### 12.5 响应式角色的几何接口
 
 App只把视觉区的矩形通过getRegion传给角色；手机在控件后预留文档流区域，滚动后定位/隐藏，桌面按视口和入口底边空间限制包围盒。拖动、比例、触控默认和纹理需求由配置统一驱动，model资产不改。纹理能力不足时跳过模型目录请求，视觉失败不阻塞解析。
 
 菜单具有可见入口、焦点循环/恢复和标准inert；触摸取消不能视作点击。PIXI会覆写canvas touchAction且默认preventDefault，原生纵向触摸须通过配置恢复pan-y/pinch-zoom及公共interaction设置，不能仅凭程序scrollTo声称触摸滚动正常。GPU、模拟8K、聚焦控件避开固定栏、真实touch/cancel验证各自留证，真机范围另列。
+
+### 12.6 当前字幕总结、实验模块与交付边界（2026-10-10）
+
+**实测及阶段分离候选（后续更新）：** 首来源优先phase已5POST/19776tokens并closed；短篇内容通过，中篇summary频率/文化归因未通过，长文raw20点超14结构失败，详见[首轮实测](acceptance-reports/2026-10-10-source-first-summary-live/report.md)。所以进一步采用[阶段分离设计](superpowers/specs/2026-10-10-staged-summary-design.md)，实际引入langchain-core/RunnableSequence两生成边界，Pydantic验证points-only与overview-only；LangSmith依赖仅用于禁用追踪，所有HTTP仍通过原服务受控client，不启用模型SDK、批量、外部上传或fallback。
+
+新增`LLM_SUMMARY_GENERATION_MODE=single|staged`，当前默认single。staged仅legacy/adaptive候选：单段正常2POST，多段原leaf笔记后最终全局要点+概览正常n+2；整摘要最多一次format额外调用，网络/provider/来源安全/容量错误终止。内部`summarize_sections`以原source_parts逐项匹配本次原文分段，支持绑定旧raw的笔记续处理，不能将笔记当权威；最终要点使用完整原文纠正损失。复验使用已付费两段笔记，正常长文2而非重复4，全部原件/哈希保留。
+
+2026-10-10三轮在线验收已完成并封账：来源优先5POST、阶段分离6POST、原生Schema/Pro对照6POST，累计17/17 POST、74355供应商tokens。第三轮三源结构均通过（短5/中6/长14点），但中篇频率/账户读取/概览重复和长文覆盖/安全范围仍失败；不提升候选为默认，不宣称总体质量解决。默认仍为legacy/adaptive/single。旧26/26工作组原件保持；没有部署。最新证据见[原生Schema/Pro实测](acceptance-reports/2026-10-10-schema-pro-summary-live/report.md)。 采用方案与成本见[阶段分离设计](superpowers/specs/2026-10-10-staged-summary-design.md)和[原生Schema/Pro设计](superpowers/specs/2026-10-10-schema-pro-summary-design.md)。多项配置同时改变，不将改善归因于单一参数。
+
+**成熟方案增量（2026-10-10）：** [局部设计](superpowers/specs/2026-10-10-source-first-summary-design.md)已落地。复用已有Pydantic v2严格类型和动态JSON Schema，`summary_output.py`无配置/HTTP依赖，`llm_service`继续执行空白规范化、数量/长度预算和错误映射。兼容模式允许额外字段、先拒绝非字符串再清理空白点；strict保留extra/空项/原字符串长度拒绝。JSON示例与schema先列key_points后列summary；strict_tool槽适配保留。公开API字段、单块1POST、分段合并及adaptive预算保持，没有新增依赖、框架、重试或付费fallback。
+
+借鉴并适配官方来源优先建议，要求先定位原文主张及频率/主体/条件/归因，形成完整要点后写高层概览；这是同一响应内的生成指导，不能保证供应商输出顺序，也不代表独立引句提取或语义质量已通过。LlamaIndex单块路径及新splitter不能直接解决本轮中篇组织缺陷，Refine默认错误模式需额外适配，故此次未引入大框架；实际采用的库与方法、理由见局部设计。
+
+前端`useVideoInsights`新操作清空该kind旧结果、active匹配时清空显示，保留其他kind缓存和AbortController/请求编号；失败后旧总结不再作为当前结果显示。相关后端108项、前端hook4项离线回归通过；这是针对当前变化的新验证，不重算历史全量或原内容评分。
+
+**默认产品路径**是 `LLM_SUMMARY_STRATEGY=legacy` 与 `LLM_SUMMARY_LENGTH_MODE=adaptive`。这里legacy指已有字幕清理、分段归纳、分层合并流程，不表示旧固定长度。`summarize_text` 接收字幕文本，不增加ASR、事实合同或字幕导出；单段一次请求，多段逐段归纳后分层合并，原文头尾证据随notes传递，无法缩减组数时明确报容量错误。
+
+`_summary_budget` 按清理后来源字符数增长输出许可：基础4096 tokens，默认有限上限8192；每新增约8000来源字符增加1024 tokens和2个主题，主题从7增长至默认最多14。分段默认20000字符、最多16段，单次输入默认60000字符；均通过配置调整。合并按对应原来源长度计算预算，不能误用中间notes长度。adaptive不按摘要800字或单点240字硬拒，保留非空、字段/类型、完成状态及本次主题数量边界；预算是资源上限，不要求模型凑满主题。
+
+**facts是显式兼容实验**：`strategy=facts`启用来源/事实提取、compose、audit，`auto`仅在发送前判断能力/容量并可选择legacy；已发送facts失败不自动切换另一条付费pipeline。`summary_facts`负责来源位置/哈希、事实与最终引用合同；`summary_normalization`先保留非空内容与原ID提示再规范结构；`summary_references`结合已验证事实与主题关联引用，关联不是语义证明，未决候选交audit；`summary_quality`检查关键事实、主题、重复和归因；`summary_audit_contract`解析compat/compact核查包。默认 `quality_contract=compat`，compact、fixed长度及schema/strict-tool保留作显式实验，未成为产品默认成功条件。
+
+**分类修复仅已接入facts编排**：优先本地零POST规范化；确需模型修复时 `summary_retry.RetryBudget` 默认每次总结最多1次format、1次semantic，总附加最多2，可配置为0关闭。来源安全、网络/provider、容量、配置错误不重试；每个付费attempt和修复预算记入诊断trace，不盲重跑整个pipeline。facts正常n次提取+compose+audit为n+2，默认最坏n+4。默认legacy的请求/解析错误仍直接返回，不宣称其已接入这些分类修复模块。
+
+2026-10-10三轮在线验收已完成并封账：来源优先5POST、阶段分离6POST、原生Schema/Pro对照6POST，累计17/17 POST、74355供应商tokens。第三轮三源结构均通过（短5/中6/长14点），但中篇频率/账户读取/概览重复和长文覆盖/安全范围仍失败；不提升候选为默认，不宣称总体质量解决。默认仍为legacy/adaptive/single。旧26/26工作组原件保持；没有部署。最新证据见[原生Schema/Pro实测](acceptance-reports/2026-10-10-schema-pro-summary-live/report.md)。
+
+最新提示变化后的相关LLM/adaptive机械回归91 passed；两个新工具离线保护测试19/7 passed。`1342 passed / 1既有警告`是此前记录，GitHub交付前新增集成验证单独记录，不重算旧结果。证据入口为[自适应交接](handoff-2026-10-09-adaptive.md)、[最终有限复验](acceptance-reports/2026-10-09-adaptive-summary-final/report.md)和[首修复未通过记录](acceptance-reports/2026-10-09-adaptive-summary-repair/report.md)。原始失败、请求、响应、freeze和账本保留，不改旧成功状态。
 
 ## 13. 第二阶段：前端视觉表现层（fx）架构
 
@@ -331,7 +382,7 @@ CSS 与 PIXI 颜色单一来源 = `global.css` 的 `:root` 语义 token；`theme
 - 删除 `hideParts`（免费版水印隐藏）——完整版无水印 Part，且配置从未填 `hiddenParts`，属死代码。
 - 保留 `startIdle` 待机（完整版仍无呼吸动作）。
 - 表情（46 个）与 `edle.motion3.json` 已随模型拷入 `public/live2d/bai/`；表情/道具/装饰特效接入见 §14.8。
-- 16K 纹理（16384×16384）在开发机已正常上传（显卡显存充足）；移动端/低端 GPU 的 `MAX_TEXTURE_SIZE` 兼容风险仍保留（见 `frontend/README.md` 已知限制）。
+- 16K 纹理（16384×16384）已有当前Windows GPU上传历史证据；当前代码先按 `mascotConfig.textureSize` 与 `MAX_TEXTURE_SIZE` 检查，不支持时跳过模型加载，见 §12.5。移动端/低GPU降级与真手机兼容仍分别验收，不能把Windows GPU成功当作所有设备支持。
 
 ### 14.8 表情 / 道具系统（46 表情接入）
 

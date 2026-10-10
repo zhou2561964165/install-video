@@ -1,0 +1,20 @@
+{
+  "ended_utc": "2026-10-08T12:34:21.565879+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "normalized-retries-zh-short.json",
+      "sha256": "e25c760050d59854d6e818fdba3aeed10bdf45c0347dba7f3f6b926fed1ad0e1"
+    },
+    {
+      "id": "en-medium",
+      "file": "normalized-retries-en-medium.json",
+      "sha256": "8821c6fc142374c23b624de5d6109fff4af3bf8ff8b5871d445fd19a6647d4cc"
+    },
+    {
+      "id": "en-long",
+      "file": "normalized-retries-en-long.json",
+      "sha256": "1b2cba481491a1ea28638ab50fa62da6a491fe4f5f4b8b9e4674a8c8d6f0cc4d"
+    }
+  ]
+}

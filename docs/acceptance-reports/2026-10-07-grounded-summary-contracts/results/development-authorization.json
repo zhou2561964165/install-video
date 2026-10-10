@@ -1,0 +1,17 @@
+{
+  "phase": "organization-contracts",
+  "user_instruction_date": "2026-10-08",
+  "authorization_basis": "用户明确说明开发阶段授权不用再问、可直接使用，必要时可有限扩预算但不得无上限",
+  "phase_ceiling": 13,
+  "work_total_ceiling": 26,
+  "max_additional_phases": 1,
+  "additional_phase_ceiling": 13,
+  "extension_requires_diagnosis_and_offline_verified_fix": true,
+  "all_stages_and_failed_attempts_count": true,
+  "caller": "root-only-serial",
+  "stop_on_first_error": true,
+  "automatic_retry": false,
+  "old_remaining_budget_reuse": false,
+  "default_summary_strategy": "legacy",
+  "account_download_quota_policy_independent": true
+}

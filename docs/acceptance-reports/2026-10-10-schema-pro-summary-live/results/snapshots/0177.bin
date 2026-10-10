@@ -1,0 +1,21 @@
+[project]
+name = "install-video"
+version = "0.1.0"
+description = "万能视频下载网站后端（FastAPI + yt-dlp）"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "yt-dlp",
+    "sqlmodel",
+    "pydantic",
+    "httpx",
+    "pyjwt",
+    "langchain-core>=1,<2",
+    "langsmith>=0.3,<1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]

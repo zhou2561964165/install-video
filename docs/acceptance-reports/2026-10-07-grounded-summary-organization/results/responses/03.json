@@ -1,0 +1,20 @@
+{
+  "ordinal": 3,
+  "phase": "organization-slots",
+  "sample": "zh-short",
+  "stage": "audit",
+  "http_status": 200,
+  "body_sha256": "252fc16a942cf8e0f68931e725438fef9c1a5e6b37fedb05a7cfb0e53c1ec6fa",
+  "content": "{\"additional_facts\":[],\"output\":{\"summary\":[{\"text\":\"MIT中文课从第二天起全中文授课，第一天说明准备与期望。维持全中文的关键是课堂用语学生听得懂且不出圈，以及学生备课与课堂练习任务一致；未准备的内容会让学生说英文。学生若听不懂，可在最后五分钟、课后或邮件用英文提问，以维持课堂中文气氛。\",\"fact_ids\":[\"F1_1\",\"F1_2\",\"F1_3\",\"F1_4\",\"F1_5\",\"F1_7\",\"F1_9\",\"F1_11\",\"F1_12\"]}],\"key_points\":[{\"topic\":\"全中文授课的两个关键环节\",\"text\":\"课堂用语要让学生听懂且不能出圈，如“请再说一遍”与“请再说一次”不同；备课须反映在课堂练习上，学生按weekly schedule准备，上课就练这些。\",\"fact_ids\":[\"F1_3\",\"F1_4\",\"F1_6\",\"F1_9\"]},{\"topic\":\"备课与上课任务一致\",\"text\":\"每天学生的备课与上课任务必须一致；一旦练到学生没准备的内容，他们就会说英文。\",\"fact_ids\":[\"F1_5\",\"F1_7\",\"F1_8\"]},{\"topic\":\"用英文提问的时机\",\"text\":\"学生听不懂要用英文问时，可在课堂最后五分钟问，所以前四十五分钟用中文；也可下课或邮件问，以维持课堂中文气氛。\",\"fact_ids\":[\"F1_10\",\"F1_11\",\"F1_12\"]}]},\"checks\":[{\"item_id\":\"S1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P2\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P3\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 2615,
+    "completion_tokens": 473,
+    "total_tokens": 3088,
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 2487,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    }
+  }
+}

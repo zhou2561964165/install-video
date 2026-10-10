@@ -1,0 +1,30 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "phase": "source-first-summary-staged-2",
+  "posts": 6,
+  "stopped_on_error": true,
+  "samples": [
+    {
+      "sample": "zh-short",
+      "success": true,
+      "result_sha256": "c197a5ad0c335861ecf1f06428ffbb63d8b9e3d7bc125e8708ea7e87b6561da2",
+      "posts": 2,
+      "trace_sha256": "85daa4fad699f4874d333be35fe7c32a6104e1c3ec9724368b20dab00b7d05de"
+    },
+    {
+      "sample": "en-medium",
+      "success": true,
+      "result_sha256": "f82b84d1c4ec4de38b4e80c9d2b3989c517870da4ec0689cd8de64a4097bb159",
+      "posts": 2,
+      "trace_sha256": "85daa4fad699f4874d333be35fe7c32a6104e1c3ec9724368b20dab00b7d05de"
+    },
+    {
+      "sample": "en-long",
+      "success": false,
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231",
+      "posts": 2,
+      "trace_sha256": "1a32ef131834d693099f0598982f519ff35b1bb5cc7798d1b7fd84a84bba17ae"
+    }
+  ],
+  "ended_utc": "2026-10-10T06:47:00.978461+00:00"
+}

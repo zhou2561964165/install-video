@@ -1,5 +1,8 @@
 # Grounded summary Implementation Plan
 
+<!-- DOCUMENT_ARCHIVE_NOTICE -->
+> **历史文档阅读说明：** 本页保留原阶段设计、任务和当时的验证结果。当前实现以[设计文档](../../design.md)和[需求/实施状态](../../requirements.md)为准，当前任务与预算见[自适应交接](../../handoff-2026-10-09-adaptive.md)。文中的“当前、下一步、待实现、等待授权”表示记录当时，不能据此重复已完成工作或重开关闭phase；仍未实现的能力以当前说明和代码为准。
+
 > **已暂停：2026-10-05用户明确要求。** 代码/测试/证据已保存但未提交；默认legacy。实际5POST/5HTTP200/11426tokens，两个候选失败原件保留，新中/长结果未完成；剩余19次不使用。后续仅按用户指示继续，先读[交接](../../handoff.md)，不能把本计划当作自动恢复授权。
 
 > **For agentic workers:** Use applicable superpowers:test-driven-development and verification-before-completion; root coordinates independent file ownership and final review.

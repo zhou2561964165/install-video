@@ -22,6 +22,8 @@ class _FakeClient:
 
 
 def _configure(monkeypatch):
+    # Historical experimental contract tests deliberately pin fixed mode.
+    monkeypatch.setattr(settings, "llm_summary_length_mode", "fixed")
     monkeypatch.setattr(settings, "llm_base_url", "https://llm.example/v1")
     monkeypatch.setattr(settings, "llm_api_key", "secret")
     monkeypatch.setattr(settings, "llm_model", "model-x")
@@ -311,7 +313,7 @@ def test_schema_summary_uses_responses_endpoint_and_enforced_contract(monkeypatc
     assert "Transcript:\nA fact." in payload["input"][0]["content"]
     schema = payload["text"]["format"]["schema"]
     assert payload["text"]["format"]["type"] == "json_schema"
-    assert schema["required"] == ["summary", "key_points"]
+    assert schema["required"] == ["key_points", "summary"]
     assert schema["additionalProperties"] is False
     assert schema["properties"]["summary"]["minLength"] == 1
     assert schema["properties"]["key_points"]["minItems"] == 1

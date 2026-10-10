@@ -1,0 +1,101 @@
+{
+  "phase": "organization-final",
+  "method": "Compile two source-grounded agent reviews; non-production-author cross-check of short/medium agreed with scores and precision/organization findings. Not blind or external human review.",
+  "engineering_conventions": [
+    "Skills precede plans; UI requires ui-ux-pro-max/design-system and primitive-semantic-component tokens.",
+    "Configurable narrow single-direction interfaces; LLM only llm_service; yt-dlp only ytdlp_service; visual layer reads scene.",
+    "User env/db/model assets, old evidence, product and runner files unchanged; writes limited to this explicitly authorized new review.",
+    "Final limits remain summary7/800 and points7/240; normal n+2, no retries or paid fallback."
+  ],
+  "review_artifacts": [
+    {
+      "file": "organization-final-short-medium-semantic-review.json",
+      "sha256": "188923a9ddc81bdfe019c4a6ef895c0e1ad1add832d5eea83b9570f2dc1bc0b8"
+    },
+    {
+      "file": "organization-final-long-semantic-review.json",
+      "sha256": "105826dd97cc742ef14aa74f41942889a5c591f9f09a5212d487b8adb38d3c8f"
+    }
+  ],
+  "essential_total": 14,
+  "counts": {
+    "full": 7,
+    "partial": 1,
+    "missing": 0,
+    "not_evaluated": 6
+  },
+  "essential_statuses": [
+    {
+      "id": "zh1",
+      "status": "full"
+    },
+    {
+      "id": "zh2",
+      "status": "full"
+    },
+    {
+      "id": "zh3",
+      "status": "full"
+    },
+    {
+      "id": "zh4",
+      "status": "full"
+    },
+    {
+      "id": "en1",
+      "status": "full"
+    },
+    {
+      "id": "en2",
+      "status": "full"
+    },
+    {
+      "id": "en3",
+      "status": "partial"
+    },
+    {
+      "id": "en4",
+      "status": "full"
+    },
+    {
+      "id": "long1",
+      "status": "not_evaluated"
+    },
+    {
+      "id": "long2",
+      "status": "not_evaluated"
+    },
+    {
+      "id": "long3",
+      "status": "not_evaluated"
+    },
+    {
+      "id": "long4",
+      "status": "not_evaluated"
+    },
+    {
+      "id": "long5",
+      "status": "not_evaluated"
+    },
+    {
+      "id": "long6",
+      "status": "not_evaluated"
+    }
+  ],
+  "organization": {
+    "zh-short": "partial",
+    "en-medium": "partial",
+    "en-long": "not_evaluated"
+  },
+  "confirmed_precision_findings": 1,
+  "precision_finding": "Unsupported Chinese spelling of a romanized speaker name in medium summary; not a determination that the real-world spelling is false.",
+  "unresolved": [
+    "Long extraction third part returned 13 facts over frozen limit 12; no compose/audit/final.",
+    "Medium output omitted grade entry.",
+    "Short/medium theme organization partial; medium unsupported Chinese name."
+  ],
+  "overall_quality_pass": false,
+  "provider_requests_after_failure": 0,
+  "remaining_budget_not_used": 4,
+  "rubric_sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49"
+}

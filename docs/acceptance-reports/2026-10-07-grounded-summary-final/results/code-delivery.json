@@ -1,0 +1,61 @@
+{
+  "phase": "organization-final",
+  "development_authorized": true,
+  "new_real_model_budget_authorized": false,
+  "default_strategy": "legacy",
+  "backend_tests": {
+    "command": "../.venv/Scripts/python.exe -B -m pytest tests -q -p no:cacheprovider --basetemp E:/install_video/tmp/summary-final-integrated-20261007",
+    "working_directory": "backend",
+    "passed": 540,
+    "warnings": 1,
+    "warning": "existing Starlette/httpx deprecation",
+    "seconds": 11.35
+  },
+  "module_sha256": {
+    "service": "c75761c3b233a0fb8653d17d9263aeef2cc7b712db8e3ec2c367a9fe69e0d0b5",
+    "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+    "facts": "5538bf308e701b06e61d8321da0ea865215ecfe6c5c84333cc57637912c53147"
+  },
+  "frozen_provenance_sha256": "fc5d3ba753888bd606d2fb43eb003c52fc580a86c774a04a7d1f2534d600afe1",
+  "freeze_check_match": true,
+  "production_review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 0
+  },
+  "entrypoint_review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 0
+  },
+  "new_provider_posts": 0,
+  "model_quality_revalidated": false,
+  "latest_prior_essential_full": 5,
+  "latest_prior_essential_partial": 3,
+  "latest_prior_long_not_evaluated": 6,
+  "old_ledgers": [
+    {
+      "file": "docs\\acceptance-reports\\2026-10-05-grounded-summary\\results\\request-ledger.json",
+      "sha256": "b39da822109badd6f5a056d03fed81bc244a10c1f38bf9f85b9c061e29bcfd06",
+      "reserved_attempts": 48,
+      "ceiling": 49,
+      "changed_this_session": false
+    },
+    {
+      "file": "docs\\acceptance-reports\\2026-10-07-grounded-summary-organization\\results\\request-ledger.json",
+      "sha256": "1f05b687f873a6a6b3487438c62b15e9f3aee464e709dfe0b76b5e8aff607d96",
+      "reserved_attempts": 12,
+      "ceiling": 13,
+      "changed_this_session": false
+    },
+    {
+      "file": "docs\\acceptance-reports\\2026-10-07-grounded-summary-refined\\results\\request-ledger.json",
+      "sha256": "2f558ed8471d3f31ecb2bc21a00f410cacaa223b30ca2787d623f5afecd5b2f4",
+      "reserved_attempts": 12,
+      "ceiling": 13,
+      "changed_this_session": false
+    }
+  ],
+  "new_code_commit_created": false,
+  "front_end_revalidated": false
+}

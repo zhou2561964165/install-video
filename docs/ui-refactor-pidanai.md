@@ -1,4 +1,7 @@
 # UI 风格重构分析报告 · 对齐 pidanai.com
+
+<!-- DOCUMENT_ARCHIVE_NOTICE -->
+> **历史文档阅读说明：** 本页保留原阶段设计、任务和当时的验证结果。当前实现以[设计文档](design.md)和[需求/实施状态](requirements.md)为准，当前任务与预算见[自适应交接](handoff-2026-10-09-adaptive.md)。文中的“当前、下一步、待实现、等待授权”表示记录当时，不能据此重复已完成工作或重开关闭phase；仍未实现的能力以当前说明和代码为准。
 > 文档状态（2026-10-03整理）：**历史参考**。历史设计分析，保留观察与当时建议；当前默认深色液态玻璃/樱花粉主题，实施状态看 [handoff.md](handoff.md)，扩展用 [UI指南](ui-extension-guide.md)。
 > 工程约定仍适用：UI先用 `ui-ux-pro-max` + `design-system`；skill优先于旧计划；颜色/字体/时长token化、能力数据与配置驱动；yt-dlp仅经 `ytdlp_service.py`，视觉只读scene，不修改下载核心。
 

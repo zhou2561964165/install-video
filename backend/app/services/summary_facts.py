@@ -107,6 +107,22 @@ class CandidateSummary:
 
 
 @dataclass(frozen=True)
+class ThemePlan:
+    id: str
+    topic: str
+    principle: str
+    conditions: tuple[str, ...]
+    consequences: tuple[str, ...]
+    fact_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class PlannedComposition:
+    candidate: CandidateSummary
+    themes: tuple[ThemePlan, ...]
+
+
+@dataclass(frozen=True)
 class AuditCheck:
     item_id: str
     supported: bool
@@ -144,12 +160,16 @@ def parse_candidate(payload: dict | str, facts: Sequence[GroundedFact], limits: 
                     *, final: bool = True, require_core_coverage: bool = False) -> CandidateSummary:
     known = _fact_index(facts)
     obj = _object(payload, {"summary", "key_points"})
+    # The one planned audit can shorten bounded preliminary wording. Final
+    # output always keeps the configured hard ceiling; no text is truncated.
+    summary_limit = limits.max_summary_chars if final else 2 * limits.max_summary_chars
+    summary_items = limits.max_items if final else 2 * limits.max_items
     statements, points = [], []
-    for index, record in enumerate(_list(obj["summary"], 1, limits.max_items), 1):
+    for index, record in enumerate(_list(obj["summary"], 1, summary_items), 1):
         item = _object(record, {"text", "fact_ids"})
-        statements.append(SummaryClaim(f"S{index}", _text(item["text"], limits.max_summary_chars),
+        statements.append(SummaryClaim(f"S{index}", _text(item["text"], summary_limit),
                                        _references(item["fact_ids"], known)))
-    if len(" ".join(item.text for item in statements)) > limits.max_summary_chars:
+    if len(" ".join(item.text for item in statements)) > summary_limit:
         raise FactValidationError("summary_too_long")
     if len({_normalized(item.text) for item in statements}) != len(statements):
         raise FactValidationError("duplicate_summary")
@@ -169,6 +189,80 @@ def parse_candidate(payload: dict | str, facts: Sequence[GroundedFact], limits: 
         if any(item.importance == "core" and item.id not in used for item in known.values()):
             raise FactValidationError("missing_core_fact")
     return result
+
+
+def parse_composition(payload: dict | str, facts: Sequence[GroundedFact], limits: FactLimits,
+                      *, require_core_coverage: bool = False) -> CandidateSummary:
+    """Resolve fixed model slots without discarding unknown or invalid points."""
+    slots = [f"point_{index}" for index in range(1, limits.max_items + 1)]
+    obj = _object(payload, {"summary", *slots})
+    points, unused = [], False
+    for slot in slots:
+        item = obj[slot]
+        if item is None:
+            unused = True
+        elif unused:
+            raise FactValidationError("nontrailing_empty_slot")
+        else:
+            points.append(item)
+    return parse_candidate({"summary": obj["summary"], "key_points": points}, facts, limits,
+                           final=False, require_core_coverage=require_core_coverage)
+
+
+def parse_planned_composition(payload: dict | str, facts: Sequence[GroundedFact],
+                              limits: FactLimits) -> PlannedComposition:
+    """Validate global themes, then preserve the original candidate contract.
+
+    Allocating a fact to a theme does not prove its meaning appears in the
+    candidate text. Missing core references remain for the one planned audit.
+    """
+    slots = [f"point_{index}" for index in range(1, limits.max_items + 1)]
+    obj = _strict_object(payload, {"summary", "theme_plan", "point_1"},
+                         {"summary", "theme_plan", *slots})
+    if not isinstance(obj["theme_plan"], dict):
+        raise FactValidationError("invalid_fields")
+    if not isinstance(obj["summary"], list) or any(not isinstance(item, dict) for item in obj["summary"]):
+        raise FactValidationError("invalid_fields")
+    normalized_points, unused = {}, False
+    for slot in slots:
+        record = obj.get(slot)
+        if record is None:
+            unused = True
+        elif unused:
+            raise FactValidationError("nontrailing_empty_slot")
+        elif not isinstance(record, dict):
+            raise FactValidationError("invalid_fields")
+        normalized_points[slot] = record
+    theme_slots = [f"theme_{index}" for index in range(1, limits.max_items + 1)]
+    plan = _strict_object(obj["theme_plan"], {"theme_1"}, set(theme_slots))
+    known = _fact_index(facts)
+    themes, unused = [], False
+    fields = {"topic", "principle", "conditions", "consequences", "fact_ids"}
+    for index, slot in enumerate(theme_slots, 1):
+        record = plan.get(slot)
+        if record is None:
+            unused = True
+        elif unused:
+            raise FactValidationError("nontrailing_empty_slot")
+        else:
+            if not isinstance(record, dict):
+                raise FactValidationError("invalid_fields")
+            item = _object(record, fields)
+            themes.append(ThemePlan(
+                f"T{index}", _text(item["topic"], limits.max_topic_chars),
+                _text(item["principle"], limits.max_claim_chars),
+                tuple(_text(text, limits.max_point_chars)
+                      for text in _list(item["conditions"], 0, limits.max_items)),
+                tuple(_text(text, limits.max_point_chars)
+                      for text in _list(item["consequences"], 0, limits.max_items)),
+                _references(item["fact_ids"], known)))
+    candidate = parse_composition({"summary": obj["summary"], **normalized_points}, facts, limits)
+    if len(themes) != len(candidate.key_points):
+        raise FactValidationError("theme_point_count_mismatch")
+    for theme, point in zip(themes, candidate.key_points):
+        if not set(point.fact_ids) <= set(theme.fact_ids):
+            raise FactValidationError("point_outside_theme")
+    return PlannedComposition(candidate, tuple(themes))
 
 
 def _fact_index(facts):
@@ -194,13 +288,9 @@ def _references(value, known):
     return tuple(refs)
 
 
-def parse_audit(payload: dict | str, sources: Sequence[SourcePart], facts: Sequence[GroundedFact],
-                limits: FactLimits) -> AuditResult:
-    """Validate grounding, coverage and the model's complete check report.
-
-    Accepted check flags are the audit model's assertions, not independent
-    proof of semantic truth or of whether every important fact was extracted.
-    """
+def prepare_audit_facts(additions: list, sources: Sequence[SourcePart], facts: Sequence[GroundedFact],
+                        limits: FactLimits) -> tuple[GroundedFact, ...]:
+    """Build the audit fact bank using the same exact source validation."""
     original = _fact_index(facts)
     if not isinstance(sources, (list, tuple)) or not sources:
         raise FactValidationError("invalid_sources")
@@ -222,9 +312,8 @@ def parse_audit(payload: dict | str, sources: Sequence[SourcePart], facts: Seque
                                "importance": item.importance}, source, sentence_map[source.id], limits, item.id)
         if rebuilt != item:
             raise FactValidationError("invalid_fact_trace")
-    obj = _object(payload, {"additional_facts", "output", "checks"})
     combined = list(original.values())
-    for index, record in enumerate(_list(obj["additional_facts"], 0, limits.max_facts_per_chunk), 1):
+    for index, record in enumerate(_list(additions, 0, limits.max_facts_per_chunk), 1):
         item = _object(record, _FACT_FIELDS | {"source_id"})
         source_id = item["source_id"]
         if not isinstance(source_id, str) or source_id not in source_map:
@@ -234,6 +323,19 @@ def parse_audit(payload: dict | str, sources: Sequence[SourcePart], facts: Seque
             raise FactValidationError("duplicate_fact_id")
         combined.append(_parse_fact({key: item[key] for key in _FACT_FIELDS}, source_map[source_id],
                                     sentence_map[source_id], limits, identifier))
+    return tuple(combined)
+
+
+def parse_audit(payload: dict | str, sources: Sequence[SourcePart], facts: Sequence[GroundedFact],
+                limits: FactLimits) -> AuditResult:
+    """Validate grounding, coverage and the model's complete check report.
+
+    Accepted flags remain model assertions, not independent semantic proof.
+    """
+    # Validate original facts before reading the response, as the old codec did.
+    prepare_audit_facts([], sources, facts, limits)
+    obj = _object(payload, {"additional_facts", "output", "checks"})
+    combined = prepare_audit_facts(obj["additional_facts"], sources, facts, limits)
     candidate = parse_candidate(obj["output"], combined, limits, require_core_coverage=True)
     expected = {item.id for item in (*candidate.summary, *candidate.key_points)}
     checks, seen = [], set()
@@ -262,6 +364,25 @@ def parse_facts(payload: dict | str, source: SourcePart, limits: FactLimits,
                  for index, record in enumerate(records, 1))
 
 
+def parse_extraction(payload: dict | str, source: SourcePart, limits: FactLimits,
+                     id_prefix: str) -> tuple[GroundedFact, ...]:
+    """Resolve finite fact slots using the existing source and evidence contract."""
+    slots = [f"fact_{index}" for index in range(1, limits.max_facts_per_chunk + 1)]
+    obj = _strict_object(payload, {"fact_1"}, set(slots))
+    records, unused = [], False
+    for slot in slots:
+        record = obj.get(slot)
+        if record is None:
+            unused = True
+        elif unused:
+            raise FactValidationError("nontrailing_empty_slot")
+        else:
+            if not isinstance(record, dict):
+                raise FactValidationError("invalid_fields")
+            records.append(record)
+    return parse_facts({"facts": records}, source, limits, id_prefix)
+
+
 def _validate_id(value):
     if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]{0,63}", value):
         raise FactValidationError("invalid_id")
@@ -284,6 +405,21 @@ def _object(payload, keys):
         except (ValueError, TypeError, RecursionError):
             raise FactValidationError("invalid_json") from None
     if not isinstance(payload, dict) or set(payload) != keys:
+        raise FactValidationError("invalid_fields")
+    return payload
+
+
+def _strict_object(payload, required_keys, allowed_keys):
+    """Decode one new-protocol object and allow only its specified key subset."""
+    if isinstance(payload, str):
+        try:
+            payload = json.loads(payload, object_pairs_hook=_unique_object)
+        except FactValidationError:
+            raise
+        except (ValueError, TypeError, RecursionError):
+            raise FactValidationError("invalid_json") from None
+    if (not isinstance(payload, dict) or not required_keys <= set(payload)
+            or not set(payload) <= allowed_keys):
         raise FactValidationError("invalid_fields")
     return payload
 
@@ -313,20 +449,6 @@ def _normalized(value):
     return " ".join(value.split())
 
 
-def _quote_span(text, quote):
-    # Each normalized character maps to an original [start,end) span. Whitespace
-    # alone is collapsed. Repeated quotes deliberately resolve to the first.
-    characters, spans = [], []
-    for match in re.finditer(r"\s+|\S", text):
-        characters.append(" " if match.group().isspace() else match.group())
-        spans.append((match.start(), match.end()))
-    needle = _normalized(quote)
-    position = "".join(characters).find(needle)
-    if not needle or position < 0:
-        raise FactValidationError("quote_not_found")
-    return spans[position][0], spans[position + len(needle) - 1][1]
-
-
 _FACT_FIELDS = {"topic", "claim", "evidence", "attribution", "importance"}
 
 
@@ -352,10 +474,10 @@ def _parse_fact(record, source, sentences, limits, identifier):
         # evidence. Bind that name to its first exact occurrence in this same
         # source part, never a different part. Lexical evidence does not prove
         # who made a particular statement; that judgment belongs to the audit.
-        try:
-            named_start, named_end = _quote_span(source.text, attribution)
-        except FactValidationError:
-            raise FactValidationError("attribution_not_found") from None
+        named_start = source.text.find(attribution)
+        if named_start < 0:
+            raise FactValidationError("attribution_not_found")
+        named_end = named_start + len(attribution)
         attribution_start = source.global_start + named_start
         attribution_end = source.global_start + named_end
     importance = obj["importance"]

@@ -1,0 +1,32 @@
+{
+  "work_id": "summary-quality-finish-20261008",
+  "phase": "adaptive-transcript-long",
+  "maximum_posts": 3,
+  "prior_posts": 17,
+  "requests": [
+    {
+      "ordinal": 1,
+      "status": "response",
+      "reserved_utc": "2026-10-09T10:03:49.394642+00:00",
+      "payload_sha256": "dc6846ee8360e20be37f61a344d51be0411e5d95bae42928440a82af670eec27",
+      "http_status": 200,
+      "response_sha256": "6788297c6853318240fe8c42ca6cc6c860aba6113e83eb08d53e7a53958139e0"
+    },
+    {
+      "ordinal": 2,
+      "status": "response",
+      "reserved_utc": "2026-10-09T10:03:53.370687+00:00",
+      "payload_sha256": "e2cbf1664e0a3859a5fcef4a286c441cf1dc512b485dd236f8001be5e30799a0",
+      "http_status": 200,
+      "response_sha256": "71c8b242721722ed4060fbacd720ae7bebe94fdb382a21f29d5c1e14b1a0fbd5"
+    },
+    {
+      "ordinal": 3,
+      "status": "response",
+      "reserved_utc": "2026-10-09T10:03:57.098537+00:00",
+      "payload_sha256": "1a6f0d4addc08774477abea27a61cc1c86d39c43f78dc2e4571b16b66c16825d",
+      "http_status": 200,
+      "response_sha256": "ac17b0b7458f0862bc41f9861d1e9b39b1242d9ae00724066e9857a9b9c80161"
+    }
+  ]
+}

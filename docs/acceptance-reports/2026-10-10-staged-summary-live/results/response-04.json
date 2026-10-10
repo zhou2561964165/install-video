@@ -1,0 +1,17 @@
+{
+  "content": "{\"summary\":\"HAOHSIANG LIAO 说明其课程采用每日评分制，原因在于人际互动必然留下印象并受到评价，且相信学生只要坚持、持续投入该课程就能展现良好中文技能。该制度把评价落实到每节课，并在课后就学生课堂上的语言与文化行为提供反馈，以指明下次课可改进之处；反馈以书面形式通过在线网站 Engrade 私下发送，学生登录账户即可阅读教师评语。评语详略依学生表现而定，可涉及发音提醒，也可引导学生思考中文文化中如何应对赞美；LIAO 以美国文化中收到赞美说谢谢、中国文化中保持谦虚为例说明这一文化行为反馈，并指出当学生课堂表现源自其母语时，教师会依据课堂所覆盖材料编写的教科书给予鼓励与反馈，使学生明确可努力的方向。\"}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1122,
+    "completion_tokens": 178,
+    "total_tokens": 1300,
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 994,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    }
+  },
+  "http_status": 200,
+  "received_utc": "2026-10-10T06:46:50.983536+00:00",
+  "model": "deepseek-flash"
+}

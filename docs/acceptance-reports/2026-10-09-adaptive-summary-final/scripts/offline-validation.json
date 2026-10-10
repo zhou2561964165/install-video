@@ -1,0 +1,46 @@
+{
+  "scope": "Only final-phase prior identity, budget offset, preserved prior artifacts and hard-26 boundaries; original guard regressions reused unchanged",
+  "engineering": "Skills first; UI ui-ux-pro-max and design-system tokens; narrow interfaces; yt-dlp only ytdlp_service; scene read-only; preserve historical evidence",
+  "command": "E:/install_video/.venv/Scripts/python.exe -B -m pytest --noconftest -p no:cacheprovider backend/tests/test_adaptive_final_evaluation.py -q",
+  "observed_red": {
+    "exit_code": 1,
+    "output": "7 failed in 4.17s",
+    "baseline": "Immutable prior repair evaluator copied to the new final script before implementing new phase identity and budget offset",
+    "failures": [
+      "Plan still reported adaptive-transcript-repair rather than adaptive-transcript-repair-final",
+      "First durable reservation was 23 rather than 25",
+      "Third-request boundary test reserved 23/24 rather than 25/26",
+      "Old phase did not reject an opened repair tracker",
+      "Old phase did not reject a changed repair ledger path",
+      "Old phase did not reject a tampered repair snapshot",
+      "Old phase did not reject changed frozen repair runner bytes"
+    ]
+  },
+  "observed_green": {"exit_code": 0, "output": "7 passed in 3.43s"},
+  "read_only_actual_plan": {
+    "command": "E:/install_video/.venv/Scripts/python.exe -B docs/acceptance-reports/2026-10-09-adaptive-summary-final/scripts/evaluate.py",
+    "exit_code": 0,
+    "phase": "adaptive-transcript-repair-final",
+    "prior_posts": 24,
+    "maximum_posts": 2,
+    "maximum_work_posts": 26,
+    "hard_ceiling": 26,
+    "network": false,
+    "dotenv_read": false
+  },
+  "reuse": [
+    "Immutable prior repair runner as template; caller lock, exclusive freeze, durable reservation, stop on error and result closure unchanged",
+    "Immutable prior repair runner verifies its closed raw/result/snapshot evidence; current runner/helper bytes checked against that prior freeze before importing",
+    "Existing offline fixture setup imported without editing prior tests; only the new 24-to-26 behavior tests added"
+  ],
+  "limits": {
+    "formal_final_freeze_executed": false,
+    "formal_final_run_executed": false,
+    "dotenv_read": false,
+    "network": false,
+    "model_posts": 0,
+    "semantic_quality_verified": false,
+    "historical_artifacts_modified": false,
+    "whole_backend_suite_repeated": false
+  }
+}

@@ -1,0 +1,436 @@
+{
+  "phase": "organization-final",
+  "reviewed_utc": "2026-10-07T14:41:25.368941+00:00",
+  "offline_only": true,
+  "engineering_conventions": "Applicable skills first; UI ui-ux-pro-max/design-system and primitive-semantic-component tokens; configurable narrow interfaces; LLM only llm_service, yt-dlp only ytdlp_service; visual scene read-only; user .env/db/model assets and historical evidence unchanged. MIT derivatives retain attribution and CC BY-NC-SA 4.0.",
+  "authorization_sha256": "7ca4e5ed984178ade477407fdeb819d6c92051dbf1f13432b1105026bd142f69",
+  "provenance_sha256": "fc5d3ba753888bd606d2fb43eb003c52fc580a86c774a04a7d1f2534d600afe1",
+  "original_fourteen_essential_ids": [
+    "zh1",
+    "zh2",
+    "zh3",
+    "zh4",
+    "en1",
+    "en2",
+    "en3",
+    "en4",
+    "long1",
+    "long2",
+    "long3",
+    "long4",
+    "long5",
+    "long6"
+  ],
+  "frozen_hash_checks": {
+    "entrypoint_sha256": {
+      "path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\scripts\\evaluate.py",
+      "sha256": "ec6b4c042710540dcda24d5acfdfaed6325f34f1104411fadf5f1b032a0a5bc4",
+      "match": true
+    },
+    "organization_wrapper_sha256": {
+      "path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-organization\\scripts\\evaluate.py",
+      "sha256": "53064e0bcd449201dc93950d99db4885d8d2398227053c9c4b6311290f9f34bc",
+      "match": true
+    },
+    "runner_sha256": {
+      "path": "docs\\acceptance-reports\\2026-10-05-grounded-summary-evidence\\scripts\\evaluate.py",
+      "sha256": "1f030b2118f3ffcb7009dbd13b23fcfa315b82984b643fcdcf897f095f18c481",
+      "match": true
+    },
+    "evidence_checker_sha256": {
+      "path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\scripts\\check_evidence.py",
+      "sha256": "666665fe4d36ba3c95a5504fc2d1e7105ac5c295d945b0715c927e329d521612",
+      "match": true
+    },
+    "evidence_checker_runner_sha256": {
+      "path": "docs\\acceptance-reports\\2026-10-05-grounded-summary-evidence\\scripts\\check_evidence.py",
+      "sha256": "c4c6248ce0d286683c6acbe347b4cc5aa4c1c731b4bbacbffca66ed7cf386227",
+      "match": true
+    },
+    "rubric_sha256": {
+      "path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\rubric.json",
+      "sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49",
+      "match": true
+    },
+    "manifest_sha256": {
+      "path": "docs\\acceptance-reports\\2026-10-04-natural-subtitle-quality\\corpus\\manifest.json",
+      "sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+      "match": true
+    },
+    "module_service": {
+      "frozen_path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\results\\organization-final-service.py",
+      "live_path": "backend\\app\\services\\llm_service.py",
+      "sha256": "c75761c3b233a0fb8653d17d9263aeef2cc7b712db8e3ec2c367a9fe69e0d0b5",
+      "match": true
+    },
+    "module_config": {
+      "frozen_path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\results\\organization-final-config.py",
+      "live_path": "backend\\app\\config.py",
+      "sha256": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+      "match": true
+    },
+    "module_facts": {
+      "frozen_path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\results\\organization-final-facts.py",
+      "live_path": "backend\\app\\services\\summary_facts.py",
+      "sha256": "5538bf308e701b06e61d8321da0ea865215ecfe6c5c84333cc57637912c53147",
+      "match": true
+    }
+  },
+  "stage_prompt_hashes_valid": true,
+  "service_literals_hash_valid": true,
+  "source_manifest_and_three_sources_valid": true,
+  "old_ledger_initial_hash_record": ".planning\\2026-10-07-grounded-summary-final\\initial-ledger-hashes.json",
+  "old_ledgers": {
+    "docs\\acceptance-reports\\2026-10-05-grounded-summary\\results\\request-ledger.json": {
+      "before_sha256": "b39da822109badd6f5a056d03fed81bc244a10c1f38bf9f85b9c061e29bcfd06",
+      "after_sha256": "b39da822109badd6f5a056d03fed81bc244a10c1f38bf9f85b9c061e29bcfd06",
+      "unchanged": true
+    },
+    "docs\\acceptance-reports\\2026-10-07-grounded-summary-organization\\results\\request-ledger.json": {
+      "before_sha256": "1f05b687f873a6a6b3487438c62b15e9f3aee464e709dfe0b76b5e8aff607d96",
+      "after_sha256": "1f05b687f873a6a6b3487438c62b15e9f3aee464e709dfe0b76b5e8aff607d96",
+      "unchanged": true
+    },
+    "docs\\acceptance-reports\\2026-10-07-grounded-summary-refined\\results\\request-ledger.json": {
+      "before_sha256": "2f558ed8471d3f31ecb2bc21a00f410cacaa223b30ca2787d623f5afecd5b2f4",
+      "after_sha256": "2f558ed8471d3f31ecb2bc21a00f410cacaa223b30ca2787d623f5afecd5b2f4",
+      "unchanged": true
+    }
+  },
+  "budget": {
+    "ceiling": 13,
+    "frozen_expected": 13,
+    "durable_reservations": 9,
+    "responses": 9,
+    "http_200": 9,
+    "unused": 4,
+    "unused_to_be_left_unused": true,
+    "all_attempts_counted": true,
+    "retry_or_fallback_in_recorded_sequence": false,
+    "serial_timestamps_valid": true,
+    "caller_lock_released": true,
+    "pre_send_reservation_evidence": {
+      "frozen_runner_sha256": "1f030b2118f3ffcb7009dbd13b23fcfa315b82984b643fcdcf897f095f18c481",
+      "mechanism": "Reviewed frozen BudgetClient persists payload, appends reserved row, fsyncs and replaces ledger before http.post; exception paths retain that ordinal. Entry verifies full freeze before reservation.",
+      "verification_boundary": "Final ledger records completed reservations, not each intermediate reserved state; pre-send ordering follows frozen runner and hermetic regression evidence, rather than a separate historical network observer."
+    }
+  },
+  "supplier_reported_usage_totals": {
+    "prompt_tokens": 24522,
+    "completion_tokens": 8134,
+    "total_tokens": 32656,
+    "prompt_cache_hit_tokens": 3840,
+    "prompt_cache_miss_tokens": 20682
+  },
+  "usage_basis": "Sum of provider response usage, independently matched byte-for-byte to all nine ledger usage records; cache counts are subcounts of prompt tokens, not added again. No price or fee estimate.",
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "zh-short",
+      "stage": "extract",
+      "sample_post": 1,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "acae353347d443513009ae7298b97aee1d46288916b29a1d4e87afcd060fc6d8",
+      "response_sha256": "a502f5dc25d8fd7fa78ef99a025d455ff392604e351842b9176d7032a85defac",
+      "usage": {
+        "prompt_tokens": 1154,
+        "completion_tokens": 492,
+        "total_tokens": 1646,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1154,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "started_utc": "2026-10-07T14:36:49.675667+00:00",
+      "ended_utc": "2026-10-07T14:36:52.136040+00:00",
+      "hash_options_prompt_identity_valid": true
+    },
+    {
+      "ordinal": 2,
+      "sample": "zh-short",
+      "stage": "compose",
+      "sample_post": 2,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "565333571236d55292953b5e1b975486984c03ee270117b14b46b1b862c40166",
+      "response_sha256": "65cb03d1d54442adb26ca915ae1ec9a5ebbe88a38a734d5cb4117733cd3ddd5f",
+      "usage": {
+        "prompt_tokens": 1670,
+        "completion_tokens": 504,
+        "total_tokens": 2174,
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 1542,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        }
+      },
+      "started_utc": "2026-10-07T14:36:52.163140+00:00",
+      "ended_utc": "2026-10-07T14:36:54.811241+00:00",
+      "hash_options_prompt_identity_valid": true
+    },
+    {
+      "ordinal": 3,
+      "sample": "zh-short",
+      "stage": "audit",
+      "sample_post": 3,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "e684ec057ac9d4995a982e02a0adcf473fbdad041c908c08000ac8986ae3e170",
+      "response_sha256": "3613b7bad1ad7c305e04aaf03a01912ca4299a83b2914e2999e0301ac9965a9e",
+      "usage": {
+        "prompt_tokens": 2856,
+        "completion_tokens": 748,
+        "total_tokens": 3604,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 2600,
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        }
+      },
+      "started_utc": "2026-10-07T14:36:54.831591+00:00",
+      "ended_utc": "2026-10-07T14:36:57.649368+00:00",
+      "hash_options_prompt_identity_valid": true
+    },
+    {
+      "ordinal": 4,
+      "sample": "en-medium",
+      "stage": "extract",
+      "sample_post": 1,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "044e74daf7eafd6879ed5e06c98d79eaed34cb6d64bcaf1b53ca35ad77c77da7",
+      "response_sha256": "15d4971886a226c6eb66fc8bf8a4a334d3e8cb69c5390fa2b28c75d1d9fe4953",
+      "usage": {
+        "prompt_tokens": 1575,
+        "completion_tokens": 724,
+        "total_tokens": 2299,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 1063,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "started_utc": "2026-10-07T14:36:57.682464+00:00",
+      "ended_utc": "2026-10-07T14:37:01.298537+00:00",
+      "hash_options_prompt_identity_valid": true
+    },
+    {
+      "ordinal": 5,
+      "sample": "en-medium",
+      "stage": "compose",
+      "sample_post": 2,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "c48b7726ff273f5605300980ebb096ce45b137214f4e0a96e01d9cba007ae4a2",
+      "response_sha256": "130646a23016ea43ca9941915ba4bba1f275d73b50254779232f2ab862323a4d",
+      "usage": {
+        "prompt_tokens": 1941,
+        "completion_tokens": 573,
+        "total_tokens": 2514,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 1429,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "started_utc": "2026-10-07T14:37:01.321007+00:00",
+      "ended_utc": "2026-10-07T14:37:04.330506+00:00",
+      "hash_options_prompt_identity_valid": true
+    },
+    {
+      "ordinal": 6,
+      "sample": "en-medium",
+      "stage": "audit",
+      "sample_post": 3,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "7a0a2dd3f2f8b37180b488214b40a20bcdc54d61dc379dd068e58097c6c4c181",
+      "response_sha256": "9ef187c9b135eb38a6ff0ad4f03c8ee05434df42fd44ad3ed35c5fc23e2abb1d",
+      "usage": {
+        "prompt_tokens": 3625,
+        "completion_tokens": 850,
+        "total_tokens": 4475,
+        "prompt_cache_hit_tokens": 896,
+        "prompt_cache_miss_tokens": 2729,
+        "prompt_tokens_details": {
+          "cached_tokens": 896
+        }
+      },
+      "started_utc": "2026-10-07T14:37:04.352430+00:00",
+      "ended_utc": "2026-10-07T14:37:07.375938+00:00",
+      "hash_options_prompt_identity_valid": true
+    },
+    {
+      "ordinal": 7,
+      "sample": "en-long",
+      "stage": "extract",
+      "sample_post": 1,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "50d21edd4132b04da5a2fcc9ab78b91a0ab52cc5fc1d2654f35ab96fe28b9896",
+      "response_sha256": "0a49d45a7532dfe97871ca31b1e149b27c7689fc0e210a5045b23472c489e225",
+      "usage": {
+        "prompt_tokens": 3889,
+        "completion_tokens": 1142,
+        "total_tokens": 5031,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 3377,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "started_utc": "2026-10-07T14:37:07.406821+00:00",
+      "ended_utc": "2026-10-07T14:37:11.977701+00:00",
+      "hash_options_prompt_identity_valid": true
+    },
+    {
+      "ordinal": 8,
+      "sample": "en-long",
+      "stage": "extract",
+      "sample_post": 2,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "ec7ee3d98fcf54b72e2e62cffb9870439f333b775d86f92f40389ada3730358e",
+      "response_sha256": "07965c5befc89006f16fb54d6ebc26ead1e78800d70f9fc0fefb1aa14aa7ad77",
+      "usage": {
+        "prompt_tokens": 3975,
+        "completion_tokens": 1374,
+        "total_tokens": 5349,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 3463,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "started_utc": "2026-10-07T14:37:12.002712+00:00",
+      "ended_utc": "2026-10-07T14:37:18.117377+00:00",
+      "hash_options_prompt_identity_valid": true
+    },
+    {
+      "ordinal": 9,
+      "sample": "en-long",
+      "stage": "extract",
+      "sample_post": 3,
+      "status": "response",
+      "http_status": 200,
+      "finish_reason": "stop",
+      "payload_sha256": "88e296a9213a92b2122b883ffb8ca2c2b5c3bb62deda4a26574efc05c0f4f72b",
+      "response_sha256": "b524bcdf3317b87b472b5070c8ac6e7dd27f7da94041db5d6183530c4cddce52",
+      "usage": {
+        "prompt_tokens": 3837,
+        "completion_tokens": 1727,
+        "total_tokens": 5564,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 3325,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "started_utc": "2026-10-07T14:37:18.149289+00:00",
+      "ended_utc": "2026-10-07T14:37:25.743188+00:00",
+      "hash_options_prompt_identity_valid": true
+    }
+  ],
+  "samples": [
+    {
+      "id": "zh-short",
+      "expected_posts": 3,
+      "actual_posts": 3,
+      "pipeline_status": "completed",
+      "trace_sha256": "555ab57d0a150b71129d3367ccfb8ff2afbe3458339f643cb1373bb5921e9432",
+      "result_sha256": "17fb2ea3cdca3055e7f9e667b9becbde0e6ec11745a9b9dfafbc816eb00b5661",
+      "validated_extracted_facts": 9,
+      "proxy_used": true,
+      "provider_reported_total_tokens": 7424,
+      "final_output_present": true,
+      "final_contract_valid": true,
+      "summary_statement_count": 4,
+      "summary_chars": 239,
+      "point_count": 4,
+      "point_chars": [
+        59,
+        63,
+        50,
+        54
+      ]
+    },
+    {
+      "id": "en-medium",
+      "expected_posts": 3,
+      "actual_posts": 3,
+      "pipeline_status": "completed",
+      "trace_sha256": "08d559f7399babd033ff8ab110a32018a6c80a59957f80e9669e1a317a0f9eb8",
+      "result_sha256": "8ce2451cb806da44880414f2d01b70085d4c86daef50dde723a0115dee114f04",
+      "validated_extracted_facts": 8,
+      "proxy_used": true,
+      "provider_reported_total_tokens": 9288,
+      "final_output_present": true,
+      "final_contract_valid": true,
+      "summary_statement_count": 4,
+      "summary_chars": 258,
+      "point_count": 5,
+      "point_chars": [
+        62,
+        66,
+        39,
+        61,
+        55
+      ]
+    },
+    {
+      "id": "en-long",
+      "expected_posts": 7,
+      "actual_posts": 3,
+      "pipeline_status": "failed",
+      "trace_sha256": "2995ea6af45a8d687a49035bacf746f2bc0337ffdc7ad661c868bf3f31220172",
+      "result_sha256": "e17865639f5a5b2575a6f79b165ac28355c166083ec09253a24fb9ccb762a431",
+      "validated_extracted_facts": 19,
+      "proxy_used": true,
+      "provider_reported_total_tokens": 15944,
+      "final_output_present": false,
+      "final_contract_valid": false,
+      "error_type": "llm_invalid_response",
+      "failure_stage": "extract",
+      "failed_extract_part": 3,
+      "failed_ordinal": 9,
+      "compose_sent": false,
+      "audit_sent": false
+    }
+  ],
+  "failure_boundary": {
+    "sample": "en-long",
+    "ordinal": 9,
+    "extract_part": 3,
+    "transport_http_status": 200,
+    "provider_finish_reason": "stop",
+    "pipeline_error_type": "llm_invalid_response",
+    "validated_previous_extract_parts": 2,
+    "no_final_output": true,
+    "no_later_request": true,
+    "remaining_four_posts_not_used": true,
+    "codec_cause_review_owned_by": "root separate frozen codec diagnosis"
+  },
+  "offline_check": {
+    "path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\results\\organization-final-offline-check.json",
+    "sha256": "945d74b2dd9379a15dfffb975200b67af11e1803c8ba6c72169a492451a22d1c",
+    "trace_lexically_valid": true,
+    "successful_audit_contract_samples": [
+      "zh-short",
+      "en-medium"
+    ],
+    "long_final_contract_not_evaluated": true,
+    "semantic_accuracy_not_proven": true
+  },
+  "semantic_review_owned_by_other_agents": true,
+  "no_quality_success_or_accuracy_claim": true
+}

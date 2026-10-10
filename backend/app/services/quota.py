@@ -7,6 +7,7 @@ from sqlmodel import Session, select
 
 from ..config import settings
 from ..models import Quota
+from .quota_policy import is_unlimited_user
 
 
 def today_utc() -> str:
@@ -21,24 +22,26 @@ def get_today(session: Session, user_id: str) -> Optional[Quota]:
     ).first()
 
 
-def get_quota_info(session: Session, user_id: str) -> tuple[int, int, str]:
-    """返回 (used, limit, date)；无今日行按默认额度计（不落库）。"""
+def get_quota_info(session: Session, user_id: str) -> tuple[int, Optional[int], str]:
+    """返回 (used, limit, date)；豁免时 limit=None，仍保留使用计数。"""
     quota = get_today(session, user_id)
     used = quota.downloads_used if quota else 0
     limit = quota.limit if quota else settings.default_quota_limit
+    if is_unlimited_user(user_id):
+        limit = None
     return used, limit, today_utc()
 
 
 def check_and_reserve(session: Session, user_id: str) -> None:
     """登录用户提交下载前扣额度；当日无行则按默认额度建行。
 
-    超限抛 429 quota（前端 ERROR_SCENES.quota 已覆盖）；否则 downloads_used += 1 并提交。
+    超限抛 429 quota；开发豁免只跳过耗尽检查，仍累计 downloads_used。
     """
     quota = get_today(session, user_id)
     if quota is None:
         quota = Quota(user_id=user_id, date=today_utc(), downloads_used=0, limit=settings.default_quota_limit)
         session.add(quota)
-    if quota.downloads_used >= quota.limit:
+    if quota.downloads_used >= quota.limit and not is_unlimited_user(user_id):
         raise HTTPException(status_code=429, detail={"error_type": "quota", "error": "今日下载额度已用完"})
     quota.downloads_used += 1
     session.commit()

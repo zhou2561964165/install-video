@@ -1,0 +1,20 @@
+{
+  "ordinal": 4,
+  "phase": "organization-final",
+  "sample": "en-medium",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "1b553b8066de068445a517d61451113a97bf1a65a7ff94672a08eec8551bb48a",
+  "content": "{\"facts\":[{\"topic\":\"采用每日评分系统的两个理由\",\"claim\":\"讲者提出采用每日评分系统的两个理由：一是与人互动就会留下印象并受到评价，因此希望对学生每次表现（即每节课）都给予评价；二是讲者相信只要学生坚持且持续努力修这门课，就能展示出很好的中文技能。\",\"evidence\":[1,2,3,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"课后反馈的内容与目的\",\"claim\":\"讲者说通常课后会就每位学生的课堂表现提供反馈，包括语言和文化行为，以便学生知道下几节课要改进什么。\",\"evidence\":[21,22,23,24,25,26,27,28],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"通过Engrade网站提供书面反馈\",\"claim\":\"讲者说通常采用书面反馈，使用一个名为Engrade的网站；除录入成绩外，还可以私下给每位学生留言，学生只要登录自己的账户就能读到教师的评论。\",\"evidence\":[29,30,31,32,33,34,35,36,37,38,39,40],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"评论内容依学生表现而定\",\"claim\":\"讲者说评论内容取决于学生的表现，可以简单到提醒注意以下发音，也可以更详细一些。\",\"evidence\":[41,42,43,44,45,46,47,48,49],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"以中文应对称赞为例的详细反馈\",\"claim\":\"讲者举例说明较详细的反馈：思考在中文里如何应对称赞。\",\"evidence\":[50,51,52,53],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"美国文化中接受称赞的方式\",\"claim\":\"讲者说在美国文化中，收到称赞时很自然会说谢谢，例如别人说你的中文很好，你回答谢谢。\",\"evidence\":[56,57,58,59,60,61,62,63,64],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"中文文化中收到称赞时保持谦虚\",\"claim\":\"讲者说在中文文化中，收到称赞时要保持谦虚，不说谢谢来接受，有时会说还有很长的路要走、还差得远，或不知道称赞从何而来；讲者总结中文文化关于称赞的基本观念是保持谦虚。\",\"evidence\":[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"依据教材就称赞应对方式给予反馈\",\"claim\":\"讲者说如果学生的课堂表现来自其母语（L1），会鼓励他们，并依据课堂上所涵盖材料的教材，就如何在中文文化中应对称赞给予反馈，让学生知道这是可以努力改进的地方。\",\"evidence\":[81,82,83,84,85,86,87,88,89,90,91,92,93,94,95],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1575,
+    "completion_tokens": 724,
+    "total_tokens": 2299,
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 1063,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    }
+  }
+}

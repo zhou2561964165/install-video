@@ -1,0 +1,9 @@
+{
+  "phase": "organization-prefix",
+  "id": "zh-short",
+  "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+  "proxy_used": true,
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 6.12,
+  "trace_sha256": "505844beae599cee6dd6bfe9e08cb7d913f45b9efc95d93bd7dcdbb60d3d861b"
+}

@@ -1,0 +1,10 @@
+{
+  "ended_utc": "2026-10-08T12:46:28.534080+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "normalized-marker-zh-short.json",
+      "sha256": "59bcd0d3480a1f7c34f5ea193ad161af9dd7ba2e62a168d305f846d6ee5e87d5"
+    }
+  ]
+}

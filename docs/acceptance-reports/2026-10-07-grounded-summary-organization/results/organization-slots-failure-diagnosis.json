@@ -1,0 +1,27 @@
+{
+  "phase": "organization-slots",
+  "sample": "en-long",
+  "offline_only": true,
+  "codec_source": "organization-slots-facts.py",
+  "frozen_codec_sha256": "4f58ccddfa7b38456f7bcf82f7f89d1615003bcca4ff7de3160b8db104e72296",
+  "codec_reason": "summary_too_long",
+  "facts_validated_before_compose": 48,
+  "finish_reason": "stop",
+  "summary_claims": 7,
+  "summary_chars": 946,
+  "measured_summary_limit": 800,
+  "point_slots": 7,
+  "point_chars": [
+    110,
+    79,
+    118,
+    137,
+    144,
+    166,
+    138
+  ],
+  "compose_completion_tokens": 1747,
+  "audit_sent": false,
+  "post_failure_live_code_change": "bounded candidate summary headroom 2x; final ceiling unchanged",
+  "post_failure_change_real_model_validated": false
+}

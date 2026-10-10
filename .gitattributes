@@ -23,3 +23,8 @@ frontend/src/pixi/stage.js -text whitespace=blank-at-eol,blank-at-eof,space-befo
 backend/app/services/summary_facts.py text eol=lf
 docs/acceptance-reports/2026-10-05-grounded-summary/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/acceptance-reports/2026-10-05-grounded-summary-evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/acceptance-reports/2026-10-07-grounded-summary-organization/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/acceptance-reports/2026-10-07-grounded-summary-refined/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve all acceptance snapshots/raw/receipts on personal GitHub unchanged.
+docs/acceptance-reports/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

@@ -1,0 +1,1189 @@
+{
+  "phase": "organization-final",
+  "reviewed_utc": "2026-10-07T14:43:13.596927+00:00",
+  "engineering_conventions": [
+    "Skills precede plans; UI requires ui-ux-pro-max/design-system and primitive-semantic-component tokens.",
+    "Configurable narrow single-direction interfaces; LLM only llm_service; yt-dlp only ytdlp_service; visual layer reads scene.",
+    "User env/db/model assets, old evidence, product and runner files unchanged; writes limited to this explicitly authorized new review.",
+    "Final limits remain summary7/800 and points7/240; normal n+2, no retries or paid fallback."
+  ],
+  "method": {
+    "reviewer": "Coverage agent",
+    "kind": "Clause-by-clause semantic review of actual final text against frozen rubric and original local sources",
+    "external_human_rating": false,
+    "blind_review": false,
+    "producer_independent_organization": false,
+    "reviewer_prior_role": "Reviewer diagnosed and implemented the current prompt revision; separate from sole live caller, but not an external or organizationally independent reviewer.",
+    "evidence": "Only final summary and points establish coverage; fact IDs/checks flags never count as evidence.",
+    "source_coordinates": "Cleaned source TXT: lines 1-based and character ranges 0-based half-open, not VTT timestamps.",
+    "output_coordinates": "S identifies final audited summary statement; P identifies public final point. Full quoted statements are included for each clause; judgment is semantic, not keyword grading.",
+    "network_or_model_calls": 0
+  },
+  "identity": {
+    "rubric_path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\rubric.json",
+    "rubric_sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49",
+    "manifest_path": "docs\\acceptance-reports\\2026-10-04-natural-subtitle-quality\\corpus\\manifest.json",
+    "manifest_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+    "provenance_sha256": "fc5d3ba753888bd606d2fb43eb003c52fc580a86c774a04a7d1f2534d600afe1"
+  },
+  "samples": [
+    {
+      "id": "zh-short",
+      "identity": {
+        "source_path": "docs\\acceptance-reports\\2026-10-04-natural-subtitle-quality\\corpus\\zh-short.txt",
+        "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+        "result_path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\results\\organization-final-zh-short.json",
+        "result_sha256": "17fb2ea3cdca3055e7f9e667b9becbde0e6ec11745a9b9dfafbc816eb00b5661",
+        "trace_path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\results\\organization-final-zh-short-trace.json",
+        "trace_sha256": "555ab57d0a150b71129d3367ccfb8ff2afbe3458339f643cb1373bb5921e9432",
+        "trace_completed": true,
+        "stages": [
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "compose",
+            "status": "validated",
+            "max_output_tokens": 8192
+          },
+          {
+            "stage": "audit",
+            "status": "validated",
+            "max_output_tokens": 8192
+          }
+        ],
+        "audit_final_matches_public": true
+      },
+      "final_text": {
+        "summary_statements": [
+          "MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。教师认为全中文上课有两个关键环节：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。",
+          "学生课前收到weekly schedule，上课就是练所准备的内容；备课与上课任务必须一致，否则练到没准备的内容学生就会说英文。",
+          "课堂用语不能“出圈”，如“请你再说一遍”与“请你再说一次”完全不同，老师须注意。",
+          "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，以维持课堂中文气氛。"
+        ],
+        "key_points": [
+          "MIT中文课从第二天起全中文，第一天说明准备与大纲。关键环节一是课堂用语学生要听得懂，二是学生备课要反映在课堂练习上。",
+          "学生课前收到weekly schedule，上课就是练所准备内容；备课与上课任务必须一致，否则练到没准备的内容学生就会说英文。",
+          "课堂用语绝对不能“出圈”，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师第一个得注意。",
+          "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，从而维持课堂中文气氛。"
+        ]
+      },
+      "measurements": {
+        "summary_chars": 239,
+        "point_count": 4,
+        "point_chars": [
+          59,
+          63,
+          50,
+          54
+        ]
+      },
+      "facts": [
+        {
+          "id": "zh1",
+          "status": "full",
+          "rubric_claim": "MIT中文课从第二天开始全中文教学；第一天讲准备方法、大纲及期望。",
+          "clauses": [
+            {
+              "clause": "This MIT class uses all Chinese from day two",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 1,
+                "line_end": 2,
+                "char_start": 0,
+                "char_end": 27,
+                "excerpt": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 79,
+                  "excerpt": "MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。教师认为全中文上课有两个关键环节：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。"
+                },
+                {
+                  "location": "P1",
+                  "char_start": 0,
+                  "char_end": 59,
+                  "excerpt": "MIT中文课从第二天起全中文，第一天说明准备与大纲。关键环节一是课堂用语学生要听得懂，二是学生备课要反映在课堂练习上。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Day one explains preparation",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 3,
+                "line_end": 4,
+                "char_start": 28,
+                "char_end": 83,
+                "excerpt": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 79,
+                  "excerpt": "MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。教师认为全中文上课有两个关键环节：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。"
+                },
+                {
+                  "location": "P1",
+                  "char_start": 0,
+                  "char_end": 59,
+                  "excerpt": "MIT中文课从第二天起全中文，第一天说明准备与大纲。关键环节一是课堂用语学生要听得懂，二是学生备课要反映在课堂练习上。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Day one explains the outline",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 3,
+                "line_end": 4,
+                "char_start": 28,
+                "char_end": 83,
+                "excerpt": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 79,
+                  "excerpt": "MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。教师认为全中文上课有两个关键环节：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。"
+                },
+                {
+                  "location": "P1",
+                  "char_start": 0,
+                  "char_end": 59,
+                  "excerpt": "MIT中文课从第二天起全中文，第一天说明准备与大纲。关键环节一是课堂用语学生要听得懂，二是学生备课要反映在课堂练习上。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Day one clarifies student expectations",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 3,
+                "line_end": 4,
+                "char_start": 28,
+                "char_end": 83,
+                "excerpt": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 79,
+                  "excerpt": "MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。教师认为全中文上课有两个关键环节：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            }
+          ],
+          "reason": "All necessary clauses retained in final text with source scope."
+        },
+        {
+          "id": "zh2",
+          "status": "full",
+          "rubric_claim": "维持全中文课堂有两个关键：学生听懂固定课堂用语，课前准备与课堂练习任务一致。",
+          "clauses": [
+            {
+              "clause": "Students understand fixed classroom phrases",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 6,
+                "line_end": 8,
+                "char_start": 126,
+                "char_end": 209,
+                "excerpt": "一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 79,
+                  "excerpt": "MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。教师认为全中文上课有两个关键环节：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。"
+                },
+                {
+                  "location": "P1",
+                  "char_start": 0,
+                  "char_end": 59,
+                  "excerpt": "MIT中文课从第二天起全中文，第一天说明准备与大纲。关键环节一是课堂用语学生要听得懂，二是学生备课要反映在课堂练习上。"
+                },
+                {
+                  "location": "P3",
+                  "char_start": 0,
+                  "char_end": 50,
+                  "excerpt": "课堂用语绝对不能“出圈”，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师第一个得注意。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Preparation and classroom practice tasks match",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 9,
+                "line_end": 13,
+                "char_start": 210,
+                "char_end": 390,
+                "excerpt": "第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。"
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 64,
+                  "excerpt": "学生课前收到weekly schedule，上课就是练所准备的内容；备课与上课任务必须一致，否则练到没准备的内容学生就会说英文。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 63,
+                  "excerpt": "学生课前收到weekly schedule，上课就是练所准备内容；备课与上课任务必须一致，否则练到没准备的内容学生就会说英文。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Both are the two keys to an all-Chinese classroom",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 5,
+                "line_end": 9,
+                "char_start": 84,
+                "char_end": 237,
+                "excerpt": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 79,
+                  "excerpt": "MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。教师认为全中文上课有两个关键环节：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。"
+                },
+                {
+                  "location": "P1",
+                  "char_start": 0,
+                  "char_end": 59,
+                  "excerpt": "MIT中文课从第二天起全中文，第一天说明准备与大纲。关键环节一是课堂用语学生要听得懂，二是学生备课要反映在课堂练习上。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Unprepared classroom practice causes English use, if stated",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 12,
+                "line_end": 13,
+                "char_start": 311,
+                "char_end": 390,
+                "excerpt": "一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。"
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 64,
+                  "excerpt": "学生课前收到weekly schedule，上课就是练所准备的内容；备课与上课任务必须一致，否则练到没准备的内容学生就会说英文。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 63,
+                  "excerpt": "学生课前收到weekly schedule，上课就是练所准备内容；备课与上课任务必须一致，否则练到没准备的内容学生就会说英文。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            }
+          ],
+          "reason": "All necessary clauses retained in final text with source scope."
+        },
+        {
+          "id": "zh3",
+          "status": "full",
+          "rubric_claim": "课堂用语不能随意换说法；请你再说一遍与请你再说一次对初学者不同。",
+          "clauses": [
+            {
+              "clause": "Teachers must not freely change classroom expressions",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 14,
+                "line_end": 16,
+                "char_start": 391,
+                "char_end": 477,
+                "excerpt": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意"
+              },
+              "output_evidence": [
+                {
+                  "location": "S3",
+                  "char_start": 0,
+                  "char_end": 40,
+                  "excerpt": "课堂用语不能“出圈”，如“请你再说一遍”与“请你再说一次”完全不同，老师须注意。"
+                },
+                {
+                  "location": "P3",
+                  "char_start": 0,
+                  "char_end": 50,
+                  "excerpt": "课堂用语绝对不能“出圈”，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师第一个得注意。"
+                }
+              ],
+              "reason": "The output explicitly restricts the claim to classroom expressions and gives the two teaching expressions. It does not explicitly generalize their semantic difference to all Chinese contexts."
+            },
+            {
+              "clause": "Say it again using bian versus ci differs in this teaching situation",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 15,
+                "line_end": 16,
+                "char_start": 426,
+                "char_end": 477,
+                "excerpt": "比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意"
+              },
+              "output_evidence": [
+                {
+                  "location": "S3",
+                  "char_start": 0,
+                  "char_end": 40,
+                  "excerpt": "课堂用语不能“出圈”，如“请你再说一遍”与“请你再说一次”完全不同，老师须注意。"
+                },
+                {
+                  "location": "P3",
+                  "char_start": 0,
+                  "char_end": 50,
+                  "excerpt": "课堂用语绝对不能“出圈”，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师第一个得注意。"
+                }
+              ],
+              "reason": "The output explicitly restricts the claim to classroom expressions and gives the two teaching expressions. It does not explicitly generalize their semantic difference to all Chinese contexts."
+            }
+          ],
+          "reason": "All necessary clauses retained in final text with source scope."
+        },
+        {
+          "id": "zh4",
+          "status": "full",
+          "rubric_claim": "前45分钟用中文；英文问题可在最后5分钟、下课后或邮件中提出。",
+          "clauses": [
+            {
+              "clause": "First 45 minutes are all Chinese",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 19,
+                "line_end": 19,
+                "char_start": 524,
+                "char_end": 561,
+                "excerpt": "几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。"
+              },
+              "output_evidence": [
+                {
+                  "location": "S4",
+                  "char_start": 0,
+                  "char_end": 53,
+                  "excerpt": "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，以维持课堂中文气氛。"
+                },
+                {
+                  "location": "P4",
+                  "char_start": 0,
+                  "char_end": 54,
+                  "excerpt": "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，从而维持课堂中文气氛。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "English questions are allowed in last five minutes",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 17,
+                "line_end": 19,
+                "char_start": 478,
+                "char_end": 561,
+                "excerpt": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。"
+              },
+              "output_evidence": [
+                {
+                  "location": "S4",
+                  "char_start": 0,
+                  "char_end": 53,
+                  "excerpt": "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，以维持课堂中文气氛。"
+                },
+                {
+                  "location": "P4",
+                  "char_start": 0,
+                  "char_end": 54,
+                  "excerpt": "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，从而维持课堂中文气氛。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "English questions may be asked after class",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 20,
+                "line_end": 20,
+                "char_start": 562,
+                "char_end": 584,
+                "excerpt": "第二个他可以下课问你，或者是他用电子邮件问你"
+              },
+              "output_evidence": [
+                {
+                  "location": "S4",
+                  "char_start": 0,
+                  "char_end": 53,
+                  "excerpt": "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，以维持课堂中文气氛。"
+                },
+                {
+                  "location": "P4",
+                  "char_start": 0,
+                  "char_end": 54,
+                  "excerpt": "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，从而维持课堂中文气氛。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "English questions may be asked by email",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 20,
+                "line_end": 20,
+                "char_start": 562,
+                "char_end": 584,
+                "excerpt": "第二个他可以下课问你，或者是他用电子邮件问你"
+              },
+              "output_evidence": [
+                {
+                  "location": "S4",
+                  "char_start": 0,
+                  "char_end": 53,
+                  "excerpt": "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，以维持课堂中文气氛。"
+                },
+                {
+                  "location": "P4",
+                  "char_start": 0,
+                  "char_end": 54,
+                  "excerpt": "学生听不懂要用英文问时，可在课堂最后五分钟问（前四十五分钟全中文），也可下课或电邮问，从而维持课堂中文气氛。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            }
+          ],
+          "reason": "All necessary clauses retained in final text with source scope."
+        }
+      ],
+      "counts": {
+        "full": 4,
+        "partial": 0,
+        "missing": 0,
+        "not_evaluated": 0
+      },
+      "organization": {
+        "status": "partial",
+        "findings": [
+          {
+            "locations": [
+              "P1",
+              "P2"
+            ],
+            "combined_chars": 122,
+            "reason": "Preparation matching classroom practice is stated in P1 and elaborated in P2. P2 adds schedule/cause, so not exact duplicate; the principle and explanation remain mergeable without losing necessary facts."
+          }
+        ],
+        "other_points": "Classroom-expression constraint and timed/out-of-class English assistance are coherent; no unrelated final catch-all."
+      },
+      "precision": {
+        "status": "pass",
+        "findings": [],
+        "frequency": "No usually-to-always strengthening; 45/5-minute limits and English-question conditions retained.",
+        "attribution_scope": "This MIT class and classroom language explicitly bound the claims."
+      },
+      "licensing": {
+        "creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+        "title": "Creating an Immersive Classroom Environment (Chinese)",
+        "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_immersive_environment_chinese-2/",
+        "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/50e5414eeb1e526bbb94593453e9c84a_MIT21G_101F14_Immersive_Environment_Chinese.vtt",
+        "license": "CC BY-NC-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare; Creating an Immersive Classroom Environment (Chinese); https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_immersive_environment_chinese-2/"
+      }
+    },
+    {
+      "id": "en-medium",
+      "identity": {
+        "source_path": "docs\\acceptance-reports\\2026-10-04-natural-subtitle-quality\\corpus\\en-medium.txt",
+        "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+        "result_path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\results\\organization-final-en-medium.json",
+        "result_sha256": "8ce2451cb806da44880414f2d01b70085d4c86daef50dde723a0115dee114f04",
+        "trace_path": "docs\\acceptance-reports\\2026-10-07-grounded-summary-final\\results\\organization-final-en-medium-trace.json",
+        "trace_sha256": "08d559f7399babd033ff8ab110a32018a6c80a59957f80e9669e1a317a0f9eb8",
+        "trace_completed": true,
+        "stages": [
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "compose",
+            "status": "validated",
+            "max_output_tokens": 8192
+          },
+          {
+            "stage": "audit",
+            "status": "validated",
+            "max_output_tokens": 8192
+          }
+        ],
+        "audit_final_matches_public": true
+      },
+      "final_text": {
+        "summary_statements": [
+          "讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。",
+          "反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。",
+          "讲者以称赞应对为例：美国文化中自然说谢谢，而中文文化强调谦虚，有时说还差得远或不知称赞从何而来。",
+          "若学生表现源自母语，讲者会鼓励并依据课堂教材，就中文文化中如何应对称赞给予反馈，让学生知道可改进之处。"
+        ],
+        "key_points": [
+          "讲者提出两个理由：与人互动会留下印象并受评价，故希望每节课都评价学生；并相信只要学生坚持持续努力修课，就能展现良好中文技能。",
+          "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。",
+          "评论内容视学生表现而定，可简单提醒发音，也可更详细，如思考中文里如何应对称赞。",
+          "讲者说美国文化中收到称赞自然说谢谢；中文文化则要谦虚，不说谢谢接受，有时说还差得远或不知称赞从何而来，基本观念是保持谦虚。",
+          "若学生表现来自母语，讲者会鼓励并依据课堂教材，就中文文化中如何应对称赞给予反馈，让学生知道这是可努力改进之处。"
+        ]
+      },
+      "measurements": {
+        "summary_chars": 258,
+        "point_count": 5,
+        "point_chars": [
+          62,
+          66,
+          39,
+          61,
+          55
+        ]
+      },
+      "facts": [
+        {
+          "id": "en1",
+          "status": "full",
+          "rubric_claim": "The instructor adopts daily grading: evaluate each class performance; persistent consistent effort is expected to yield good Chinese skills.",
+          "clauses": [
+            {
+              "clause": "Daily grading evaluates every class performance",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 7,
+                "line_end": 20,
+                "char_start": 143,
+                "char_end": 482,
+                "excerpt": "We want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere."
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 94,
+                  "excerpt": "讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。"
+                },
+                {
+                  "location": "P1",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "讲者提出两个理由：与人互动会留下印象并受评价，故希望每节课都评价学生；并相信只要学生坚持持续努力修课，就能展现良好中文技能。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Students make persistent and consistent efforts in this course",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 12,
+                "line_end": 15,
+                "char_start": 268,
+                "char_end": 361,
+                "excerpt": "that, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 94,
+                  "excerpt": "讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。"
+                },
+                {
+                  "location": "P1",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "讲者提出两个理由：与人互动会留下印象并受评价，故希望每节课都评价学生；并相信只要学生坚持持续努力修课，就能展现良好中文技能。"
+                }
+              ],
+              "reason": "The final phrase conveys sustained consistent participation in this course as a natural Chinese paraphrase, rather than requiring literal separate vocabulary for persistent/consistent. This is an explicit semantic judgment with residual translation ambiguity."
+            },
+            {
+              "clause": "Instructor believes these efforts can demonstrate good Chinese skills, as reason for grading",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 10,
+                "line_end": 20,
+                "char_start": 227,
+                "char_end": 482,
+                "excerpt": "And the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere."
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 94,
+                  "excerpt": "讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。"
+                },
+                {
+                  "location": "P1",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "讲者提出两个理由：与人互动会留下印象并受评价，故希望每节课都评价学生；并相信只要学生坚持持续努力修课，就能展现良好中文技能。"
+                }
+              ],
+              "reason": "Both S1 and standalone P1 explicitly attribute the conditional prediction to the instructor believing it. Source itself says we are convinced/as long as/can demonstrate; this is retained belief, not an unqualified reviewer guarantee."
+            }
+          ],
+          "reason": "All necessary clauses retained in final text with source scope."
+        },
+        {
+          "id": "en2",
+          "status": "full",
+          "rubric_claim": "Written after-class feedback covers language and cultural behavior to show students what to improve next time.",
+          "clauses": [
+            {
+              "clause": "Feedback is usually after class",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 21,
+                "line_end": 24,
+                "char_start": 483,
+                "char_end": 568,
+                "excerpt": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 94,
+                  "excerpt": "讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Feedback is usually written",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 29,
+                "line_end": 29,
+                "char_start": 684,
+                "char_end": 715,
+                "excerpt": "We usually do written feedback."
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Feedback addresses each student classroom performance",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 23,
+                "line_end": 24,
+                "char_start": 519,
+                "char_end": 568,
+                "excerpt": "feedback to each student's\nperformance in class--"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 94,
+                  "excerpt": "讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Feedback includes language",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 25,
+                "line_end": 25,
+                "char_start": 569,
+                "char_end": 598,
+                "excerpt": "including language, including"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 94,
+                  "excerpt": "讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Feedback includes cultural behavior",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 25,
+                "line_end": 26,
+                "char_start": 569,
+                "char_end": 622,
+                "excerpt": "including language, including\nhis cultural behavior--"
+              },
+              "output_evidence": [
+                {
+                  "location": "S1",
+                  "char_start": 0,
+                  "char_end": 94,
+                  "excerpt": "讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Feedback shows what to improve in next sessions",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 27,
+                "line_end": 28,
+                "char_start": 623,
+                "char_end": 683,
+                "excerpt": "so that students know what to\nimprove for the next sessions."
+              },
+              "output_evidence": [
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            }
+          ],
+          "reason": "All necessary clauses retained in final text with source scope."
+        },
+        {
+          "id": "en3",
+          "status": "partial",
+          "rubric_claim": "Engrade allows both grades and private comments; each student reads feedback through their own account.",
+          "clauses": [
+            {
+              "clause": "Uses Engrade",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 30,
+                "line_end": 31,
+                "char_start": 716,
+                "char_end": 771,
+                "excerpt": "So we use an online-- we have\na website called Engrade."
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Enters grades",
+              "status": "missing",
+              "source_evidence": {
+                "line_start": 32,
+                "line_end": 32,
+                "char_start": 772,
+                "char_end": 799,
+                "excerpt": "So besides entering grades,"
+              },
+              "output_evidence": [],
+              "reason": "Absent from all final summary/points: daily grading or naming Engrade is not the concrete action of entering grades."
+            },
+            {
+              "clause": "Leaves private comments for each student",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 33,
+                "line_end": 34,
+                "char_start": 800,
+                "char_end": 854,
+                "excerpt": "you can also leave comments\nto each student privately."
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Each student accesses instructor feedback through their own account",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 35,
+                "line_end": 40,
+                "char_start": 855,
+                "char_end": 984,
+                "excerpt": "So each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor."
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。"
+                },
+                {
+                  "location": "P2",
+                  "char_start": 0,
+                  "char_end": 66,
+                  "excerpt": "通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。"
+                }
+              ],
+              "reason": "Student account login/read access, in the each-student private-comment context, conveys their individual account access. Literal possessive wording is not required; the grade-entry action is still absent elsewhere."
+            }
+          ],
+          "reason": "Engrade, private comments and account access retained; entering grades omitted, so en3 remains partial."
+        },
+        {
+          "id": "en4",
+          "status": "full",
+          "rubric_claim": "Feedback depends on performance: pronunciation or culturally appropriate compliment responses; the instructor contrasts American thanks with Chinese humility, and grounds feedback in course/textbook material.",
+          "clauses": [
+            {
+              "clause": "Feedback depends on student performance",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 41,
+                "line_end": 43,
+                "char_start": 985,
+                "char_end": 1050,
+                "excerpt": "So the comments--\nit really depends\non the student's performance."
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。"
+                },
+                {
+                  "location": "P3",
+                  "char_start": 0,
+                  "char_end": 39,
+                  "excerpt": "评论内容视学生表现而定，可简单提醒发音，也可更详细，如思考中文里如何应对称赞。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Can address pronunciation",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 44,
+                "line_end": 47,
+                "char_start": 1051,
+                "char_end": 1131,
+                "excerpt": "It can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations."
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。"
+                },
+                {
+                  "location": "P3",
+                  "char_start": 0,
+                  "char_end": 39,
+                  "excerpt": "评论内容视学生表现而定，可简单提醒发音，也可更详细，如思考中文里如何应对称赞。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Can also address cultural compliment responses",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 48,
+                "line_end": 53,
+                "char_start": 1132,
+                "char_end": 1252,
+                "excerpt": "It can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?"
+              },
+              "output_evidence": [
+                {
+                  "location": "S2",
+                  "char_start": 0,
+                  "char_end": 62,
+                  "excerpt": "反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。"
+                },
+                {
+                  "location": "P3",
+                  "char_start": 0,
+                  "char_end": 39,
+                  "excerpt": "评论内容视学生表现而定，可简单提醒发音，也可更详细，如思考中文里如何应对称赞。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Speaker example contrasts American thanks and Chinese humility",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 54,
+                "line_end": 80,
+                "char_start": 1253,
+                "char_end": 1872,
+                "excerpt": "For example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble."
+              },
+              "output_evidence": [
+                {
+                  "location": "S3",
+                  "char_start": 0,
+                  "char_end": 48,
+                  "excerpt": "讲者以称赞应对为例：美国文化中自然说谢谢，而中文文化强调谦虚，有时说还差得远或不知称赞从何而来。"
+                },
+                {
+                  "location": "P4",
+                  "char_start": 0,
+                  "char_end": 61,
+                  "excerpt": "讲者说美国文化中收到称赞自然说谢谢；中文文化则要谦虚，不说谢谢接受，有时说还差得远或不知称赞从何而来，基本观念是保持谦虚。"
+                }
+              ],
+              "reason": "S3 explicitly frames this as speaker example, and standalone P4 says the speaker says. Source itself makes humility/not accepting thanks a speaker cultural generalization; sometimes modifies concrete response phrases, not the entire comparison."
+            },
+            {
+              "clause": "Feedback grounded in course textbook and covered materials under L1 condition",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 81,
+                "line_end": 95,
+                "char_start": 1873,
+                "char_end": 2199,
+                "excerpt": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on."
+              },
+              "output_evidence": [
+                {
+                  "location": "S4",
+                  "char_start": 0,
+                  "char_end": 51,
+                  "excerpt": "若学生表现源自母语，讲者会鼓励并依据课堂教材，就中文文化中如何应对称赞给予反馈，让学生知道可改进之处。"
+                },
+                {
+                  "location": "P5",
+                  "char_start": 0,
+                  "char_end": 55,
+                  "excerpt": "若学生表现来自母语，讲者会鼓励并依据课堂教材，就中文文化中如何应对称赞给予反馈，让学生知道这是可努力改进之处。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            },
+            {
+              "clause": "Concrete response examples retain sometimes scope",
+              "status": "full",
+              "source_evidence": {
+                "line_start": 71,
+                "line_end": 76,
+                "char_start": 1625,
+                "char_end": 1784,
+                "excerpt": "Sometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]"
+              },
+              "output_evidence": [
+                {
+                  "location": "S3",
+                  "char_start": 0,
+                  "char_end": 48,
+                  "excerpt": "讲者以称赞应对为例：美国文化中自然说谢谢，而中文文化强调谦虚，有时说还差得远或不知称赞从何而来。"
+                },
+                {
+                  "location": "P4",
+                  "char_start": 0,
+                  "char_end": 61,
+                  "excerpt": "讲者说美国文化中收到称赞自然说谢谢；中文文化则要谦虚，不说谢谢接受，有时说还差得远或不知称赞从何而来，基本观念是保持谦虚。"
+                }
+              ],
+              "reason": "Final wording semantically preserves this clause in the cited source situation."
+            }
+          ],
+          "reason": "All necessary clauses retained in final text with source scope."
+        }
+      ],
+      "counts": {
+        "full": 3,
+        "partial": 1,
+        "missing": 0,
+        "not_evaluated": 0
+      },
+      "organization": {
+        "status": "partial",
+        "findings": [
+          {
+            "locations": [
+              "P3",
+              "P4",
+              "P5"
+            ],
+            "combined_chars": 155,
+            "reason": "Pronunciation/cultural feedback, the compliment example, and textbook-guided L1 improvement are split across three short points. Different details exist, but the same feedback example could be one coherent theme while retaining all conditions."
+          }
+        ],
+        "other_points": "Grading reasons and written/private feedback mechanism are coherent distinct themes. More points or longer output alone do not establish improvement."
+      },
+      "precision": {
+        "status": "partial",
+        "findings": [
+          {
+            "kind": "unsupported_written_name",
+            "severity": "Important",
+            "location": "S1",
+            "char_start": 2,
+            "char_end": 5,
+            "excerpt": "廖浩翔",
+            "source_evidence": {
+              "line_start": 1,
+              "excerpt": "HAOHSIANG LIAO: Whenever you",
+              "manifest_creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare"
+            },
+            "reason": "Allowed local source and manifest contain HAOHSIANG LIAO/Dr. Haohsiang Liao, which do not uniquely establish these Chinese name characters. Unsupported local attribution detail; no claim that the real-world spelling was independently disproved. Essential grading/feedback content keeps speaker attribution; this precision issue is separate from en1 coverage."
+          }
+        ],
+        "frequency": "Usually after-class/written and sometimes response examples preserved.",
+        "attribution_scope": "P1 explicitly attributes belief; S3 is a speaker example and P4 explicitly says speaker says. L1 condition and course textbook basis retained.",
+        "coverage_omission_not_double_counted": [
+          "en3 missing grade entry is coverage partial, not an unsupported-added claim."
+        ]
+      },
+      "licensing": {
+        "creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+        "title": "Daily Grading System",
+        "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/daily-grading-system/",
+        "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/e9d389e4d81e5391b948a1981fc7ef4c_hNUoYTJl3j4.vtt",
+        "license": "CC BY-NC-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare; Daily Grading System; https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/daily-grading-system/"
+      }
+    }
+  ],
+  "aggregate": {
+    "evaluated": 8,
+    "full": 7,
+    "partial": 1,
+    "missing": 0,
+    "not_evaluated": 0,
+    "confirmed_precision_findings": 1,
+    "organization": {
+      "zh-short": "partial",
+      "en-medium": "partial"
+    },
+    "whole_phase_denominator": 14,
+    "scope_limitation": "Other six essentials reviewed separately; this report makes no 14/14 or whole-phase pass claim."
+  },
+  "comparison": {
+    "baseline_phase": "organization-refined",
+    "baseline_short_medium": {
+      "full": 5,
+      "partial": 3,
+      "missing": 0
+    },
+    "current_short_medium": {
+      "full": 7,
+      "partial": 1,
+      "missing": 0
+    },
+    "changes": [
+      "zh1-zh4 and en1 remain full.",
+      "en2 partial to full: next-session improvement purpose restored.",
+      "en4 partial to full: pronunciation alternative restored.",
+      "en3 stays partial: individual account access restored but grades still omitted."
+    ],
+    "organization": "Short partial remains partial; medium pass becomes partial due to mergeable example fragmentation.",
+    "precision": "Previous refined short/medium recorded no confirmed unsupported additions; current medium introduces unsupported Chinese name characters.",
+    "not_statistical": "These are output-specific qualitative comparisons, not a stable accuracy or general improvement estimate."
+  },
+  "limitations": [
+    "Agent review, not external human scoring, not blind and not organizationally independent; reviewer helped implement the prompt revision.",
+    "Only two natural-caption outputs reviewed; cannot infer population accuracy, stability or exhaustive truth.",
+    "Natural Chinese paraphrases for consistent effort and own-account access involve disclosed semantic judgment, not literal vocabulary rules.",
+    "Hash/stage validation proves identity/traceability, not factual completeness. Fact IDs and model flags do not establish coverage.",
+    "Only supplied local corpus/rubric considered; no internet verification of names, current tools or cultural generalizations.",
+    "Full essential coverage would not imply zero precision/organization problems; en3 omission and unsupported name prevent a short/medium pass.",
+    "Other six long essentials are outside this artifact scope, not counted missing or evaluated here."
+  ],
+  "licensing": {
+    "license": "CC BY-NC-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "purpose": "Noncommercial local inference evaluation; preserve source attribution and ShareAlike; no training/fine-tuning.",
+    "scope": "Caption excerpts and derived review only, not product code/scripts; no MIT endorsement.",
+    "links_visited": false
+  }
+}

@@ -28,9 +28,12 @@ Thumbs.db
 # Env / secrets
 .env
 .env.*
+# 本机开发账号额度配置（按现有 user ID 授权，不发布到其他环境）
+/backend/dev-quota-policy.json
 
 # Runtime temp (server-side downloads)
 backend/tmp/
+/tmp/
 *.log
 
 # Visual companion mockups

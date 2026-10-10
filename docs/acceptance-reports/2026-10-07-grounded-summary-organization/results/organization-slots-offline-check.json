@@ -1,0 +1,40 @@
+{
+  "phase": "organization-slots",
+  "offline_only": true,
+  "samples": [
+    {
+      "id": "zh-short",
+      "evidence_spans_checked": 12,
+      "named_attribution_spans_checked": 0,
+      "audit_added_facts": 0,
+      "pipeline_status": "completed",
+      "error_type": null,
+      "audit_contract_valid": true,
+      "semantic_entailment_proven": false
+    },
+    {
+      "id": "en-medium",
+      "evidence_spans_checked": 11,
+      "named_attribution_spans_checked": 11,
+      "audit_added_facts": 0,
+      "pipeline_status": "completed",
+      "error_type": null,
+      "audit_contract_valid": true,
+      "semantic_entailment_proven": false
+    },
+    {
+      "id": "en-long",
+      "evidence_spans_checked": 48,
+      "named_attribution_spans_checked": 0,
+      "audit_added_facts": 0,
+      "pipeline_status": "failed",
+      "error_type": "llm_invalid_response",
+      "audit_contract_valid": false,
+      "semantic_entailment_proven": false
+    }
+  ],
+  "reserved_all_phases": 12,
+  "ceiling": 13,
+  "trace_lexically_valid": true,
+  "semantic_accuracy_not_proven_by_this_check": true
+}

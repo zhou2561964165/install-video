@@ -1,0 +1,83 @@
+{
+  "phase": "organization-slots",
+  "offline_only": true,
+  "review_method": "Independent agent semantic review against frozen rubric and local licensed sources; no external human review or statistical generalization. Fact IDs and model checks do not prove truth.",
+  "rubric_sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49",
+  "samples": [
+    {
+      "id": "zh-short",
+      "result_sha256": "0a08a77c5c59ea50c60773c25b1675bc17f4785319d359348daa304567b5b3a5",
+      "points": 3,
+      "summary_chars": 117,
+      "point_chars": [
+        75,
+        38,
+        54
+      ]
+    },
+    {
+      "id": "en-medium",
+      "result_sha256": "0a9a020c63433b37d6389991fc11f142bd107b7e57bd0002ee1c1e9e1efadbbd",
+      "points": 5,
+      "summary_chars": 164,
+      "point_chars": [
+        41,
+        54,
+        30,
+        52,
+        52
+      ]
+    }
+  ],
+  "essential_facts": [
+    {
+      "id": "zh1",
+      "status": "partial",
+      "reason": "Preparation and expectations retained; syllabus omitted."
+    },
+    {
+      "id": "zh2",
+      "status": "full"
+    },
+    {
+      "id": "zh3",
+      "status": "full"
+    },
+    {
+      "id": "zh4",
+      "status": "full"
+    },
+    {
+      "id": "en1",
+      "status": "partial",
+      "reason": "Persistent consistent effort retained but instructor belief/expectation strengthened to sufficient guarantee."
+    },
+    {
+      "id": "en2",
+      "status": "full"
+    },
+    {
+      "id": "en3",
+      "status": "full"
+    },
+    {
+      "id": "en4",
+      "status": "partial",
+      "reason": "Teaching illustration attribution weakened; sometimes strengthened to often."
+    }
+  ],
+  "fully_retained": 5,
+  "partially_retained": 3,
+  "missing_among_delivered_samples": 0,
+  "long_essential_facts_not_finally_evaluated": 6,
+  "precision_findings": [
+    "Chinese written instructor name is not uniquely supported by English transliteration in the supplied source.",
+    "Standalone points weaken speaker belief, cultural example scope, and frequency qualifiers."
+  ],
+  "organization_findings": [
+    "Short P1/P2 overlap preparation alignment; not exact duplicates because consequences add information.",
+    "Medium P3-P5 fragment cultural feedback themes; not all synonyms."
+  ],
+  "live_headroom_and_prompt_revision_real_model_validated": false,
+  "new_provider_requests_after_failure": 0
+}

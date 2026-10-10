@@ -1,0 +1,8 @@
+{
+  "phase": "normalized-clause",
+  "id": "en-long",
+  "source_sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7",
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 55.06,
+  "trace_sha256": "9c4996154d83d0ee6ac61fefcf12abc7e3a3986a627a504304ea2f1a0336b7c5"
+}

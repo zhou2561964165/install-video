@@ -1,0 +1,30 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "phase": "source-first-summary-schema-pro-3",
+  "posts": 6,
+  "stopped_on_error": false,
+  "samples": [
+    {
+      "sample": "zh-short",
+      "success": true,
+      "result_sha256": "a3d1c837ff7f806d743a96fbd68e8f71fffb7a5b0f71cd5795f2496a666dc7eb",
+      "posts": 2,
+      "trace_sha256": "85daa4fad699f4874d333be35fe7c32a6104e1c3ec9724368b20dab00b7d05de"
+    },
+    {
+      "sample": "en-medium",
+      "success": true,
+      "result_sha256": "258acb15135c98910e8604712836fc26917f57cd93debc169401111bfd7869db",
+      "posts": 2,
+      "trace_sha256": "85daa4fad699f4874d333be35fe7c32a6104e1c3ec9724368b20dab00b7d05de"
+    },
+    {
+      "sample": "en-long",
+      "success": true,
+      "result_sha256": "4dc4680a9a6fb4aed09fcefcf608942e7c463f32ee5a0ddd96a6fd1b8e762d18",
+      "posts": 2,
+      "trace_sha256": "85daa4fad699f4874d333be35fe7c32a6104e1c3ec9724368b20dab00b7d05de"
+    }
+  ],
+  "ended_utc": "2026-10-10T07:10:40.900522+00:00"
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "New independent repair evaluator; temporary fixtures and offline transport only",
+  "engineering": "Skills first; UI ui-ux-pro-max and design-system tokens; narrow interfaces; yt-dlp only ytdlp_service; scene read-only; preserve historical evidence",
+  "command": "E:/install_video/.venv/Scripts/python.exe -B -m pytest --noconftest -p no:cacheprovider backend/tests/test_adaptive_repair_evaluation.py -q",
+  "observed_red": {
+    "exit_code": 1,
+    "output": "3 failed, 14 passed in 4.20s",
+    "failures": [
+      {"test": "test_reservation_write_failure_never_sends_and_retains_attempt_budget", "observed": "Expected error status; durable ledger retained reserved after tracker write failure"},
+      {"test": "test_changed_runtime_before_second_post_stops_without_second_reservation", "observed": "Raw/result mismatch because result used model changed during first transport", "current_test_name": "test_changed_runtime_during_post_stops_without_second_reservation"},
+      {"test": "test_result_index_cannot_claim_failure_when_all_results_succeeded", "observed": "DID NOT RAISE RuntimeError after index stopped_on_error was falsely changed to true"}
+    ]
+  },
+  "additional_red": {
+    "command": "E:/install_video/.venv/Scripts/python.exe -B -m pytest --noconftest -p no:cacheprovider backend/tests/test_adaptive_repair_evaluation.py::test_interrupted_transport_closes_with_counted_error_and_no_reopen -q",
+    "exit_code": 1,
+    "output": "1 failed in 0.61s",
+    "observed": "KeyboardInterrupt closed tracker with 23 reserved posts, but attempt status remained reserved rather than error"
+  },
+  "initial_observed_green": {"exit_code": 0, "output": "17 passed in 4.68s"},
+  "review_fix_red": {
+    "command": "E:/install_video/.venv/Scripts/python.exe -B -m pytest --noconftest -p no:cacheprovider backend/tests/test_adaptive_repair_evaluation.py::test_client_construction_failure_closes_zero_post_phase backend/tests/test_adaptive_repair_evaluation.py::test_success_results_require_unique_request_evidence_even_for_failed_phase -q",
+    "exit_code": 1,
+    "output": "2 failed in 0.93s",
+    "failures": [
+      {"test": "test_client_construction_failure_closes_zero_post_phase", "observed": "Client construction exception left tracker running rather than closed"},
+      {"test": "test_success_results_require_unique_request_evidence_even_for_failed_phase", "observed": "DID NOT RAISE after requests were removed and tracker/index totals changed while success results remained"}
+    ]
+  },
+  "observed_green": {"exit_code": 0, "output": "19 passed in 4.79s"},
+  "limits": {
+    "formal_freeze_executed": false,
+    "formal_run_executed": false,
+    "dotenv_read": false,
+    "network": false,
+    "semantic_quality_verified": false,
+    "historical_artifacts_modified": false,
+    "whole_backend_suite_repeated": false
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "ended_utc": "2026-10-08T08:15:17.366098+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "organization-prefix-zh-short.json",
+      "sha256": "3cb254fdb430a0792598340f0d37d2bde60079715f6bd2789699b793500dd149",
+      "posts": 2
+    }
+  ]
+}

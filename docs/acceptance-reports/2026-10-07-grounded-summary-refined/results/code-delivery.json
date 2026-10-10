@@ -1,0 +1,35 @@
+{
+  "default_strategy": "legacy",
+  "backend_tests_passed": 479,
+  "model_measurement_phase": "organization-refined",
+  "measured_module_sha256": {
+    "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+    "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+    "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+  },
+  "live_module_sha256": {
+    "service": "1937d7e6886d9c653063c27dba257705818c39bc792f51da43a3d469caa60350",
+    "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+    "facts": "5538bf308e701b06e61d8321da0ea865215ecfe6c5c84333cc57637912c53147"
+  },
+  "changed_after_measurement": {
+    "service": true,
+    "config": false,
+    "facts": true
+  },
+  "reserved_attempts": 12,
+  "ceiling": 13,
+  "http_200": 12,
+  "reported_tokens": 54967,
+  "remaining_not_used": 1,
+  "calls_stopped": true,
+  "valid_delivered_samples": 2,
+  "long_final_output_available": false,
+  "essential_facts_full": 5,
+  "essential_facts_partial": 3,
+  "long_essential_facts_not_evaluated": 6,
+  "post_measurement_fix": "candidate summary statements max 2x14; final max7 unchanged, audit merges excessive draft statements",
+  "post_measurement_fix_real_model_validated": false,
+  "old_ledgers_changed": false,
+  "env_or_user_db_or_model_assets_changed": false
+}

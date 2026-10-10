@@ -1,0 +1,28 @@
+{
+  "work_id": "summary-quality-finish-20261008",
+  "phase": "adaptive-transcript-repair",
+  "prior_posts": 22,
+  "maximum_posts": 2,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "zh-short",
+      "status": "response",
+      "reserved_utc": "2026-10-09T11:00:18.983662+00:00",
+      "payload_sha256": "00cfa03f1268a689e4244c135ae480425f3084767b748aeea4ff8bf1b7ba28ca",
+      "http_status": 200,
+      "response_sha256": "3fbc9b5c3109ed29083637ecf4534b70597a5a98ed51059904071308d06a0f80",
+      "result_sha256": "96c78776797448e538db713f0b52077f7c9d7ffb77e8c20e8e8714b8cd5e05e8"
+    },
+    {
+      "ordinal": 2,
+      "sample": "en-medium",
+      "status": "response",
+      "reserved_utc": "2026-10-09T11:00:20.745568+00:00",
+      "payload_sha256": "a83e204cd6b4d8ffdb336141ffcd0348d69fc3912a5c0cc613d2a0ec70609582",
+      "http_status": 200,
+      "response_sha256": "dd896880c384aee4a58bc6c197899043771f64dd817fada7e1dc0aa47a664cd7",
+      "result_sha256": "97126859c3b717de83b80ef8cf06cac0996d03f59aaaabbe20d814c409ef1ca1"
+    }
+  ]
+}

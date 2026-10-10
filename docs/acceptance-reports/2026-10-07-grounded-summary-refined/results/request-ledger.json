@@ -1,0 +1,377 @@
+{
+  "ceiling": 13,
+  "requests": [
+    {
+      "ordinal": 1,
+      "phase": "organization-refined",
+      "sample": "zh-short",
+      "stage": "extract",
+      "sample_post": 1,
+      "started_utc": "2026-10-07T13:42:44.624733+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "d869b4285807748fea346e8ea707841ea3873080cd2321089d6c557c60b27e2b",
+      "system_prompt_sha256": "bd1376382329b9d5339f44112ba9fd8f5335213f4fee9146df475f43996b1a90",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "bbcce91d06dc2310c7e20e279eabf3991cbd6eeb71df1bcb5dbf1557281cfe85",
+      "usage": {
+        "prompt_tokens": 1093,
+        "completion_tokens": 373,
+        "total_tokens": 1466,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1093,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ended_utc": "2026-10-07T13:42:46.714226+00:00"
+    },
+    {
+      "ordinal": 2,
+      "phase": "organization-refined",
+      "sample": "zh-short",
+      "stage": "compose",
+      "sample_post": 2,
+      "started_utc": "2026-10-07T13:42:46.733330+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "b494bb1e2d9f252201aee40a373a96e615b6d552343b22774dacbec815c19f5a",
+      "system_prompt_sha256": "4c0ac241d4a90a0991d7c647450d9ef46eaa740b36b82dd56684388d888f7465",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "f31af71a553dcadb3cba632f83ae38868638c767921b8813466e0ff7a83d7776",
+      "usage": {
+        "prompt_tokens": 1412,
+        "completion_tokens": 535,
+        "total_tokens": 1947,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1412,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ended_utc": "2026-10-07T13:42:49.147502+00:00"
+    },
+    {
+      "ordinal": 3,
+      "phase": "organization-refined",
+      "sample": "zh-short",
+      "stage": "audit",
+      "sample_post": 3,
+      "started_utc": "2026-10-07T13:42:49.167760+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "138c121990b6df98e6052b47ce3e4c0b7c31717e6fb35277bedc6e3e30983813",
+      "system_prompt_sha256": "7ecbf2613236d275344b87c921cda025ddb6a737331f35b153de26be8914a43c",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "d6e7af39ebe45a0db298eae547a4f0a0484565f5957e1c9ee7ffbfe013571312",
+      "usage": {
+        "prompt_tokens": 2540,
+        "completion_tokens": 805,
+        "total_tokens": 3345,
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 2412,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        }
+      },
+      "ended_utc": "2026-10-07T13:42:52.344986+00:00"
+    },
+    {
+      "ordinal": 4,
+      "phase": "organization-refined",
+      "sample": "en-medium",
+      "stage": "extract",
+      "sample_post": 1,
+      "started_utc": "2026-10-07T13:42:52.369677+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "0205759a09780bea8e04752652259cf8aa352d1799f1f40de1489bd0f786b751",
+      "system_prompt_sha256": "bd1376382329b9d5339f44112ba9fd8f5335213f4fee9146df475f43996b1a90",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "3c915c940a9e28652b291f4ab43404728ede4c3daa4930bf9b697700db8256cc",
+      "usage": {
+        "prompt_tokens": 1514,
+        "completion_tokens": 633,
+        "total_tokens": 2147,
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 1130,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "ended_utc": "2026-10-07T13:42:55.539129+00:00"
+    },
+    {
+      "ordinal": 5,
+      "phase": "organization-refined",
+      "sample": "en-medium",
+      "stage": "compose",
+      "sample_post": 2,
+      "started_utc": "2026-10-07T13:42:55.561098+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "c9496e24e8c5e9b792d894d4cff51ec2a705ebc32085154983c3c74063f474a2",
+      "system_prompt_sha256": "4c0ac241d4a90a0991d7c647450d9ef46eaa740b36b82dd56684388d888f7465",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "c2c786521beb3604d0b9e0a8044eff377f1f027d301e0f1e6660a3570791735f",
+      "usage": {
+        "prompt_tokens": 1741,
+        "completion_tokens": 378,
+        "total_tokens": 2119,
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 1357,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "ended_utc": "2026-10-07T13:42:57.849059+00:00"
+    },
+    {
+      "ordinal": 6,
+      "phase": "organization-refined",
+      "sample": "en-medium",
+      "stage": "audit",
+      "sample_post": 3,
+      "started_utc": "2026-10-07T13:42:57.873392+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "9672da7841197b65a0b22d468b3109c933170934985215694cd60ad9f8685435",
+      "system_prompt_sha256": "7ecbf2613236d275344b87c921cda025ddb6a737331f35b153de26be8914a43c",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "9773aee944e4294157fe53ee7c592bc848a8273bb2c4794a2513489bbd979c29",
+      "usage": {
+        "prompt_tokens": 3138,
+        "completion_tokens": 488,
+        "total_tokens": 3626,
+        "prompt_cache_hit_tokens": 768,
+        "prompt_cache_miss_tokens": 2370,
+        "prompt_tokens_details": {
+          "cached_tokens": 768
+        }
+      },
+      "ended_utc": "2026-10-07T13:43:00.126627+00:00"
+    },
+    {
+      "ordinal": 7,
+      "phase": "organization-refined",
+      "sample": "en-long",
+      "stage": "extract",
+      "sample_post": 1,
+      "started_utc": "2026-10-07T13:43:00.158653+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "93335b3933cec6f971a5a5efa834cbd681e1bc0f46e0c1182796264dfe2d3297",
+      "system_prompt_sha256": "bd1376382329b9d5339f44112ba9fd8f5335213f4fee9146df475f43996b1a90",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "c5d684501145d278e1835fb342286732bf81418d93e8943bed817ff405b4be34",
+      "usage": {
+        "prompt_tokens": 3828,
+        "completion_tokens": 1260,
+        "total_tokens": 5088,
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 3444,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "ended_utc": "2026-10-07T13:43:05.276956+00:00"
+    },
+    {
+      "ordinal": 8,
+      "phase": "organization-refined",
+      "sample": "en-long",
+      "stage": "extract",
+      "sample_post": 2,
+      "started_utc": "2026-10-07T13:43:05.299311+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "4a62e5ad493f87ff00edae3b226cd60e75cb08f5cae28b135b2a616647e62b9a",
+      "system_prompt_sha256": "bd1376382329b9d5339f44112ba9fd8f5335213f4fee9146df475f43996b1a90",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "1352f9d2178c427d2518dd6adef9de428387fb9db4991059f339e26ae24ebfe5",
+      "usage": {
+        "prompt_tokens": 3914,
+        "completion_tokens": 1450,
+        "total_tokens": 5364,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 3402,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "ended_utc": "2026-10-07T13:43:11.917378+00:00"
+    },
+    {
+      "ordinal": 9,
+      "phase": "organization-refined",
+      "sample": "en-long",
+      "stage": "extract",
+      "sample_post": 3,
+      "started_utc": "2026-10-07T13:43:11.940487+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "a57a5720e704900cf78cdcbf114a89207eecd74e6702b6a4b6e7d05a2401a814",
+      "system_prompt_sha256": "bd1376382329b9d5339f44112ba9fd8f5335213f4fee9146df475f43996b1a90",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "8e29c081f783597f93664563b27589c143d6f22c75f2124d53b28ba61305fc02",
+      "usage": {
+        "prompt_tokens": 3776,
+        "completion_tokens": 1688,
+        "total_tokens": 5464,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 3264,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "ended_utc": "2026-10-07T13:43:18.808694+00:00"
+    },
+    {
+      "ordinal": 10,
+      "phase": "organization-refined",
+      "sample": "en-long",
+      "stage": "extract",
+      "sample_post": 4,
+      "started_utc": "2026-10-07T13:43:18.838889+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "d41f31e914ac9302034fbb06bbe87561abe81b050e100884598f4c4c1125c7c3",
+      "system_prompt_sha256": "bd1376382329b9d5339f44112ba9fd8f5335213f4fee9146df475f43996b1a90",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "d2a4b03eec6943ac2a7b356322aaec44221bffa2e33dd4e71b6c9135c336a015",
+      "usage": {
+        "prompt_tokens": 3907,
+        "completion_tokens": 1698,
+        "total_tokens": 5605,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 3395,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "ended_utc": "2026-10-07T13:43:25.917183+00:00"
+    },
+    {
+      "ordinal": 11,
+      "phase": "organization-refined",
+      "sample": "en-long",
+      "stage": "extract",
+      "sample_post": 5,
+      "started_utc": "2026-10-07T13:43:25.941646+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "adcc1d7e331a8b5cfd4646cb875c42f3333e6c1a6bc2d53b2d008b3026ca60d8",
+      "system_prompt_sha256": "bd1376382329b9d5339f44112ba9fd8f5335213f4fee9146df475f43996b1a90",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "667744f6e1c269d3b6ccb4e319795f380994990d064a66ca7a9dc6d55bbbfd98",
+      "usage": {
+        "prompt_tokens": 1777,
+        "completion_tokens": 772,
+        "total_tokens": 2549,
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 1265,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        }
+      },
+      "ended_utc": "2026-10-07T13:43:29.499428+00:00"
+    },
+    {
+      "ordinal": 12,
+      "phase": "organization-refined",
+      "sample": "en-long",
+      "stage": "compose",
+      "sample_post": 6,
+      "started_utc": "2026-10-07T13:43:29.527623+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "6f9069dedaed3025af27f99e1f1bb74530237f734a174a51941d152c250a189c",
+      "system_prompt_sha256": "4c0ac241d4a90a0991d7c647450d9ef46eaa740b36b82dd56684388d888f7465",
+      "module_sha256": {
+        "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+      },
+      "http_status": 200,
+      "response_sha256": "6075d5109fa4d03d421ed88a70e1ffb44897b28087aeea27f755627434eb5e82",
+      "usage": {
+        "prompt_tokens": 14378,
+        "completion_tokens": 1869,
+        "total_tokens": 16247,
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 13994,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "ended_utc": "2026-10-07T13:43:36.858663+00:00"
+    }
+  ]
+}

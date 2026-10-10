@@ -1,0 +1,37 @@
+{
+  "work_id": "summary-quality-finish-20261008",
+  "authorization": "Standing development and finite model-validation authorization; user explicitly resumes original workflow with restored sub-agents",
+  "reason": "Validate offline-confirmed fixes to audit output structure, source attribution and global theme organization with the original three sources and default classified repairs",
+  "hard_ceiling": 26,
+  "initial_phase": "quality-final",
+  "initial_normal_posts": 13,
+  "initial_phase_ceiling": 19,
+  "max_extra_posts_per_sample": 2,
+  "maximum_followup_phase_posts": 19,
+  "phases": [
+    {
+      "phase": "quality-final",
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-08-summary-quality-final\\results\\request-ledger.json",
+      "ceiling": 19
+    },
+    {
+      "phase": "quality-repaired",
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-09-summary-quality-repaired\\results\\request-ledger.json",
+      "ceiling": 19
+    }
+  ],
+  "status": "closed",
+  "rules": [
+    "Historical closed work groups and their balances remain unchanged",
+    "Root is the only model caller; serial samples and a shared caller lock",
+    "Freeze all executed product modules, helpers, sources and rubric before any model POST",
+    "Durably reserve every POST before sending; failures and both repair categories count",
+    "No whole-pipeline automatic restart, source/provider/network retry or hidden paid fallback",
+    "Any follow-up requires an identified offline-verified fix, a separate freeze and an explicit finite allocation within the same 26-POST work ceiling",
+    "Stop when the work ceiling is reached; never auto-create another budget to evade it"
+  ],
+  "reserved_posts": 17,
+  "followup_normal_posts": 13,
+  "followup_maximum_work_posts": 22,
+  "followup_reason": "Offline-confirmed lossless scalar theme conditions/consequences normalization; validate default classified retries with a finite 19-POST allocation inside unchanged 26 work ceiling"
+}

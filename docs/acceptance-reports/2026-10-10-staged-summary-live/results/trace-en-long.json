@@ -1,0 +1,44 @@
+[
+  {
+    "strategy": "legacy",
+    "generation_mode": "staged",
+    "stage": "points",
+    "attempt": 1,
+    "request_count": 1,
+    "status": "started",
+    "format_used": 0
+  },
+  {
+    "strategy": "legacy",
+    "generation_mode": "staged",
+    "stage": "points",
+    "attempt": 1,
+    "request_count": 1,
+    "status": "failed",
+    "format_used": 0,
+    "error_type": "llm_invalid_response",
+    "category": "format",
+    "reason": "invalid_count"
+  },
+  {
+    "strategy": "legacy",
+    "generation_mode": "staged",
+    "stage": "points_format",
+    "attempt": 1,
+    "request_count": 2,
+    "status": "started",
+    "format_used": 1
+  },
+  {
+    "strategy": "legacy",
+    "generation_mode": "staged",
+    "stage": "points_format",
+    "attempt": 1,
+    "request_count": 2,
+    "status": "failed",
+    "format_used": 1,
+    "error_type": "llm_invalid_response",
+    "category": "format",
+    "reason": "invalid_count"
+  }
+]

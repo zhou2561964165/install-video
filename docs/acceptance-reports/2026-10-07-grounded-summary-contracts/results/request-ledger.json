@@ -1,0 +1,36 @@
+{
+  "ceiling": 13,
+  "requests": [
+    {
+      "ordinal": 1,
+      "phase": "organization-contracts",
+      "sample": "zh-short",
+      "stage": "extract",
+      "sample_post": 1,
+      "started_utc": "2026-10-08T03:04:09.557562+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "a31ce968f6a5d9cba7fa00f0899e1a98f5129ddde82c15b011a015d013682c8f",
+      "system_prompt_sha256": "e164ebb53034ce4c2da485668e56321b437af7b00a72776b8cec9296281fad7b",
+      "module_sha256": {
+        "service": "6cd9ac33c47740744704ee2c776a539caf098ae81429bb0dd82e7bbdfd0258cf",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "898679f7a51406beb4a7b1446045e5c85ae39539957bd016c63ce24682555e6e"
+      },
+      "http_status": 200,
+      "response_sha256": "9410033afb36f850916253c91baa957483a32a882f64f094c3100d17f0d2592e",
+      "usage": {
+        "prompt_tokens": 1265,
+        "completion_tokens": 421,
+        "total_tokens": 1686,
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 881,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "ended_utc": "2026-10-08T03:04:11.579142+00:00"
+    }
+  ]
+}

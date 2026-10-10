@@ -1,0 +1,13 @@
+{
+  "work_id": "summary-quality-finish-20261008",
+  "phase": "adaptive-transcript-short-medium",
+  "status": "closed",
+  "hard_ceiling": 26,
+  "parent_snapshot": "E:\\install_video\\.planning\\2026-10-08-summary-quality-finish\\budget-group.json",
+  "parent_posts": 20,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-09-adaptive-short-medium\\results\\request-ledger.json",
+  "maximum_posts": 2,
+  "maximum_work_posts": 22,
+  "reserved_posts": 22,
+  "reason": "User-requested adaptive short/medium regression verification; two prior samples, one POST each"
+}

@@ -1,0 +1,40 @@
+{
+  "default_strategy": "legacy",
+  "backend_tests_passed": 437,
+  "frontend_changed": false,
+  "model_measurement_phase": "organization-slots",
+  "model_measurement_module_sha256": {
+    "service": "550a6029c95f53ad481028b43390e47fb9a832b6eaa025e8eac83acbdb40f531",
+    "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+    "facts": "4f58ccddfa7b38456f7bcf82f7f89d1615003bcca4ff7de3160b8db104e72296"
+  },
+  "delivery_module_sha256": {
+    "service": "b6c86a476e49c905c1c32149caff30efc74d75a168de8be7bfbcbf8f7152a42b",
+    "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+    "facts": "b46ffc75a4f10c9e5ac0be7aacb69f1b867b8df0d7206ea587f83f7d7decb40a"
+  },
+  "changed_after_model_measurement": {
+    "service": true,
+    "config": false,
+    "facts": true
+  },
+  "reserved_attempts": 12,
+  "ceiling": 13,
+  "http_200": 12,
+  "reported_tokens": 52880,
+  "remaining_not_used": 1,
+  "calls_stopped": true,
+  "more_calls_authorized_or_planned_in_this_phase": false,
+  "delivered_valid_samples": 2,
+  "long_final_output_available": false,
+  "delivered_sample_core_facts_fully_retained": 5,
+  "delivered_sample_core_facts_partially_retained": 3,
+  "long_core_facts_not_evaluated_on_final_output": 6,
+  "post_measurement_revisions": [
+    "bounded candidate summary headroom 2x; final summary ceiling preserved",
+    "generic source attribution/frequency/proper-name guidance"
+  ],
+  "post_measurement_revisions_real_model_validated": false,
+  "env_or_user_db_changed": false,
+  "old_ledgers_changed": false
+}

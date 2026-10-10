@@ -1,0 +1,792 @@
+{
+  "version": 1,
+  "phase": "organization-final",
+  "sample": "en-long",
+  "reviewed_utc": "2026-10-07T14:40:15.418689+00:00",
+  "review_type": "independent_agent_semantic_review",
+  "review_status": "complete_for_failure_boundary_with_final_not_evaluated",
+  "authorization": "?agent???????results/organization-final-long-semantic-review.json???????????????????????CLI???agent?",
+  "engineering_conventions": [
+    "?????UI/??/???ui-ux-pro-max?design-system?primitive?semantic?component??token??review??UI?",
+    "????????????????LLM?llm_service.py?yt-dlp?ytdlp_service.py??????scene?",
+    "??.env/db/???????????????7?/800?????7?/??240???????????????????",
+    "??n+2??phase????????????????????"
+  ],
+  "review_method": {
+    "rubric_frozen_utc": "2026-10-05T04:52:40.327647+00:00",
+    "unit": "??phase??summary?key_points????????point????????????",
+    "essential_denominator": 6,
+    "evaluated_essential_count": 0,
+    "full": "???????????????????????????????????????????",
+    "partial": "???????????????????",
+    "missing": "????????????????????",
+    "not_evaluated": "?????????missing???????????",
+    "optional_policy": "long7?11????????????????????????",
+    "coordinates": "????????rubric???en-long.txt???Unicode??0????????1????????????source?34894???????normalize/dedupe??34658???????????????",
+    "prohibited_proofs": [
+      "HTTP200",
+      "fact IDs",
+      "??facts/candidate",
+      "model checks=true",
+      "?????"
+    ],
+    "reviewer_limitations": [
+      "??agent???????????????????????",
+      "????????????????????",
+      "?refined????final???????????????????",
+      "???????????????????????????",
+      "?????????agent??codec??????????JSON??/?????????????????????"
+    ],
+    "skills_used": [
+      "superpowers:systematic-debugging",
+      "superpowers:verification-before-completion"
+    ]
+  },
+  "artifacts": {
+    "rubric": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/rubric.json",
+      "sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49"
+    },
+    "manifest": {
+      "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/manifest.json",
+      "sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3"
+    },
+    "source": {
+      "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/en-long.txt",
+      "sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7"
+    },
+    "source_license": {
+      "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/LICENSE.md",
+      "sha256": "4e87f1f901d907368e4f206da8ed5da72964d648b9cc516f44d4b02950a157a5"
+    },
+    "review_checklist": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/semantic-review-checklist.md",
+      "sha256": "125eaa015761ddaec856611a56e5ab43d924ad3776c8f2a8944fd062e9b2f1b7"
+    },
+    "result": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/organization-final-en-long.json",
+      "sha256": "e17865639f5a5b2575a6f79b165ac28355c166083ec09253a24fb9ccb762a431"
+    },
+    "trace": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/organization-final-en-long-trace.json",
+      "sha256": "2995ea6af45a8d687a49035bacf746f2bc0337ffdc7ad661c868bf3f31220172"
+    },
+    "provenance": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/organization-final-provenance.json",
+      "sha256": "fc5d3ba753888bd606d2fb43eb003c52fc580a86c774a04a7d1f2534d600afe1"
+    },
+    "index": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/organization-final-index.json",
+      "sha256": "165e2c6ea9836f705911fc3e6d3236e16c7ba85892fd33c9fe574fca4cd4a709"
+    },
+    "frozen_service": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/organization-final-service.py",
+      "sha256": "c75761c3b233a0fb8653d17d9263aeef2cc7b712db8e3ec2c367a9fe69e0d0b5"
+    },
+    "frozen_facts": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/organization-final-facts.py",
+      "sha256": "5538bf308e701b06e61d8321da0ea865215ecfe6c5c84333cc57637912c53147"
+    },
+    "frozen_config": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/organization-final-config.py",
+      "sha256": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac"
+    },
+    "budget_authorization": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/budget-authorization.json",
+      "sha256": "7ca4e5ed984178ade477407fdeb819d6c92051dbf1f13432b1105026bd142f69"
+    },
+    "request_ledger": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/request-ledger.json",
+      "sha256": "2caa6f00f27ff077f7fb917b6d2d64ec4896bdc20d16b1702e4719f27440b7d7"
+    },
+    "failure_diagnosis": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/organization-final-failure-diagnosis.json",
+      "sha256": "ad04c0c8896ae688765a4c4864b68c199127073027a0dda431731c06c2750603"
+    },
+    "failed_response": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/responses/09.json",
+      "sha256": "b524bcdf3317b87b472b5070c8ac6e7dd27f7da94041db5d6183530c4cddce52"
+    }
+  },
+  "identity_checks": {
+    "source_matches_rubric_and_result": true,
+    "result_matches_index": true,
+    "trace_matches_result": true,
+    "frozen_modules_match_provenance": true,
+    "rubric_matches_provenance": true,
+    "source_excerpt_and_line_ranges_verified": true,
+    "generation_cleaned_source_sha256": "3faeca5fe447959fce73ff9491413a52916b5f628cf00e2cd88c8bbad9f6cbd4"
+  },
+  "phase_evidence": {
+    "index_ended_utc": "2026-10-07T14:37:25.754887+00:00",
+    "final_available": false,
+    "delivery_status": "failed",
+    "error_type": "llm_invalid_response",
+    "planned_calls": 7,
+    "index_reported_posts": 3,
+    "observed_stages": [
+      {
+        "stage": "extract",
+        "status": "validated",
+        "max_output_tokens": 4096
+      },
+      {
+        "stage": "extract",
+        "status": "validated",
+        "max_output_tokens": 4096
+      },
+      {
+        "stage": "extract",
+        "status": "received",
+        "max_output_tokens": 4096
+      }
+    ],
+    "compose_performed": false,
+    "audit_performed": false,
+    "boundary": "??extract?validated??19facts????part3 extract????JSON/finish_reason=stop???13facts??????12??agent??codec?????invalid_count????compose?audit?????????",
+    "budget_scope": "13 POST????phase??????review????????????????code-delivery??????????????????",
+    "failure_diagnosis": {
+      "source_part": "part3",
+      "response_ordinal": 9,
+      "raw_facts_count": 13,
+      "frozen_max_facts_per_chunk": 12,
+      "codec_reason": "invalid_count",
+      "finish_reason": "stop",
+      "completion_tokens": 1727,
+      "facts_validated_before_failure": 19,
+      "compose_sent": false,
+      "audit_sent": false,
+      "retry_performed": false
+    },
+    "diagnosis_verification": "?review??????????codec???????response???????JSON??13???stop?codec invalid_count????agent???review????CLI/???"
+  },
+  "essential": [
+    {
+      "id": "long1",
+      "priority": "essential",
+      "status": "not_evaluated",
+      "frozen_claim": "Computers calculate and remember results; the programmer must explicitly specify the operations.",
+      "reason": "???summary/key_points????extract?13?????????12?invalid_count????19facts??????????????",
+      "source_evidence": [
+        {
+          "line_start": 275,
+          "line_end": 292,
+          "char_start": 6352,
+          "char_end": 6768,
+          "excerpt": "Let's start by talking at a high\nlevel what does a computer do.\nFundamentally, it\ndoes two things.\nOne, performs calculations.\nIt performs a lot\nof calculations.\nComputers these days\nare really, really fast,\na billion calculations per\nsecond is probably not far off.\nIt performs these\ncalculations and it\nhas to store them somewhere.\nRight?\nStores them in computer memory.\nSo a computer also has\nto remember results."
+        },
+        {
+          "line_start": 319,
+          "line_end": 336,
+          "char_start": 7357,
+          "char_end": 7757,
+          "excerpt": "I think, one thing\nI want to stress--\nand we're going to\ncome back to this\nagain during this entire\nlecture, actually--\nis computers only know\nwhat you tell them.\nComputers only do what\nyou tell them to do.\nThey're not magical.\nThey don't have a mind.\nThey just know how to\nperform calculations really,\nreally quickly.\nBut you have to tell them\nwhat calculations to do.\nComputers don't know anything."
+        }
+      ],
+      "output_evidence": [],
+      "clauses": [
+        {
+          "id": "long1.c1",
+          "required_meaning": "???????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long1.c2",
+          "required_meaning": "?????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long1.c3",
+          "required_meaning": "?????????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            1
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        }
+      ],
+      "precision_findings": []
+    },
+    {
+      "id": "long2",
+      "priority": "essential",
+      "status": "not_evaluated",
+      "frozen_claim": "Declarative knowledge states facts; imperative knowledge gives a recipe/sequence of steps. An algorithm needs steps, control flow, and a stopping condition.",
+      "reason": "???summary/key_points????extract?13?????????12?invalid_count????19facts??????????????",
+      "source_evidence": [
+        {
+          "line_start": 340,
+          "line_end": 344,
+          "char_start": 7807,
+          "char_end": 7926,
+          "excerpt": "types of knowledge.\nThe first type of knowledge\nis declarative knowledge.\nAnd those are things\nlike statements of fact."
+        },
+        {
+          "line_start": 373,
+          "line_end": 382,
+          "char_start": 8533,
+          "char_end": 8745,
+          "excerpt": "That's where imperative\nknowledge comes in.\nImperative knowledge is\nthe recipe, or the how-to,\nor the sequence of steps.\nSorry.\nThat's just my\nfunny for that one.\nSo the sequence of steps\nis imperative knowledge."
+        },
+        {
+          "line_start": 554,
+          "line_end": 588,
+          "char_start": 12376,
+          "char_end": 13212,
+          "excerpt": "What were the three\nparts of the recipe?\nOne was a simple\nsequence of steps.\nThere were four steps.\nThe other was a flow of\ncontrol, so there were\nparts where we made decisions.\nAre we close enough?\nThere were parts where\nwe repeated some steps.\nAt the end, we said,\nrepeat steps 1, 2, 3.\nThat's the flow of control.\nAnd the last part of the\nrecipe was a way to stop.\nYou don't want a program\nthat keeps going and going.\nOr for a recipe, you don't want\nto keep baking bread forever.\nYou want to stop at some point.\nLike 10 breads is enough, right?\nSo you have to have\na way of stopping.\nIn the previous example,\nthe way of stopping\nwas that we decided\nwe were close enough.\nClose enough was maybe\nbeing within .01, .001,\nwhatever you pick.\nThis recipe is there\nfor an algorithm.\nIn computer science speak,\nit's going to be an algorithm."
+        }
+      ],
+      "output_evidence": [],
+      "clauses": [
+        {
+          "id": "long2.c1",
+          "required_meaning": "?????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long2.c2",
+          "required_meaning": "??????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            1
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long2.c3",
+          "required_meaning": "????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long2.c4",
+          "required_meaning": "??????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long2.c5",
+          "required_meaning": "?????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        }
+      ],
+      "precision_findings": []
+    },
+    {
+      "id": "long3",
+      "priority": "essential",
+      "status": "not_evaluated",
+      "frozen_claim": "Stored-program computers store changeable instruction sequences and execute them; tests/control flow can skip or repeat instructions.",
+      "reason": "???summary/key_points????extract?13?????????12?invalid_count????19facts??????????????",
+      "source_evidence": [
+        {
+          "line_start": 628,
+          "line_end": 642,
+          "char_start": 14183,
+          "char_end": 14570,
+          "excerpt": "That's when stored-program\ncomputers came into play.\nAnd these were machines\nthat could store\na sequence of instructions.\nAnd these machines could execute\nthe sequence of instructions.\nAnd you could change the\nsequence of instructions\nand execute this different\nsequence of instructions.\nYou could do different\ntasks in the same machine.\nAnd that's the computer\nas we know it these days."
+        },
+        {
+          "line_start": 735,
+          "line_end": 754,
+          "char_start": 16692,
+          "char_end": 17206,
+          "excerpt": "Just to recap, you have\nthe stored program computer\nthat contains these\nsequences of instructions.\nThe primitive operations\nthat it can do\nare addition, subtraction,\nlogic operations, tests--\nwhich are something equal\nto something else, something\nless than, and so\non-- and moving data,\nso storing data, moving data\naround, and things like that.\nAnd the interpreter goes\nthrough every instruction\nand decides whether you're going\nto go to the next instruction,\nskip instructions, or repeat\ninstructions, and so on."
+        }
+      ],
+      "output_evidence": [],
+      "clauses": [
+        {
+          "id": "long3.c1",
+          "required_meaning": "?????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long3.c2",
+          "required_meaning": "??????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long3.c3",
+          "required_meaning": "?????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long3.c4",
+          "required_meaning": "?????????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            1
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        }
+      ],
+      "precision_findings": []
+    },
+    {
+      "id": "long4",
+      "priority": "essential",
+      "status": "not_evaluated",
+      "frozen_claim": "Programming expressions have syntax, static semantics, and intended meaning; a program can execute exactly as written yet produce an unintended result, crash, or fail to stop.",
+      "reason": "???summary/key_points????extract?13?????????12?invalid_count????19facts??????????????",
+      "source_evidence": [
+        {
+          "line_start": 854,
+          "line_end": 889,
+          "char_start": 19546,
+          "char_end": 20426,
+          "excerpt": "So once you've created these\nphrases, or these expressions,\nthat are syntactically\nvalid, you\nhave to think about the static\nsemantics of your phrase,\nor of your expression.\nFor example, in English, \"I\nare hungry\" is good syntax.\nBut it's weird to say.\nWe have a pronoun, a verb,\nand an adjective, which\ndoesn't really make sense.\n\"I am hungry\" is better.\nThis does not have\ngood static semantics.\nSimilarly, in\nprogramming languages--\nand you'll get the\nhang of this the more\nyou do it-- something like\nthis, \"3.2 times 5, is OK.\nBut what does it mean?\nWhat's the meaning to have\na word added to a number?\nThere's no meaning behind that.\nIts syntax is OK,\nbecause you have\noperator, operand, operator.\nBut it doesn't really make\nsense to add a number to a word,\nfor example.\nOnce you have created\nthese expressions that\nare syntactically correct and\nstatic, semantically correct,"
+        },
+        {
+          "line_start": 920,
+          "line_end": 943,
+          "char_start": 21085,
+          "char_end": 21654,
+          "excerpt": "But in programming languages,\nthe program that you write,\nthe set of instructions that\nyou write, only has one meaning.\nRemember, we're coming\nback to the fact\nthat the computer only does\nwhat you tell it to do.\nIt's not going to\nsuddenly decide\nto add another variable\nfor some reason.\nIt's just going to execute\nwhatever statements you've\nput up.\nIn programming languages,\nthere's only one meaning.\nBut the problem that comes into\nplay in programming languages\nis it's not the meaning\nthat you might have\nintended, as the programmer.\nThat's where things\ncan go wrong."
+        },
+        {
+          "line_start": 991,
+          "line_end": 1022,
+          "char_start": 22671,
+          "char_end": 23401,
+          "excerpt": "The program might do\nsomething different than what\nyou expected it to do.\nAnd that's not because the\nprogram suddenly-- for example,\nyou expected the program\nto give you an output of 0\nfor a certain test case, and\nthe output that you got was 10.\nWell, the program\ndidn't suddenly\ndecide to change\nits answer to 10.\nIt just executed the\nprogram that you wrote.\nThat's the case where\nthe program gave you\na different answer\nthan expected.\nPrograms might crash, which\nmeans they stop running.\nThat's OK.\nJust go back to your code and\nfigure out what was wrong.\nAnd another example\nof a different meaning\nthan what you intended was\nmaybe the program won't stop.\nIt's also OK.\nThere are ways to stop\nit besides restarting\nthe computer."
+        }
+      ],
+      "output_evidence": [],
+      "clauses": [
+        {
+          "id": "long4.c1",
+          "required_meaning": "?????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long4.c2",
+          "required_meaning": "???????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long4.c3",
+          "required_meaning": "??????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            1
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long4.c4",
+          "required_meaning": "????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            1,
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long4.c5",
+          "required_meaning": "?????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long4.c6",
+          "required_meaning": "????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long4.c7",
+          "required_meaning": "?????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        }
+      ],
+      "precision_findings": []
+    },
+    {
+      "id": "long5",
+      "priority": "essential",
+      "status": "not_evaluated",
+      "frozen_claim": "Python manipulates typed objects, including scalar and structured non-scalar objects; object types constrain available operations and expressions evaluate to values.",
+      "reason": "???summary/key_points????extract?13?????????12?invalid_count????19facts??????????????",
+      "source_evidence": [
+        {
+          "line_start": 1054,
+          "line_end": 1066,
+          "char_start": 24153,
+          "char_end": 24467,
+          "excerpt": "Now we're going to start\ntalking about Python.\nAnd in Python, we're going\nto come back to this,\neverything is an object.\nAnd Python programs\nmanipulate these data objects.\nAll objects in Python\nare going to have a type.\nAnd the type is going to tell\nPython the kinds of operations\nthat you can do\non these objects."
+        },
+        {
+          "line_start": 1090,
+          "line_end": 1114,
+          "char_start": 24960,
+          "char_end": 25552,
+          "excerpt": "There are actually\ntwo types of objects.\nOne are scalar objects.\nThat means these are very basic\nobjects in Python from which\neverything can be made.\nThese are scalar objects.\nThat can't be subdivided.\nThe other type of object\nis a non-scalar object.\nAnd these are objects that\nhave some internal structure.\nFor example, the\nnumber five is a scalar\nobject because it\ncan't be subdivided.\nBut a list of numbers,\nfor example, 5, 6,\n7,8, is going to be\na non-scalar object\nbecause you can subdivide it.\nYou can subdivide it into--\nyou can find parts to it.\nIt's made up of a\nsequence of numbers."
+        },
+        {
+          "line_start": 1229,
+          "line_end": 1241,
+          "char_start": 28151,
+          "char_end": 28442,
+          "excerpt": "We talked a little\nbit about objects.\nOnce you have objects, you can\ncombine objects and operators\nto form these expressions.\nAnd each expression is\ngoing to have a value.\nSo an expression\nevaluates to a value.\nThe syntax for an\nexpression is going\nto be object, operator,\nobject, like that."
+        }
+      ],
+      "output_evidence": [],
+      "clauses": [
+        {
+          "id": "long5.c1",
+          "required_meaning": "Python??????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long5.c2",
+          "required_meaning": "?????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            1
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long5.c3",
+          "required_meaning": "????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            1
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long5.c4",
+          "required_meaning": "?????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long5.c5",
+          "required_meaning": "?????????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        }
+      ],
+      "precision_findings": []
+    },
+    {
+      "id": "long6",
+      "priority": "essential",
+      "status": "not_evaluated",
+      "frozen_claim": "Assignment binds a name to a value; rebinding radius alone does not recalculate the already computed area. This is the final example before next lecture's control flow.",
+      "reason": "???summary/key_points????extract?13?????????12?invalid_count????19facts??????????????",
+      "source_evidence": [
+        {
+          "line_start": 1307,
+          "line_end": 1336,
+          "char_start": 29977,
+          "char_end": 30664,
+          "excerpt": "To save a value to a variable\nname, you use the equal sign.\nAnd the equal sign\nis an assignment.\nIt assigns the\nright-hand side, which\nis a value, to the\nleft-hand side, which\nis going to be a variable name.\nIn this case, I assigned\nthe float 3.14159\nto the variable pi.\nAnd in the second\nline, I'm going\nto take this expression,\n22 divided by 7,\nI'm going to evaluate it.\nIt's going to come up\nwith some decimal number.\nAnd I'm going to save it\ninto the variable pi_approx.\nvalues are stored in memory.\nAnd this assignment\nin Python, we\nsay the assignment binds\nthe name to the value.\nWhen you use that name\nlater on in your program,\nyou're going to be referring\nto the value in memory."
+        },
+        {
+          "line_start": 1460,
+          "line_end": 1472,
+          "char_start": 33537,
+          "char_end": 33849,
+          "excerpt": "Now, let's say we rebind\nradius to be something else.\nRadius i is bound\nto the value 2.2.\nBut when we do this line, radius\nis equal to radius plus 1,\nwe're going to take\naway the binding to 2.2.\nWe're going to do\nthis calculation.\nThe new value is 3.2.\nAnd we're going to rebind that\nvalue to that same variable."
+        },
+        {
+          "line_start": 1493,
+          "line_end": 1515,
+          "char_start": 34295,
+          "char_end": 34883,
+          "excerpt": "The value of area-- notice,\nthis is very important.\nThe value of area\ndid not change.\nAnd it did not change because\nthese are all the instructions\nwe told the computer to do.\nWe just told it to change\nradius to be radius plus 1.\nWe never told it to\nrecalculate the value of area.\nIf I copied that line down\nhere, then the value of area\nwould change.\nBut we never told it to do that.\nThe computer only does\nwhat we tell it to do.\nThat's the last thing.\nNext lecture, we're going\nto talk about adding control\nflow to our programs, so\nhow do you tell the computer\nto do one thing or another?"
+        }
+      ],
+      "output_evidence": [],
+      "clauses": [
+        {
+          "id": "long6.c1",
+          "required_meaning": "?????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            0
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long6.c2",
+          "required_meaning": "????radius",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            1
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long6.c3",
+          "required_meaning": "?????area???radius???????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long6.c4",
+          "required_meaning": "??????????????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        },
+        {
+          "id": "long6.c5",
+          "required_meaning": "??????????????",
+          "status": "not_evaluated",
+          "source_evidence_indices": [
+            2
+          ],
+          "output_evidence": [],
+          "reason": "?????????"
+        }
+      ],
+      "precision_findings": []
+    }
+  ],
+  "detail_if_present": [
+    {
+      "id": "long7",
+      "priority": "detail_if_present",
+      "status": "not_evaluated",
+      "frozen_claim": "The square-root example uses x=16 and initial guess g=3; average g with x/g repeatedly and stop when g*g is sufficiently close to x; .01/.001 are possible tolerances, not a mandatory fixed tolerance.",
+      "source_evidence": [
+        {
+          "line_start": 507,
+          "line_end": 547,
+          "char_start": 11305,
+          "char_end": 12247,
+          "excerpt": "To find the square\nroot of a number x,\nlet's say x is originally\n16, if a computer follows\nthis algorithm, it's going\nto start with a guess, g,\nlet's say, 3.\nWe're trying to find\nthe square root of 16.\nWe're going to calculate\ng times g is 9.\nAnd we're going to\nask is if g times g\nis close enough to x, then\nstop and say, g is the answer.\nI'm not really happy with\n9 being really close to 16.\nSo I'm going to say,\nI'm not stopping here.\nI'm going to keep going.\nIf it's not close\nenough, then I'm\ngoing to make a new guess\nby averaging g and x over g.\nThat's x over g here.\nAnd that's the\naverage over there.\nAnd the new average is\ngoing to be my new guess.\nAnd that's what it says.\nAnd then, the last step\nis using the new guess,\nrepeat the process.\nThen we go back to the beginning\nand repeat the whole process\nover and over again.\nAnd that's what the\nrest of the rows do.\nAnd you keep doing\nthis until you decide\nthat you're close enough."
+        },
+        {
+          "line_start": 578,
+          "line_end": 584,
+          "char_start": 12963,
+          "char_end": 13115,
+          "excerpt": "In the previous example,\nthe way of stopping\nwas that we decided\nwe were close enough.\nClose enough was maybe\nbeing within .01, .001,\nwhatever you pick."
+        }
+      ],
+      "output_evidence": [],
+      "appears_in_final": null,
+      "reason": "??????????????????????????????essential???",
+      "precision_findings": []
+    },
+    {
+      "id": "long8",
+      "priority": "detail_if_present",
+      "status": "not_evaluated",
+      "frozen_claim": "Converting a float to int truncates rather than rounds; float(3) becomes 3.0.",
+      "source_evidence": [
+        {
+          "line_start": 1149,
+          "line_end": 1167,
+          "char_start": 26299,
+          "char_end": 26774,
+          "excerpt": "If you happen to want to convert\nbetween two different types,\nPython allows you to do that.\nAnd to do that, you\nput the type that you\nwant to convert to\nright before the object\nthat you want to convert to.\nSo float(3) will convert the\ninteger 3 to the float 3.0.\nAnd similarly, you can convert\nany float into an integer.\nAnd converting to an\ninteger just truncates.\nIt just takes away the\ndecimal and whatever's\nafter it-- it does not round--\nand keeps just the integer\npart."
+        }
+      ],
+      "output_evidence": [],
+      "appears_in_final": null,
+      "reason": "??????????????????????????????essential???",
+      "precision_findings": []
+    },
+    {
+      "id": "long9",
+      "priority": "detail_if_present",
+      "status": "not_evaluated",
+      "frozen_claim": "True and False are the two Boolean values; NoneType has the single value None.",
+      "source_evidence": [
+        {
+          "line_start": 1122,
+          "line_end": 1134,
+          "char_start": 25734,
+          "char_end": 25991,
+          "excerpt": "Bools are Booleans.\nThere's only two\nvalues to Booleans.\nThat's True and False.\nNote the capitalization,\ncapital T and capital F.\nAnd this other thing\ncalled NoneType.\nIt's special.\nIt has only one\nvalue called None.\nAnd it represents the\nabsence of a type."
+        }
+      ],
+      "output_evidence": [],
+      "appears_in_final": null,
+      "reason": "??????????????????????????????essential???",
+      "precision_findings": []
+    },
+    {
+      "id": "long10",
+      "priority": "detail_if_present",
+      "status": "not_evaluated",
+      "frozen_claim": "The lecture says Python / division produces a float regardless of operand types; +,-,* preserve int for int operands and yield float if an operand is float.",
+      "source_evidence": [
+        {
+          "line_start": 1242,
+          "line_end": 1265,
+          "char_start": 28443,
+          "char_end": 29035,
+          "excerpt": "And these are some operators\nyou can do on ints and floats.\nThere's the typical ones,\naddition, subtraction,\nmultiplication, and division.\nIf, for the first\nthree, the answer\nthat you get-- the type of\nthe answer that you get--\nis going to depend on the\ntype of your variables.\nIf both of the variables of\nthe operands are integers,\nthen the result you're going\nto get is of type integer.\nBut if at least one of\nthem is a float, then\nthe result you're going\nto get is a float.\nDivision is a little\nbit special in that\nno matter what the\noperands are, the result\nis always going to be a float."
+        }
+      ],
+      "output_evidence": [],
+      "appears_in_final": null,
+      "reason": "??????????????????????????????essential???",
+      "precision_findings": []
+    },
+    {
+      "id": "long11",
+      "priority": "detail_if_present",
+      "status": "not_evaluated",
+      "frozen_claim": "In the final rebinding example radius starts at 2.2 and radius=radius+1 yields 3.2 while area stays unchanged until explicitly recomputed.",
+      "source_evidence": [
+        {
+          "line_start": 1437,
+          "line_end": 1442,
+          "char_start": 33047,
+          "char_end": 33180,
+          "excerpt": "Next line, radius\nis equal to 2.2.\nIn memory, we're\ncreating this value 2.2.\nAnd we're going to bind it\nto the variable named radius."
+        },
+        {
+          "line_start": 1460,
+          "line_end": 1472,
+          "char_start": 33537,
+          "char_end": 33849,
+          "excerpt": "Now, let's say we rebind\nradius to be something else.\nRadius i is bound\nto the value 2.2.\nBut when we do this line, radius\nis equal to radius plus 1,\nwe're going to take\naway the binding to 2.2.\nWe're going to do\nthis calculation.\nThe new value is 3.2.\nAnd we're going to rebind that\nvalue to that same variable."
+        },
+        {
+          "line_start": 1493,
+          "line_end": 1507,
+          "char_start": 34295,
+          "char_end": 34677,
+          "excerpt": "The value of area-- notice,\nthis is very important.\nThe value of area\ndid not change.\nAnd it did not change because\nthese are all the instructions\nwe told the computer to do.\nWe just told it to change\nradius to be radius plus 1.\nWe never told it to\nrecalculate the value of area.\nIf I copied that line down\nhere, then the value of area\nwould change.\nBut we never told it to do that."
+        }
+      ],
+      "output_evidence": [],
+      "appears_in_final": null,
+      "reason": "??????????????????????????????essential???",
+      "precision_findings": []
+    }
+  ],
+  "precision": {
+    "status": "not_evaluated",
+    "findings": [],
+    "claim_reviews": [],
+    "reason": "????????/??/??/??/??????essential????????????findings????????"
+  },
+  "organization": {
+    "status": "not_evaluated",
+    "point_reviews": [],
+    "last_point_mixing": "not_evaluated",
+    "ending_consequence": "not_evaluated",
+    "reason": "????????????????????????????area???????"
+  },
+  "counts": {
+    "full": 0,
+    "partial": 0,
+    "missing": 0,
+    "not_evaluated": 6,
+    "evaluated_essential": 0,
+    "essential_total": 6,
+    "optional_not_evaluated": 5
+  },
+  "license": {
+    "attribution": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare; Lecture 1: What is Computation?; https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+    "license": "CC BY-NC-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "scope": "??????????????????????????????????????????????????MIT????????"
+  }
+}

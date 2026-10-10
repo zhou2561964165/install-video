@@ -1,0 +1,20 @@
+{
+  "ended_utc": "2026-10-09T03:59:59.852482+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "quality-repaired-zh-short.json",
+      "sha256": "164b6d559b5fd7807cafd927d7b1f17fd2b6671beff139568a9caf309d4841b0"
+    },
+    {
+      "id": "en-medium",
+      "file": "quality-repaired-en-medium.json",
+      "sha256": "3e7cf46bcc9c87ce017c6598b21182aef2c26e1656bed8e56461180bc3796ea2"
+    },
+    {
+      "id": "en-long",
+      "file": "quality-repaired-en-long.json",
+      "sha256": "8555926c74fb35cf39dd8f073b1333d9b7bf2ff36d7132f859e58427c8e7fdbc"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "actual_vendor_posts": 0,
+  "parent_posts": 5,
+  "phase_limit": 7,
+  "work_hard_ceiling": 12,
+  "production_validation": [
+    {
+      "kind": "staged_related_suite",
+      "passed": 170,
+      "new_cases": 28,
+      "related_prior_cases": 142
+    },
+    {
+      "kind": "resource_decode_error_targeted",
+      "passed": 11,
+      "deselected": 19,
+      "counts_overlap": true
+    }
+  ],
+  "production_review": "No unresolved Critical/Important after terminal JSON capacity classification fix",
+  "new_evaluator_validation": {
+    "initial_failed": 12,
+    "initial_passed": 5,
+    "final_passed": 17,
+    "seconds": 25.99,
+    "reason": "compile frozen codec with dont_inherit=True"
+  },
+  "evaluator_collection_setup": "initial rootcwd missingapp import corrected; not counted as actual behavior red",
+  "old_phase_not_replayed": true,
+  "reused_parent_leaf_ordinals": [
+    3,
+    4
+  ],
+  "runner_sha256": "2ec28b4dc42d0f3fd1f71d5cef800605cd101a51e960628519ef35a336a58505",
+  "tests_sha256": "44ed91314d77637fdc7afdb57a31f3a21850491cda49699bad95fa944bd85de6"
+}

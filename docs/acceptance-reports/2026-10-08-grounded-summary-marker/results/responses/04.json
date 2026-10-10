@@ -1,0 +1,20 @@
+{
+  "phase": "normalized-marker",
+  "ordinal": 4,
+  "sample": "zh-short",
+  "stage": "audit",
+  "http_status": 200,
+  "body_sha256": "a05869be3aab0c5cc548eb38beaf83f9a4199ccab2b66a236ed19773521b35ee",
+  "content": "{\"additional_facts\":[],\"output\":{\"summary\":[{\"text\":\"MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。教师认为全中文上课有两个关键：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。\",\"fact_ids\":[\"F1_1\",\"F1_2\"]},{\"text\":\"课堂用语很重要，学生需听懂“请跟我再说一遍”“请你回答问题”“很好”等；课堂用语不能出圈，如“请你再说一遍”与“请你再说一次”完全不同，老师首先要注意。\",\"fact_ids\":[\"F1_3\",\"F1_5\"]},{\"text\":\"学生课前收到weekly schedule，知道每天准备什么，上课就练这些；若练到没准备的内容，学生就会跑出英文，所以备课与上课任务必须一致。\",\"fact_ids\":[\"F1_4\"]},{\"text\":\"学生若真有问题、听不懂要用英文问，通常可在课堂最后五分钟问，前四十五分钟用中文；也可下课或电子邮件问，以维持课堂中文气氛。\",\"fact_ids\":[\"F1_6\"]}],\"key_points\":[{\"topic\":\"MIT中文课从第二天起全中文授课\",\"text\":\"MIT中文课从第二天起全中文授课，第一天说明准备与大纲，让学生清楚期望。\",\"fact_ids\":[\"F1_1\"]},{\"topic\":\"全中文上课的两个关键环节\",\"text\":\"教师认为全中文上课有两个关键：课堂用语学生要听得懂，且学生备课要反映在课堂练习上。\",\"fact_ids\":[\"F1_2\"]},{\"topic\":\"课堂用语需让学生理解\",\"text\":\"课堂用语很重要，学生需听懂“请跟我再说一遍”“请你回答问题”“很好”等。\",\"fact_ids\":[\"F1_3\"]},{\"topic\":\"课堂用语不能出圈\",\"text\":\"课堂用语不能出圈，如“请你再说一遍”与“请你再说一次”完全不同，老师首先要注意。\",\"fact_ids\":[\"F1_5\"]},{\"topic\":\"备课与课堂练习一致\",\"text\":\"学生课前收到weekly schedule，知道每天准备什么，上课就练这些；若练到没准备的内容，学生就会跑出英文，所以备课与上课任务必须一致。\",\"fact_ids\":[\"F1_4\"]},{\"topic\":\"学生用英文提问的处理方式\",\"text\":\"学生若真有问题、听不懂要用英文问，通常可在课堂最后五分钟问，前四十五分钟用中文；也可下课或电子邮件问，以维持课堂中文气氛。\",\"fact_ids\":[\"F1_6\"]}]},\"checks\":[{\"item_id\":\"S1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"S2\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"S3\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"S4\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P2\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P3\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P4\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P5\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P6\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 4386,
+    "completion_tokens": 871,
+    "total_tokens": 5257,
+    "prompt_cache_hit_tokens": 896,
+    "prompt_cache_miss_tokens": 3490,
+    "prompt_tokens_details": {
+      "cached_tokens": 896
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "phase": "organization-final",
+  "id": "en-long",
+  "source_sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7",
+  "proxy_used": true,
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 18.36,
+  "trace_sha256": "2995ea6af45a8d687a49035bacf746f2bc0337ffdc7ad661c868bf3f31220172"
+}

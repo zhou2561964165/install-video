@@ -1,0 +1,15 @@
+{
+  "phase": "organization-final",
+  "authorized_utc": "2026-10-07 14:35:59 UTC",
+  "authorization_basis": "用户在上一轮明确提出最多13次模型POST及供应商费用后回复：继续",
+  "ceiling": 13,
+  "expected_posts": {"zh-short": 3, "en-medium": 3, "en-long": 7},
+  "caller": "root-only-serial",
+  "all_stages_and_failed_attempts_count": true,
+  "retry": false,
+  "paid_fallback": false,
+  "old_budget_reuse": false,
+  "system_proxy": true,
+  "proxy_basis": "沿用前轮三个真实样本均proxy_used=true的已验证路径",
+  "frozen_check_match_before_run": true
+}

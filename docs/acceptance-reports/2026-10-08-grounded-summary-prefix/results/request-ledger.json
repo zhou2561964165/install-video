@@ -1,0 +1,67 @@
+{
+  "ceiling": 13,
+  "requests": [
+    {
+      "ordinal": 1,
+      "phase": "organization-prefix",
+      "sample": "zh-short",
+      "stage": "extract",
+      "sample_post": 1,
+      "started_utc": "2026-10-08T08:15:11.263852+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "47a6793ff3b6fc6f8d1ecf89d5493570d8b9b20ec6c0aec28eb22c9104a218c8",
+      "system_prompt_sha256": "d33e9da9253d71b0cbfa49498a352dae60de683502d4d3256dbae449be80d1a1",
+      "module_sha256": {
+        "service": "a98ffd51702eed005b8e7a3db1c62c63583f1a1110445826b75fe5d6ff390b1c",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "88f815a57b4f687e75a22a61331a1ac1b4344950cf0a99d06294d379f3b9eca7"
+      },
+      "http_status": 200,
+      "response_sha256": "13194cc96ca8bbe400be18b4af57d5015d628ce4d3339bacf02690bd00fe8bab",
+      "usage": {
+        "prompt_tokens": 1224,
+        "completion_tokens": 501,
+        "total_tokens": 1725,
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 840,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "ended_utc": "2026-10-08T08:15:13.867089+00:00"
+    },
+    {
+      "ordinal": 2,
+      "phase": "organization-prefix",
+      "sample": "zh-short",
+      "stage": "compose",
+      "sample_post": 2,
+      "started_utc": "2026-10-08T08:15:13.895264+00:00",
+      "status": "response",
+      "endpoint_host": "api.deepseek.com",
+      "endpoint_path": "/chat/completions",
+      "payload_sha256": "bd265cfb813c4593aaf5226242b3584bc19d0836b4612b5ddd6ce3ee6464fef3",
+      "system_prompt_sha256": "4c1d83776c3c80b4bb9ee4d7d054f4677ec6c666a41739a1338f0fa0ffe8846c",
+      "module_sha256": {
+        "service": "a98ffd51702eed005b8e7a3db1c62c63583f1a1110445826b75fe5d6ff390b1c",
+        "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+        "facts": "88f815a57b4f687e75a22a61331a1ac1b4344950cf0a99d06294d379f3b9eca7"
+      },
+      "http_status": 200,
+      "response_sha256": "89de15e7ca8a8cce08543abfd8fcd8ee65ac383f49b580513b4f6e65ecdd89fe",
+      "usage": {
+        "prompt_tokens": 1585,
+        "completion_tokens": 873,
+        "total_tokens": 2458,
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 1457,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        }
+      },
+      "ended_utc": "2026-10-08T08:15:17.360527+00:00"
+    }
+  ]
+}

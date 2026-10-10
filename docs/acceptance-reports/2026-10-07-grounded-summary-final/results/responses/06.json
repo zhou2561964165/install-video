@@ -1,0 +1,20 @@
+{
+  "ordinal": 6,
+  "phase": "organization-final",
+  "sample": "en-medium",
+  "stage": "audit",
+  "http_status": 200,
+  "body_sha256": "e880eddc933d13eac4e11eee6aa1f73e81e4511bd34fe731b20b4e23335dbfca",
+  "content": "{\"additional_facts\":[],\"output\":{\"summary\":[{\"text\":\"讲者廖浩翔介绍课程采用每日评分系统：因人际互动会留下印象并受评价，故每节课都评价学生；并相信只要学生坚持持续努力，就能展现良好中文能力。课后通常就语言与文化行为给每位学生反馈，帮助其改进。\",\"fact_ids\":[\"F1_1\",\"F1_2\"]},{\"text\":\"反馈通常为书面形式，通过Engrade网站私下留言，学生登录账户即可阅读；评论内容视表现而定，从提醒发音到更详细的文化讨论。\",\"fact_ids\":[\"F1_3\",\"F1_4\"]},{\"text\":\"讲者以称赞应对为例：美国文化中自然说谢谢，而中文文化强调谦虚，有时说还差得远或不知称赞从何而来。\",\"fact_ids\":[\"F1_5\",\"F1_6\",\"F1_7\"]},{\"text\":\"若学生表现源自母语，讲者会鼓励并依据课堂教材，就中文文化中如何应对称赞给予反馈，让学生知道可改进之处。\",\"fact_ids\":[\"F1_8\"]}],\"key_points\":[{\"topic\":\"采用每日评分系统的理由\",\"text\":\"讲者提出两个理由：与人互动会留下印象并受评价，故希望每节课都评价学生；并相信只要学生坚持持续努力修课，就能展现良好中文技能。\",\"fact_ids\":[\"F1_1\"]},{\"topic\":\"课后反馈与Engrade书面留言\",\"text\":\"通常课后就每位学生的语言和文化行为提供反馈，使其知道下几节课要改进什么；通常用Engrade网站书面私下留言，学生登录账户即可阅读。\",\"fact_ids\":[\"F1_2\",\"F1_3\"]},{\"topic\":\"评论内容与称赞应对示例\",\"text\":\"评论内容视学生表现而定，可简单提醒发音，也可更详细，如思考中文里如何应对称赞。\",\"fact_ids\":[\"F1_4\",\"F1_5\"]},{\"topic\":\"美中文化对称赞的回应差异\",\"text\":\"讲者说美国文化中收到称赞自然说谢谢；中文文化则要谦虚，不说谢谢接受，有时说还差得远或不知称赞从何而来，基本观念是保持谦虚。\",\"fact_ids\":[\"F1_6\",\"F1_7\"]},{\"topic\":\"依据教材就称赞应对给予反馈\",\"text\":\"若学生表现来自母语，讲者会鼓励并依据课堂教材，就中文文化中如何应对称赞给予反馈，让学生知道这是可努力改进之处。\",\"fact_ids\":[\"F1_8\"]}]},\"checks\":[{\"item_id\":\"S1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"S2\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"S3\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"S4\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P1\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P2\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P3\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P4\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true},{\"item_id\":\"P5\",\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 3625,
+    "completion_tokens": 850,
+    "total_tokens": 4475,
+    "prompt_cache_hit_tokens": 896,
+    "prompt_cache_miss_tokens": 2729,
+    "prompt_tokens_details": {
+      "cached_tokens": 896
+    }
+  }
+}

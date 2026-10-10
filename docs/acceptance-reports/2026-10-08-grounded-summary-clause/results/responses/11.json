@@ -1,0 +1,20 @@
+{
+  "phase": "normalized-clause",
+  "ordinal": 11,
+  "sample": "en-long",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "2aa0d666813a4fa239466f59356bc6c330cd15572fb9562f91cf4aa9a278b7fb",
+  "content": "{\n  \"fact_1\": {\n    \"topic\": \"赋值语句中等于号的含义\",\n    \"claim\": \"在编程中，等于号表示赋值：右侧总是一个会被求值为值的表达式，左侧总是一个变量，这与数学中等于号两侧可以有很多内容不同。\",\n    \"evidence\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_2\": {\n    \"topic\": \"通过新赋值语句重新绑定变量\",\n    \"claim\": \"创建表达式和赋值后，可以通过新的赋值语句重新绑定变量名。\",\n    \"evidence\": [21, 22, 23, 24, 25],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_3\": {\n    \"topic\": \"内存中绑定变量与计算表达式\",\n    \"claim\": \"在内存中，pi 被绑定到 3.14，radius 被绑定到 2.2；表达式会从内存中替换 pi 和 radius 的值，计算求值结果，并将该值赋给变量 area。\",\n    \"evidence\": [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_4\": {\n    \"topic\": \"重新绑定变量后旧值失去引用\",\n    \"claim\": \"当执行 radius = radius + 1 时，会移除 radius 对 2.2 的绑定，计算得到新值 3.2，并将该值重新绑定到同一变量；内存中仍存在 2.2，但已失去访问它的句柄，无法再取回。\",\n    \"evidence\": [59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 88, 89, 90],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_5\": {\n    \"topic\": \"垃圾回收器回收丢失的值\",\n    \"claim\": \"在 Python 中，丢失的值可能最终被垃圾回收器收集，回收后可用于新值等用途。\",\n    \"evidence\": [81, 82, 83, 84, 85, 86, 87],\n    \"attribution\": \"source\",\n    \"importance\": \"support\"\n  },\n  \"fact_6\": {\n    \"topic\": \"area 的值未变的原因\",\n    \"claim\": \"area 的值没有改变，因为指令只告诉计算机将 radius 改为 radius + 1，从未告诉它重新计算 area 的值；如果复制该行，area 的值才会改变。\",\n    \"evidence\": [92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_7\": {\n    \"topic\": \"计算机只执行明确指令\",\n    \"claim\": \"计算机只做我们告诉它做的事。\",\n    \"evidence\": [107, 108],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_8\": {\n    \"topic\": \"下一讲主题：控制流\",\n    \"claim\": \"下一讲将讨论如何为程序添加控制流，即如何告诉计算机做一件事或另一件事。\",\n    \"evidence\": [110, 111, 112, 113, 114],\n    \"attribution\": \"source\",\n    \"importance\": \"support\"\n  }\n}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1908,
+    "completion_tokens": 949,
+    "total_tokens": 2857,
+    "prompt_cache_hit_tokens": 640,
+    "prompt_cache_miss_tokens": 1268,
+    "prompt_tokens_details": {
+      "cached_tokens": 640
+    }
+  }
+}

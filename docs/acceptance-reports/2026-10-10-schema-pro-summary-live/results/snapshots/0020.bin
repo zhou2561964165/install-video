@@ -1,0 +1,10 @@
+{
+  "url": "https://ocw.mit.edu/pages/privacy-and-terms-of-use/",
+  "retrieved_utc": "2026-10-04T07:57:47.511576+00:00",
+  "response_sha256": "8888d5224b8c134f7b4f2dd0c0116839678815c913a6ad94927c1c64c3c3b055",
+  "status": 200,
+  "license": "CC BY-NC-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "ai_section_heading": "Permitted Use of AI Training",
+  "interpretation": "Noncommercial evaluation only; attribution and ShareAlike retained. No model training occurs."
+}

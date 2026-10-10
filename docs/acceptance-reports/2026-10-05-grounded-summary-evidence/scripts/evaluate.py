@@ -1,6 +1,6 @@
-"""Sentence-ID grounded pipeline evaluation: exclusive freeze, shared 24 POST ceiling.
+"""Sentence-ID grounded pipeline evaluation: exclusive freeze, shared POST ceiling.
 
-Continues the durable 24-POST ledger from the prior grounded-summary round
+Continues the durable ledger from the prior grounded-summary round
 (5 already used), so the remaining budget is genuinely enforced. No HTTP retries,
 provider capability probes, secret/header/reasoning persistence, or phase restarts.
 Engineering: applicable skills first; UI ui-ux-pro-max/design-system and three-layer
@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+from contextlib import contextmanager, nullcontext
 from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
@@ -44,12 +45,31 @@ CONFIG = {"llm_summary_strategy": "facts", "llm_summary_response_format": "auto"
           "llm_summary_facts_max_source_chars": 40000,
           "llm_summary_facts_chunk_chars": 8000,
           "llm_summary_facts_max_per_chunk": 12,
-          "llm_summary_facts_max_evidence_sentences": 128}
-sys.path.insert(0, str(PROJECT / "backend"))
-load_dotenv(PROJECT / "backend/.env", override=False)
-from app.config import settings
-from app.services import llm_service as service
-from app.services.summary_facts import FactLimits
+          "llm_summary_facts_max_evidence_sentences": 128,
+          "llm_summary_facts_max_summary_chars": 800,
+          "llm_summary_facts_compose_max_output_tokens": 0,
+          "llm_summary_facts_audit_max_output_tokens": 0}
+# Runtime-only dependencies: importing budget helpers must not read user config.
+settings = service = FactLimits = None
+
+
+@contextmanager
+def directory_guard(path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.mkdir()  # Fail closed; never remove an existing caller's or stale lock.
+    try:
+        yield
+    finally:
+        path.rmdir()
+
+
+def caller_guard():
+    # Same name and directory as the prior evaluator's session lock.
+    return directory_guard(SHARED_LEDGER.parent / ".http-session-lock")
+
+
+def ledger_guard():
+    return directory_guard(SHARED_LEDGER.parent / "ledger.lock")
 
 
 def digest(value):
@@ -100,14 +120,17 @@ def snapshot():
                 if isinstance(node, ast.Constant) and isinstance(node.value, str)]
     limits = FactLimits(max_facts_per_chunk=CONFIG["llm_summary_facts_max_per_chunk"],
                         max_evidence_sentences=CONFIG["llm_summary_facts_max_evidence_sentences"],
-                        max_point_chars=CONFIG["llm_summary_max_point_chars"])
+                        max_point_chars=CONFIG["llm_summary_max_point_chars"],
+                        max_summary_chars=CONFIG["llm_summary_facts_max_summary_chars"])
     prompts = {stage: service._grounded_system(stage, limits) for stage in ("extract", "compose", "audit")}
     return {"module_sha256": {key: digest(path.read_bytes()) for key, path in MODULES.items()},
             "runner_sha256": digest(Path(__file__).read_bytes()), "resolved_strategy": "facts",
             "stage_prompts": prompts, "stage_prompt_sha256": {key: digest(value) for key, value in prompts.items()},
             "fact_limits": asdict(limits),
+            "stage_max_output_tokens": {stage: service._grounded_max_tokens(stage)
+                                        for stage in ("extract", "compose", "audit")},
             "service_string_literals_sha256": digest(encoded(literals)),
-            "service_string_literals": literals, "config": CONFIG,
+            "service_string_literals": literals, "config": dict(CONFIG),
             "manifest_sha256": digest(manifest_path.read_bytes()),
             "rubric_sha256": digest((REPORT / "rubric.json").read_bytes()),
             "baseline": rubric["baseline"], "samples": samples,
@@ -117,19 +140,68 @@ def snapshot():
 
 
 def response_evidence(data):
-    choice = data.get("choices", [{}])[0]
-    message = choice.get("message", {})
-    return {"content": message.get("content"), "finish_reason": choice.get("finish_reason"),
-            "usage": data.get("usage")}
+    if not isinstance(data, dict):
+        data = {}
+    choices = data.get("choices")
+    choice = choices[0] if isinstance(choices, list) and choices and isinstance(choices[0], dict) else {}
+    message = choice.get("message")
+    message = message if isinstance(message, dict) else {}
+    content = message.get("content")
+    if isinstance(content, list):
+        # Preserve the same public text blocks the production adapter accepts,
+        # without copying arbitrary block metadata or reasoning blocks.
+        content = "".join(block["text"] for block in content
+                          if isinstance(block, dict) and block.get("type") == "text"
+                          and isinstance(block.get("text"), str))
+    finish = choice.get("finish_reason")
+    allowed_finish = ("stop", "length", "content_filter", "tool_calls", "function_call")
+    usage = data.get("usage")
+    safe_usage = None
+    if isinstance(usage, dict):
+        safe_usage = {key: usage[key] for key in (
+            "prompt_tokens", "completion_tokens", "total_tokens",
+            "prompt_cache_hit_tokens", "prompt_cache_miss_tokens")
+            if type(usage.get(key)) is int and usage[key] >= 0}
+        for key, fields in {
+            "prompt_tokens_details": ("cached_tokens", "audio_tokens"),
+            "completion_tokens_details": ("reasoning_tokens", "audio_tokens",
+                                          "accepted_prediction_tokens", "rejected_prediction_tokens"),
+        }.items():
+            details = usage.get(key)
+            if isinstance(details, dict):
+                safe_usage[key] = {field: details[field] for field in fields
+                                   if type(details.get(field)) is int and details[field] >= 0}
+    return {"content": content if isinstance(content, str) else None,
+            "finish_reason": finish if finish in allowed_finish else None,
+            "usage": safe_usage}
+
+
+def error_marker(value):
+    # A character/length filter alone would still copy short secrets. Only known
+    # classifications may leave the provider response; arbitrary text is hashed.
+    allowed = {"rate_limit_error", "rate_limit_exceeded", "invalid_request_error",
+               "authentication_error", "permission_error", "insufficient_quota",
+               "server_error", "invalid_api_key", "model_not_found",
+               "context_length_exceeded", "content_filter", "overloaded_error"}
+    if value is None:
+        return None
+    return value if isinstance(value, str) and value in allowed else "other"
 
 
 class BudgetClient:
-    def __init__(self, http, phase, frozen):
+    def __init__(self, http, phase, frozen, *, caller_locked=False):
         self.http, self.phase, self.frozen = http, phase, frozen
+        self.caller_locked = caller_locked
         self.sample = ""
         self.sample_post = 0
 
     def post(self, url, *, headers, json):
+        # main owns the session lock across the entire phase. Direct callers own
+        # it for one POST, so neither bypasses the prior evaluator's exclusion.
+        with nullcontext() if self.caller_locked else caller_guard():
+            return self._post(url, headers=headers, json=json)
+
+    def _post(self, url, *, headers, json):
         for key, path in MODULES.items():
             if digest(path.read_bytes()) != self.frozen["module_sha256"][key]:
                 raise RuntimeError("Product bytes changed after freeze; POST refused")
@@ -140,60 +212,95 @@ class BudgetClient:
         plan = next(row for row in self.frozen["samples"] if row["id"] == self.sample)
         if self.sample_post >= plan["expected_posts"]:
             raise RuntimeError("Unplanned stage/hidden retry refused")
-        options = {key: value for key, value in json.items() if key != "messages"}
-        expected_options = {"model": self.frozen["model"], "temperature": 0.2,
-                            "max_tokens": CONFIG["llm_summary_max_output_tokens"], **self.frozen["options"]}
-        if options != expected_options:
-            raise RuntimeError("Transport/schema/options differ from freeze")
-        if not SHARED_LEDGER.exists():
-            exclusive(SHARED_LEDGER, {"ceiling": CEILING, "requests": []})
-        ledger = json_module.loads(SHARED_LEDGER.read_text(encoding="utf-8"))
-        if ledger["ceiling"] != CEILING or len(ledger["requests"]) >= CEILING:
-            raise RuntimeError("Hard durable 24-POST ceiling exhausted")
-        ordinal = len(ledger["requests"]) + 1
         stage = "extract" if self.sample_post < plan["sections"] else (
             "compose" if self.sample_post == plan["sections"] else "audit")
+        stage_budgets = self.frozen.get("stage_max_output_tokens")
+        max_tokens = (stage_budgets[stage] if stage_budgets is not None
+                      else CONFIG["llm_summary_max_output_tokens"])
+        options = {key: value for key, value in json.items() if key != "messages"}
+        expected_options = {"model": self.frozen["model"], "temperature": 0.2,
+                            "max_tokens": max_tokens, **self.frozen["options"]}
+        if options != expected_options:
+            raise RuntimeError("Transport/schema/options differ from freeze")
         if json["messages"][0]["content"] != self.frozen["stage_prompts"][stage]:
             raise RuntimeError("Actual stage prompt differs from freeze")
-        payload_path = RESULTS / "payloads" / f"{ordinal:02d}.json"
-        exclusive(payload_path, json)
         system = json["messages"][0]["content"]
         endpoint = urlsplit(url)
-        row = {"ordinal": ordinal, "phase": self.phase, "sample": self.sample,
-               "stage": stage, "sample_post": self.sample_post + 1,
-               "started_utc": now(), "status": "reserved", "endpoint_host": endpoint.hostname,
-               "endpoint_path": endpoint.path, "payload_sha256": digest(payload_path.read_bytes()),
-               "system_prompt_sha256": digest(system), "module_sha256": self.frozen["module_sha256"]}
-        ledger["requests"].append(row)
-        durable(SHARED_LEDGER, ledger)  # fsync+replace BEFORE any billable send
-        self.sample_post += 1
+        with ledger_guard():
+            if not SHARED_LEDGER.exists():
+                exclusive(SHARED_LEDGER, {"ceiling": CEILING, "requests": []})
+            ledger = json_module.loads(SHARED_LEDGER.read_text(encoding="utf-8"))
+            if ledger["ceiling"] != CEILING or len(ledger["requests"]) >= CEILING:
+                raise RuntimeError("Hard durable POST ceiling exhausted")
+            ordinal = len(ledger["requests"]) + 1
+            payload_path = RESULTS / "payloads" / f"{ordinal:02d}.json"
+            exclusive(payload_path, json)
+            row = {"ordinal": ordinal, "phase": self.phase, "sample": self.sample,
+                   "stage": stage, "sample_post": self.sample_post + 1,
+                   "started_utc": now(), "status": "reserved", "endpoint_host": endpoint.hostname,
+                   "endpoint_path": endpoint.path, "payload_sha256": digest(payload_path.read_bytes()),
+                   "system_prompt_sha256": digest(system), "module_sha256": self.frozen["module_sha256"]}
+            ledger["requests"].append(row)
+            durable(SHARED_LEDGER, ledger)  # fsync+replace BEFORE any billable send
+            self.sample_post += 1
         try:
             response = self.http.post(url, headers=headers, json=json)
-            row.update(status="response", http_status=response.status_code)
-            if response.is_success:
-                evidence = {"ordinal": ordinal, "phase": self.phase, "sample": self.sample,
-                            "stage": stage, **response_evidence(response.json())}
-                path = RESULTS / "responses" / f"{ordinal:02d}.json"
-                exclusive(path, evidence)
-                row.update(response_sha256=digest(path.read_bytes()), usage=evidence["usage"])
+            row.update(status="response" if response.is_success else "http_error",
+                       http_status=response.status_code)
+            evidence = {"ordinal": ordinal, "phase": self.phase, "sample": self.sample,
+                        "stage": stage, "http_status": response.status_code,
+                        "body_sha256": digest(response.content),
+                        "content": None, "finish_reason": None, "usage": None}
+            parse_error = None
+            try:
+                data = response.json()
+            except (ValueError, UnicodeDecodeError) as exc:
+                parse_error = exc
+                evidence["error_type"] = "invalid_json"
+            else:
+                if response.is_success:
+                    evidence.update(response_evidence(data))
+                else:
+                    error = data.get("error") if isinstance(data, dict) else None
+                    error = error if isinstance(error, dict) else {}
+                    evidence.update(error_type=error_marker(error.get("type")) or "http_error",
+                                    error_code=error_marker(error.get("code")))
+            path = RESULTS / "responses" / f"{ordinal:02d}.json"
+            exclusive(path, evidence)
+            row.update(response_sha256=digest(path.read_bytes()), usage=evidence["usage"])
+            if parse_error is not None and response.is_success:
+                raise parse_error
             return response
         except Exception as exc:
             row["status"] = type(exc).__name__ if "http_status" not in row else "evidence_error"
             raise
         finally:
-            row["ended_utc"] = now(); durable(SHARED_LEDGER, ledger)
+            row["ended_utc"] = now()
+            with ledger_guard():
+                latest = json_module.loads(SHARED_LEDGER.read_text(encoding="utf-8"))
+                matching = [item for item in latest["requests"] if item["ordinal"] == ordinal]
+                if len(matching) != 1:
+                    raise RuntimeError("Reserved ordinal missing or duplicated; ledger update refused")
+                matching[0].update(row)
+                durable(SHARED_LEDGER, latest)
 
 
 json_module = json
 
 
-def main():
+def main(argv=None, *, phase_choices=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--phase", choices=["evidence-wide"], required=True)
+    parser.add_argument("--phase", choices=["evidence-wide"] if phase_choices is None else phase_choices, required=True)
     parser.add_argument("--freeze", action="store_true")
     parser.add_argument("--check-only", action="store_true")
     parser.add_argument("--system-proxy", action="store_true")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    global settings, service, FactLimits
+    sys.path.insert(0, str(PROJECT / "backend"))
+    load_dotenv(PROJECT / "backend/.env", override=False)
+    from app.config import settings
+    from app.services import llm_service as service
+    from app.services.summary_facts import FactLimits
     for key, value in CONFIG.items():
         if not hasattr(settings, key):
             raise RuntimeError("Grounded settings unavailable; refuse")
@@ -214,9 +321,7 @@ def main():
     if args.check_only:
         print(json.dumps({"phase": args.phase, "match": True})); return
     RESULTS.mkdir(parents=True, exist_ok=True)
-    lock = RESULTS / ".http-session-lock"
-    lock.mkdir()  # global sole caller lock, stale locks not automatically removed
-    try:
+    with caller_guard():
         exclusive(RESULTS / f"{args.phase}-started.json", {"started_utc": now()})
         proxy = None
         if args.system_proxy:
@@ -225,7 +330,7 @@ def main():
         manifest = json.loads((OLD / "corpus/manifest.json").read_text(encoding="utf-8"))
         written = []
         with httpx.Client(timeout=settings.llm_timeout_seconds, proxy=proxy, trust_env=False) as http:
-            client = BudgetClient(http, args.phase, frozen)
+            client = BudgetClient(http, args.phase, frozen, caller_locked=True)
             for sample in manifest["samples"]:
                 client.sample, client.sample_post = sample["id"], 0
                 source = (OLD / "corpus" / sample["file"]).read_text(encoding="utf-8")
@@ -255,8 +360,6 @@ def main():
                 if "error_type" in row:
                     break  # preserve failure and stop phase; no paid retries
         exclusive(RESULTS / f"{args.phase}-index.json", {"ended_utc": now(), "sample_results": written})
-    finally:
-        lock.rmdir()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,12 @@
+{
+  "cases": [],
+  "real_vendor_posts": 0,
+  "initialization_failed": true,
+  "local_supplier_posts": 0,
+  "transport_reservations": 0,
+  "local_supplier_cap": 20,
+  "supplier_events": [],
+  "threads_stopped": true,
+  "live_database_unchanged": true,
+  "request_headers_and_tokens_saved": false
+}

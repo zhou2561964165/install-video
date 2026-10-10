@@ -1,0 +1,2065 @@
+{
+  "phase": "organization-slots",
+  "id": "en-medium",
+  "events": [
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nSo that's a very basic,\nfundamental idea.\nWe want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.\nSo usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.\nSo the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?\nFor example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.\nSo if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on.",
+          "global_start": 0,
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "requesting",
+          "max_output_tokens": 4096
+        }
+      ]
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nSo that's a very basic,\nfundamental idea.\nWe want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.\nSo usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.\nSo the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?\nFor example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.\nSo if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on.",
+          "global_start": 0,
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 0,
+          "end": 482,
+          "quote": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.",
+          "topic": "日常评分系统的两个理由",
+          "claim": "讲者提出两个理由来采用日常评分系统：一是与人互动会留下印象并受到评价，二是只要学生持续且一致地努力修这门课，就能展示出很好的中文技能。",
+          "evidence_indices": [
+            1,
+            2,
+            3,
+            4,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 143,
+          "end": 226,
+          "quote": "We want to give evaluation to\nour students each performance.\nThat means each class.",
+          "topic": "每次课都给予评价",
+          "claim": "讲者表示希望对学生的每一次表现、也就是每一节课都给予评价。",
+          "evidence_indices": [
+            7,
+            8,
+            9
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 483,
+          "end": 683,
+          "quote": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.",
+          "topic": "课后反馈的内容与目的",
+          "claim": "通常课后会就学生课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。",
+          "evidence_indices": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 684,
+          "end": 854,
+          "quote": "We usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.",
+          "topic": "书面反馈与Engrade网站",
+          "claim": "反馈通常以书面形式进行，使用一个叫Engrade的网站，除了录入成绩外，还可以私下给每位学生留言。",
+          "evidence_indices": [
+            29,
+            30,
+            31,
+            32,
+            33,
+            34
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 855,
+          "end": 984,
+          "quote": "So each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.",
+          "topic": "学生查看评语的方式",
+          "claim": "只要学生登录网站上的账户，就能读到教师的评语。",
+          "evidence_indices": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 985,
+          "end": 1171,
+          "quote": "So the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.",
+          "topic": "评语依学生表现而定",
+          "claim": "评语取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。",
+          "evidence_indices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1172,
+          "end": 1252,
+          "quote": "For example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?",
+          "topic": "详细评语的例子",
+          "claim": "更详细的评语例如让学生思考在中文里如何应对赞美。",
+          "evidence_indices": [
+            50,
+            51,
+            52,
+            53
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1312,
+          "end": 1500,
+          "quote": "In American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.",
+          "topic": "美国文化中接受赞美的方式",
+          "claim": "在美国文化中，收到赞美时很自然地说谢谢，例如别人说你的中文很好，你回答谢谢。",
+          "evidence_indices": [
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1501,
+          "end": 1872,
+          "quote": "However, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.",
+          "topic": "中国文化中应对赞美的谦逊方式",
+          "claim": "在中文文化中收到赞美时要保持谦逊，不用谢谢来接受，有时会说还有很长的路要走、不知道赞美从何而来等。",
+          "evidence_indices": [
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1873,
+          "end": 2137,
+          "quote": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?",
+          "topic": "针对L1表现的反馈方式",
+          "claim": "如果学生的课堂表现来自其母语（L1），讲者会鼓励他们，并依据课堂上所涵盖材料的教科书，让他们思考在中文文化中如何应对赞美。",
+          "evidence_indices": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 2138,
+          "end": 2199,
+          "quote": "So students can know\nthis is something\nthat they can work on.",
+          "topic": "学生可改进的方向",
+          "claim": "这样学生就能知道这是他们可以努力改进的地方。",
+          "evidence_indices": [
+            93,
+            94,
+            95
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        }
+      ]
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nSo that's a very basic,\nfundamental idea.\nWe want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.\nSo usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.\nSo the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?\nFor example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.\nSo if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on.",
+          "global_start": 0,
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        },
+        {
+          "stage": "compose",
+          "status": "requesting",
+          "max_output_tokens": 8192
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 0,
+          "end": 482,
+          "quote": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.",
+          "topic": "日常评分系统的两个理由",
+          "claim": "讲者提出两个理由来采用日常评分系统：一是与人互动会留下印象并受到评价，二是只要学生持续且一致地努力修这门课，就能展示出很好的中文技能。",
+          "evidence_indices": [
+            1,
+            2,
+            3,
+            4,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 143,
+          "end": 226,
+          "quote": "We want to give evaluation to\nour students each performance.\nThat means each class.",
+          "topic": "每次课都给予评价",
+          "claim": "讲者表示希望对学生的每一次表现、也就是每一节课都给予评价。",
+          "evidence_indices": [
+            7,
+            8,
+            9
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 483,
+          "end": 683,
+          "quote": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.",
+          "topic": "课后反馈的内容与目的",
+          "claim": "通常课后会就学生课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。",
+          "evidence_indices": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 684,
+          "end": 854,
+          "quote": "We usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.",
+          "topic": "书面反馈与Engrade网站",
+          "claim": "反馈通常以书面形式进行，使用一个叫Engrade的网站，除了录入成绩外，还可以私下给每位学生留言。",
+          "evidence_indices": [
+            29,
+            30,
+            31,
+            32,
+            33,
+            34
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 855,
+          "end": 984,
+          "quote": "So each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.",
+          "topic": "学生查看评语的方式",
+          "claim": "只要学生登录网站上的账户，就能读到教师的评语。",
+          "evidence_indices": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 985,
+          "end": 1171,
+          "quote": "So the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.",
+          "topic": "评语依学生表现而定",
+          "claim": "评语取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。",
+          "evidence_indices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1172,
+          "end": 1252,
+          "quote": "For example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?",
+          "topic": "详细评语的例子",
+          "claim": "更详细的评语例如让学生思考在中文里如何应对赞美。",
+          "evidence_indices": [
+            50,
+            51,
+            52,
+            53
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1312,
+          "end": 1500,
+          "quote": "In American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.",
+          "topic": "美国文化中接受赞美的方式",
+          "claim": "在美国文化中，收到赞美时很自然地说谢谢，例如别人说你的中文很好，你回答谢谢。",
+          "evidence_indices": [
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1501,
+          "end": 1872,
+          "quote": "However, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.",
+          "topic": "中国文化中应对赞美的谦逊方式",
+          "claim": "在中文文化中收到赞美时要保持谦逊，不用谢谢来接受，有时会说还有很长的路要走、不知道赞美从何而来等。",
+          "evidence_indices": [
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1873,
+          "end": 2137,
+          "quote": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?",
+          "topic": "针对L1表现的反馈方式",
+          "claim": "如果学生的课堂表现来自其母语（L1），讲者会鼓励他们，并依据课堂上所涵盖材料的教科书，让他们思考在中文文化中如何应对赞美。",
+          "evidence_indices": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 2138,
+          "end": 2199,
+          "quote": "So students can know\nthis is something\nthat they can work on.",
+          "topic": "学生可改进的方向",
+          "claim": "这样学生就能知道这是他们可以努力改进的地方。",
+          "evidence_indices": [
+            93,
+            94,
+            95
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        }
+      ]
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nSo that's a very basic,\nfundamental idea.\nWe want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.\nSo usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.\nSo the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?\nFor example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.\nSo if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on.",
+          "global_start": 0,
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        },
+        {
+          "stage": "compose",
+          "status": "validated",
+          "max_output_tokens": 8192
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 0,
+          "end": 482,
+          "quote": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.",
+          "topic": "日常评分系统的两个理由",
+          "claim": "讲者提出两个理由来采用日常评分系统：一是与人互动会留下印象并受到评价，二是只要学生持续且一致地努力修这门课，就能展示出很好的中文技能。",
+          "evidence_indices": [
+            1,
+            2,
+            3,
+            4,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 143,
+          "end": 226,
+          "quote": "We want to give evaluation to\nour students each performance.\nThat means each class.",
+          "topic": "每次课都给予评价",
+          "claim": "讲者表示希望对学生的每一次表现、也就是每一节课都给予评价。",
+          "evidence_indices": [
+            7,
+            8,
+            9
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 483,
+          "end": 683,
+          "quote": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.",
+          "topic": "课后反馈的内容与目的",
+          "claim": "通常课后会就学生课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。",
+          "evidence_indices": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 684,
+          "end": 854,
+          "quote": "We usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.",
+          "topic": "书面反馈与Engrade网站",
+          "claim": "反馈通常以书面形式进行，使用一个叫Engrade的网站，除了录入成绩外，还可以私下给每位学生留言。",
+          "evidence_indices": [
+            29,
+            30,
+            31,
+            32,
+            33,
+            34
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 855,
+          "end": 984,
+          "quote": "So each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.",
+          "topic": "学生查看评语的方式",
+          "claim": "只要学生登录网站上的账户，就能读到教师的评语。",
+          "evidence_indices": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 985,
+          "end": 1171,
+          "quote": "So the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.",
+          "topic": "评语依学生表现而定",
+          "claim": "评语取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。",
+          "evidence_indices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1172,
+          "end": 1252,
+          "quote": "For example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?",
+          "topic": "详细评语的例子",
+          "claim": "更详细的评语例如让学生思考在中文里如何应对赞美。",
+          "evidence_indices": [
+            50,
+            51,
+            52,
+            53
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1312,
+          "end": 1500,
+          "quote": "In American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.",
+          "topic": "美国文化中接受赞美的方式",
+          "claim": "在美国文化中，收到赞美时很自然地说谢谢，例如别人说你的中文很好，你回答谢谢。",
+          "evidence_indices": [
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1501,
+          "end": 1872,
+          "quote": "However, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.",
+          "topic": "中国文化中应对赞美的谦逊方式",
+          "claim": "在中文文化中收到赞美时要保持谦逊，不用谢谢来接受，有时会说还有很长的路要走、不知道赞美从何而来等。",
+          "evidence_indices": [
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1873,
+          "end": 2137,
+          "quote": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?",
+          "topic": "针对L1表现的反馈方式",
+          "claim": "如果学生的课堂表现来自其母语（L1），讲者会鼓励他们，并依据课堂上所涵盖材料的教科书，让他们思考在中文文化中如何应对赞美。",
+          "evidence_indices": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 2138,
+          "end": 2199,
+          "quote": "So students can know\nthis is something\nthat they can work on.",
+          "topic": "学生可改进的方向",
+          "claim": "这样学生就能知道这是他们可以努力改进的地方。",
+          "evidence_indices": [
+            93,
+            94,
+            95
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        }
+      ],
+      "candidate": {
+        "summary": [
+          {
+            "text": "讲者廖浩翔介绍日常评分系统：因人际互动会留下印象并受评价，且学生持续一致努力即可展现良好中文能力，故对每节课给予评价。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2"
+            ]
+          },
+          {
+            "text": "课后通常就课堂表现提供书面反馈，涵盖语言与文化行为，借助Engrade网站录入成绩并私下留言，学生登录账户即可查看，以明确下节课改进方向。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_5"
+            ]
+          },
+          {
+            "text": "评语依表现而定，可简可详，例如提醒发音，或让学生思考中文里如何应对赞美。",
+            "fact_ids": [
+              "F1_6",
+              "F1_7"
+            ]
+          }
+        ],
+        "key_points": [
+          {
+            "topic": "日常评分系统的理由与做法",
+            "text": "因互动会留下印象并受评价，且持续一致努力即可展现良好中文能力，故对每节课给予评价。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2"
+            ]
+          },
+          {
+            "topic": "课后反馈的内容与渠道",
+            "text": "课后就语言与文化行为提供书面反馈，用Engrade录入成绩并私下留言，学生登录账户即可查看，以明确改进方向。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_5"
+            ]
+          },
+          {
+            "topic": "评语依表现而定",
+            "text": "评语可简可详，例如提醒发音，或让学生思考中文里如何应对赞美。",
+            "fact_ids": [
+              "F1_6",
+              "F1_7"
+            ]
+          },
+          {
+            "topic": "中美应对赞美的文化差异",
+            "text": "美国文化中收到赞美自然说谢谢；中文文化则保持谦逊，不以谢谢接受，常说还有很长的路要走、不知赞美从何而来。",
+            "fact_ids": [
+              "F1_8",
+              "F1_9"
+            ]
+          },
+          {
+            "topic": "针对L1表现的反馈",
+            "text": "若课堂表现来自母语，讲者会鼓励学生，并依课堂教材让他们思考在中文文化中如何应对赞美，从而知道可改进之处。",
+            "fact_ids": [
+              "F1_10",
+              "F1_11"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nSo that's a very basic,\nfundamental idea.\nWe want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.\nSo usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.\nSo the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?\nFor example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.\nSo if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on.",
+          "global_start": 0,
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        },
+        {
+          "stage": "compose",
+          "status": "validated",
+          "max_output_tokens": 8192
+        },
+        {
+          "stage": "audit",
+          "status": "requesting",
+          "max_output_tokens": 8192
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 0,
+          "end": 482,
+          "quote": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.",
+          "topic": "日常评分系统的两个理由",
+          "claim": "讲者提出两个理由来采用日常评分系统：一是与人互动会留下印象并受到评价，二是只要学生持续且一致地努力修这门课，就能展示出很好的中文技能。",
+          "evidence_indices": [
+            1,
+            2,
+            3,
+            4,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 143,
+          "end": 226,
+          "quote": "We want to give evaluation to\nour students each performance.\nThat means each class.",
+          "topic": "每次课都给予评价",
+          "claim": "讲者表示希望对学生的每一次表现、也就是每一节课都给予评价。",
+          "evidence_indices": [
+            7,
+            8,
+            9
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 483,
+          "end": 683,
+          "quote": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.",
+          "topic": "课后反馈的内容与目的",
+          "claim": "通常课后会就学生课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。",
+          "evidence_indices": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 684,
+          "end": 854,
+          "quote": "We usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.",
+          "topic": "书面反馈与Engrade网站",
+          "claim": "反馈通常以书面形式进行，使用一个叫Engrade的网站，除了录入成绩外，还可以私下给每位学生留言。",
+          "evidence_indices": [
+            29,
+            30,
+            31,
+            32,
+            33,
+            34
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 855,
+          "end": 984,
+          "quote": "So each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.",
+          "topic": "学生查看评语的方式",
+          "claim": "只要学生登录网站上的账户，就能读到教师的评语。",
+          "evidence_indices": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 985,
+          "end": 1171,
+          "quote": "So the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.",
+          "topic": "评语依学生表现而定",
+          "claim": "评语取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。",
+          "evidence_indices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1172,
+          "end": 1252,
+          "quote": "For example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?",
+          "topic": "详细评语的例子",
+          "claim": "更详细的评语例如让学生思考在中文里如何应对赞美。",
+          "evidence_indices": [
+            50,
+            51,
+            52,
+            53
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1312,
+          "end": 1500,
+          "quote": "In American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.",
+          "topic": "美国文化中接受赞美的方式",
+          "claim": "在美国文化中，收到赞美时很自然地说谢谢，例如别人说你的中文很好，你回答谢谢。",
+          "evidence_indices": [
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1501,
+          "end": 1872,
+          "quote": "However, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.",
+          "topic": "中国文化中应对赞美的谦逊方式",
+          "claim": "在中文文化中收到赞美时要保持谦逊，不用谢谢来接受，有时会说还有很长的路要走、不知道赞美从何而来等。",
+          "evidence_indices": [
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1873,
+          "end": 2137,
+          "quote": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?",
+          "topic": "针对L1表现的反馈方式",
+          "claim": "如果学生的课堂表现来自其母语（L1），讲者会鼓励他们，并依据课堂上所涵盖材料的教科书，让他们思考在中文文化中如何应对赞美。",
+          "evidence_indices": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 2138,
+          "end": 2199,
+          "quote": "So students can know\nthis is something\nthat they can work on.",
+          "topic": "学生可改进的方向",
+          "claim": "这样学生就能知道这是他们可以努力改进的地方。",
+          "evidence_indices": [
+            93,
+            94,
+            95
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        }
+      ],
+      "candidate": {
+        "summary": [
+          {
+            "text": "讲者廖浩翔介绍日常评分系统：因人际互动会留下印象并受评价，且学生持续一致努力即可展现良好中文能力，故对每节课给予评价。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2"
+            ]
+          },
+          {
+            "text": "课后通常就课堂表现提供书面反馈，涵盖语言与文化行为，借助Engrade网站录入成绩并私下留言，学生登录账户即可查看，以明确下节课改进方向。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_5"
+            ]
+          },
+          {
+            "text": "评语依表现而定，可简可详，例如提醒发音，或让学生思考中文里如何应对赞美。",
+            "fact_ids": [
+              "F1_6",
+              "F1_7"
+            ]
+          }
+        ],
+        "key_points": [
+          {
+            "topic": "日常评分系统的理由与做法",
+            "text": "因互动会留下印象并受评价，且持续一致努力即可展现良好中文能力，故对每节课给予评价。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2"
+            ]
+          },
+          {
+            "topic": "课后反馈的内容与渠道",
+            "text": "课后就语言与文化行为提供书面反馈，用Engrade录入成绩并私下留言，学生登录账户即可查看，以明确改进方向。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_5"
+            ]
+          },
+          {
+            "topic": "评语依表现而定",
+            "text": "评语可简可详，例如提醒发音，或让学生思考中文里如何应对赞美。",
+            "fact_ids": [
+              "F1_6",
+              "F1_7"
+            ]
+          },
+          {
+            "topic": "中美应对赞美的文化差异",
+            "text": "美国文化中收到赞美自然说谢谢；中文文化则保持谦逊，不以谢谢接受，常说还有很长的路要走、不知赞美从何而来。",
+            "fact_ids": [
+              "F1_8",
+              "F1_9"
+            ]
+          },
+          {
+            "topic": "针对L1表现的反馈",
+            "text": "若课堂表现来自母语，讲者会鼓励学生，并依课堂教材让他们思考在中文文化中如何应对赞美，从而知道可改进之处。",
+            "fact_ids": [
+              "F1_10",
+              "F1_11"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nSo that's a very basic,\nfundamental idea.\nWe want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.\nSo usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.\nSo the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?\nFor example, this is another\nexample I always like to use.\nIn American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.\nSo if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on.",
+          "global_start": 0,
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        },
+        {
+          "stage": "compose",
+          "status": "validated",
+          "max_output_tokens": 8192
+        },
+        {
+          "stage": "audit",
+          "status": "validated",
+          "max_output_tokens": 8192
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 0,
+          "end": 482,
+          "quote": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.",
+          "topic": "日常评分系统的两个理由",
+          "claim": "讲者提出两个理由来采用日常评分系统：一是与人互动会留下印象并受到评价，二是只要学生持续且一致地努力修这门课，就能展示出很好的中文技能。",
+          "evidence_indices": [
+            1,
+            2,
+            3,
+            4,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 143,
+          "end": 226,
+          "quote": "We want to give evaluation to\nour students each performance.\nThat means each class.",
+          "topic": "每次课都给予评价",
+          "claim": "讲者表示希望对学生的每一次表现、也就是每一节课都给予评价。",
+          "evidence_indices": [
+            7,
+            8,
+            9
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 483,
+          "end": 683,
+          "quote": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.",
+          "topic": "课后反馈的内容与目的",
+          "claim": "通常课后会就学生课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。",
+          "evidence_indices": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 684,
+          "end": 854,
+          "quote": "We usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.",
+          "topic": "书面反馈与Engrade网站",
+          "claim": "反馈通常以书面形式进行，使用一个叫Engrade的网站，除了录入成绩外，还可以私下给每位学生留言。",
+          "evidence_indices": [
+            29,
+            30,
+            31,
+            32,
+            33,
+            34
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 855,
+          "end": 984,
+          "quote": "So each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.",
+          "topic": "学生查看评语的方式",
+          "claim": "只要学生登录网站上的账户，就能读到教师的评语。",
+          "evidence_indices": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 985,
+          "end": 1171,
+          "quote": "So the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.",
+          "topic": "评语依学生表现而定",
+          "claim": "评语取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。",
+          "evidence_indices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1172,
+          "end": 1252,
+          "quote": "For example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?",
+          "topic": "详细评语的例子",
+          "claim": "更详细的评语例如让学生思考在中文里如何应对赞美。",
+          "evidence_indices": [
+            50,
+            51,
+            52,
+            53
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1312,
+          "end": 1500,
+          "quote": "In American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.",
+          "topic": "美国文化中接受赞美的方式",
+          "claim": "在美国文化中，收到赞美时很自然地说谢谢，例如别人说你的中文很好，你回答谢谢。",
+          "evidence_indices": [
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "support",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1501,
+          "end": 1872,
+          "quote": "However, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.",
+          "topic": "中国文化中应对赞美的谦逊方式",
+          "claim": "在中文文化中收到赞美时要保持谦逊，不用谢谢来接受，有时会说还有很长的路要走、不知道赞美从何而来等。",
+          "evidence_indices": [
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 1873,
+          "end": 2137,
+          "quote": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?",
+          "topic": "针对L1表现的反馈方式",
+          "claim": "如果学生的课堂表现来自其母语（L1），讲者会鼓励他们，并依据课堂上所涵盖材料的教科书，让他们思考在中文文化中如何应对赞美。",
+          "evidence_indices": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+          "start": 2138,
+          "end": 2199,
+          "quote": "So students can know\nthis is something\nthat they can work on.",
+          "topic": "学生可改进的方向",
+          "claim": "这样学生就能知道这是他们可以努力改进的地方。",
+          "evidence_indices": [
+            93,
+            94,
+            95
+          ],
+          "attribution": "HAOHSIANG LIAO",
+          "importance": "core",
+          "attribution_start": 0,
+          "attribution_end": 14
+        }
+      ],
+      "candidate": {
+        "summary": [
+          {
+            "text": "讲者廖浩翔介绍日常评分系统：因人际互动会留下印象并受评价，且学生持续一致努力即可展现良好中文能力，故对每节课给予评价。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2"
+            ]
+          },
+          {
+            "text": "课后通常就课堂表现提供书面反馈，涵盖语言与文化行为，借助Engrade网站录入成绩并私下留言，学生登录账户即可查看，以明确下节课改进方向。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_5"
+            ]
+          },
+          {
+            "text": "评语依表现而定，可简可详，例如提醒发音，或让学生思考中文里如何应对赞美。",
+            "fact_ids": [
+              "F1_6",
+              "F1_7"
+            ]
+          }
+        ],
+        "key_points": [
+          {
+            "topic": "日常评分系统的理由与做法",
+            "text": "因互动会留下印象并受评价，且持续一致努力即可展现良好中文能力，故对每节课给予评价。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2"
+            ]
+          },
+          {
+            "topic": "课后反馈的内容与渠道",
+            "text": "课后就语言与文化行为提供书面反馈，用Engrade录入成绩并私下留言，学生登录账户即可查看，以明确改进方向。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_5"
+            ]
+          },
+          {
+            "topic": "评语依表现而定",
+            "text": "评语可简可详，例如提醒发音，或让学生思考中文里如何应对赞美。",
+            "fact_ids": [
+              "F1_6",
+              "F1_7"
+            ]
+          },
+          {
+            "topic": "中美应对赞美的文化差异",
+            "text": "美国文化中收到赞美自然说谢谢；中文文化则保持谦逊，不以谢谢接受，常说还有很长的路要走、不知赞美从何而来。",
+            "fact_ids": [
+              "F1_8",
+              "F1_9"
+            ]
+          },
+          {
+            "topic": "针对L1表现的反馈",
+            "text": "若课堂表现来自母语，讲者会鼓励学生，并依课堂教材让他们思考在中文文化中如何应对赞美，从而知道可改进之处。",
+            "fact_ids": [
+              "F1_10",
+              "F1_11"
+            ]
+          }
+        ]
+      },
+      "audit": {
+        "facts": [
+          {
+            "id": "F1_1",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 0,
+            "end": 482,
+            "quote": "HAOHSIANG LIAO: Whenever you\nhave interaction with people,\nyou leave impressions.\nYou are evaluated.\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere.",
+            "topic": "日常评分系统的两个理由",
+            "claim": "讲者提出两个理由来采用日常评分系统：一是与人互动会留下印象并受到评价，二是只要学生持续且一致地努力修这门课，就能展示出很好的中文技能。",
+            "evidence_indices": [
+              1,
+              2,
+              3,
+              4,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "core",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_2",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 143,
+            "end": 226,
+            "quote": "We want to give evaluation to\nour students each performance.\nThat means each class.",
+            "topic": "每次课都给予评价",
+            "claim": "讲者表示希望对学生的每一次表现、也就是每一节课都给予评价。",
+            "evidence_indices": [
+              7,
+              8,
+              9
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "core",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_3",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 483,
+            "end": 683,
+            "quote": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.",
+            "topic": "课后反馈的内容与目的",
+            "claim": "通常课后会就学生课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。",
+            "evidence_indices": [
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "core",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_4",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 684,
+            "end": 854,
+            "quote": "We usually do written feedback.\nSo we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.",
+            "topic": "书面反馈与Engrade网站",
+            "claim": "反馈通常以书面形式进行，使用一个叫Engrade的网站，除了录入成绩外，还可以私下给每位学生留言。",
+            "evidence_indices": [
+              29,
+              30,
+              31,
+              32,
+              33,
+              34
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "support",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_5",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 855,
+            "end": 984,
+            "quote": "So each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor.",
+            "topic": "学生查看评语的方式",
+            "claim": "只要学生登录网站上的账户，就能读到教师的评语。",
+            "evidence_indices": [
+              35,
+              36,
+              37,
+              38,
+              39,
+              40
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "support",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_6",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 985,
+            "end": 1171,
+            "quote": "So the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.",
+            "topic": "评语依学生表现而定",
+            "claim": "评语取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。",
+            "evidence_indices": [
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "support",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_7",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 1172,
+            "end": 1252,
+            "quote": "For example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?",
+            "topic": "详细评语的例子",
+            "claim": "更详细的评语例如让学生思考在中文里如何应对赞美。",
+            "evidence_indices": [
+              50,
+              51,
+              52,
+              53
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "support",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_8",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 1312,
+            "end": 1500,
+            "quote": "In American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.",
+            "topic": "美国文化中接受赞美的方式",
+            "claim": "在美国文化中，收到赞美时很自然地说谢谢，例如别人说你的中文很好，你回答谢谢。",
+            "evidence_indices": [
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              63,
+              64
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "support",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_9",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 1501,
+            "end": 1872,
+            "quote": "However, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble.",
+            "topic": "中国文化中应对赞美的谦逊方式",
+            "claim": "在中文文化中收到赞美时要保持谦逊，不用谢谢来接受，有时会说还有很长的路要走、不知道赞美从何而来等。",
+            "evidence_indices": [
+              65,
+              66,
+              67,
+              68,
+              69,
+              70,
+              71,
+              72,
+              73,
+              74,
+              75,
+              76,
+              77,
+              78,
+              79,
+              80
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "core",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_10",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 1873,
+            "end": 2137,
+            "quote": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?",
+            "topic": "针对L1表现的反馈方式",
+            "claim": "如果学生的课堂表现来自其母语（L1），讲者会鼓励他们，并依据课堂上所涵盖材料的教科书，让他们思考在中文文化中如何应对赞美。",
+            "evidence_indices": [
+              81,
+              82,
+              83,
+              84,
+              85,
+              86,
+              87,
+              88,
+              89,
+              90,
+              91,
+              92
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "core",
+            "attribution_start": 0,
+            "attribution_end": 14
+          },
+          {
+            "id": "F1_11",
+            "source_id": "part1",
+            "source_sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+            "start": 2138,
+            "end": 2199,
+            "quote": "So students can know\nthis is something\nthat they can work on.",
+            "topic": "学生可改进的方向",
+            "claim": "这样学生就能知道这是他们可以努力改进的地方。",
+            "evidence_indices": [
+              93,
+              94,
+              95
+            ],
+            "attribution": "HAOHSIANG LIAO",
+            "importance": "core",
+            "attribution_start": 0,
+            "attribution_end": 14
+          }
+        ],
+        "output": {
+          "summary": [
+            {
+              "text": "讲者廖浩翔介绍日常评分系统：因人际互动会留下印象并受评价，且学生持续一致努力即可展现良好中文能力，故对每节课给予评价。课后通常就课堂表现提供书面反馈，涵盖语言与文化行为，借助Engrade网站录入成绩并私下留言，学生登录账户即可查看，以明确下节课改进方向。评语依表现而定，可简可详，例如提醒发音，或让学生思考中文里如何应对赞美。",
+              "fact_ids": [
+                "F1_1",
+                "F1_2",
+                "F1_3",
+                "F1_4",
+                "F1_5",
+                "F1_6",
+                "F1_7"
+              ]
+            }
+          ],
+          "key_points": [
+            {
+              "topic": "日常评分系统的理由与做法",
+              "text": "因互动会留下印象并受评价，且持续一致努力即可展现良好中文能力，故对每节课给予评价。",
+              "fact_ids": [
+                "F1_1",
+                "F1_2"
+              ]
+            },
+            {
+              "topic": "课后反馈的内容与渠道",
+              "text": "课后就语言与文化行为提供书面反馈，用Engrade录入成绩并私下留言，学生登录账户即可查看，以明确改进方向。",
+              "fact_ids": [
+                "F1_3",
+                "F1_4",
+                "F1_5"
+              ]
+            },
+            {
+              "topic": "评语依表现而定",
+              "text": "评语可简可详，例如提醒发音，或让学生思考中文里如何应对赞美。",
+              "fact_ids": [
+                "F1_6",
+                "F1_7"
+              ]
+            },
+            {
+              "topic": "中美应对赞美的文化差异",
+              "text": "美国文化中收到赞美自然说谢谢；中文文化则保持谦逊，不以谢谢接受，常说还有很长的路要走、不知赞美从何而来。",
+              "fact_ids": [
+                "F1_8",
+                "F1_9"
+              ]
+            },
+            {
+              "topic": "针对L1表现的反馈",
+              "text": "若课堂表现来自母语，讲者会鼓励学生，并依课堂教材让他们思考在中文文化中如何应对赞美，从而知道可改进之处。",
+              "fact_ids": [
+                "F1_10",
+                "F1_11"
+              ]
+            }
+          ]
+        },
+        "checks": [
+          {
+            "item_id": "S1",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          },
+          {
+            "item_id": "P1",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          },
+          {
+            "item_id": "P2",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          },
+          {
+            "item_id": "P3",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          },
+          {
+            "item_id": "P4",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          },
+          {
+            "item_id": "P5",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          }
+        ]
+      },
+      "status": "completed"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "phase": "adaptive-transcript-short-medium",
+  "ended_utc": "2026-10-09T10:17:12.630609+00:00",
+  "posts": 2,
+  "stopped_on_error": false,
+  "samples": [
+    {
+      "sample": "zh-short",
+      "success": true,
+      "result_sha256": "dc1f083e15336b668f101d71fc2f0e6d53a34d37837242bf8906ef6495b4925a"
+    },
+    {
+      "sample": "en-medium",
+      "success": true,
+      "result_sha256": "9ea2b71676ab5b877007f47975ba5a88c762ec5cd0e6692f5ca592970473d1bd"
+    }
+  ]
+}

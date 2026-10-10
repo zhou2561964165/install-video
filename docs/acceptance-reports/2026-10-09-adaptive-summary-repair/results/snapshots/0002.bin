@@ -1,0 +1,12 @@
+{
+  "work_id": "summary-quality-finish-20261008",
+  "hard_ceiling": 26,
+  "parent_snapshot": "E:\\install_video\\.planning\\2026-10-08-summary-quality-finish\\budget-group.json",
+  "parent_posts": 17,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-09-adaptive-summary\\results\\request-ledger.json",
+  "maximum_posts": 3,
+  "maximum_work_posts": 20,
+  "reserved_posts": 20,
+  "reason": "User replaces fixed-length fact-contract goal with finite adaptive transcript summarization",
+  "status": "closed"
+}

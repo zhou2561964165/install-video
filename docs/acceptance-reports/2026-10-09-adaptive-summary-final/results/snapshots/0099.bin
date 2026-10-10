@@ -1,0 +1,8 @@
+{
+  "phase": "quality-final",
+  "id": "zh-short",
+  "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 9.44,
+  "trace_sha256": "48846a25cb123c7f15a817ed23d0cca21b7cade34d5019b32811fb5f3705b365"
+}

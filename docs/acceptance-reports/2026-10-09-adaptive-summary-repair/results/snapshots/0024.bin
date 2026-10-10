@@ -1,0 +1,22 @@
+{
+  "phase": "quality-final",
+  "posts": 3,
+  "ceiling": 19,
+  "work_posts": 3,
+  "evidence_verified": true,
+  "samples": [
+    {
+      "id": "zh-short",
+      "posts": 3,
+      "status": "failed",
+      "retry_budget": {
+        "used": 1,
+        "ceiling": 2,
+        "format_used": 1,
+        "semantic_used": 0
+      },
+      "semantic_quality": "NOT_EVALUATED"
+    }
+  ],
+  "semantic_quality": "NOT_EVALUATED"
+}

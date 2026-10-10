@@ -1,0 +1,20 @@
+{
+  "ordinal": 11,
+  "phase": "organization-slots",
+  "sample": "en-long",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "724808c0310574287443679913aadaa72ba4fae2c610170e994d4a11a988b092",
+  "content": "{\"facts\":[{\"topic\":\"赋值语句中右侧为表达式\",\"claim\":\"在编程中，等号右侧总是一个表达式，会被求值为一个值。\",\"evidence\":[1,2,3,4,5],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"赋值语句中左侧为变量\",\"claim\":\"等号左侧总是一个变量，表示一次赋值；与数学不同，等号左侧只能有一个变量。\",\"evidence\":[6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"通过新赋值重新绑定变量\",\"claim\":\"创建表达式和赋值后，可以用新的赋值语句重新绑定变量名。\",\"evidence\":[21,22,23,24,25],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"pi 与 radius 的赋值示例\",\"claim\":\"示例中 pi 等于 3.14，内存创建值 3.14 并绑定到变量 pi；radius 等于 2.2，内存创建值 2.2 并绑定到变量 radius。\",\"evidence\":[31,32,33,34,35,36,37,38,39,40,41],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"表达式求值与赋值到 area\",\"claim\":\"表达式会从内存中替换 pi 和 radius 的值，计算求值结果，放入内存，并因使用等号而将该值赋给变量 area。\",\"evidence\":[42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"重新绑定 radius 的过程\",\"claim\":\"执行 radius 等于 radius 加 1 时，会解除 radius 对 2.2 的绑定，计算得到新值 3.2，并将该值重新绑定到同一变量。\",\"evidence\":[59,60,61,62,63,64,65,66,67,68,69,70,71],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"丢失的旧值可能被垃圾回收\",\"claim\":\"内存中仍会保留值 2.2，但已失去指向它的句柄，无法再取回；在 Python 中，它可能在某时被垃圾收集器回收，并用于新值。\",\"evidence\":[72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"area 的值不会自动改变\",\"claim\":\"area 的值没有改变，因为指令只要求把 radius 改为 radius 加 1，从未要求重新计算 area 的值；只有复制该行后 area 的值才会改变。\",\"evidence\":[92,93,94,95,96,97,98,99,100,101,102,103,104,105,106],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"计算机只执行被明确告知的操作\",\"claim\":\"计算机只做我们告诉它做的事。\",\"evidence\":[107,108],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"下一讲将讨论控制流\",\"claim\":\"下一讲将讨论如何为程序添加控制流，即如何告诉计算机执行一件事或另一件事。\",\"evidence\":[110,111,112,113,114],\"attribution\":\"source\",\"importance\":\"support\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1706,
+    "completion_tokens": 746,
+    "total_tokens": 2452,
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 1322,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    }
+  }
+}

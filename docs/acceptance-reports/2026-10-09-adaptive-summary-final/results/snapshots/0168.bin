@@ -1,0 +1,20 @@
+{
+  "phase": "quality-repaired",
+  "ordinal": 11,
+  "sample": "en-long",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "ac9b697ebe27a16fc4629b69eb87925f1113a3dda75438d8a4ec5cc952835ecf",
+  "content": "{\n  \"fact_1\": {\n    \"topic\": \"赋值语句中等于号的含义\",\n    \"claim\": \"在编程中，等于号表示赋值：右侧总是一个会被求值为值的表达式，左侧总是一个变量；这与数学中等于号两侧可以有很多内容不同，赋值号左侧只能有一个变量。\",\n    \"evidence\": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_2\": {\n    \"topic\": \"通过新赋值语句重新绑定变量名\",\n    \"claim\": \"创建表达式和赋值后，可以通过新的赋值语句重新绑定变量名。\",\n    \"evidence\": [21, 22, 23, 24, 25],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_3\": {\n    \"topic\": \"内存中绑定变量与计算表达式\",\n    \"claim\": \"以 pi 等于 3.14 和 radius 等于 2.2 为例，内存中创建值 3.14 并绑定到变量 pi，创建值 2.2 并绑定到变量 radius；随后表达式从内存中替换 pi 和 radius 的值，计算求值结果，放入内存，并通过等于号将该值赋给变量 area。\",\n    \"evidence\": [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_4\": {\n    \"topic\": \"重新绑定变量与丢失旧值\",\n    \"claim\": \"当执行 radius 等于 radius 加 1 时，会移除对 2.2 的绑定，计算得到新值 3.2，并将该值重新绑定到同一变量；内存中仍会保留值 2.2，但已失去其句柄，无法再取回，它可能在某时被垃圾回收器回收，在 Python 中垃圾回收器会取回这些丢失的值并复用于新值等。\",\n    \"evidence\": [59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_5\": {\n    \"topic\": \"area 的值未变及原因\",\n    \"claim\": \"area 的值没有改变，因为给出的指令只是将 radius 改为 radius 加 1，从未告诉计算机重新计算 area 的值；如果复制那一行，area 的值才会改变，但计算机只做被明确告知的事。\",\n    \"evidence\": [92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108],\n    \"attribution\": \"source\",\n    \"importance\": \"core\"\n  },\n  \"fact_6\": {\n    \"topic\": \"下一讲预告：控制流\",\n    \"claim\": \"下一讲将讨论为程序添加控制流，即如何告诉计算机做一件事或另一件事。\",\n    \"evidence\": [110, 111, 112, 113, 114],\n    \"attribution\": \"source\",\n    \"importance\": \"support\"\n  }\n}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1908,
+    "completion_tokens": 903,
+    "total_tokens": 2811,
+    "prompt_cache_hit_tokens": 1664,
+    "prompt_cache_miss_tokens": 244,
+    "prompt_tokens_details": {
+      "cached_tokens": 1664
+    }
+  }
+}

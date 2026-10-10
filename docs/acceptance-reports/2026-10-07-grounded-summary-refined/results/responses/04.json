@@ -1,0 +1,20 @@
+{
+  "ordinal": 4,
+  "phase": "organization-refined",
+  "sample": "en-medium",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "ccea27f0a1bbe34d36740d66d1515a08f34e84f9209c265f73ce4fc7069fe9fc",
+  "content": "{\"facts\":[{\"topic\":\"日常评分系统的两个理由\",\"claim\":\"讲者认为，人与人互动会留下印象并受到评价，因此希望给学生的每次表现（即每节课）作出评价；同时讲者确信，只要学生坚持并持续努力修读这门课，就能展示出很好的中文技能；基于这两个理由，他们采用日常评分系统。\",\"evidence\":[1,2,3,4,7,8,9,11,12,13,14,15,16,17,18,19,20],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"课后反馈的内容与形式\",\"claim\":\"讲者表示，通常在课后会就每位学生的课堂表现提供反馈，包括语言和文化行为，让学生知道下次课要改进什么；反馈通常采用书面形式。\",\"evidence\":[21,22,23,24,25,26,27,28,29],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"Engrade网站与私下评语\",\"claim\":\"讲者说他们使用一个名为Engrade的网站，除录入成绩外，还可以私下给每位学生留言；学生只要登录自己的账户，就能读到教师的评语。\",\"evidence\":[30,31,32,33,34,35,36,37,38,39,40],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"评语依表现而定\",\"claim\":\"讲者表示，评语取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细。\",\"evidence\":[41,42,43,44,45,46,47,48,49],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"美国文化中回应称赞的方式\",\"claim\":\"讲者以自己常用的例子说明，在美国文化中收到称赞时，说谢谢是很自然的，例如别人说你的中文很好，你回答谢谢。\",\"evidence\":[54,55,56,57,58,59,60,61,62,63,64],\"attribution\":\"source\",\"importance\":\"support\"},{\"topic\":\"中国文化中回应称赞的谦逊方式\",\"claim\":\"讲者认为，在中国文化中收到称赞时要保持谦逊，不以说谢谢来接受，有时会说还有很长的路要走、还差得远，或不知道称赞从何而来；讲者称中国文化中关于称赞的基本观念是保持谦逊。\",\"evidence\":[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80],\"attribution\":\"source\",\"importance\":\"core\"},{\"topic\":\"针对L1表现的反馈与练习方向\",\"claim\":\"讲者表示，如果学生的课堂表现来自其母语（L1），他们会鼓励学生，并依据课堂所覆盖材料的教科书，让学生思考在中国文化中如何应对称赞，从而知道这是可以努力改进的地方。\",\"evidence\":[81,82,83,84,85,86,87,88,89,90,91,92,93,94,95],\"attribution\":\"source\",\"importance\":\"core\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1514,
+    "completion_tokens": 633,
+    "total_tokens": 2147,
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 1130,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    }
+  }
+}

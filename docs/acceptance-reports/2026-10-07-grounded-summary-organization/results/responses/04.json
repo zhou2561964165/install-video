@@ -1,0 +1,20 @@
+{
+  "ordinal": 4,
+  "phase": "organization-slots",
+  "sample": "en-medium",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "6a644b8279ad47cce50dc7d4f5e2e1ebcd02fb877114ff4bd74521ac8663d0f9",
+  "content": "{\"facts\":[{\"topic\":\"日常评分系统的两个理由\",\"claim\":\"讲者提出两个理由来采用日常评分系统：一是与人互动会留下印象并受到评价，二是只要学生持续且一致地努力修这门课，就能展示出很好的中文技能。\",\"evidence\":[1,2,3,4,12,13,14,15,16,17,18,19,20],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"每次课都给予评价\",\"claim\":\"讲者表示希望对学生的每一次表现、也就是每一节课都给予评价。\",\"evidence\":[7,8,9],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"课后反馈的内容与目的\",\"claim\":\"通常课后会就学生课堂表现提供反馈，包括语言和文化行为，以便学生知道下节课要改进什么。\",\"evidence\":[21,22,23,24,25,26,27,28],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"书面反馈与Engrade网站\",\"claim\":\"反馈通常以书面形式进行，使用一个叫Engrade的网站，除了录入成绩外，还可以私下给每位学生留言。\",\"evidence\":[29,30,31,32,33,34],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"学生查看评语的方式\",\"claim\":\"只要学生登录网站上的账户，就能读到教师的评语。\",\"evidence\":[35,36,37,38,39,40],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"评语依学生表现而定\",\"claim\":\"评语取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细一些。\",\"evidence\":[41,42,43,44,45,46,47,48,49],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"详细评语的例子\",\"claim\":\"更详细的评语例如让学生思考在中文里如何应对赞美。\",\"evidence\":[50,51,52,53],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"美国文化中接受赞美的方式\",\"claim\":\"在美国文化中，收到赞美时很自然地说谢谢，例如别人说你的中文很好，你回答谢谢。\",\"evidence\":[56,57,58,59,60,61,62,63,64],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"support\"},{\"topic\":\"中国文化中应对赞美的谦逊方式\",\"claim\":\"在中文文化中收到赞美时要保持谦逊，不用谢谢来接受，有时会说还有很长的路要走、不知道赞美从何而来等。\",\"evidence\":[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"针对L1表现的反馈方式\",\"claim\":\"如果学生的课堂表现来自其母语（L1），讲者会鼓励他们，并依据课堂上所涵盖材料的教科书，让他们思考在中文文化中如何应对赞美。\",\"evidence\":[81,82,83,84,85,86,87,88,89,90,91,92],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"},{\"topic\":\"学生可改进的方向\",\"claim\":\"这样学生就能知道这是他们可以努力改进的地方。\",\"evidence\":[93,94,95],\"attribution\":\"HAOHSIANG LIAO\",\"importance\":\"core\"}]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1443,
+    "completion_tokens": 771,
+    "total_tokens": 2214,
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 1059,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    }
+  }
+}

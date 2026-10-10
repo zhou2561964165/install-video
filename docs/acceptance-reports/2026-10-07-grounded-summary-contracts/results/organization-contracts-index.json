@@ -1,0 +1,11 @@
+{
+  "ended_utc": "2026-10-08T03:04:11.581654+00:00",
+  "sample_results": [
+    {
+      "id": "zh-short",
+      "file": "organization-contracts-zh-short.json",
+      "sha256": "e38e607ba50764549b898e78bd8e92f81aab6d32471d495668868bf661a4ac80",
+      "posts": 1
+    }
+  ]
+}

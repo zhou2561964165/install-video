@@ -1,0 +1,28 @@
+{
+  "work_id": "summary-quality-finish-20261008",
+  "phase": "adaptive-transcript-short-medium",
+  "prior_posts": 20,
+  "maximum_posts": 2,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "zh-short",
+      "status": "response",
+      "reserved_utc": "2026-10-09T10:17:08.059857+00:00",
+      "payload_sha256": "d8c9b0560d37a483eb4c59f84d69f210864efa4c81ecfc5bf3ba1761c2859f4c",
+      "http_status": 200,
+      "response_sha256": "f9396aa03c7abdfefa843f717b4d04fdd43d0d7a29d280f5d7ace247a9e787ca",
+      "result_sha256": "dc1f083e15336b668f101d71fc2f0e6d53a34d37837242bf8906ef6495b4925a"
+    },
+    {
+      "ordinal": 2,
+      "sample": "en-medium",
+      "status": "response",
+      "reserved_utc": "2026-10-09T10:17:10.102204+00:00",
+      "payload_sha256": "2b1c894e76770534cac8e998354f32d6d688bfd1c824c90bba9c863a8033b1fb",
+      "http_status": 200,
+      "response_sha256": "d7b9725c899f68c1619109a7b6ba71d598b6a9ad5a8e29d6ad6e15e836de6921",
+      "result_sha256": "9ea2b71676ab5b877007f47975ba5a88c762ec5cd0e6692f5ca592970473d1bd"
+    }
+  ]
+}

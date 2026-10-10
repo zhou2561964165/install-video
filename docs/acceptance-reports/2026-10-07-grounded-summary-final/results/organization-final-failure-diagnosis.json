@@ -1,0 +1,21 @@
+{
+  "phase": "organization-final",
+  "offline_only": true,
+  "frozen_codec_sha256": "5538bf308e701b06e61d8321da0ea865215ecfe6c5c84333cc57637912c53147",
+  "response_ordinal": 9,
+  "response_file": "responses/09.json",
+  "response_sha256": "b524bcdf3317b87b472b5070c8ac6e7dd27f7da94041db5d6183530c4cddce52",
+  "stage": "extract",
+  "source_part": "part3",
+  "raw_facts_count": 13,
+  "frozen_max_facts_per_chunk": 12,
+  "codec_reason": "invalid_count",
+  "finish_reason": "stop",
+  "completion_tokens": 1727,
+  "facts_validated_before_failure": 19,
+  "compose_sent": false,
+  "audit_sent": false,
+  "new_provider_posts_after_stop": 0,
+  "retry_performed": false,
+  "candidate_salvaged_or_reclassified": false
+}

@@ -1,0 +1,56 @@
+{
+  "real_vendor_posts": 0,
+  "model_quality_verified": false,
+  "browser_only": true,
+  "existing_account_identity": true,
+  "passwords_read": false,
+  "password_login_tested": false,
+  "isolated_session": true,
+  "api": "http://127.0.0.1:50409",
+  "source_kind": "loopback HTML5 + unmodified original VTT",
+  "public_native_success_claimed": false,
+  "work": "E:\\install_video\\tmp\\formal-api-zero-gofzdig7",
+  "cases": [],
+  "browser": {
+    "real_vendor_posts": 0,
+    "model_semantics_tested": false,
+    "page_errors": 0,
+    "responses": [
+      {
+        "path": "/api/parse",
+        "status": 200
+      },
+      {
+        "path": "/api/summary",
+        "status": 200
+      },
+      {
+        "path": "/api/summary",
+        "status": 502
+      }
+    ],
+    "success_visible": true,
+    "previous_summary_hidden_after_failure": true,
+    "error_visible": true,
+    "action_reenabled": true,
+    "passed": true
+  },
+  "local_supplier_posts": 2,
+  "transport_reservations": 2,
+  "local_supplier_cap": 20,
+  "supplier_events": [
+    {
+      "ordinal": 1,
+      "mode": "healthy",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 2,
+      "mode": "http_503",
+      "model": "formal-local-only"
+    }
+  ],
+  "threads_stopped": true,
+  "live_database_unchanged": true,
+  "request_headers_and_tokens_saved": false
+}

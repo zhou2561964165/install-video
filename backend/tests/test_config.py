@@ -141,3 +141,25 @@ def test_grounded_summary_controls_load_from_environment(monkeypatch):
 def test_grounded_configuration_rejects_invalid_limits(changes):
     with pytest.raises(ValueError, match="llm_summary_"):
         Settings(**changes)
+
+
+def test_grounded_organization_limits_load_from_environment(monkeypatch):
+    monkeypatch.setenv("LLM_SUMMARY_FACTS_MAX_SUMMARY_CHARS", "650")
+    monkeypatch.setenv("LLM_SUMMARY_FACTS_COMPOSE_MAX_OUTPUT_TOKENS", "8192")
+    monkeypatch.setenv("LLM_SUMMARY_FACTS_AUDIT_MAX_OUTPUT_TOKENS", "10000")
+    configured = Settings.from_env()
+    assert configured.llm_summary_facts_max_summary_chars == 650
+    assert configured.llm_summary_facts_compose_max_output_tokens == 8192
+    assert configured.llm_summary_facts_audit_max_output_tokens == 10000
+
+
+@pytest.mark.parametrize("changes", [
+    {"llm_summary_facts_max_summary_chars": 0},
+    {"llm_summary_facts_max_summary_chars": 4001},
+    {"llm_summary_facts_compose_max_output_tokens": -1},
+    {"llm_summary_facts_audit_max_output_tokens": True},
+    {"llm_summary_facts_audit_max_output_tokens": 65537},
+])
+def test_grounded_organization_rejects_invalid_configuration(changes):
+    with pytest.raises(ValueError, match="llm_summary_facts"):
+        Settings(**changes)

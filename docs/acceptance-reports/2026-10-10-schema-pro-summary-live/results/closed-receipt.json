@@ -1,0 +1,11 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "phase": "source-first-summary-schema-pro-3",
+  "status": "closed",
+  "posts": 6,
+  "work_posts": 17,
+  "hard_ceiling": 17,
+  "ledger_sha256": "9732ef3b951e177a9283cd6709f624d5d5d6d956b49d2a98ddb0c23e421f7beb",
+  "index_sha256": "deee95365f85d7a37ec4955714b0cf7e9e84ba8b58c39cce8198322ec605e1d6",
+  "provenance_sha256": "2e6f1d86bd1b7d646d1d52b5777696d5b2c02baaf7815ddc801c8b84bb3bb899"
+}

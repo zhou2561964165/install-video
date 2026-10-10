@@ -1,0 +1,96 @@
+{
+  "phase": "organization-contracts",
+  "method": "No final output exists: caller verifies all original essential IDs as not_evaluated; this is not independent semantic scoring. An independent agent completed offline-check before host usage-limit interruption.",
+  "engineering_conventions": "Skills first; UI tokens; narrow configurable service interfaces; LLM/yt-dlp service boundaries; scene read-only; old evidence retained; bounded autonomous budget26.",
+  "rubric_sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49",
+  "provenance_sha256": "4a61fc4d24b74110bf719f3398015ce201d16282c9ce746c56f31d4e6e663c76",
+  "diagnosis_sha256": "a62cb727aaa3ae854a370ff92d0982ef058e87c2c69341cfa0c0f744cfe0b11d",
+  "essential_total": 14,
+  "counts": {
+    "full": 0,
+    "partial": 0,
+    "missing": 0,
+    "not_evaluated": 14
+  },
+  "essential": [
+    {
+      "id": "zh1",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "zh2",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "zh3",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "zh4",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "en1",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "en2",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "en3",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "en4",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "long1",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "long2",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "long3",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "long4",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "long5",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    },
+    {
+      "id": "long6",
+      "status": "not_evaluated",
+      "reason": "No final summary or key_points; phase stopped at the first short extraction contract failure."
+    }
+  ],
+  "organization": {
+    "zh-short": "not_evaluated",
+    "en-medium": "not_evaluated",
+    "en-long": "not_evaluated"
+  },
+  "precision": "not_evaluated",
+  "overall_quality_pass": false,
+  "prior_short_medium_7_full_1_partial_not_a_current_score": true,
+  "license": "MIT corpus/derived review retain original authors and CC BY-NC-SA 4.0; noncommercial evaluation."
+}

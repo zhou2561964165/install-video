@@ -1,0 +1,35 @@
+{
+  "phase": "organization-final",
+  "budget_authorized": true,
+  "ceiling": 13,
+  "reserved_attempts": 9,
+  "http_200": 9,
+  "reported_tokens": 32656,
+  "remaining_not_used": 4,
+  "calls_stopped": true,
+  "pipeline_samples": {
+    "zh-short": "completed",
+    "en-medium": "completed",
+    "en-long": "failed_extract_part3"
+  },
+  "semantic_review_sha256": "f581d65aaf8799526414a892f48ff12267c37ab31bca962703bf4a16f5e1a465",
+  "essential_full": 7,
+  "essential_partial": 1,
+  "essential_missing": 0,
+  "essential_not_evaluated": 6,
+  "overall_quality_pass": false,
+  "default_strategy": "legacy",
+  "module_sha256": {
+    "service": "c75761c3b233a0fb8653d17d9263aeef2cc7b712db8e3ec2c367a9fe69e0d0b5",
+    "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+    "facts": "5538bf308e701b06e61d8321da0ea865215ecfe6c5c84333cc57637912c53147"
+  },
+  "frozen_provenance_sha256": "fc5d3ba753888bd606d2fb43eb003c52fc580a86c774a04a7d1f2534d600afe1",
+  "live_modules_match_measurement": true,
+  "prepare_stage_delivery_snapshot": "code-delivery.json",
+  "backend_last_full_tests": 540,
+  "backend_tests_rerun_after_measurement": false,
+  "code_modified_after_measurement": false,
+  "old_ledgers_changed": false,
+  "new_code_commit_created": false
+}

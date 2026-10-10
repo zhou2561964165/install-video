@@ -1,0 +1,11 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "phase": "source-first-summary-live-1",
+  "status": "closed",
+  "posts": 5,
+  "work_posts": 5,
+  "hard_ceiling": 10,
+  "ledger_sha256": "3278f5775b50154f43a8a75cb74ba3155fc078c570a9fd1284eb3b1365915efb",
+  "index_sha256": "7edd3481bd089f53d0b4d37635f8fea1efda9079c9080c79ee4d302db91f809e",
+  "provenance_sha256": "2488b9f5e0579fae1b0e690290efb9a74c6ae1049df7dc88b1b460cc1c2b1daf"
+}

@@ -1,0 +1,20 @@
+{
+  "ordinal": 5,
+  "phase": "organization-refined",
+  "sample": "en-medium",
+  "stage": "compose",
+  "http_status": 200,
+  "body_sha256": "bd097cf2943076b566175d6936d371653137b8d6674d3c4a719aa1c5b1782651",
+  "content": "{\"summary\":[{\"text\":\"讲者介绍其课程采用日常评分系统：因人际互动会留下印象并受评价，且相信学生坚持努力就能展现良好中文能力，故每节课都评价学生；课后通常以书面形式反馈语言与文化行为，并通过Engrade网站私下留言，内容依表现而定。\",\"fact_ids\":[\"F1_1\",\"F1_2\",\"F1_3\",\"F1_4\"]},{\"text\":\"讲者以称赞回应为例比较文化：在美国文化中说谢谢很自然，而在中国文化中讲者认为应保持谦逊、不以谢谢接受；若学生课堂表现来自母语，讲者会依课堂教科书鼓励其思考中国文化中如何应对称赞，作为可改进之处。\",\"fact_ids\":[\"F1_5\",\"F1_6\",\"F1_7\"]}],\"point_1\":{\"topic\":\"日常评分系统的理由与实施\",\"text\":\"讲者因人际互动留下印象并受评价、且相信学生坚持努力能展现良好中文能力，采用日常评分；课后通常书面反馈语言与文化行为，并通过Engrade私下留言，评语依表现而定。\",\"fact_ids\":[\"F1_1\",\"F1_2\",\"F1_3\",\"F1_4\"]},\"point_2\":{\"topic\":\"称赞回应的文化对比与反馈\",\"text\":\"讲者称美国文化中收到称赞说谢谢很自然，而中国文化中应保持谦逊、不以谢谢接受；若学生表现来自母语，讲者会依课堂教科书鼓励其思考中国文化中如何应对称赞。\",\"fact_ids\":[\"F1_5\",\"F1_6\",\"F1_7\"]},\"point_3\":null,\"point_4\":null,\"point_5\":null,\"point_6\":null,\"point_7\":null}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1741,
+    "completion_tokens": 378,
+    "total_tokens": 2119,
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 1357,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    }
+  }
+}

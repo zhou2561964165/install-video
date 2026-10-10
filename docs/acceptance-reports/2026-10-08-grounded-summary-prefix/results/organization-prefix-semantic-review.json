@@ -1,0 +1,238 @@
+{
+  "artifact": "organization-prefix-semantic-review",
+  "version": 1,
+  "phase": "organization-prefix",
+  "status": "not_evaluated",
+  "scope": "The fixed 14 rubric IDs below only. No final summary exists for this phase; no semantic source scoring was performed.",
+  "authorization": {
+    "source": "AGENTS.md section 5 and the phase budget-authorization.json",
+    "work_id": "2026-10-08-development-quota-validation",
+    "hard_post_ceiling": 26,
+    "phase_post_ceiling": 13,
+    "max_additional_phases": 1,
+    "current_extension_number": 1,
+    "current_extension_closed": true,
+    "new_provider_calls_authorized_by_this_review": 0,
+    "structured_authorization_fields": {
+      "automatic_retry": false,
+      "stop_on_first_error": true,
+      "old_phase_remaining_budget_reuse": false,
+      "caller": "root-only-serial"
+    }
+  },
+  "engineering_conventions": [
+    "UI and visual changes require ui-ux-pro-max and design-system; tokens follow primitive-to-semantic-to-component layering.",
+    "Changes stay configurable and narrowly scoped; preserve module boundaries, including yt-dlp access through ytdlp_service.py and scene-only reads in the visual layer.",
+    "Skill guidance takes precedence over plans; avoid broad, unrelated refactors."
+  ],
+  "evaluation_counts": {
+    "total_rubric_items": 14,
+    "evaluated": 0,
+    "not_evaluated": 14,
+    "missing": 0
+  },
+  "missing_count_semantics": "Zero missing means no missing-claim score was assigned because no final output was evaluated. It is not a pass or an accuracy result.",
+  "rubric_items": [
+    {
+      "id": "zh1",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "zh2",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "zh3",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "zh4",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "en1",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "en2",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "en3",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "en4",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "long1",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "long2",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "long3",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "long4",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "long5",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    },
+    {
+      "id": "long6",
+      "status": "not_evaluated",
+      "missing": 0,
+      "reason": "No final output; phase stopped after the compose response failed the frozen contract."
+    }
+  ],
+  "semantic_accuracy_claim": "not assessed",
+  "source_read_scope": {
+    "long_semantic_source_fully_read": false,
+    "long_source_character_count_from_freeze_metadata": 34658,
+    "reason": "No final output is available to compare; reading the full long source would not support a valid score."
+  },
+  "offline_evidence": {
+    "pipeline_status": "failed",
+    "error_type": "llm_invalid_response",
+    "latest_compose_reason": "invalid_fields",
+    "semantic_entailment_proven": false,
+    "final_output_present": false
+  },
+  "review_execution": {
+    "external_model_posts": 0,
+    "network_requests": 0,
+    "live_database_or_secret_inputs_read": false,
+    "tests_run": [],
+    "offline_checker_command": "python -B docs/acceptance-reports/2026-10-08-grounded-summary-prefix/scripts/check_evidence.py --write",
+    "offline_checker_exit_code": 0,
+    "offline_checker_result_sha256": "4c0a35b341a2a8a55f0eb60194e2b119c446227b4340336869ec11f8d1e6f910",
+    "run_or_freeze_entrypoint_invoked": false,
+    "frozen_pure_helper_execution_performed": true,
+    "frozen_pure_helper_execution_order": "The offline checker exercised frozen pure helpers only after validating the code chain, modules, rubric, manifest, baseline, source hashes, type-strict payload transport, and raw response bindings."
+  },
+  "input_hashes": {
+    "AGENTS.md": {
+      "path": "AGENTS.md",
+      "sha256": "633be8aa73a2974bed8235cbaa7f4add2565fecea2f3ac0c3101b8680a303a05"
+    },
+    "budget_group": {
+      "path": ".planning/2026-10-08-development-quota-validation/budget-group.json",
+      "sha256": "0c04a2b9e760dafa388b73d125485385021b5110d87cf1ce27d9659240ebf4be"
+    },
+    "contracts_request_ledger": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-contracts/results/request-ledger.json",
+      "sha256": "01a4c4ebc6590b8acd401a63a6dc9e442278a3dcb4e6452005245cafdf4af1f2"
+    },
+    "prefix_budget_authorization": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/budget-authorization.json",
+      "sha256": "2b1c1477ae4864ca82978c06a336edfe1b06302f5c26c36269d08549ada67a4a"
+    },
+    "prefix_provenance": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/organization-prefix-provenance.json",
+      "sha256": "e43a92a874192bcc5d7bc5bd2f5c037fefcdc452168d0d5c0c87e7181c31aaff"
+    },
+    "prefix_request_ledger": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/request-ledger.json",
+      "sha256": "b309713ca4cfe92dd4dce0bdd292399b885e902b3f13d6fb04b1e1374240e2ef"
+    },
+    "prefix_index": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/organization-prefix-index.json",
+      "sha256": "e23f8ceb8c6c36fff89d19ca1ff72c058435d83d8da787bf9995edd2e0da58e0"
+    },
+    "zh_short_status_record": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/organization-prefix-zh-short.json",
+      "sha256": "3cb254fdb430a0792598340f0d37d2bde60079715f6bd2789699b793500dd149"
+    },
+    "zh_short_trace": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/organization-prefix-zh-short-trace.json",
+      "sha256": "505844beae599cee6dd6bfe9e08cb7d913f45b9efc95d93bd7dcdbb60d3d861b"
+    },
+    "payload_01": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/payloads/01.json",
+      "sha256": "47a6793ff3b6fc6f8d1ecf89d5493570d8b9b20ec6c0aec28eb22c9104a218c8"
+    },
+    "response_01": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/responses/01.json",
+      "sha256": "13194cc96ca8bbe400be18b4af57d5015d628ce4d3339bacf02690bd00fe8bab"
+    },
+    "payload_02": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/payloads/02.json",
+      "sha256": "bd265cfb813c4593aaf5226242b3584bc19d0836b4612b5ddd6ce3ee6464fef3"
+    },
+    "response_02": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/responses/02.json",
+      "sha256": "89de15e7ca8a8cce08543abfd8fcd8ee65ac383f49b580513b4f6e65ecdd89fe"
+    },
+    "prefix_rubric": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/rubric.json",
+      "sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49"
+    },
+    "offline_checker": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/scripts/check_evidence.py",
+      "sha256": "31b426cb0215eda9de8ad044b0f01c38dc52f7091853e695ec4915eda584576d"
+    },
+    "offline_check_result": {
+      "path": "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/organization-prefix-offline-check.json",
+      "sha256": "4c0a35b341a2a8a55f0eb60194e2b119c446227b4340336869ec11f8d1e6f910"
+    }
+  },
+  "input_hashes_from_freeze": {
+    "sample_source_sha256": {
+      "zh-short": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+      "en-medium": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+      "en-long": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7"
+    },
+    "frozen_module_sha256": {
+      "service": "a98ffd51702eed005b8e7a3db1c62c63583f1a1110445826b75fe5d6ff390b1c",
+      "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+      "facts": "88f815a57b4f687e75a22a61331a1ac1b4344950cf0a99d06294d379f3b9eca7"
+    },
+    "runner_chain_sha256": {
+      "prefix": "16ce50c6a2d27b451bef9dc92db95d7afabde57a0471d81ff4344e34ca1dc96d",
+      "contracts": "60bd9a6d990afe7c1497d1b6d51531b971d5b69caa45d622a63dce61e8419e0a",
+      "final": "ec6b4c042710540dcda24d5acfdfaed6325f34f1104411fadf5f1b032a0a5bc4",
+      "organization": "53064e0bcd449201dc93950d99db4885d8d2398227053c9c4b6311290f9f34bc",
+      "runner": "1f030b2118f3ffcb7009dbd13b23fcfa315b82984b643fcdcf897f095f18c481",
+      "checker": "31b426cb0215eda9de8ad044b0f01c38dc52f7091853e695ec4915eda584576d",
+      "contracts-checker": "10ff2d1132861141d2a11e562114b402e4e68b9e9d5cb164d98dd5fc1044dc71",
+      "checker-runner": "c4c6248ce0d286683c6acbe347b4cc5aa4c1c731b4bbacbffca66ed7cf386227",
+      "final-checker": "666665fe4d36ba3c95a5504fc2d1e7105ac5c295d945b0715c927e329d521612"
+    },
+    "manifest_sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3",
+    "rubric_sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49"
+  },
+  "original_artifacts_modified_by_this_review": []
+}

@@ -1,0 +1,37 @@
+{
+  "real_vendor_posts": 0,
+  "backend_tests": 108,
+  "frontend_hook_tests": 4,
+  "initial_test_setup_error": "missing PYTHONPATH; corrected before RED",
+  "backend_red": {
+    "failed": 13,
+    "passed": 4,
+    "scope": "2 generation ordering failures;11 missing codec; mechanical only"
+  },
+  "frontend_red": {
+    "failed": 1,
+    "passed": 3,
+    "scope": "stale summary before retry"
+  },
+  "ui_loopback_posts": 2,
+  "ui_passed": true,
+  "ports": [
+    {
+      "port": 50409,
+      "closed": true
+    },
+    {
+      "port": 50412,
+      "closed": true
+    },
+    {
+      "port": 50406,
+      "closed": true
+    }
+  ],
+  "protected_files": 118,
+  "protected_changes": [],
+  "semantic_model_quality_verified": false,
+  "old_group_posts": 26,
+  "old_group_cap": 26
+}

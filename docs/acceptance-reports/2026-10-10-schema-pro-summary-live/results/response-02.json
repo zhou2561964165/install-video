@@ -1,0 +1,31 @@
+{
+  "object": "response",
+  "status": "completed",
+  "error_present": false,
+  "incomplete_present": false,
+  "output": [
+    {
+      "type": "message",
+      "role": "assistant",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "text": "{\n  \"summary\": \"演讲者介绍MIT中文课如何从第二天起营造全中文沉浸式课堂环境，核心在于通过课堂用语的可理解性和课前备课与课堂练习的一致性来维持中文氛围，并为学生提供课后或邮件等非课堂时段的英文提问渠道。\"\n}"
+        }
+      ]
+    }
+  ],
+  "content": "{\n  \"summary\": \"演讲者介绍MIT中文课如何从第二天起营造全中文沉浸式课堂环境，核心在于通过课堂用语的可理解性和课前备课与课堂练习的一致性来维持中文氛围，并为学生提供课后或邮件等非课堂时段的英文提问渠道。\"\n}",
+  "usage": {
+    "input_tokens": 843,
+    "output_tokens": 60,
+    "total_tokens": 903,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "http_status": 200,
+  "received_utc": "2026-10-10T07:10:08.044912+00:00",
+  "model": "deepseek-v4-pro"
+}

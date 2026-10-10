@@ -1,0 +1,41 @@
+{
+  "phase": "organization-contracts",
+  "development_authorized": true,
+  "real_provider_budget_authorized": false,
+  "new_provider_posts": 0,
+  "default_strategy": "legacy",
+  "normal_call_plan": [
+    3,
+    3,
+    7
+  ],
+  "ceiling": 13,
+  "backend_full_verification": {
+    "command": "../.venv/Scripts/python.exe -B -m pytest tests -q -p no:cacheprovider --basetemp E:/install_video/tmp/contracts-final-20261008",
+    "working_directory": "backend",
+    "passed": 706,
+    "warnings": 1,
+    "warning": "existing Starlette/httpx deprecation",
+    "seconds": 20.34
+  },
+  "module_sha256": {
+    "service": "6cd9ac33c47740744704ee2c776a539caf098ae81429bb0dd82e7bbdfd0258cf",
+    "config": "38efec2ab733512375665d5f8c0493493500dddada0c3d706e20b5684362b7ac",
+    "facts": "898679f7a51406beb4a7b1446045e5c85ae39539957bd016c63ce24682555e6e"
+  },
+  "provenance_sha256": "4a61fc4d24b74110bf719f3398015ce201d16282c9ce746c56f31d4e6e663c76",
+  "freeze_check_match": true,
+  "task_reviews_pass": true,
+  "final_scoped_review_pass": true,
+  "remaining_important_findings": 0,
+  "history_files_unchanged": 351,
+  "user_env_and_db_unchanged": true,
+  "public_shape_unchanged": true,
+  "candidate_point_headroom_preserved": "max(max_claim_chars,max_point_chars), default600; final default240",
+  "new_real_model_quality_validation": false,
+  "prior_phase": "organization-final",
+  "prior_essential_full": 7,
+  "prior_essential_partial": 1,
+  "prior_long_not_evaluated": 6,
+  "code_commit_created": false
+}

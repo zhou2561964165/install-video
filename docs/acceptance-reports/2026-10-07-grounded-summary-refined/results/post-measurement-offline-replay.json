@@ -1,0 +1,17 @@
+{
+  "offline_only": true,
+  "raw_response_sha256": "6075d5109fa4d03d421ed88a70e1ffb44897b28087aeea27f755627434eb5e82",
+  "live_codec_sha256": "5538bf308e701b06e61d8321da0ea865215ecfe6c5c84333cc57637912c53147",
+  "candidate_statement_limit": 14,
+  "candidate_chars_limit": 1600,
+  "final_statement_limit": 7,
+  "final_chars_limit": 800,
+  "parsed_statements": 8,
+  "parsed_points": 7,
+  "missing_core_ids": [
+    "F2_3"
+  ],
+  "model_audit_performed": false,
+  "new_provider_posts": 0,
+  "new_source_not_model_validated": true
+}

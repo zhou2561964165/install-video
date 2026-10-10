@@ -1,0 +1,26 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "status": "closed",
+  "hard_ceiling": 10,
+  "reserved_posts": 5,
+  "initial_phase_limit": 5,
+  "conditional_followup_limit": 5,
+  "phases": [
+    {
+      "phase": "source-first-summary-live-1",
+      "status": "closed",
+      "maximum_posts": 5,
+      "reserved_posts": 5,
+      "tracker": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\phase-1.json",
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-10-source-first-summary-live\\results\\request-ledger.json",
+      "provenance_sha256": "2488b9f5e0579fae1b0e690290efb9a74c6ae1049df7dc88b1b460cc1c2b1daf",
+      "closed_receipt_sha256": "21a19d7131269c0fc8627daf6a918b42c75fa17792917ab7b031cc9e0d0ef94b"
+    }
+  ],
+  "reason": "Validate source-first candidate on short/medium/long; one conditional finite repaired phase only after offline validation and review",
+  "authorization": "User 2026-10-10: budget may be increased by agent according to task without asking",
+  "historical_group": "summary-quality-finish-20261008",
+  "historical_group_posts": 26,
+  "historical_group_closed": true,
+  "close_reason": "Superseded by explicit finite continuation12 after located stage-separation/merge repair; preserve original ceiling10 and5 reservations"
+}

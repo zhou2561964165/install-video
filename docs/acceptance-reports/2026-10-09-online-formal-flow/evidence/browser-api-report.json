@@ -1,0 +1,133 @@
+{
+  "real_vendor_posts": 0,
+  "model_quality_verified": false,
+  "browser_only": true,
+  "existing_account_identity": true,
+  "passwords_read": false,
+  "password_login_tested": false,
+  "isolated_session": true,
+  "api": "http://127.0.0.1:56858",
+  "source_kind": "loopback HTML5 + unmodified original VTT",
+  "public_native_success_claimed": false,
+  "work": "E:\\install_video\\tmp\\formal-api-zero-_x619znx",
+  "cases": [],
+  "browser": {
+    "real_vendor_posts": 0,
+    "model_quality_verified": false,
+    "password_login_tested": false,
+    "cases": [
+      {
+        "case": "medium_parse_controls",
+        "passed": true
+      },
+      {
+        "case": "medium_original_subtitle_render",
+        "passed": true
+      },
+      {
+        "case": "summary_fixture_render",
+        "passed": true
+      },
+      {
+        "case": "upstream_error_alert_and_reenabled_action",
+        "passed": true
+      }
+    ],
+    "page_error_count": 0,
+    "responses": [
+      {
+        "path": "/api/parse",
+        "status": 200
+      },
+      {
+        "path": "/api/subtitle",
+        "status": 200
+      },
+      {
+        "path": "/api/summary",
+        "status": 200
+      },
+      {
+        "path": "/api/summary",
+        "status": 502
+      }
+    ],
+    "entry_controls": [
+      "视频链接",
+      "解析",
+      "download.samplelib.com",
+      "bilibili.com",
+      "youtube.com",
+      "角色换装",
+      "立即解析",
+      "退出",
+      "浅色",
+      "深色",
+      "自动",
+      "关闭菜单",
+      "变大",
+      "变小",
+      "短发",
+      "披发",
+      "刘海切换",
+      "左鬓发",
+      "右鬓发",
+      "左马尾",
+      "右马尾",
+      "左啾啾",
+      "右啾啾",
+      "衣服颜色1",
+      "衣服颜色2",
+      "围裙",
+      "绷带",
+      "大小变",
+      "耳机",
+      "猫",
+      "天使环",
+      "眼镜（方）",
+      "眼镜（圆）",
+      "爱心发饰",
+      "发卡",
+      "翅膀（装饰）",
+      "翅膀（背后）",
+      "牌子",
+      "左袖子爱心",
+      "袖带",
+      "创可贴（额）",
+      "创可贴（嘴）",
+      "创可贴（右腿）",
+      "创可贴（左腿）",
+      "睫毛颜色",
+      "眼镜颜色",
+      "头发颜色",
+      "头部装饰颜色",
+      "身体装饰颜色",
+      "脸红",
+      "哭",
+      "黑脸",
+      "血迹",
+      "角色换装"
+    ],
+    "failed_summary_stale_result_visible": true,
+    "external_requests_blocked": 1,
+    "passed": true
+  },
+  "local_supplier_posts": 2,
+  "transport_reservations": 2,
+  "local_supplier_cap": 20,
+  "supplier_events": [
+    {
+      "ordinal": 1,
+      "mode": "healthy",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 2,
+      "mode": "http_503",
+      "model": "formal-local-only"
+    }
+  ],
+  "threads_stopped": true,
+  "live_database_unchanged": true,
+  "request_headers_and_tokens_saved": false
+}

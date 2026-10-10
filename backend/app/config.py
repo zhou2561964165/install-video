@@ -37,6 +37,10 @@ class Settings:
     llm_summary_chunk_chars: int = 20_000
     llm_summary_max_chunks: int = 16
     llm_summary_max_output_tokens: int = 4096
+    llm_summary_length_mode: str = "adaptive"
+    llm_summary_generation_mode: str = "single"
+    llm_summary_output_token_ceiling: int | None = None
+    llm_summary_point_ceiling: int = 14
     llm_summary_response_format: str = "auto"
     llm_summary_thinking_mode: str = "auto"
     llm_summary_max_point_chars: int = 240
@@ -46,8 +50,29 @@ class Settings:
     llm_summary_facts_chunk_chars: int = 8_000
     llm_summary_facts_max_per_chunk: int = 12
     llm_summary_facts_max_evidence_sentences: int = 128
+    llm_summary_facts_max_summary_chars: int = 800
+    llm_summary_facts_compose_max_output_tokens: int = 0
+    llm_summary_facts_audit_max_output_tokens: int = 0
+    llm_summary_format_retries: int = 1
+    llm_summary_semantic_retries: int = 1
+    llm_summary_max_extra_calls: int = 2
+    llm_summary_quality_contract: str = "compat"
 
     def __post_init__(self) -> None:
+        if type(self.llm_summary_generation_mode) is not str or self.llm_summary_generation_mode not in {"single", "staged"}:
+            raise ValueError("llm_summary_generation_mode must be single or staged")
+        if type(self.llm_summary_length_mode) is not str or self.llm_summary_length_mode not in {"adaptive", "fixed"}:
+            raise ValueError("llm_summary_length_mode must be adaptive or fixed")
+        if type(self.llm_summary_max_output_tokens) is not int or not 1 <= self.llm_summary_max_output_tokens <= 65536:
+            raise ValueError("llm_summary_max_output_tokens must be an integer between 1 and 65536")
+        if self.llm_summary_output_token_ceiling is None:
+            self.llm_summary_output_token_ceiling = max(8192, self.llm_summary_max_output_tokens)
+        if (type(self.llm_summary_output_token_ceiling) is not int
+                or not 1 <= self.llm_summary_output_token_ceiling <= 65536
+                or self.llm_summary_output_token_ceiling < self.llm_summary_max_output_tokens):
+            raise ValueError("llm_summary_output_token_ceiling must cover the base budget and be <= 65536")
+        if type(self.llm_summary_point_ceiling) is not int or not 7 <= self.llm_summary_point_ceiling <= 32:
+            raise ValueError("llm_summary_point_ceiling must be an integer between 7 and 32")
         if self.network_retries < 0:
             raise ValueError("network_retries must be >= 0")
         if (
@@ -65,13 +90,25 @@ class Settings:
             raise ValueError("llm_summary_source_context_chars must be >= 0")
         if self.llm_summary_strategy not in {"auto", "legacy", "facts"}:
             raise ValueError("llm_summary_strategy must be auto, legacy or facts")
+        if (type(self.llm_summary_quality_contract) is not str
+                or self.llm_summary_quality_contract not in {"compat", "compact"}):
+            raise ValueError("llm_summary_quality_contract must be compat or compact")
         for name, maximum in (("llm_summary_facts_max_source_chars", 1_000_000),
                               ("llm_summary_facts_chunk_chars", 1_000_000),
                               ("llm_summary_facts_max_per_chunk", 48),
-                              ("llm_summary_facts_max_evidence_sentences", 256)):
+                              ("llm_summary_facts_max_evidence_sentences", 256),
+                              ("llm_summary_facts_max_summary_chars", 4000)):
             value = getattr(self, name)
             if type(value) is not int or not 1 <= value <= maximum:
                 raise ValueError(f"{name} must be an integer between 1 and {maximum}")
+        for name in ("llm_summary_facts_compose_max_output_tokens", "llm_summary_facts_audit_max_output_tokens"):
+            value = getattr(self, name)
+            if type(value) is not int or not 0 <= value <= 65536:
+                raise ValueError(f"{name} must be an integer between 0 and 65536")
+        for name in ("llm_summary_format_retries", "llm_summary_semantic_retries", "llm_summary_max_extra_calls"):
+            value = getattr(self, name)
+            if type(value) is not int or not 0 <= value <= 2:
+                raise ValueError(f"{name} must be an integer between 0 and 2")
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -112,6 +149,13 @@ class Settings:
             llm_summary_chunk_chars=_int("LLM_SUMMARY_CHUNK_CHARS", 20_000),
             llm_summary_max_chunks=_int("LLM_SUMMARY_MAX_CHUNKS", 16),
             llm_summary_max_output_tokens=_int("LLM_SUMMARY_MAX_OUTPUT_TOKENS", 4096),
+            llm_summary_length_mode=_str("LLM_SUMMARY_LENGTH_MODE", "adaptive"),
+            llm_summary_generation_mode=_str("LLM_SUMMARY_GENERATION_MODE", "single"),
+            llm_summary_output_token_ceiling=(
+                _int("LLM_SUMMARY_OUTPUT_TOKEN_CEILING", 8192)
+                if os.getenv("LLM_SUMMARY_OUTPUT_TOKEN_CEILING") is not None else None
+            ),
+            llm_summary_point_ceiling=_int("LLM_SUMMARY_POINT_CEILING", 14),
             llm_summary_response_format=_str("LLM_SUMMARY_RESPONSE_FORMAT", "auto"),
             llm_summary_thinking_mode=_str("LLM_SUMMARY_THINKING_MODE", "auto"),
             llm_summary_max_point_chars=_int("LLM_SUMMARY_MAX_POINT_CHARS", 240),
@@ -121,6 +165,13 @@ class Settings:
             llm_summary_facts_chunk_chars=_int("LLM_SUMMARY_FACTS_CHUNK_CHARS", 8_000),
             llm_summary_facts_max_per_chunk=_int("LLM_SUMMARY_FACTS_MAX_PER_CHUNK", 12),
             llm_summary_facts_max_evidence_sentences=_int("LLM_SUMMARY_FACTS_MAX_EVIDENCE_SENTENCES", 128),
+            llm_summary_facts_max_summary_chars=_int("LLM_SUMMARY_FACTS_MAX_SUMMARY_CHARS", 800),
+            llm_summary_facts_compose_max_output_tokens=_int("LLM_SUMMARY_FACTS_COMPOSE_MAX_OUTPUT_TOKENS", 0),
+            llm_summary_facts_audit_max_output_tokens=_int("LLM_SUMMARY_FACTS_AUDIT_MAX_OUTPUT_TOKENS", 0),
+            llm_summary_format_retries=_int("LLM_SUMMARY_FORMAT_RETRIES", 1),
+            llm_summary_semantic_retries=_int("LLM_SUMMARY_SEMANTIC_RETRIES", 1),
+            llm_summary_max_extra_calls=_int("LLM_SUMMARY_MAX_EXTRA_CALLS", 2),
+            llm_summary_quality_contract=_str("LLM_SUMMARY_QUALITY_CONTRACT", "compat"),
         )
 
 

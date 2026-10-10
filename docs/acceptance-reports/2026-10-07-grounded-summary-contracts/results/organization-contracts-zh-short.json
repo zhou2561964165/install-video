@@ -1,0 +1,9 @@
+{
+  "phase": "organization-contracts",
+  "id": "zh-short",
+  "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+  "proxy_used": true,
+  "error_type": "llm_invalid_response",
+  "elapsed_seconds": 2.05,
+  "trace_sha256": "144e5ef452e2865586a06da5ad28069ca44a654eb8221e1a5322b9e7e8cab2b5"
+}

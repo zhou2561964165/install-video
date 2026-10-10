@@ -1,0 +1,36 @@
+{
+  "real_vendor_posts": 0,
+  "offline_plan_verified": true,
+  "group_reserved_posts_at_plan": 0,
+  "maximum_phase_posts": 5,
+  "group_hard_ceiling": 10,
+  "runs": [
+    {
+      "kind": "initial_new_guard_suite",
+      "passed": 21,
+      "seconds": 5.33
+    },
+    {
+      "kind": "runtime_versions_targeted",
+      "passed": 2,
+      "seconds": 0.65
+    },
+    {
+      "kind": "owned_writing_failure_targeted",
+      "passed": 7,
+      "seconds": 1.48
+    }
+  ],
+  "counts_overlap": true,
+  "collected_unique_cases": 26,
+  "collection_is_not_a_test_run": true,
+  "red_observed": [
+    "missing new runner",
+    "missing runtime version fields",
+    "actual os.replace failure left writing file and blocked close"
+  ],
+  "independent_review": "No unresolved Critical/Important; env basename, owned durable failure cleanup, runtime versions checked",
+  "scope": "new guard tests only; prior product108/hook4/old phase tests reused; no old evaluator execution",
+  "runner_sha256": "8de64c1cffabc82e7a8b446e4f81091360c8374a502cd23ffd022328180bd4b0",
+  "tests_sha256": "e3b722d2c7c85e2c0b393d2e99d48389e7f1ac866bfbfb19280077c1044c7324"
+}

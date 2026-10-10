@@ -1,0 +1,81 @@
+{
+  "phase": "quality-final",
+  "ceiling": 19,
+  "requests": [
+    {
+      "phase": "quality-final",
+      "ordinal": 1,
+      "sample": "zh-short",
+      "sample_post": 1,
+      "stage": "extract",
+      "attempt": 1,
+      "recovery": "none",
+      "started_utc": "2026-10-09T03:21:24.722622+00:00",
+      "status": "response",
+      "payload_sha256": "47a6793ff3b6fc6f8d1ecf89d5493570d8b9b20ec6c0aec28eb22c9104a218c8",
+      "http_status": 200,
+      "response_sha256": "2af33b40d4021cc7ace6ede82ac58c01162600492934b743d0d92bf0a36d4c45",
+      "usage": {
+        "prompt_tokens": 1224,
+        "completion_tokens": 556,
+        "total_tokens": 1780,
+        "prompt_cache_hit_tokens": 1024,
+        "prompt_cache_miss_tokens": 200,
+        "prompt_tokens_details": {
+          "cached_tokens": 1024
+        }
+      },
+      "ended_utc": "2026-10-09T03:21:26.973970+00:00"
+    },
+    {
+      "phase": "quality-final",
+      "ordinal": 2,
+      "sample": "zh-short",
+      "sample_post": 2,
+      "stage": "compose",
+      "attempt": 1,
+      "recovery": "none",
+      "started_utc": "2026-10-09T03:21:27.005152+00:00",
+      "status": "response",
+      "payload_sha256": "dfb33cd34a845c691ebe655711f74bdd31b2596d4bd4b1c0ff867cff7efbe67a",
+      "http_status": 200,
+      "response_sha256": "67fda7bee736bb9fe0a5ff974091f3316f49a045a6ee46df8aded2a1bdf85a69",
+      "usage": {
+        "prompt_tokens": 1426,
+        "completion_tokens": 1003,
+        "total_tokens": 2429,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1426,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "ended_utc": "2026-10-09T03:21:30.796271+00:00"
+    },
+    {
+      "phase": "quality-final",
+      "ordinal": 3,
+      "sample": "zh-short",
+      "sample_post": 3,
+      "stage": "compose",
+      "attempt": 2,
+      "recovery": "model_format_repair",
+      "started_utc": "2026-10-09T03:21:30.827255+00:00",
+      "status": "response",
+      "payload_sha256": "b959039edc5b6a33a9abdcd4df3b2cf4f054edeb3e286b924e2de8eccc089668",
+      "http_status": 200,
+      "response_sha256": "917b0b9dc94158f4d146b50aec62069af3bc8544d2f88274ef4af6a1e1a13eb2",
+      "usage": {
+        "prompt_tokens": 2628,
+        "completion_tokens": 1003,
+        "total_tokens": 3631,
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 2372,
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        }
+      },
+      "ended_utc": "2026-10-09T03:21:34.119704+00:00"
+    }
+  ]
+}

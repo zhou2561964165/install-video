@@ -320,6 +320,15 @@ def test_named_attribution_is_not_case_corrected_or_invented(name):
         parse_facts({"facts": [record]}, source, FactLimits(), "F")
 
 
+@pytest.mark.parametrize("separator,evidence", [("\n", [3]), ("  ", [2]), ("\t", [2])])
+def test_named_attribution_must_be_an_exact_source_substring(separator, evidence):
+    source = SourcePart("C4", f"Mira{separator}Liao introduces policy.\nBudget is 48000.")
+    record = fact(topic="Budget", claim="Budget is 48000.",
+                  evidence=evidence, attribution="Mira Liao")
+    with pytest.raises(FactValidationError, match="attribution_not_found"):
+        parse_facts({"facts": [record]}, source, FactLimits(), "F")
+
+
 def test_audit_cannot_borrow_attribution_from_another_source_part():
     sources = [SourcePart("C1", "Budget is 48000."), SourcePart("C2", "Mira introduces policy.", 100)]
     original = parse_facts({"facts": [fact(topic="Budget", claim="Budget is 48000.",
@@ -353,3 +362,46 @@ def test_verbatim_quote_copy_issue_is_removed_entirely():
     item = parse_facts({"facts": [record]}, source, FactLimits(), "F")[0]
     assert len(item.quote) == len(long_line)
     assert item.quote == long_line
+
+
+def composition():
+    return {"summary": [{"text": "Release depends on the audit.", "fact_ids": ["F1"]}],
+            "point_1": {"topic": "Budget", "text": "Budget is 48000.", "fact_ids": ["F2"]},
+            **{f"point_{i}": None for i in range(2, 8)}}
+
+
+def test_composition_slots_normalize_to_existing_candidate_with_core_coverage():
+    from app.services import summary_facts as codec
+    parsed = codec.parse_composition(composition(), facts(), FactLimits(), require_core_coverage=True)
+    assert parsed.public_summary == "Release depends on the audit."
+    assert parsed.public_key_points == ("Budget is 48000.",)
+    assert parsed.key_points[0].id == "P1"
+
+
+@pytest.mark.parametrize("change", ["missing", "unknown", "empty_first", "gap", "bad_slot", "unknown_ref", "eight"])
+def test_composition_rejects_invalid_slots_without_dropping_or_truncating(change):
+    from app.services import summary_facts as codec
+    obj = composition()
+    if change == "missing":
+        del obj["point_7"]
+    elif change in {"unknown", "eight"}:
+        obj["point_8" if change == "eight" else "extra"] = obj["point_1"]
+    elif change == "empty_first":
+        obj["point_1"] = None
+    elif change == "gap":
+        obj["point_3"] = {"topic": "Training", "text": "Training lasts six weeks.", "fact_ids": ["F3"]}
+    elif change == "bad_slot":
+        obj["point_1"] = "Budget is 48000."
+    else:
+        obj["point_1"]["fact_ids"] = ["unknown"]
+    with pytest.raises(FactValidationError):
+        codec.parse_composition(obj, facts(), FactLimits())
+
+
+def test_composition_duplicate_json_fields_cannot_hide_a_slot():
+    from app.services import summary_facts as codec
+    import json
+    text = json.dumps(composition())
+    text = text[:-1] + ',"point_1":null}'
+    with pytest.raises(FactValidationError):
+        codec.parse_composition(text, facts(), FactLimits())

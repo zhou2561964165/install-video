@@ -1,0 +1,21 @@
+{
+  "phase": "organization-prefix",
+  "offline_only": true,
+  "frozen_codec_sha256": "88f815a57b4f687e75a22a61331a1ac1b4344950cf0a99d06294d379f3b9eca7",
+  "response_sha256": "89de15e7ca8a8cce08543abfd8fcd8ee65ac383f49b580513b4f6e65ecdd89fe",
+  "stage": "compose",
+  "response_ordinal": 2,
+  "codec_reason": "invalid_fields",
+  "summary_json_type": "str",
+  "expected_summary_json_type": "array of text/fact_ids statement objects",
+  "facts_validated": 6,
+  "nonempty_point_slots": 5,
+  "themes_supplied": 5,
+  "finish_reason": "stop",
+  "audit_sent": false,
+  "final_output_available": false,
+  "provider_posts": 2,
+  "supplier_reported_tokens": 4183,
+  "phase_restarted": false,
+  "candidate_text_salvaged_or_invented_references": false
+}

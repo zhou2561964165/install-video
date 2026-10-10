@@ -1,0 +1,33 @@
+{
+  "phase": "organization-contracts",
+  "offline_only": true,
+  "frozen_codec_sha256": "898679f7a51406beb4a7b1446045e5c85ae39539957bd016c63ce24682555e6e",
+  "response_sha256": "9410033afb36f850916253c91baa957483a32a882f64f094c3100d17f0d2592e",
+  "codec_reason": "invalid_fields",
+  "provided_fact_keys": [
+    "fact_1",
+    "fact_2",
+    "fact_3",
+    "fact_4",
+    "fact_5",
+    "fact_6"
+  ],
+  "missing_reserved_tail_keys": [
+    "fact_7",
+    "fact_8",
+    "fact_9",
+    "fact_10",
+    "fact_11",
+    "fact_12"
+  ],
+  "raw_fact_objects": 6,
+  "validated_facts": 0,
+  "finish_reason": "stop",
+  "supplier_reported_tokens": 1686,
+  "compose_sent": false,
+  "audit_sent": false,
+  "final_output_available": false,
+  "provider_posts": 1,
+  "remaining_phase_reservations_not_used": 12,
+  "phase_restarted": false
+}

@@ -30,15 +30,55 @@ def configured(monkeypatch):
                         "llm_summary_facts_chunk_chars": 20000,
                         "llm_summary_facts_max_per_chunk": 12,
                         "llm_summary_facts_max_evidence_sentences": 32,
+                        "llm_summary_facts_max_summary_chars": 800,
+                        "llm_summary_facts_compose_max_output_tokens": 0,
+                        "llm_summary_facts_audit_max_output_tokens": 0,
+                        # These historical stop-boundary cases explicitly disable
+                        # repairs. The default finite policy has its own HTTP suite.
+                        "llm_summary_format_retries": 0,
+                        "llm_summary_semantic_retries": 0,
+                        "llm_summary_max_extra_calls": 0,
                         "llm_summary_max_point_chars": 240}.items():
         monkeypatch.setattr(settings, name, value, raising=False)
+
+
+def extraction_response(facts):
+    """Explicit fixture container migration; preserve fields and excess facts."""
+    fields = {"topic", "claim", "evidence", "attribution", "importance"}
+    if not isinstance(facts, list) or not facts or any(
+            not isinstance(fact, dict) or set(fact) != fields for fact in facts):
+        return {"facts": facts}  # Keep malformed old payloads for production rejection.
+    return {f"fact_{index}": facts[index - 1] if index <= len(facts) else None
+            for index in range(1, max(12, len(facts)) + 1)}
+
+
+def composition_response(value):
+    """Explicit legal candidate fixture migration; audit keeps its array contract.
+
+    Do not parse strings or repair invalid fields/references. Theme wording is
+    synthetic fixture data and makes no new model semantic-quality claim.
+    """
+    if (isinstance(value, dict) and set(value) == {"summary", "key_points"}
+            and isinstance(value["summary"], list) and isinstance(value["key_points"], list)
+            and value["key_points"] and all(
+                isinstance(point, dict) and set(point) == {"topic", "text", "fact_ids"}
+                for point in value["key_points"])):
+        slot_count = max(7, len(value["key_points"]))  # Excess slots remain invalid, never truncated.
+        return {"summary": value["summary"], **{
+            f"point_{index}": value["key_points"][index - 1] if index <= len(value["key_points"]) else None
+            for index in range(1, slot_count + 1)}, "theme_plan": {
+                f"theme_{index}": {"topic": point["topic"], "principle": point["text"],
+                    "conditions": [], "consequences": [], "fact_ids": point["fact_ids"]}
+                if index <= len(value["key_points"]) and (point := value["key_points"][index - 1]) else None
+                for index in range(1, slot_count + 1)}}
+    return value
 
 
 def run(responses, *, transcript=SOURCE, trace=None):
     requests = []
     def respond(request):
         requests.append(json.loads(request.content))
-        response = responses[len(requests) - 1]
+        response = composition_response(responses[len(requests) - 1])
         if isinstance(response, int):
             return httpx.Response(response, json={"error": "unavailable"})
         content = response if isinstance(response, str) else json.dumps(response)
@@ -50,7 +90,7 @@ def run(responses, *, transcript=SOURCE, trace=None):
 
 def test_facts_pipeline_audits_source_and_preserves_public_shape():
     traces = []
-    result, requests = run([{"facts": [FACT]}, CANDIDATE, AUDIT], trace=traces.append)
+    result, requests = run([extraction_response([FACT]), CANDIDATE, AUDIT], trace=traces.append)
     assert result.summary == SOURCE
     assert result.key_points == [CANDIDATE["key_points"][0]["text"]]
     assert result.provider == "compatible" and result.model == "fixture-model"
@@ -69,13 +109,13 @@ def test_facts_pipeline_audits_source_and_preserves_public_shape():
 
 @pytest.mark.parametrize("stage", ["extract", "compose", "audit"])
 def test_failure_at_each_stage_stops_without_retry_or_legacy_fallback(stage):
-    responses = [{"facts": [FACT]}, CANDIDATE, AUDIT]
+    responses = [extraction_response([FACT]), CANDIDATE, AUDIT]
     index = ["extract", "compose", "audit"].index(stage)
     responses[index] = 503
     calls = []
     def respond(request):
         calls.append(request)
-        value = responses[len(calls)-1]
+        value = composition_response(responses[len(calls)-1])
         return httpx.Response(value, json={}) if isinstance(value, int) else httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(value)}, "finish_reason": "stop"}]})
     with httpx.Client(transport=httpx.MockTransport(respond)) as client, pytest.raises(LLMServiceError) as error:
         summarize_text(SOURCE, title="t", output_language="en", client=client)
@@ -94,14 +134,14 @@ def test_explicit_facts_unsupported_protocol_rejected_before_http(monkeypatch, m
 def test_invalid_evidence_stops_after_extraction():
     fact = dict(FACT, evidence=[99])
     with pytest.raises(LLMServiceError) as error:
-        run([{"facts": [fact]}])
+        run([extraction_response([fact])])
     assert error.value.error_type == "llm_invalid_response"
 
 
 def test_verbatim_quote_field_is_rejected_instead_of_accepted():
     fact = dict(FACT, quote="The library always closes.")
     with pytest.raises(LLMServiceError) as error:
-        run([{"facts": [fact]}])
+        run([extraction_response([fact])])
     assert error.value.error_type == "llm_invalid_response"
 
 
@@ -109,14 +149,14 @@ def test_negative_audit_flag_prevents_unaudited_result():
     audit = copy.deepcopy(AUDIT)
     audit["checks"][1]["qualifiers_preserved"] = False
     with pytest.raises(LLMServiceError) as error:
-        run([{"facts": [FACT]}, CANDIDATE, audit])
+        run([extraction_response([FACT]), CANDIDATE, audit])
     assert error.value.error_type == "llm_invalid_response"
 
 
 def test_audit_repairs_overlong_candidate_without_truncating(monkeypatch):
     candidate = copy.deepcopy(CANDIDATE)
     candidate["key_points"][0]["text"] = "Some candidate wording. " * 12
-    result, requests = run([{"facts": [FACT]}, candidate, AUDIT])
+    result, requests = run([extraction_response([FACT]), candidate, AUDIT])
     assert len(requests) == 3
     assert result.key_points == [CANDIDATE["key_points"][0]["text"]]
 
@@ -125,7 +165,7 @@ def test_final_overlong_point_fails_instead_of_silent_truncation(monkeypatch):
     audit = copy.deepcopy(AUDIT)
     audit["output"]["key_points"][0]["text"] = "Some candidate wording. " * 12
     with pytest.raises(LLMServiceError) as error:
-        run([{"facts": [FACT]}, CANDIDATE, audit])
+        run([extraction_response([FACT]), CANDIDATE, audit])
     assert error.value.error_type == "llm_invalid_response"
 
 
@@ -155,7 +195,7 @@ def test_two_parts_preserve_cleaned_source_offsets_and_closing_fact():
     audit = {"additional_facts": [], "output": candidate,
              "checks": CHECKS + [{**CHECKS[1], "item_id": "P2"}]}
     traces = []
-    result, requests = run([{"facts": [FACT]}, {"facts": [tail_fact]}, candidate, audit],
+    result, requests = run([extraction_response([FACT]), extraction_response([tail_fact]), candidate, audit],
                            transcript=transcript, trace=traces.append)
     assert len(requests) == 4 and result.key_points[-1] == ending
     assert traces[-1]["planned_calls"] == 4
@@ -175,7 +215,7 @@ def test_planned_audit_can_add_omitted_core_fact_with_validated_source():
                   "attribution": "Noor", "importance": "core"}
     audit = {"additional_facts": [additional], "output": final,
              "checks": CHECKS + [{**CHECKS[1], "item_id": "P2"}]}
-    result, requests = run([{"facts": [FACT]}, candidate, audit], transcript=SOURCE + "\n" + ending)
+    result, requests = run([extraction_response([FACT]), candidate, audit], transcript=SOURCE + "\n" + ending)
     assert len(requests) == 3 and result.key_points[-1] == ending
 
 
@@ -184,10 +224,12 @@ def test_compose_capacity_stops_without_discarding_validated_facts(monkeypatch):
     facts = [dict(FACT, topic="t" * 120, claim="x" * 600) for _ in range(12)]
     traces = []
     with pytest.raises(LLMServiceError) as error:
-        run([{"facts": facts}], trace=traces.append)
+        run([extraction_response(facts)], trace=traces.append)
     assert error.value.error_type == "llm_input_too_large"
     assert len(traces[-1]["facts"]) == 12
-    assert [entry["stage"] for entry in traces[-1]["stages"]] == ["extract"]
+    assert [entry["stage"] for entry in traces[-1]["stages"]] == ["extract", "compose"]
+    assert traces[-1]["stages"][-1]["status"] == "blocked"
+    assert traces[-1]["stages"][-1]["paid_attempt"] is False
 
 
 def test_source_json_escaping_capacity_checked_before_any_post(monkeypatch):
@@ -201,7 +243,7 @@ def test_source_json_escaping_capacity_checked_before_any_post(monkeypatch):
 def test_auto_supported_protocol_selects_fact_pipeline(monkeypatch, mode):
     monkeypatch.setattr(settings, "llm_summary_strategy", "auto")
     monkeypatch.setattr(settings, "llm_summary_response_format", mode)
-    result, requests = run([{"facts": [FACT]}, CANDIDATE, AUDIT])
+    result, requests = run([extraction_response([FACT]), CANDIDATE, AUDIT])
     assert result.summary == SOURCE and len(requests) == 3
     if mode != "json_object":
         assert "response_format" not in requests[0]
@@ -240,23 +282,25 @@ def test_missing_core_candidate_gets_one_planned_audit_chance():
     final["key_points"].append({"topic": "Budget", "text": extra, "fact_ids": ["F1_2"]})
     audit = {"additional_facts": [], "output": final,
              "checks": CHECKS + [{**CHECKS[1], "item_id": "P2"}]}
-    result, requests = run([{"facts": [FACT, fact2]}, CANDIDATE, audit], transcript=SOURCE+"\n"+extra)
+    result, requests = run([extraction_response([FACT, fact2]), CANDIDATE, audit], transcript=SOURCE+"\n"+extra)
     assert len(requests) == 3 and result.key_points[-1] == extra
 
 
-def test_unknown_candidate_ref_stops_before_audit():
+def test_unknown_candidate_hint_is_diagnostic_and_text_reaches_audit():
     candidate = copy.deepcopy(CANDIDATE)
     candidate["summary"][0]["fact_ids"] = ["not-known"]
-    with pytest.raises(LLMServiceError) as error:
-        run([{"facts": [FACT]}, candidate])
-    assert error.value.error_type == "llm_invalid_response"
+    traces = []
+    result, requests = run([extraction_response([FACT]), candidate, AUDIT], trace=traces.append)
+    assert result.summary == SOURCE and len(requests) == 3
+    assert traces[-1]["reference_status"]["invalid_hints"][0]["hint_id"] == "not-known"
+    assert traces[-1]["candidate"]["summary"][0]["fact_ids"] == ["F1_1"]
 
 
 def test_long_single_line_evidence_is_accepted_without_quote_limit():
     source = SOURCE + " " + "x" * (466 - len(SOURCE) - 1)
     fact = dict(FACT, evidence=[1])
     traces = []
-    result, requests = run([{"facts": [fact]}, CANDIDATE, AUDIT], transcript=source, trace=traces.append)
+    result, requests = run([extraction_response([fact]), CANDIDATE, AUDIT], transcript=source, trace=traces.append)
     assert result.summary == SOURCE and len(requests) == 3
     assert len(traces[-1]["facts"][0]["quote"]) == 466
     assert traces[-1]["facts"][0]["end"] == 466
@@ -267,7 +311,7 @@ def test_named_speaker_outside_evidence_retains_separate_source_span():
     source = "Speaker: Mira.\n" + quote
     fact = dict(FACT, claim=quote, evidence=[2], attribution="Mira")
     traces = []
-    result, requests = run([{"facts": [fact]}, CANDIDATE, AUDIT], transcript=source, trace=traces.append)
+    result, requests = run([extraction_response([fact]), CANDIDATE, AUDIT], transcript=source, trace=traces.append)
     assert result.summary == SOURCE and len(requests) == 3
     evidence = traces[-1]["facts"][0]
     assert evidence["start"] == 15
@@ -285,3 +329,109 @@ def test_facts_strategy_chunks_finer_than_legacy(monkeypatch):
     facts = _summary_chunks(text, min(settings.llm_summary_facts_chunk_chars, settings.llm_summary_chunk_chars, settings.llm_max_input_chars))
     assert len(facts) > len(legacy)
     assert max(len(chunk) for chunk in facts) <= 8000
+
+
+@pytest.mark.parametrize("strategy", ["auto", "facts"])
+def test_selected_fact_pipeline_honors_facts_chunk_size(monkeypatch, strategy):
+    monkeypatch.setattr(settings, "llm_summary_strategy", strategy)
+    monkeypatch.setattr(settings, "llm_summary_facts_chunk_chars", len(SOURCE))
+    ending = "Noor paused release."
+    tail_fact = {"topic": "Release", "claim": ending, "evidence": [1],
+                 "attribution": "Noor", "importance": "core"}
+    final = copy.deepcopy(CANDIDATE)
+    final["key_points"].append({"topic": "Release", "text": ending, "fact_ids": ["F2_1"]})
+    audit = {"additional_facts": [], "output": final,
+             "checks": CHECKS + [{**CHECKS[1], "item_id": "P2"}]}
+    result, requests = run([extraction_response([FACT]), extraction_response([tail_fact]), final, audit],
+                           transcript=SOURCE + "\n" + ending)
+    assert result.key_points[-1] == ending
+    assert len(requests) == 4
+    assert json.loads(requests[0]["messages"][1]["content"])["source"]["text"] == "[1] " + SOURCE
+    assert json.loads(requests[1]["messages"][1]["content"])["source"]["text"] == "[1] " + ending
+
+
+def test_auto_falls_back_before_post_when_fact_chunks_exceed_limit(monkeypatch):
+    monkeypatch.setattr(settings, "llm_summary_strategy", "auto")
+    monkeypatch.setattr(settings, "llm_summary_facts_chunk_chars", 10)
+    monkeypatch.setattr(settings, "llm_summary_max_chunks", 1)
+    result, requests = run([{"summary": "Legacy policy", "key_points": ["Legacy point"]}])
+    assert result.summary == "Legacy policy"
+    assert len(requests) == 1
+
+
+@pytest.mark.parametrize("compose,audit,expected", [(0, 0, [4096, 4096, 4096]),
+                                                  (8192, 10000, [4096, 8192, 10000])])
+def test_facts_stage_budgets_match_actual_post_payloads(monkeypatch, compose, audit, expected):
+    monkeypatch.setattr(settings, "llm_summary_facts_compose_max_output_tokens", compose)
+    monkeypatch.setattr(settings, "llm_summary_facts_audit_max_output_tokens", audit)
+    result, requests = run([extraction_response([FACT]), CANDIDATE, AUDIT])
+    assert result.summary == SOURCE
+    assert [request["max_tokens"] for request in requests] == expected
+
+
+def test_array_composition_reaches_the_planned_audit():
+    result, requests = run([extraction_response([FACT]), json.dumps(CANDIDATE), AUDIT])
+    assert result.summary == SOURCE and len(requests) == 3
+
+
+def test_configured_summary_ceiling_is_enforced_without_truncation(monkeypatch):
+    monkeypatch.setattr(settings, "llm_summary_facts_max_summary_chars", 20)
+    with pytest.raises(LLMServiceError) as error:
+        run([extraction_response([FACT]), CANDIDATE])
+    assert error.value.error_type == "llm_invalid_response"
+
+
+def test_planned_audit_can_shorten_measured_size_candidate_summary():
+    candidate = copy.deepcopy(CANDIDATE)
+    texts = [str(i) + "r" * 134 for i in range(6)] + ["6" + "r" * 129]
+    candidate["summary"] = [{"text": text, "fact_ids": ["F1_1"]} for text in texts]
+    assert len(" ".join(texts)) == 946  # seven-claim overshoot observed in first profile
+    result, requests = run([extraction_response([FACT]), candidate, AUDIT])
+    assert len(requests) == 3
+    assert result.summary == SOURCE
+    normalized = json.loads(requests[2]["messages"][1]["content"])["candidate"]["summary"]
+    assert [item["text"] for item in normalized] == texts
+    assert all(item["fact_ids"] == [] for item in normalized)  # Unrelated hints are not support.
+
+
+def test_candidate_summary_above_bounded_audit_headroom_stops():
+    candidate = copy.deepcopy(CANDIDATE)
+    candidate["summary"][0]["text"] = "r" * 1601
+    with pytest.raises(LLMServiceError) as error:
+        run([extraction_response([FACT]), candidate])
+    assert error.value.error_type == "llm_invalid_response"
+
+
+def test_final_summary_over_ceiling_is_not_published_or_truncated():
+    audit = copy.deepcopy(AUDIT)
+    audit["output"]["summary"][0]["text"] = "r" * 946
+    with pytest.raises(LLMServiceError) as error:
+        run([extraction_response([FACT]), CANDIDATE, audit])
+    assert error.value.error_type == "llm_invalid_response"
+
+
+def test_planned_audit_merges_eight_draft_summary_statements_without_dropping_them():
+    candidate = copy.deepcopy(CANDIDATE)
+    candidate["summary"] = [{"text": f"Draft clause {i}.", "fact_ids": ["F1_1"]} for i in range(1, 9)]
+    result, requests = run([extraction_response([FACT]), candidate, AUDIT])
+    assert len(requests) == 3
+    assert result.summary == SOURCE
+    normalized = json.loads(requests[2]["messages"][1]["content"])["candidate"]["summary"]
+    assert [item["text"] for item in normalized] == [item["text"] for item in candidate["summary"]]
+    assert all(item["fact_ids"] == [] for item in normalized)
+
+
+def test_draft_summary_more_than_fourteen_statements_is_rejected():
+    candidate = copy.deepcopy(CANDIDATE)
+    candidate["summary"] = [{"text": f"Draft clause {i}.", "fact_ids": ["F1_1"]} for i in range(1, 16)]
+    with pytest.raises(LLMServiceError) as error:
+        run([extraction_response([FACT]), candidate])
+    assert error.value.error_type == "llm_invalid_response"
+
+
+def test_final_summary_eight_statements_is_rejected_without_merging():
+    audit = copy.deepcopy(AUDIT)
+    audit["output"]["summary"] = [{"text": f"Final clause {i}.", "fact_ids": ["F1_1"]} for i in range(1, 9)]
+    with pytest.raises(LLMServiceError) as error:
+        run([extraction_response([FACT]), CANDIDATE, audit])
+    assert error.value.error_type == "llm_invalid_response"

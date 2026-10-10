@@ -1,0 +1,1520 @@
+{
+  "version": 1,
+  "phase": "organization-refined",
+  "reviewed_utc": "2026-10-07T13:53:57.305578+00:00",
+  "review_type": "independent_agent_semantic_review",
+  "review_status": "complete_for_available_finals_with_long_not_evaluated",
+  "authorization": "用户在phase结束及index可用后明确授权仅新建此JSON；exclusive create，禁止覆盖。",
+  "engineering_conventions": [
+    "UI/视觉/交互先使用ui-ux-pro-max及design-system；primitive -> semantic -> component三层token。本review不修改UI。",
+    "skill指引优先于计划，用户明确指令优先于skill。",
+    "颜色/字体/时长走:root token；能力可配置、数据驱动，避免硬编码与大规模重构。",
+    "模块通过稳定窄接口单向依赖；ytdlp_service.py唯一接触yt-dlp；LLM经llm_service.py；视觉层只读scene，不修改下载状态、不import下载核心。",
+    "只读本地许可材料和证据，不读.env、不联网、不调用模型、不运行runner、不开发或修改其他文件，仅新建获授权review JSON。"
+  ],
+  "review_method": {
+    "rubric_frozen_utc": "2026-10-05T04:52:40.327647+00:00",
+    "rubric_frozen_before_any_new_output": true,
+    "essential_denominator": 14,
+    "evaluated_essential_count": 8,
+    "unit": "final summary and final key_points joint semantic coverage; per-clause source comparison, not keyword grading",
+    "full": "全部必需子句、条件、归属及范围在final中语义保留，且无相反/过强final断言损坏。",
+    "partial": "有准确核心，但必需子句缺失或不完整；不借trace补final。",
+    "missing": "已有final但不能支持该核心事实。",
+    "not_evaluated": "没有final；不是missing，不加入已交付样本full/partial/missing分母。",
+    "output_positions": "summary、P1..Pn；位置为对应字段内0基左闭右开Unicode字符区间。",
+    "source_positions": "冻结rubric清理后TXT的0基左闭右开字符区间，行号从1起；不是原VTT时间轴。",
+    "clause_evidence_scope": "每essential的source_evidence适用于其所有子句；output_evidence定位实际final文字。空output_evidence明确标记缺失、不适用或未评。",
+    "qualitative_organization": "pass/partial/fail/not_evaluated，独立于长度与语义覆盖。",
+    "trace_limit": "hash、quote位置、HTTP/stage状态、fact ID及audit checks=true只用于身份/阶段/可追溯性，不证明语义。",
+    "model_policy": "继承当前主模型/推理设置；review无新模型调用。产出文件记录的provider/model是deepseek/deepseek-flash，不把它当独立评审模型身份。",
+    "skills_used": [
+      "superpowers:using-superpowers",
+      "superpowers:verification-before-completion"
+    ]
+  },
+  "artifacts": {
+    "rubric": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/rubric.json",
+      "sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49"
+    },
+    "manifest": {
+      "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/manifest.json",
+      "sha256": "c5426b5d1fb9c5381af2a5e223905f163301be1087167fc5b42ef9f79e6640d3"
+    },
+    "index": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results/organization-refined-index.json",
+      "sha256": "e23bce0b9a40f4f6540a186f7db7e637c9fcc813eb41bc03f74f507d266e754f"
+    },
+    "provenance": {
+      "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results/organization-refined-provenance.json",
+      "sha256": "da012f1e59a55c035c5c19e7df8df9862f1eb4b6392f9e6e007633957dddd098"
+    },
+    "source_license": {
+      "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/LICENSE.md",
+      "sha256": "4e87f1f901d907368e4f206da8ed5da72964d648b9cc516f44d4b02950a157a5"
+    }
+  },
+  "phase_evidence": {
+    "index_ended_utc": "2026-10-07T13:43:36.877837+00:00",
+    "index_reported_posts": 12,
+    "authorized_ceiling_from_user": 13,
+    "budget_evidence_limit": "12 POST为本地index报告的3+3+6；本review未独立重放网络或审计全部持久化预算台账，不使用剩余预算。",
+    "completed_samples": [
+      "zh-short",
+      "en-medium"
+    ],
+    "failed_samples": [
+      "en-long"
+    ],
+    "delivery_all_three_complete": false,
+    "long_failure_boundary": "五次extract validated，compose received后failed llm_invalid_response；无audit、无最终result。只确认阶段边界，不对无记录的非法响应根因作推断。",
+    "production_changes": "review无production修改；不将producer候选宣称为已部署production。"
+  },
+  "samples": [
+    {
+      "id": "zh-short",
+      "identity": {
+        "result": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results/organization-refined-zh-short.json",
+          "sha256": "9ac49ae5672bbce626e3b2e9ec36f7e92197950da1697b3c0e61849772bdb154"
+        },
+        "source": {
+          "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/zh-short.txt",
+          "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b"
+        },
+        "rubric": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/rubric.json",
+          "sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49"
+        },
+        "trace": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results/organization-refined-zh-short-trace.json",
+          "sha256": "deded676765b1d83f78eccce068cedb1aceb2be18d3a39c6555fc4653840e776"
+        },
+        "index_reported_posts": 3
+      },
+      "final_available": true,
+      "delivery_status": "completed",
+      "error_type": null,
+      "essential": [
+        {
+          "id": "zh1",
+          "status": "full",
+          "rubric_claim": "MIT中文课从第二天开始全中文教学；第一天讲准备方法、大纲及期望。",
+          "source_evidence": [
+            {
+              "line_start": 1,
+              "line_end": 4,
+              "char_start": 0,
+              "char_end": 83,
+              "excerpt": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的\n当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么"
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "本MIT中文课堂从第二天开始全中文",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P1",
+                  "quote": "从第二天开始就用全中文上课",
+                  "char_start": 9,
+                  "char_end": 22
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "第一天说明准备方法",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "summary",
+                  "quote": "第一天说明准备与大纲",
+                  "char_start": 20,
+                  "char_end": 30
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "第一天介绍大纲",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P1",
+                  "quote": "第一天会告诉学生课程准备、大纲等",
+                  "char_start": 23,
+                  "char_end": 39
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "第一天让学生清楚课程期望",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P1",
+                  "quote": "让学生清楚期望",
+                  "char_start": 40,
+                  "char_end": 47
+                }
+              ],
+              "note": null
+            }
+          ],
+          "reason": "四个必需子句均出现在新final；大纲没有遗漏。",
+          "precision_findings": []
+        },
+        {
+          "id": "zh2",
+          "status": "full",
+          "rubric_claim": "维持全中文课堂有两个关键：学生听懂固定课堂用语，课前准备与课堂练习任务一致。",
+          "source_evidence": [
+            {
+              "line_start": 5,
+              "line_end": 13,
+              "char_start": 84,
+              "char_end": 390,
+              "excerpt": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。"
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "学生听懂固定课堂用语",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P2",
+                  "quote": "课堂用语学生听得懂",
+                  "char_start": 22,
+                  "char_end": 31
+                }
+              ],
+              "note": "固定表述的约束由同一final的P4具体例子支持。"
+            },
+            {
+              "clause": "课前准备与课堂任务一致",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P3",
+                  "quote": "所以每天备课与上课任务一定要一致",
+                  "char_start": 64,
+                  "char_end": 80
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "两者是维持全中文上课的关键环节",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P2",
+                  "quote": "该课程认为，要让一堂课能用中文上，最重要的是课堂用语学生听得懂，以及学生的备课要反映在课堂练习上。",
+                  "char_start": 0,
+                  "char_end": 49
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "若练未准备内容会转用英文（已出现的后果）",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P3",
+                  "quote": "若练学生没准备的内容，他们就会跑出英文",
+                  "char_start": 44,
+                  "char_end": 63
+                }
+              ],
+              "note": null
+            }
+          ],
+          "reason": "P2的两环节和P3的任务一致/后果联合保留源义，P4限定课堂用语表述。",
+          "precision_findings": []
+        },
+        {
+          "id": "zh3",
+          "status": "full",
+          "rubric_claim": "课堂用语不能随意换说法；请你再说一遍与请你再说一次对初学者不同。",
+          "source_evidence": [
+            {
+              "line_start": 14,
+              "line_end": 16,
+              "char_start": 391,
+              "char_end": 477,
+              "excerpt": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意"
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "课堂用语不能随意改变表述",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P4",
+                  "quote": "课堂用语绝对不能出圈",
+                  "char_start": 0,
+                  "char_end": 10
+                }
+              ],
+              "note": "随后具体对比使出圈在此课堂语境中可理解为改变固定表述。"
+            },
+            {
+              "clause": "一遍/一次对比保留在教学场景内",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P4",
+                  "quote": "例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师首先得注意这一点。",
+                  "char_start": 11,
+                  "char_end": 50
+                }
+              ],
+              "note": "P4以课堂用语起句；不解释为所有中文语境中的词义不等。字幕没有明说初学者，rubric的教学范围由课堂语境支持，不补写原文。"
+            }
+          ],
+          "reason": "固定课堂表述要求及具体对比齐全，无脱离课堂的普遍词义断言。",
+          "precision_findings": []
+        },
+        {
+          "id": "zh4",
+          "status": "full",
+          "rubric_claim": "前45分钟用中文；英文问题可在最后5分钟、下课后或邮件中提出。",
+          "source_evidence": [
+            {
+              "line_start": 17,
+              "line_end": 21,
+              "char_start": 478,
+              "char_end": 608,
+              "excerpt": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。\n第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛"
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "前45分钟中文",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P5",
+                  "quote": "前四十五分钟都用中文上课",
+                  "char_start": 32,
+                  "char_end": 44
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "听不懂需英文提问可最后5分钟问",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P5",
+                  "quote": "学生真有问题、听不懂要用英文问时，通常可在课堂最后五分钟问",
+                  "char_start": 0,
+                  "char_end": 29
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "可下课后问",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P5",
+                  "quote": "也可下课问",
+                  "char_start": 45,
+                  "char_end": 50
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "可用邮件问",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P5",
+                  "quote": "或用电子邮件问",
+                  "char_start": 50,
+                  "char_end": 57
+                }
+              ],
+              "note": null
+            }
+          ],
+          "reason": "课堂时段、提问条件及两条课外途径均保留。",
+          "precision_findings": []
+        }
+      ],
+      "counts": {
+        "full": 4,
+        "partial": 0,
+        "missing": 0,
+        "not_evaluated": 0
+      },
+      "organization": {
+        "status": "partial",
+        "reason": "P2与P3重复备课反映在练习/备课与任务一致，仍可合并；P3新增weekly schedule及未准备内容导致转英文的因果，不是完全重复。各点可读，无末点混装。",
+        "point_evidence": [
+          {
+            "location": "P2",
+            "quote": "学生的备课要反映在课堂练习上",
+            "char_start": 34,
+            "char_end": 48
+          },
+          {
+            "location": "P3",
+            "quote": "所以每天备课与上课任务一定要一致",
+            "char_start": 64,
+            "char_end": 80
+          }
+        ]
+      },
+      "precision": {
+        "status": "no_confirmed_unsupported_final_claim_found",
+        "findings": [],
+        "clause_omissions_are_coverage_findings": true
+      },
+      "attribution": {
+        "source_name": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+        "source_spelling": "HAOHSIANG LIAO / Haohsiang Liao",
+        "final_name_present": false,
+        "final_chinese_name_present": false,
+        "finding": "final uses generic speaker/course labels; no invented written Chinese name"
+      },
+      "trace_identity": {
+        "last_event_status": "completed",
+        "stages": [
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "compose",
+            "status": "validated",
+            "max_output_tokens": 8192
+          },
+          {
+            "stage": "audit",
+            "status": "validated",
+            "max_output_tokens": 8192
+          }
+        ],
+        "audit_present": true,
+        "audit_text_equals_final": true
+      },
+      "licensing": {
+        "creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+        "title": "Creating an Immersive Classroom Environment (Chinese)",
+        "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_immersive_environment_chinese-2/",
+        "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/50e5414eeb1e526bbb94593453e9c84a_MIT21G_101F14_Immersive_Environment_Chinese.vtt",
+        "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare; Creating an Immersive Classroom Environment (Chinese); https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_immersive_environment_chinese-2/",
+        "license": "CC BY-NC-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "links_visited_this_review": false
+      },
+      "final_text": {
+        "summary": "在MIT的中文课，从第二天起全中文授课；第一天说明准备与大纲，让学生清楚期望。该课程认为，全中文上课的关键在于课堂用语学生听得懂，且学生备课要反映在课堂练习上。 学生课前收到weekly schedule，上课就练所准备的内容；若练未准备的内容，学生就会转用英文，因此备课与上课任务必须一致。 课堂用语不能出圈，如“请你再说一遍”与“请你再说一次”不同，老师首先要注意。 学生若真有问题、听不懂需用英文问，可在课堂最后五分钟问，前四十五分钟用中文，也可下课或邮件问，以维持课堂中文气氛。",
+        "key_points": [
+          "在MIT的中文课，从第二天开始就用全中文上课；第一天会告诉学生课程准备、大纲等，让学生清楚期望。",
+          "该课程认为，要让一堂课能用中文上，最重要的是课堂用语学生听得懂，以及学生的备课要反映在课堂练习上。",
+          "学生课前收到weekly schedule，知道每天要准备哪些环节，上课就是练这些东西；若练学生没准备的内容，他们就会跑出英文，所以每天备课与上课任务一定要一致。",
+          "课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师首先得注意这一点。",
+          "学生真有问题、听不懂要用英文问时，通常可在课堂最后五分钟问，所以前四十五分钟都用中文上课；也可下课问或用电子邮件问，从而在课堂上维持住中文的气氛。"
+        ],
+        "provider": "deepseek",
+        "model": "deepseek-flash"
+      },
+      "claim_inventory": [
+        {
+          "location": "P1",
+          "text": "在MIT的中文课，从第二天开始就用全中文上课；第一天会告诉学生课程准备、大纲等，让学生清楚期望。",
+          "theme": "课堂安排与第一天说明",
+          "essential_ids": [
+            "zh1"
+          ],
+          "precision": "source_supported_as_written",
+          "note": "保留讲者/课程范围；缺失信息另按coverage记录，不据缺失发明错误。"
+        },
+        {
+          "location": "P2",
+          "text": "该课程认为，要让一堂课能用中文上，最重要的是课堂用语学生听得懂，以及学生的备课要反映在课堂练习上。",
+          "theme": "维持中文课堂的两个关键",
+          "essential_ids": [
+            "zh2"
+          ],
+          "precision": "source_supported_as_written",
+          "note": "保留讲者/课程范围；缺失信息另按coverage记录，不据缺失发明错误。"
+        },
+        {
+          "location": "P3",
+          "text": "学生课前收到weekly schedule，知道每天要准备哪些环节，上课就是练这些东西；若练学生没准备的内容，他们就会跑出英文，所以每天备课与上课任务一定要一致。",
+          "theme": "weekly schedule、任务一致及未准备内容的后果",
+          "essential_ids": [
+            "zh2"
+          ],
+          "precision": "source_supported_as_written",
+          "note": "保留讲者/课程范围；缺失信息另按coverage记录，不据缺失发明错误。"
+        },
+        {
+          "location": "P4",
+          "text": "课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，老师首先得注意这一点。",
+          "theme": "课堂用语表述约束和具体对比",
+          "essential_ids": [
+            "zh3"
+          ],
+          "precision": "source_supported_as_written",
+          "note": "保留讲者/课程范围；缺失信息另按coverage记录，不据缺失发明错误。"
+        },
+        {
+          "location": "P5",
+          "text": "学生真有问题、听不懂要用英文问时，通常可在课堂最后五分钟问，所以前四十五分钟都用中文上课；也可下课问或用电子邮件问，从而在课堂上维持住中文的气氛。",
+          "theme": "英文提问时段、课外途径与课堂气氛",
+          "essential_ids": [
+            "zh4"
+          ],
+          "precision": "source_supported_as_written",
+          "note": "保留讲者/课程范围；缺失信息另按coverage记录，不据缺失发明错误。"
+        }
+      ],
+      "summary_precision": {
+        "text": "在MIT的中文课，从第二天起全中文授课；第一天说明准备与大纲，让学生清楚期望。该课程认为，全中文上课的关键在于课堂用语学生听得懂，且学生备课要反映在课堂练习上。 学生课前收到weekly schedule，上课就练所准备的内容；若练未准备的内容，学生就会转用英文，因此备课与上课任务必须一致。 课堂用语不能出圈，如“请你再说一遍”与“请你再说一次”不同，老师首先要注意。 学生若真有问题、听不懂需用英文问，可在课堂最后五分钟问，前四十五分钟用中文，也可下课或邮件问，以维持课堂中文气氛。",
+        "status": "source_supported_as_written",
+        "evidence_link": "essential clause output/source spans plus claim_inventory",
+        "note": "zh-short的weekly schedule/英文后果来自行10-13；en-medium人际印象/受评价来自行1-4，L1条件及可改进处来自行81-95。"
+      },
+      "measurements": {
+        "summary_chars": 243,
+        "point_count": 5,
+        "point_chars": [
+          48,
+          49,
+          81,
+          50,
+          73
+        ],
+        "summary_limit": 800,
+        "point_chars_limit": 240,
+        "valid_point_range": [
+          1,
+          7
+        ],
+        "contract_pass": true,
+        "measurement_does_not_prove_semantics_or_organization": true
+      }
+    },
+    {
+      "id": "en-medium",
+      "identity": {
+        "result": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results/organization-refined-en-medium.json",
+          "sha256": "279f954e6e9e91554732d14c54a1c8cdbf18ce3e8337b8f25ebb4b286496f979"
+        },
+        "source": {
+          "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/en-medium.txt",
+          "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9"
+        },
+        "rubric": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/rubric.json",
+          "sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49"
+        },
+        "trace": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results/organization-refined-en-medium-trace.json",
+          "sha256": "5d94bbaa9e8eb7b68e88acc20e9522cf764e7bad71bcaca2588d31413106578e"
+        },
+        "index_reported_posts": 3
+      },
+      "final_available": true,
+      "delivery_status": "completed",
+      "error_type": null,
+      "essential": [
+        {
+          "id": "en1",
+          "status": "full",
+          "rubric_claim": "The instructor adopts daily grading: evaluate each class performance; persistent consistent effort is expected to yield good Chinese skills.",
+          "source_evidence": [
+            {
+              "line_start": 7,
+              "line_end": 20,
+              "char_start": 143,
+              "char_end": 482,
+              "excerpt": "We want to give evaluation to\nour students each performance.\nThat means each class.\nAnd the second thing\nis we are convinced\nthat, as long as students\nare persistent and consistent\nin their efforts to\ntake this course,\nthey can demonstrate very\ngood skills in Chinese.\nSo because of those two reasons,\nwe adopt a daily grading system\nhere."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "课程采用daily grading",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "summary",
+                  "quote": "其课程采用日常评分系统",
+                  "char_start": 4,
+                  "char_end": 15
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "评估每堂课的学生表现",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "summary",
+                  "quote": "故每节课都评价学生",
+                  "char_start": 51,
+                  "char_end": 60
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "学生持续且一贯努力",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "summary",
+                  "quote": "学生坚持努力",
+                  "char_start": 34,
+                  "char_end": 40
+                }
+              ],
+              "note": "坚持努力是持续努力不间断的自然中文概括；不要求逐词复写persistent和consistent，也未把单次努力改成充分条件。"
+            },
+            {
+              "clause": "良好中文能力是讲者的信念/预期及制度理由",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P1",
+                  "quote": "讲者因人际互动留下印象并受评价、且相信学生坚持努力能展现良好中文能力，采用日常评分",
+                  "char_start": 0,
+                  "char_end": 41
+                }
+              ],
+              "note": "summary的就能仍处于讲者相信的从句内；独立P1也明确相信，不当作审核者认定的学习保证。"
+            }
+          ],
+          "reason": "每课评估、持续投入和讲者信念归属完整；中文概括保留投入语义，不作关键词评分。",
+          "precision_findings": []
+        },
+        {
+          "id": "en2",
+          "status": "partial",
+          "rubric_claim": "Written after-class feedback covers language and cultural behavior to show students what to improve next time.",
+          "source_evidence": [
+            {
+              "line_start": 21,
+              "line_end": 29,
+              "char_start": 483,
+              "char_end": 715,
+              "excerpt": "So usually, after\nclass, we provide\nfeedback to each student's\nperformance in class--\nincluding language, including\nhis cultural behavior--\nso that students know what to\nimprove for the next sessions.\nWe usually do written feedback."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "通常课后书面反馈",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "summary",
+                  "quote": "课后通常以书面形式反馈",
+                  "char_start": 61,
+                  "char_end": 72
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "针对学生当堂表现",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "summary",
+                  "quote": "故每节课都评价学生；课后通常以书面形式反馈语言与文化行为",
+                  "char_start": 51,
+                  "char_end": 79
+                }
+              ],
+              "note": "结合每节课评价、课后反馈与P1评语依表现而定，支持当堂表现反馈的联系；不是只凭trace补足。"
+            },
+            {
+              "clause": "反馈涵盖语言",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P1",
+                  "quote": "书面反馈语言与文化行为",
+                  "char_start": 46,
+                  "char_end": 57
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "反馈涵盖文化行为",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P1",
+                  "quote": "书面反馈语言与文化行为",
+                  "char_start": 46,
+                  "char_end": 57
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "一般课后反馈使学生知道下次要改进什么",
+              "status": "partial",
+              "output_evidence": [],
+              "note": "summary只有文化称赞示例结尾的作为可改进之处；保留该例的改进方向，但没有把一般课后反馈明确连到学生下次课堂应改进的内容。"
+            }
+          ],
+          "reason": "频率、形式和两类内容保留；文化个例的可改进之处不能完整替代一般反馈面向下一次课堂的改进目的，故partial而非missing。",
+          "precision_findings": []
+        },
+        {
+          "id": "en3",
+          "status": "partial",
+          "rubric_claim": "Engrade allows both grades and private comments; each student reads feedback through their own account.",
+          "source_evidence": [
+            {
+              "line_start": 30,
+              "line_end": 40,
+              "char_start": 716,
+              "char_end": 984,
+              "excerpt": "So we use an online-- we have\na website called Engrade.\nSo besides entering grades,\nyou can also leave comments\nto each student privately.\nSo each student, as\nlong as they get access\ninto their website\nto their account,\nthey will read the comments\nfrom the instructor."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "使用Engrade网站",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "summary",
+                  "quote": "并通过Engrade网站",
+                  "char_start": 80,
+                  "char_end": 92
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "在Engrade录入成绩",
+              "status": "missing",
+              "output_evidence": [],
+              "note": "summary及两个points均无成绩录入；日常评分不等于说明成绩录入Engrade。"
+            },
+            {
+              "clause": "给学生私密评论",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P1",
+                  "quote": "通过Engrade私下留言",
+                  "char_start": 59,
+                  "char_end": 72
+                }
+              ],
+              "note": "学生反馈上下文支持私密评语。"
+            },
+            {
+              "clause": "学生用自己的账户访问教师反馈",
+              "status": "missing",
+              "output_evidence": [],
+              "note": "summary及两个points均无本人账户、登录或读取反馈的访问机制。"
+            }
+          ],
+          "reason": "保留网站及私密留言，但成绩录入、学生通过本人账户读取反馈两子句缺失；trace内有对应事实也不能补final。",
+          "precision_findings": []
+        },
+        {
+          "id": "en4",
+          "status": "partial",
+          "rubric_claim": "Feedback depends on performance: pronunciation or culturally appropriate compliment responses; the instructor contrasts American thanks with Chinese humility, and grounds feedback in course/textbook material.",
+          "source_evidence": [
+            {
+              "line_start": 41,
+              "line_end": 53,
+              "char_start": 985,
+              "char_end": 1252,
+              "excerpt": "So the comments--\nit really depends\non the student's performance.\nIt can be as simple\nas, you know, pay\nattention to the\nfollowing pronunciations.\nIt can be a little\nbit more elaborated.\nFor example, think\nabout, how are you\ngoing to deal with\ncompliments in Chinese?"
+            },
+            {
+              "line_start": 56,
+              "line_end": 80,
+              "char_start": 1312,
+              "char_end": 1872,
+              "excerpt": "In American culture, when\nyou receive a compliment,\nit's very natural for\nyou to say thank you.\nFor example, your\nChinese is very good.\nYou say, thank you.\nYour English is good.\nThank you.\nHowever, being humble\nis the way when\nyou receive a compliment\nin Chinese culture.\nYou don't accept it\nby saying thank you.\nSometimes you say things,\nfor example, like,\nthere's still a long way for\nme to go, so it's too far.\nOh, I don't know where the\ncompliments come from. [LAUGHS]\nSo yeah, the fundamental\nidea in Chinese culture\nabout compliments\nis to remain humble."
+            },
+            {
+              "line_start": 81,
+              "line_end": 95,
+              "char_start": 1873,
+              "char_end": 2199,
+              "excerpt": "So if the student's performance\nin class is from his L1,\nwe will encourage\nthem and give them\nthe feedback by\nthinking about, how\ndo you deal with compliments\nin Chinese culture,\naccording to a textbook\nwhere everything\nis based on the materials\nwe cover in class?\nSo students can know\nthis is something\nthat they can work on."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "反馈取决于学生表现",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P1",
+                  "quote": "评语依表现而定",
+                  "char_start": 73,
+                  "char_end": 80
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "反馈可以涉及发音",
+              "status": "missing",
+              "output_evidence": [],
+              "note": "final未提发音；语言与文化行为是较宽分类，不能代替发音分支。"
+            },
+            {
+              "clause": "也可涉及回应称赞的文化行为",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P2",
+                  "quote": "讲者会依课堂教科书鼓励其思考中国文化中如何应对称赞",
+                  "char_start": 48,
+                  "char_end": 73
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "美国式致谢与中文语境谦逊为讲者课堂示例",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "summary",
+                  "quote": "讲者以称赞回应为例比较文化",
+                  "char_start": 106,
+                  "char_end": 119
+                }
+              ],
+              "note": "summary明确举例；独立P2以讲者称起句，后接该教师的课堂教科书反馈，不变成审核者认可的普遍文化规则。"
+            },
+            {
+              "clause": "具体美国式致谢/中文语境谦逊对比",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P2",
+                  "quote": "讲者称美国文化中收到称赞说谢谢很自然，而中国文化中应保持谦逊、不以谢谢接受",
+                  "char_start": 0,
+                  "char_end": 37
+                }
+              ],
+              "note": null
+            },
+            {
+              "clause": "依据本课程/教材材料",
+              "status": "supported",
+              "output_evidence": [
+                {
+                  "location": "P2",
+                  "quote": "讲者会依课堂教科书",
+                  "char_start": 48,
+                  "char_end": 57
+                }
+              ],
+              "note": "课堂教科书在本讲者课程语境下保留课程/教材依据。"
+            },
+            {
+              "clause": "如列举源中具体谦逊回应方式需保留sometimes",
+              "status": "not_applicable",
+              "output_evidence": [],
+              "note": "final没有列仍有很长路要走、不知称赞从何来等具体sometimes回应；没有频率词替换，不因省略可选具体例句扣分。"
+            }
+          ],
+          "reason": "文化示例、归属与教材依据保留，发音反馈分支缺失，故partial；sometimes具体回应未出现，不额外扣分。",
+          "precision_findings": []
+        }
+      ],
+      "counts": {
+        "full": 1,
+        "partial": 3,
+        "missing": 0,
+        "not_evaluated": 0
+      },
+      "organization": {
+        "status": "pass",
+        "reason": "P1围绕评分制度的理由和反馈实施，P2围绕称赞回应示例及课堂教材反馈；主题连贯，文化例子未拆成同义碎片，无无意义重复或末点大杂烩。组织通过不代表遗漏的essential得到补足。",
+        "point_evidence": [
+          {
+            "location": "P1",
+            "quote": "采用日常评分",
+            "char_start": 35,
+            "char_end": 41
+          },
+          {
+            "location": "P2",
+            "quote": "讲者会依课堂教科书鼓励其思考中国文化中如何应对称赞",
+            "char_start": 48,
+            "char_end": 73
+          }
+        ]
+      },
+      "precision": {
+        "status": "no_confirmed_unsupported_final_claim_found",
+        "findings": [],
+        "clause_omissions_are_coverage_findings": true
+      },
+      "attribution": {
+        "source_name": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+        "source_spelling": "HAOHSIANG LIAO / Haohsiang Liao",
+        "final_name_present": false,
+        "final_chinese_name_present": false,
+        "finding": "final uses generic speaker/course labels; no invented written Chinese name"
+      },
+      "trace_identity": {
+        "last_event_status": "completed",
+        "stages": [
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "compose",
+            "status": "validated",
+            "max_output_tokens": 8192
+          },
+          {
+            "stage": "audit",
+            "status": "validated",
+            "max_output_tokens": 8192
+          }
+        ],
+        "audit_present": true,
+        "audit_text_equals_final": true
+      },
+      "licensing": {
+        "creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+        "title": "Daily Grading System",
+        "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/daily-grading-system/",
+        "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/e9d389e4d81e5391b948a1981fc7ef4c_hNUoYTJl3j4.vtt",
+        "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare; Daily Grading System; https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/daily-grading-system/",
+        "license": "CC BY-NC-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "links_visited_this_review": false
+      },
+      "final_text": {
+        "summary": "讲者介绍其课程采用日常评分系统：因人际互动会留下印象并受评价，且相信学生坚持努力就能展现良好中文能力，故每节课都评价学生；课后通常以书面形式反馈语言与文化行为，并通过Engrade网站私下留言，内容依表现而定。 讲者以称赞回应为例比较文化：在美国文化中说谢谢很自然，而在中国文化中讲者认为应保持谦逊、不以谢谢接受；若学生课堂表现来自母语，讲者会依课堂教科书鼓励其思考中国文化中如何应对称赞，作为可改进之处。",
+        "key_points": [
+          "讲者因人际互动留下印象并受评价、且相信学生坚持努力能展现良好中文能力，采用日常评分；课后通常书面反馈语言与文化行为，并通过Engrade私下留言，评语依表现而定。",
+          "讲者称美国文化中收到称赞说谢谢很自然，而中国文化中应保持谦逊、不以谢谢接受；若学生表现来自母语，讲者会依课堂教科书鼓励其思考中国文化中如何应对称赞。"
+        ],
+        "provider": "deepseek",
+        "model": "deepseek-flash"
+      },
+      "claim_inventory": [
+        {
+          "location": "P1",
+          "text": "讲者因人际互动留下印象并受评价、且相信学生坚持努力能展现良好中文能力，采用日常评分；课后通常书面反馈语言与文化行为，并通过Engrade私下留言，评语依表现而定。",
+          "theme": "评分制度理由、书面反馈、私密传递和按表现评论",
+          "essential_ids": [
+            "en1",
+            "en2",
+            "en3",
+            "en4"
+          ],
+          "precision": "source_supported_as_written",
+          "note": "保留讲者/课程范围；缺失信息另按coverage记录，不据缺失发明错误。"
+        },
+        {
+          "location": "P2",
+          "text": "讲者称美国文化中收到称赞说谢谢很自然，而中国文化中应保持谦逊、不以谢谢接受；若学生表现来自母语，讲者会依课堂教科书鼓励其思考中国文化中如何应对称赞。",
+          "theme": "称赞回应的课堂文化示例、L1条件与教材反馈",
+          "essential_ids": [
+            "en4"
+          ],
+          "precision": "source_supported_as_written",
+          "note": "保留讲者/课程范围；缺失信息另按coverage记录，不据缺失发明错误。"
+        }
+      ],
+      "summary_precision": {
+        "text": "讲者介绍其课程采用日常评分系统：因人际互动会留下印象并受评价，且相信学生坚持努力就能展现良好中文能力，故每节课都评价学生；课后通常以书面形式反馈语言与文化行为，并通过Engrade网站私下留言，内容依表现而定。 讲者以称赞回应为例比较文化：在美国文化中说谢谢很自然，而在中国文化中讲者认为应保持谦逊、不以谢谢接受；若学生课堂表现来自母语，讲者会依课堂教科书鼓励其思考中国文化中如何应对称赞，作为可改进之处。",
+        "status": "source_supported_as_written",
+        "evidence_link": "essential clause output/source spans plus claim_inventory",
+        "note": "zh-short的weekly schedule/英文后果来自行10-13；en-medium人际印象/受评价来自行1-4，L1条件及可改进处来自行81-95。"
+      },
+      "measurements": {
+        "summary_chars": 203,
+        "point_count": 2,
+        "point_chars": [
+          81,
+          74
+        ],
+        "summary_limit": 800,
+        "point_chars_limit": 240,
+        "valid_point_range": [
+          1,
+          7
+        ],
+        "contract_pass": true,
+        "measurement_does_not_prove_semantics_or_organization": true
+      }
+    },
+    {
+      "id": "en-long",
+      "identity": {
+        "result": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results/organization-refined-en-long.json",
+          "sha256": "b4623ed20e1ec45c23fc9bdf8c7cc10843bcbb53998e16999ebc0d90556768b4"
+        },
+        "source": {
+          "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/en-long.txt",
+          "sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7"
+        },
+        "rubric": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/rubric.json",
+          "sha256": "92418e725678a54aafd51d6c457b1ebd42326f73e1c0b6aa43a86bf147be8d49"
+        },
+        "trace": {
+          "path": "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results/organization-refined-en-long-trace.json",
+          "sha256": "35ba0fdef19a501811ec52e2b36e63cee5d1b52a35ca893a0559ee61e0fe0162"
+        },
+        "index_reported_posts": 6
+      },
+      "final_available": false,
+      "delivery_status": "failed",
+      "error_type": "llm_invalid_response",
+      "essential": [
+        {
+          "id": "long1",
+          "status": "not_evaluated",
+          "rubric_claim": "Computers calculate and remember results; the programmer must explicitly specify the operations.",
+          "source_evidence": [
+            {
+              "line_start": 275,
+              "line_end": 292,
+              "char_start": 6352,
+              "char_end": 6768,
+              "excerpt": "Let's start by talking at a high\nlevel what does a computer do.\nFundamentally, it\ndoes two things.\nOne, performs calculations.\nIt performs a lot\nof calculations.\nComputers these days\nare really, really fast,\na billion calculations per\nsecond is probably not far off.\nIt performs these\ncalculations and it\nhas to store them somewhere.\nRight?\nStores them in computer memory.\nSo a computer also has\nto remember results."
+            },
+            {
+              "line_start": 319,
+              "line_end": 336,
+              "char_start": 7357,
+              "char_end": 7757,
+              "excerpt": "I think, one thing\nI want to stress--\nand we're going to\ncome back to this\nagain during this entire\nlecture, actually--\nis computers only know\nwhat you tell them.\nComputers only do what\nyou tell them to do.\nThey're not magical.\nThey don't have a mind.\nThey just know how to\nperform calculations really,\nreally quickly.\nBut you have to tell them\nwhat calculations to do.\nComputers don't know anything."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "计算机进行计算",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "记住/存储结果",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "程序员必须明确说明做哪些运算",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            }
+          ],
+          "reason": "本轮结果是llm_invalid_response错误记录，没有result/最终summary/key_points；所有子句未评，不计missing。",
+          "precision_findings": []
+        },
+        {
+          "id": "long2",
+          "status": "not_evaluated",
+          "rubric_claim": "Declarative knowledge states facts; imperative knowledge gives a recipe/sequence of steps. An algorithm needs steps, control flow, and a stopping condition.",
+          "source_evidence": [
+            {
+              "line_start": 340,
+              "line_end": 344,
+              "char_start": 7807,
+              "char_end": 7926,
+              "excerpt": "types of knowledge.\nThe first type of knowledge\nis declarative knowledge.\nAnd those are things\nlike statements of fact."
+            },
+            {
+              "line_start": 373,
+              "line_end": 382,
+              "char_start": 8533,
+              "char_end": 8745,
+              "excerpt": "That's where imperative\nknowledge comes in.\nImperative knowledge is\nthe recipe, or the how-to,\nor the sequence of steps.\nSorry.\nThat's just my\nfunny for that one.\nSo the sequence of steps\nis imperative knowledge."
+            },
+            {
+              "line_start": 554,
+              "line_end": 588,
+              "char_start": 12376,
+              "char_end": 13212,
+              "excerpt": "What were the three\nparts of the recipe?\nOne was a simple\nsequence of steps.\nThere were four steps.\nThe other was a flow of\ncontrol, so there were\nparts where we made decisions.\nAre we close enough?\nThere were parts where\nwe repeated some steps.\nAt the end, we said,\nrepeat steps 1, 2, 3.\nThat's the flow of control.\nAnd the last part of the\nrecipe was a way to stop.\nYou don't want a program\nthat keeps going and going.\nOr for a recipe, you don't want\nto keep baking bread forever.\nYou want to stop at some point.\nLike 10 breads is enough, right?\nSo you have to have\na way of stopping.\nIn the previous example,\nthe way of stopping\nwas that we decided\nwe were close enough.\nClose enough was maybe\nbeing within .01, .001,\nwhatever you pick.\nThis recipe is there\nfor an algorithm.\nIn computer science speak,\nit's going to be an algorithm."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "declarative knowledge陈述事实",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "imperative knowledge给出方法/步骤",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "算法包含步骤",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "控制流含决定/重复",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "算法包含停止条件/停止方式",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            }
+          ],
+          "reason": "本轮结果是llm_invalid_response错误记录，没有result/最终summary/key_points；所有子句未评，不计missing。",
+          "precision_findings": []
+        },
+        {
+          "id": "long3",
+          "status": "not_evaluated",
+          "rubric_claim": "Stored-program computers store changeable instruction sequences and execute them; tests/control flow can skip or repeat instructions.",
+          "source_evidence": [
+            {
+              "line_start": 628,
+              "line_end": 642,
+              "char_start": 14183,
+              "char_end": 14570,
+              "excerpt": "That's when stored-program\ncomputers came into play.\nAnd these were machines\nthat could store\na sequence of instructions.\nAnd these machines could execute\nthe sequence of instructions.\nAnd you could change the\nsequence of instructions\nand execute this different\nsequence of instructions.\nYou could do different\ntasks in the same machine.\nAnd that's the computer\nas we know it these days."
+            },
+            {
+              "line_start": 735,
+              "line_end": 754,
+              "char_start": 16692,
+              "char_end": 17206,
+              "excerpt": "Just to recap, you have\nthe stored program computer\nthat contains these\nsequences of instructions.\nThe primitive operations\nthat it can do\nare addition, subtraction,\nlogic operations, tests--\nwhich are something equal\nto something else, something\nless than, and so\non-- and moving data,\nso storing data, moving data\naround, and things like that.\nAnd the interpreter goes\nthrough every instruction\nand decides whether you're going\nto go to the next instruction,\nskip instructions, or repeat\ninstructions, and so on."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "stored-program存储指令序列",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "改变序列可执行不同任务",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "执行指令",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "测试/控制流可继续、跳过或重复",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            }
+          ],
+          "reason": "本轮结果是llm_invalid_response错误记录，没有result/最终summary/key_points；所有子句未评，不计missing。",
+          "precision_findings": []
+        },
+        {
+          "id": "long4",
+          "status": "not_evaluated",
+          "rubric_claim": "Programming expressions have syntax, static semantics, and intended meaning; a program can execute exactly as written yet produce an unintended result, crash, or fail to stop.",
+          "source_evidence": [
+            {
+              "line_start": 854,
+              "line_end": 889,
+              "char_start": 19546,
+              "char_end": 20426,
+              "excerpt": "So once you've created these\nphrases, or these expressions,\nthat are syntactically\nvalid, you\nhave to think about the static\nsemantics of your phrase,\nor of your expression.\nFor example, in English, \"I\nare hungry\" is good syntax.\nBut it's weird to say.\nWe have a pronoun, a verb,\nand an adjective, which\ndoesn't really make sense.\n\"I am hungry\" is better.\nThis does not have\ngood static semantics.\nSimilarly, in\nprogramming languages--\nand you'll get the\nhang of this the more\nyou do it-- something like\nthis, \"3.2 times 5, is OK.\nBut what does it mean?\nWhat's the meaning to have\na word added to a number?\nThere's no meaning behind that.\nIts syntax is OK,\nbecause you have\noperator, operand, operator.\nBut it doesn't really make\nsense to add a number to a word,\nfor example.\nOnce you have created\nthese expressions that\nare syntactically correct and\nstatic, semantically correct,"
+            },
+            {
+              "line_start": 920,
+              "line_end": 943,
+              "char_start": 21085,
+              "char_end": 21654,
+              "excerpt": "But in programming languages,\nthe program that you write,\nthe set of instructions that\nyou write, only has one meaning.\nRemember, we're coming\nback to the fact\nthat the computer only does\nwhat you tell it to do.\nIt's not going to\nsuddenly decide\nto add another variable\nfor some reason.\nIt's just going to execute\nwhatever statements you've\nput up.\nIn programming languages,\nthere's only one meaning.\nBut the problem that comes into\nplay in programming languages\nis it's not the meaning\nthat you might have\nintended, as the programmer.\nThat's where things\ncan go wrong."
+            },
+            {
+              "line_start": 991,
+              "line_end": 1022,
+              "char_start": 22671,
+              "char_end": 23401,
+              "excerpt": "The program might do\nsomething different than what\nyou expected it to do.\nAnd that's not because the\nprogram suddenly-- for example,\nyou expected the program\nto give you an output of 0\nfor a certain test case, and\nthe output that you got was 10.\nWell, the program\ndidn't suddenly\ndecide to change\nits answer to 10.\nIt just executed the\nprogram that you wrote.\nThat's the case where\nthe program gave you\na different answer\nthan expected.\nPrograms might crash, which\nmeans they stop running.\nThat's OK.\nJust go back to your code and\nfigure out what was wrong.\nAnd another example\nof a different meaning\nthan what you intended was\nmaybe the program won't stop.\nIt's also OK.\nThere are ways to stop\nit besides restarting\nthe computer."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "表达式/程序有syntax",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "有static semantics",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "实际意义可能偏离程序员意图",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "计算机照所写指令执行",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "可能得到非预期结果",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "可能崩溃",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "可能不停止",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            }
+          ],
+          "reason": "本轮结果是llm_invalid_response错误记录，没有result/最终summary/key_points；所有子句未评，不计missing。",
+          "precision_findings": []
+        },
+        {
+          "id": "long5",
+          "status": "not_evaluated",
+          "rubric_claim": "Python manipulates typed objects, including scalar and structured non-scalar objects; object types constrain available operations and expressions evaluate to values.",
+          "source_evidence": [
+            {
+              "line_start": 1054,
+              "line_end": 1066,
+              "char_start": 24153,
+              "char_end": 24467,
+              "excerpt": "Now we're going to start\ntalking about Python.\nAnd in Python, we're going\nto come back to this,\neverything is an object.\nAnd Python programs\nmanipulate these data objects.\nAll objects in Python\nare going to have a type.\nAnd the type is going to tell\nPython the kinds of operations\nthat you can do\non these objects."
+            },
+            {
+              "line_start": 1090,
+              "line_end": 1114,
+              "char_start": 24960,
+              "char_end": 25552,
+              "excerpt": "There are actually\ntwo types of objects.\nOne are scalar objects.\nThat means these are very basic\nobjects in Python from which\neverything can be made.\nThese are scalar objects.\nThat can't be subdivided.\nThe other type of object\nis a non-scalar object.\nAnd these are objects that\nhave some internal structure.\nFor example, the\nnumber five is a scalar\nobject because it\ncan't be subdivided.\nBut a list of numbers,\nfor example, 5, 6,\n7,8, is going to be\na non-scalar object\nbecause you can subdivide it.\nYou can subdivide it into--\nyou can find parts to it.\nIt's made up of a\nsequence of numbers."
+            },
+            {
+              "line_start": 1229,
+              "line_end": 1241,
+              "char_start": 28151,
+              "char_end": 28442,
+              "excerpt": "We talked a little\nbit about objects.\nOnce you have objects, you can\ncombine objects and operators\nto form these expressions.\nAnd each expression is\ngoing to have a value.\nSo an expression\nevaluates to a value.\nThe syntax for an\nexpression is going\nto be object, operator,\nobject, like that."
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "Python操作有类型的数据对象",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "标量不可进一步拆分",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "非标量有内部结构",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "对象类型限制可用操作",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "对象与运算符形成求值为值的表达式",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            }
+          ],
+          "reason": "本轮结果是llm_invalid_response错误记录，没有result/最终summary/key_points；所有子句未评，不计missing。",
+          "precision_findings": []
+        },
+        {
+          "id": "long6",
+          "status": "not_evaluated",
+          "rubric_claim": "Assignment binds a name to a value; rebinding radius alone does not recalculate the already computed area. This is the final example before next lecture's control flow.",
+          "source_evidence": [
+            {
+              "line_start": 1307,
+              "line_end": 1336,
+              "char_start": 29977,
+              "char_end": 30664,
+              "excerpt": "To save a value to a variable\nname, you use the equal sign.\nAnd the equal sign\nis an assignment.\nIt assigns the\nright-hand side, which\nis a value, to the\nleft-hand side, which\nis going to be a variable name.\nIn this case, I assigned\nthe float 3.14159\nto the variable pi.\nAnd in the second\nline, I'm going\nto take this expression,\n22 divided by 7,\nI'm going to evaluate it.\nIt's going to come up\nwith some decimal number.\nAnd I'm going to save it\ninto the variable pi_approx.\nvalues are stored in memory.\nAnd this assignment\nin Python, we\nsay the assignment binds\nthe name to the value.\nWhen you use that name\nlater on in your program,\nyou're going to be referring\nto the value in memory."
+            },
+            {
+              "line_start": 1460,
+              "line_end": 1472,
+              "char_start": 33537,
+              "char_end": 33849,
+              "excerpt": "Now, let's say we rebind\nradius to be something else.\nRadius i is bound\nto the value 2.2.\nBut when we do this line, radius\nis equal to radius plus 1,\nwe're going to take\naway the binding to 2.2.\nWe're going to do\nthis calculation.\nThe new value is 3.2.\nAnd we're going to rebind that\nvalue to that same variable."
+            },
+            {
+              "line_start": 1493,
+              "line_end": 1515,
+              "char_start": 34295,
+              "char_end": 34883,
+              "excerpt": "The value of area-- notice,\nthis is very important.\nThe value of area\ndid not change.\nAnd it did not change because\nthese are all the instructions\nwe told the computer to do.\nWe just told it to change\nradius to be radius plus 1.\nWe never told it to\nrecalculate the value of area.\nIf I copied that line down\nhere, then the value of area\nwould change.\nBut we never told it to do that.\nThe computer only does\nwhat we tell it to do.\nThat's the last thing.\nNext lecture, we're going\nto talk about adding control\nflow to our programs, so\nhow do you tell the computer\nto do one thing or another?"
+            }
+          ],
+          "clauses": [
+            {
+              "clause": "赋值把名称绑定到值",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "重新绑定radius",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "已计算area不自动重算",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "原因是未指示重算，重新执行面积计算才会更新",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            },
+            {
+              "clause": "这是尾部示例，随后预告下讲控制流",
+              "status": "not_evaluated",
+              "output_evidence": [],
+              "note": "无audit最终输出，不据抽取事实或compose阶段判覆盖。"
+            }
+          ],
+          "reason": "本轮结果是llm_invalid_response错误记录，没有result/最终summary/key_points；所有子句未评，不计missing。",
+          "precision_findings": []
+        }
+      ],
+      "counts": {
+        "full": 0,
+        "partial": 0,
+        "missing": 0,
+        "not_evaluated": 6
+      },
+      "organization": {
+        "status": "not_evaluated",
+        "reason": "没有最终points，不能评价末点混装、主题组织或声称较旧长篇改善。",
+        "point_evidence": []
+      },
+      "precision": {
+        "status": "not_evaluated",
+        "findings": [],
+        "clause_omissions_are_coverage_findings": true
+      },
+      "attribution": {
+        "source_name": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare",
+        "source_spelling": "Ana Bell",
+        "final_name_present": null,
+        "final_chinese_name_present": null,
+        "finding": "not_evaluated: no final"
+      },
+      "trace_identity": {
+        "last_event_status": "failed",
+        "stages": [
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "extract",
+            "status": "validated",
+            "max_output_tokens": 4096
+          },
+          {
+            "stage": "compose",
+            "status": "received",
+            "max_output_tokens": 8192
+          }
+        ],
+        "audit_present": false
+      },
+      "licensing": {
+        "creator": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare",
+        "title": "Lecture 1: What is Computation?",
+        "page": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+        "caption": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/a746f6bc380f5e6d807ffff5f56cd877_nykOeWgQcHM.vtt",
+        "attribution": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare; Lecture 1: What is Computation?; https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+        "license": "CC BY-NC-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "links_visited_this_review": false
+      },
+      "claim_inventory": [],
+      "summary_precision": {
+        "status": "not_evaluated"
+      },
+      "measurements": {
+        "status": "not_evaluated"
+      },
+      "optional_details": [
+        {
+          "id": "long7",
+          "status": "not_evaluated",
+          "counts_toward_essential_denominator": false,
+          "reason": "detail_if_present只核对最终文本已出现内容；本轮无final。",
+          "rubric_claim": "The square-root example uses x=16 and initial guess g=3; average g with x/g repeatedly and stop when g*g is sufficiently close to x; .01/.001 are possible tolerances, not a mandatory fixed tolerance."
+        },
+        {
+          "id": "long8",
+          "status": "not_evaluated",
+          "counts_toward_essential_denominator": false,
+          "reason": "detail_if_present只核对最终文本已出现内容；本轮无final。",
+          "rubric_claim": "Converting a float to int truncates rather than rounds; float(3) becomes 3.0."
+        },
+        {
+          "id": "long9",
+          "status": "not_evaluated",
+          "counts_toward_essential_denominator": false,
+          "reason": "detail_if_present只核对最终文本已出现内容；本轮无final。",
+          "rubric_claim": "True and False are the two Boolean values; NoneType has the single value None."
+        },
+        {
+          "id": "long10",
+          "status": "not_evaluated",
+          "counts_toward_essential_denominator": false,
+          "reason": "detail_if_present只核对最终文本已出现内容；本轮无final。",
+          "rubric_claim": "The lecture says Python / division produces a float regardless of operand types; +,-,* preserve int for int operands and yield float if an operand is float."
+        },
+        {
+          "id": "long11",
+          "status": "not_evaluated",
+          "counts_toward_essential_denominator": false,
+          "reason": "detail_if_present只核对最终文本已出现内容；本轮无final。",
+          "rubric_claim": "In the final rebinding example radius starts at 2.2 and radius=radius+1 yields 3.2 while area stays unchanged until explicitly recomputed."
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "fixed_essential_denominator": 14,
+    "evaluated": 8,
+    "full": 5,
+    "partial": 3,
+    "missing": 0,
+    "not_evaluated": 6,
+    "delivered_sample_counts": {
+      "full": 5,
+      "partial": 3,
+      "missing": 0,
+      "denominator": 8
+    },
+    "all_14_evaluated": false,
+    "all_14_full": false,
+    "confirmed_precision_findings": 0,
+    "precision_scope": "只针对已交付short/medium final；0 findings不等于全14正确或输出穷尽无误。",
+    "organization": {
+      "zh-short": "partial",
+      "en-medium": "pass",
+      "en-long": "not_evaluated"
+    },
+    "conclusion": "短篇4full；中篇1full/3partial（en2反馈改进目的范围、en3成绩/账户访问、en4发音分支不完整）；长篇6项未评。本轮不能宣称14/14或三样本端到端验收通过。"
+  },
+  "historical_boundary": {
+    "historical_counts_from_preparation_context": {
+      "short_medium_full": 5,
+      "short_medium_partial": 3,
+      "long_final_available": false
+    },
+    "used_for_new_scoring": false,
+    "old_new_final_comparison": "本轮未重新读取/重评旧final，故不声称逐项净改善或退化；即使短中合计数字相同也不能推定错误分布相同。旧长篇无final，不声称相对旧长篇final组织改善。"
+  },
+  "limitations": [
+    "仅三份自然字幕、两门MIT课程；本轮只有两个已交付final，不能推断普适准确率、统计稳定性或重复运行成功率。",
+    "这是agent独立语义复核，不是外部独立人类评分、技术规范认证或穷尽事实真值验证。",
+    "原文含口误、自我纠正、幻灯片指代与教学简化；只评来源忠实度，不联网补事实或为讲者纠错。",
+    "曾读准备清单和历史评分边界，不能声称对历史输出完全盲评；本轮分数仅使用本轮final/source/冻结rubric。",
+    "en1坚持努力按自然中文概括判持续一贯投入；en2仅文化示例的改进表述按范围不足判partial，这些是明示的语义判断，不是词串匹配。",
+    "姓名缺省允许generic speaker；本轮short/medium未出现中文姓名，不能据此证明未来姓名输出准确。",
+    "long抽取事实及任何候选都不计最终覆盖；类型约束、算术范围和radius/area尾部均无final可评。",
+    "hash和stage身份检验不证明语义；audit模型自评不替代本review。",
+    "未访问许可链接；沿用本地署名及许可证据，无新增法律核验。"
+  ],
+  "licensing": {
+    "license": "CC BY-NC-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "purpose": "非商业本地推理质量评测；不训练或微调模型。",
+    "attribution": "原作者/课程/字幕链接见每sample licensing及本地manifest/LICENSE。",
+    "adaptation": "对冻结rubric和本轮final作中文子句分析、source/output定位及定性评分；源文本、rubric、历史报告均未修改。",
+    "scope": "源字幕、摘录和衍生review保留署名/非商业/相同方式共享；不重新许可产品代码/脚本，不表示MIT认可产品或模型输出。"
+  }
+}

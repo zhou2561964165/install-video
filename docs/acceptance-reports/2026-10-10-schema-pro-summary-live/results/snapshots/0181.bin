@@ -1,0 +1,38 @@
+[
+  {
+    "strategy": "legacy",
+    "generation_mode": "staged",
+    "stage": "points",
+    "attempt": 1,
+    "request_count": 1,
+    "status": "started",
+    "format_used": 0
+  },
+  {
+    "strategy": "legacy",
+    "generation_mode": "staged",
+    "stage": "points",
+    "attempt": 1,
+    "request_count": 1,
+    "status": "passed",
+    "format_used": 0
+  },
+  {
+    "strategy": "legacy",
+    "generation_mode": "staged",
+    "stage": "overview",
+    "attempt": 1,
+    "request_count": 2,
+    "status": "started",
+    "format_used": 0
+  },
+  {
+    "strategy": "legacy",
+    "generation_mode": "staged",
+    "stage": "overview",
+    "attempt": 1,
+    "request_count": 2,
+    "status": "passed",
+    "format_used": 0
+  }
+]

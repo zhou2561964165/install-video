@@ -78,9 +78,10 @@ class UserResponse(BaseModel):
 
 class QuotaInfo(BaseModel):
     date: str
-    limit: int
+    limit: Optional[int]
     used: int
-    remaining: int
+    remaining: Optional[int]
+    unlimited: bool = False
 
 
 class AuthResponse(BaseModel):

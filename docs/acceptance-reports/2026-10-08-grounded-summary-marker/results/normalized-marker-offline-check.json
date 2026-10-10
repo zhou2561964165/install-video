@@ -1,0 +1,21 @@
+{
+  "phase": "normalized-marker",
+  "posts": 4,
+  "ceiling": 16,
+  "evidence_verified": true,
+  "samples": [
+    {
+      "id": "zh-short",
+      "posts": 4,
+      "status": "failed",
+      "retry_budget": {
+        "used": 1,
+        "ceiling": 1,
+        "format_used": 0,
+        "semantic_used": 1
+      },
+      "semantic_quality": "NOT_EVALUATED"
+    }
+  ],
+  "semantic_quality": "NOT_EVALUATED"
+}

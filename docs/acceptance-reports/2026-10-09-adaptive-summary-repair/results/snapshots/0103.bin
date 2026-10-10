@@ -1,0 +1,20 @@
+{
+  "phase": "quality-repaired",
+  "ordinal": 13,
+  "sample": "en-long",
+  "stage": "audit",
+  "http_status": 200,
+  "body_sha256": "704aaab7194ece204f52a803d73711b313371cc8c04674b4d0313316f394a194",
+  "content": "{\"additional_facts\":[],\"output\":{\"summary\":{\"text\":\"Ana Bell 与 Eric Grimson 讲授 6.0001/600，首讲先讲行政事务，再从高层次讨论计算并进入 Python 基础。课程节奏快，建议提前下载幻灯片与代码、跟随练习；编程靠大量练习，新手不必怕弄坏电脑。课程目标为概念知识、编程技能与通过 psets 培养的解决问题能力，内容分编程、良好代码风格与比较程序效率三部分。计算即执行大量计算并存储结果，计算机只做被明确告知的事。\",\"assertions\":{\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}},\"point_1\":{\"topic\":\"课程安排与学习方式\",\"text\":\"Ana Bell 与 Eric Grimson 讲授 6.0001/600；首讲先讲行政事务，再高层次讨论计算并进入 Python 基础。课程节奏快，建议提前下载幻灯片与代码、跟随练习；编程靠大量练习，新手不必怕弄坏电脑。\",\"fact_ids\":[\"F1_1\",\"F1_2\",\"F1_3\",\"F1_4\"],\"assertions\":{\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}},\"point_2\":{\"topic\":\"课程目标与内容板块\",\"text\":\"课程希望学生获得概念知识、编程技能与通过 psets 培养的解决问题能力，基础是大量练习。内容分三部分：学习编程（对象、数据结构、控制流）、写可读且模块化的好代码、比较 Python 程序的优劣与效率。\",\"fact_ids\":[\"F1_5\",\"F1_6\"],\"assertions\":{\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}},\"point_3\":{\"topic\":\"计算、知识与算法\",\"text\":\"计算机执行大量计算并存储结果，只做被明确告知的事。陈述性知识是事实，命令式知识是配方；配方含步骤序列、控制流与停止方式，即算法。求平方根用猜测、检验接近、平均更新并重复的步骤说明。\",\"fact_ids\":[\"F1_7\",\"F1_8\",\"F1_9\",\"F1_10\",\"F2_2\",\"F2_5\",\"F2_6\",\"F2_7\",\"F2_8\"],\"assertions\":{\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}},\"point_4\":{\"topic\":\"机器架构与可计算性\",\"text\":\"固定程序计算机只能做一件事；存储程序计算机可存储并更换指令序列。基本架构含内存、输入输出、ALU 与控制单元，程序计数器逐条执行，测试可改变控制流。图灵用六种原语表明可计算任何东西，故 Python 能算的也可用其他语言实现。\",\"fact_ids\":[\"F2_9\",\"F2_10\",\"F2_11\",\"F2_12\",\"F3_1\",\"F3_2\",\"F3_3\",\"F3_4\"],\"assertions\":{\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}},\"point_5\":{\"topic\":\"语言语法、语义与程序含义\",\"text\":\"原语可组合成表达式；英语与 Python 都需语法与静态语义，如名词动词名词有效，而把数字加到单词上无意义。英语可有歧义，但程序只有一种含义；程序可能不按意图运行、崩溃或不停止，语法与静态语义错误可被 Python 捕获。\",\"fact_ids\":[\"F3_5\",\"F3_6\",\"F3_7\",\"F3_8\",\"F3_9\",\"F3_10\",\"F3_11\"],\"assertions\":{\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}},\"point_6\":{\"topic\":\"Python 对象、类型与运算\",\"text\":\"Python 中一切皆对象，分标量与可再分的非标量；标量含整数、浮点数、布尔值与 NoneType。可用 type 查询、用类型名转换（转整数截断）。表达式由对象与运算符组成，结果类型取决于操作数，除法总返回浮点数；百分号取余，双星号幂运算。\",\"fact_ids\":[\"F4_1\",\"F4_2\",\"F4_3\",\"F4_4\",\"F4_5\",\"F4_6\",\"F4_7\"],\"assertions\":{\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}},\"point_7\":{\"topic\":\"变量赋值与重新绑定\",\"text\":\"等号是赋值：右侧求值为值，左侧只能是变量名，应具描述性。赋值把名字绑定到内存中的值，如 pi、radius 计算圆面积。重新绑定 radius 后旧值失去句柄，area 不会自动重算，因为计算机只做被明确告知的事；下一讲讲控制流。\",\"fact_ids\":[\"F4_8\",\"F4_9\",\"F4_10\",\"F5_1\",\"F5_2\",\"F5_3\",\"F5_4\",\"F5_5\",\"F5_6\"],\"assertions\":{\"supported\":true,\"qualifiers_preserved\":true,\"attribution_preserved\":true,\"scope_preserved\":true}}}}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 27882,
+    "completion_tokens": 1196,
+    "total_tokens": 29078,
+    "prompt_cache_hit_tokens": 896,
+    "prompt_cache_miss_tokens": 26986,
+    "prompt_tokens_details": {
+      "cached_tokens": 896
+    }
+  }
+}

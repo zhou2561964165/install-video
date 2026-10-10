@@ -1,0 +1,1665 @@
+{
+  "phase": "organization-slots",
+  "id": "zh-short",
+  "events": [
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的\n当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么\n那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。\n另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意\n所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。\n第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "global_start": 0,
+          "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "requesting",
+          "max_output_tokens": 4096
+        }
+      ]
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的\n当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么\n那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。\n另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意\n所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。\n第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "global_start": 0,
+          "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 0,
+          "end": 27,
+          "quote": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的",
+          "topic": "MIT中文课从第二天起全中文授课",
+          "claim": "在MIT的中文课，从第二天开始就是用全中文上的。",
+          "evidence_indices": [
+            1,
+            2
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 28,
+          "end": 83,
+          "quote": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么",
+          "topic": "第一天说明课程准备与期望",
+          "claim": "第一天会告诉学生课程如何准备、大纲等，让学生清楚期望是什么。",
+          "evidence_indices": [
+            3,
+            4
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 84,
+          "end": 125,
+          "quote": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。",
+          "topic": "全中文上课的两个重要环节",
+          "claim": "要让一堂课能够用中文上课，最重要的有两个非常重要的环节。",
+          "evidence_indices": [
+            5
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 126,
+          "end": 209,
+          "quote": "一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要",
+          "topic": "课堂用语需让学生听懂",
+          "claim": "第一个重要环节是课堂用语学生要听得懂，例如“请跟我再说一遍”“请你回答问题”“很好”这些词的意思，所以课堂用语非常重要。",
+          "evidence_indices": [
+            6,
+            7,
+            8
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 210,
+          "end": 237,
+          "quote": "第二个最重要的是，他们的备课要反映在你课堂的练习上头。",
+          "topic": "备课需反映在课堂练习上",
+          "claim": "第二个最重要的是学生的备课要反映在课堂练习上。",
+          "evidence_indices": [
+            9
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 238,
+          "end": 310,
+          "quote": "也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西",
+          "topic": "每周日程与课堂练习内容",
+          "claim": "学生每次课前会收到weekly schedule，告知每天要准备哪些环节，所以上课就是练这些东西。",
+          "evidence_indices": [
+            10,
+            11
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 311,
+          "end": 347,
+          "quote": "一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为",
+          "topic": "练习未准备内容会导致学生说英文",
+          "claim": "一旦练的东西是学生没有准备到的，他们就会跑出英文来。",
+          "evidence_indices": [
+            12
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 348,
+          "end": 390,
+          "quote": "所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。",
+          "topic": "备课与上课任务必须一致",
+          "claim": "每天学生的备课跟他每天上课的任务一定要一致。",
+          "evidence_indices": [
+            13
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 391,
+          "end": 477,
+          "quote": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意",
+          "topic": "课堂用语不能出圈",
+          "claim": "课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，所以老师第一个得注意。",
+          "evidence_indices": [
+            14,
+            15,
+            16
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 478,
+          "end": 523,
+          "quote": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、",
+          "topic": "学生听不懂需用英文提问时的处理",
+          "claim": "当学生真的有问题、听不懂要用英文问的时候，常常前面做几件事。",
+          "evidence_indices": [
+            17,
+            18
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 524,
+          "end": 561,
+          "quote": "几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。",
+          "topic": "课堂最后五分钟可用英文提问",
+          "claim": "学生可以在课堂最后五分钟问，所以前四十五分钟都用中文上课。",
+          "evidence_indices": [
+            19
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_12",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 562,
+          "end": 608,
+          "quote": "第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "topic": "课后或邮件提问以维持中文气氛",
+          "claim": "学生可以下课问老师，或者用电子邮件问，这样可以在课堂上维持住中文的气氛。",
+          "evidence_indices": [
+            20,
+            21
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        }
+      ]
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的\n当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么\n那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。\n另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意\n所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。\n第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "global_start": 0,
+          "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        },
+        {
+          "stage": "compose",
+          "status": "requesting",
+          "max_output_tokens": 8192
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 0,
+          "end": 27,
+          "quote": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的",
+          "topic": "MIT中文课从第二天起全中文授课",
+          "claim": "在MIT的中文课，从第二天开始就是用全中文上的。",
+          "evidence_indices": [
+            1,
+            2
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 28,
+          "end": 83,
+          "quote": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么",
+          "topic": "第一天说明课程准备与期望",
+          "claim": "第一天会告诉学生课程如何准备、大纲等，让学生清楚期望是什么。",
+          "evidence_indices": [
+            3,
+            4
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 84,
+          "end": 125,
+          "quote": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。",
+          "topic": "全中文上课的两个重要环节",
+          "claim": "要让一堂课能够用中文上课，最重要的有两个非常重要的环节。",
+          "evidence_indices": [
+            5
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 126,
+          "end": 209,
+          "quote": "一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要",
+          "topic": "课堂用语需让学生听懂",
+          "claim": "第一个重要环节是课堂用语学生要听得懂，例如“请跟我再说一遍”“请你回答问题”“很好”这些词的意思，所以课堂用语非常重要。",
+          "evidence_indices": [
+            6,
+            7,
+            8
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 210,
+          "end": 237,
+          "quote": "第二个最重要的是，他们的备课要反映在你课堂的练习上头。",
+          "topic": "备课需反映在课堂练习上",
+          "claim": "第二个最重要的是学生的备课要反映在课堂练习上。",
+          "evidence_indices": [
+            9
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 238,
+          "end": 310,
+          "quote": "也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西",
+          "topic": "每周日程与课堂练习内容",
+          "claim": "学生每次课前会收到weekly schedule，告知每天要准备哪些环节，所以上课就是练这些东西。",
+          "evidence_indices": [
+            10,
+            11
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 311,
+          "end": 347,
+          "quote": "一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为",
+          "topic": "练习未准备内容会导致学生说英文",
+          "claim": "一旦练的东西是学生没有准备到的，他们就会跑出英文来。",
+          "evidence_indices": [
+            12
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 348,
+          "end": 390,
+          "quote": "所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。",
+          "topic": "备课与上课任务必须一致",
+          "claim": "每天学生的备课跟他每天上课的任务一定要一致。",
+          "evidence_indices": [
+            13
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 391,
+          "end": 477,
+          "quote": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意",
+          "topic": "课堂用语不能出圈",
+          "claim": "课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，所以老师第一个得注意。",
+          "evidence_indices": [
+            14,
+            15,
+            16
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 478,
+          "end": 523,
+          "quote": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、",
+          "topic": "学生听不懂需用英文提问时的处理",
+          "claim": "当学生真的有问题、听不懂要用英文问的时候，常常前面做几件事。",
+          "evidence_indices": [
+            17,
+            18
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 524,
+          "end": 561,
+          "quote": "几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。",
+          "topic": "课堂最后五分钟可用英文提问",
+          "claim": "学生可以在课堂最后五分钟问，所以前四十五分钟都用中文上课。",
+          "evidence_indices": [
+            19
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_12",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 562,
+          "end": 608,
+          "quote": "第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "topic": "课后或邮件提问以维持中文气氛",
+          "claim": "学生可以下课问老师，或者用电子邮件问，这样可以在课堂上维持住中文的气氛。",
+          "evidence_indices": [
+            20,
+            21
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        }
+      ]
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的\n当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么\n那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。\n另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意\n所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。\n第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "global_start": 0,
+          "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        },
+        {
+          "stage": "compose",
+          "status": "validated",
+          "max_output_tokens": 8192
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 0,
+          "end": 27,
+          "quote": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的",
+          "topic": "MIT中文课从第二天起全中文授课",
+          "claim": "在MIT的中文课，从第二天开始就是用全中文上的。",
+          "evidence_indices": [
+            1,
+            2
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 28,
+          "end": 83,
+          "quote": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么",
+          "topic": "第一天说明课程准备与期望",
+          "claim": "第一天会告诉学生课程如何准备、大纲等，让学生清楚期望是什么。",
+          "evidence_indices": [
+            3,
+            4
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 84,
+          "end": 125,
+          "quote": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。",
+          "topic": "全中文上课的两个重要环节",
+          "claim": "要让一堂课能够用中文上课，最重要的有两个非常重要的环节。",
+          "evidence_indices": [
+            5
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 126,
+          "end": 209,
+          "quote": "一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要",
+          "topic": "课堂用语需让学生听懂",
+          "claim": "第一个重要环节是课堂用语学生要听得懂，例如“请跟我再说一遍”“请你回答问题”“很好”这些词的意思，所以课堂用语非常重要。",
+          "evidence_indices": [
+            6,
+            7,
+            8
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 210,
+          "end": 237,
+          "quote": "第二个最重要的是，他们的备课要反映在你课堂的练习上头。",
+          "topic": "备课需反映在课堂练习上",
+          "claim": "第二个最重要的是学生的备课要反映在课堂练习上。",
+          "evidence_indices": [
+            9
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 238,
+          "end": 310,
+          "quote": "也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西",
+          "topic": "每周日程与课堂练习内容",
+          "claim": "学生每次课前会收到weekly schedule，告知每天要准备哪些环节，所以上课就是练这些东西。",
+          "evidence_indices": [
+            10,
+            11
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 311,
+          "end": 347,
+          "quote": "一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为",
+          "topic": "练习未准备内容会导致学生说英文",
+          "claim": "一旦练的东西是学生没有准备到的，他们就会跑出英文来。",
+          "evidence_indices": [
+            12
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 348,
+          "end": 390,
+          "quote": "所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。",
+          "topic": "备课与上课任务必须一致",
+          "claim": "每天学生的备课跟他每天上课的任务一定要一致。",
+          "evidence_indices": [
+            13
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 391,
+          "end": 477,
+          "quote": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意",
+          "topic": "课堂用语不能出圈",
+          "claim": "课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，所以老师第一个得注意。",
+          "evidence_indices": [
+            14,
+            15,
+            16
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 478,
+          "end": 523,
+          "quote": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、",
+          "topic": "学生听不懂需用英文提问时的处理",
+          "claim": "当学生真的有问题、听不懂要用英文问的时候，常常前面做几件事。",
+          "evidence_indices": [
+            17,
+            18
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 524,
+          "end": 561,
+          "quote": "几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。",
+          "topic": "课堂最后五分钟可用英文提问",
+          "claim": "学生可以在课堂最后五分钟问，所以前四十五分钟都用中文上课。",
+          "evidence_indices": [
+            19
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_12",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 562,
+          "end": 608,
+          "quote": "第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "topic": "课后或邮件提问以维持中文气氛",
+          "claim": "学生可以下课问老师，或者用电子邮件问，这样可以在课堂上维持住中文的气氛。",
+          "evidence_indices": [
+            20,
+            21
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        }
+      ],
+      "candidate": {
+        "summary": [
+          {
+            "text": "MIT中文课从第二天起全中文授课，第一天说明准备与期望。要维持全中文，关键是课堂用语学生听得懂且不出圈，以及学生备课与课堂练习任务一致；未准备的内容会让学生说英文。学生若听不懂，可在最后五分钟、课后或邮件用英文提问，以维持课堂中文气氛。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2",
+              "F1_3",
+              "F1_4",
+              "F1_5",
+              "F1_7",
+              "F1_9",
+              "F1_11",
+              "F1_12"
+            ]
+          }
+        ],
+        "key_points": [
+          {
+            "topic": "全中文授课的两个关键环节",
+            "text": "课堂用语要让学生听懂且不能出圈，如“请再说一遍”与“请再说一次”不同；备课须反映在课堂练习上，学生按weekly schedule准备，上课就练这些。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_6",
+              "F1_9"
+            ]
+          },
+          {
+            "topic": "备课与上课任务一致",
+            "text": "每天学生的备课与上课任务必须一致；一旦练到学生没准备的内容，他们就会说英文。",
+            "fact_ids": [
+              "F1_5",
+              "F1_7",
+              "F1_8"
+            ]
+          },
+          {
+            "topic": "用英文提问的时机",
+            "text": "学生听不懂要用英文问时，可在课堂最后五分钟问，所以前四十五分钟用中文；也可下课或邮件问，以维持课堂中文气氛。",
+            "fact_ids": [
+              "F1_10",
+              "F1_11",
+              "F1_12"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的\n当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么\n那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。\n另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意\n所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。\n第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "global_start": 0,
+          "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        },
+        {
+          "stage": "compose",
+          "status": "validated",
+          "max_output_tokens": 8192
+        },
+        {
+          "stage": "audit",
+          "status": "requesting",
+          "max_output_tokens": 8192
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 0,
+          "end": 27,
+          "quote": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的",
+          "topic": "MIT中文课从第二天起全中文授课",
+          "claim": "在MIT的中文课，从第二天开始就是用全中文上的。",
+          "evidence_indices": [
+            1,
+            2
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 28,
+          "end": 83,
+          "quote": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么",
+          "topic": "第一天说明课程准备与期望",
+          "claim": "第一天会告诉学生课程如何准备、大纲等，让学生清楚期望是什么。",
+          "evidence_indices": [
+            3,
+            4
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 84,
+          "end": 125,
+          "quote": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。",
+          "topic": "全中文上课的两个重要环节",
+          "claim": "要让一堂课能够用中文上课，最重要的有两个非常重要的环节。",
+          "evidence_indices": [
+            5
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 126,
+          "end": 209,
+          "quote": "一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要",
+          "topic": "课堂用语需让学生听懂",
+          "claim": "第一个重要环节是课堂用语学生要听得懂，例如“请跟我再说一遍”“请你回答问题”“很好”这些词的意思，所以课堂用语非常重要。",
+          "evidence_indices": [
+            6,
+            7,
+            8
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 210,
+          "end": 237,
+          "quote": "第二个最重要的是，他们的备课要反映在你课堂的练习上头。",
+          "topic": "备课需反映在课堂练习上",
+          "claim": "第二个最重要的是学生的备课要反映在课堂练习上。",
+          "evidence_indices": [
+            9
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 238,
+          "end": 310,
+          "quote": "也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西",
+          "topic": "每周日程与课堂练习内容",
+          "claim": "学生每次课前会收到weekly schedule，告知每天要准备哪些环节，所以上课就是练这些东西。",
+          "evidence_indices": [
+            10,
+            11
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 311,
+          "end": 347,
+          "quote": "一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为",
+          "topic": "练习未准备内容会导致学生说英文",
+          "claim": "一旦练的东西是学生没有准备到的，他们就会跑出英文来。",
+          "evidence_indices": [
+            12
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 348,
+          "end": 390,
+          "quote": "所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。",
+          "topic": "备课与上课任务必须一致",
+          "claim": "每天学生的备课跟他每天上课的任务一定要一致。",
+          "evidence_indices": [
+            13
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 391,
+          "end": 477,
+          "quote": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意",
+          "topic": "课堂用语不能出圈",
+          "claim": "课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，所以老师第一个得注意。",
+          "evidence_indices": [
+            14,
+            15,
+            16
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 478,
+          "end": 523,
+          "quote": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、",
+          "topic": "学生听不懂需用英文提问时的处理",
+          "claim": "当学生真的有问题、听不懂要用英文问的时候，常常前面做几件事。",
+          "evidence_indices": [
+            17,
+            18
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 524,
+          "end": 561,
+          "quote": "几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。",
+          "topic": "课堂最后五分钟可用英文提问",
+          "claim": "学生可以在课堂最后五分钟问，所以前四十五分钟都用中文上课。",
+          "evidence_indices": [
+            19
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_12",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 562,
+          "end": 608,
+          "quote": "第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "topic": "课后或邮件提问以维持中文气氛",
+          "claim": "学生可以下课问老师，或者用电子邮件问，这样可以在课堂上维持住中文的气氛。",
+          "evidence_indices": [
+            20,
+            21
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        }
+      ],
+      "candidate": {
+        "summary": [
+          {
+            "text": "MIT中文课从第二天起全中文授课，第一天说明准备与期望。要维持全中文，关键是课堂用语学生听得懂且不出圈，以及学生备课与课堂练习任务一致；未准备的内容会让学生说英文。学生若听不懂，可在最后五分钟、课后或邮件用英文提问，以维持课堂中文气氛。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2",
+              "F1_3",
+              "F1_4",
+              "F1_5",
+              "F1_7",
+              "F1_9",
+              "F1_11",
+              "F1_12"
+            ]
+          }
+        ],
+        "key_points": [
+          {
+            "topic": "全中文授课的两个关键环节",
+            "text": "课堂用语要让学生听懂且不能出圈，如“请再说一遍”与“请再说一次”不同；备课须反映在课堂练习上，学生按weekly schedule准备，上课就练这些。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_6",
+              "F1_9"
+            ]
+          },
+          {
+            "topic": "备课与上课任务一致",
+            "text": "每天学生的备课与上课任务必须一致；一旦练到学生没准备的内容，他们就会说英文。",
+            "fact_ids": [
+              "F1_5",
+              "F1_7",
+              "F1_8"
+            ]
+          },
+          {
+            "topic": "用英文提问的时机",
+            "text": "学生听不懂要用英文问时，可在课堂最后五分钟问，所以前四十五分钟用中文；也可下课或邮件问，以维持课堂中文气氛。",
+            "fact_ids": [
+              "F1_10",
+              "F1_11",
+              "F1_12"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "strategy": "facts",
+      "planned_calls": 3,
+      "sources": [
+        {
+          "id": "part1",
+          "text": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的\n当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么\n那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。\n一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要\n第二个最重要的是，他们的备课要反映在你课堂的练习上头。\n也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西\n一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为\n所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。\n另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意\n所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、\n几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。\n第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "global_start": 0,
+          "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "extract",
+          "status": "validated",
+          "max_output_tokens": 4096
+        },
+        {
+          "stage": "compose",
+          "status": "validated",
+          "max_output_tokens": 8192
+        },
+        {
+          "stage": "audit",
+          "status": "validated",
+          "max_output_tokens": 8192
+        }
+      ],
+      "facts": [
+        {
+          "id": "F1_1",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 0,
+          "end": 27,
+          "quote": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的",
+          "topic": "MIT中文课从第二天起全中文授课",
+          "claim": "在MIT的中文课，从第二天开始就是用全中文上的。",
+          "evidence_indices": [
+            1,
+            2
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_2",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 28,
+          "end": 83,
+          "quote": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么",
+          "topic": "第一天说明课程准备与期望",
+          "claim": "第一天会告诉学生课程如何准备、大纲等，让学生清楚期望是什么。",
+          "evidence_indices": [
+            3,
+            4
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_3",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 84,
+          "end": 125,
+          "quote": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。",
+          "topic": "全中文上课的两个重要环节",
+          "claim": "要让一堂课能够用中文上课，最重要的有两个非常重要的环节。",
+          "evidence_indices": [
+            5
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_4",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 126,
+          "end": 209,
+          "quote": "一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要",
+          "topic": "课堂用语需让学生听懂",
+          "claim": "第一个重要环节是课堂用语学生要听得懂，例如“请跟我再说一遍”“请你回答问题”“很好”这些词的意思，所以课堂用语非常重要。",
+          "evidence_indices": [
+            6,
+            7,
+            8
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_5",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 210,
+          "end": 237,
+          "quote": "第二个最重要的是，他们的备课要反映在你课堂的练习上头。",
+          "topic": "备课需反映在课堂练习上",
+          "claim": "第二个最重要的是学生的备课要反映在课堂练习上。",
+          "evidence_indices": [
+            9
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_6",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 238,
+          "end": 310,
+          "quote": "也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西",
+          "topic": "每周日程与课堂练习内容",
+          "claim": "学生每次课前会收到weekly schedule，告知每天要准备哪些环节，所以上课就是练这些东西。",
+          "evidence_indices": [
+            10,
+            11
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_7",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 311,
+          "end": 347,
+          "quote": "一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为",
+          "topic": "练习未准备内容会导致学生说英文",
+          "claim": "一旦练的东西是学生没有准备到的，他们就会跑出英文来。",
+          "evidence_indices": [
+            12
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_8",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 348,
+          "end": 390,
+          "quote": "所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。",
+          "topic": "备课与上课任务必须一致",
+          "claim": "每天学生的备课跟他每天上课的任务一定要一致。",
+          "evidence_indices": [
+            13
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_9",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 391,
+          "end": 477,
+          "quote": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意",
+          "topic": "课堂用语不能出圈",
+          "claim": "课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，所以老师第一个得注意。",
+          "evidence_indices": [
+            14,
+            15,
+            16
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_10",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 478,
+          "end": 523,
+          "quote": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、",
+          "topic": "学生听不懂需用英文提问时的处理",
+          "claim": "当学生真的有问题、听不懂要用英文问的时候，常常前面做几件事。",
+          "evidence_indices": [
+            17,
+            18
+          ],
+          "attribution": "source",
+          "importance": "support",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_11",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 524,
+          "end": 561,
+          "quote": "几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。",
+          "topic": "课堂最后五分钟可用英文提问",
+          "claim": "学生可以在课堂最后五分钟问，所以前四十五分钟都用中文上课。",
+          "evidence_indices": [
+            19
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        },
+        {
+          "id": "F1_12",
+          "source_id": "part1",
+          "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+          "start": 562,
+          "end": 608,
+          "quote": "第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+          "topic": "课后或邮件提问以维持中文气氛",
+          "claim": "学生可以下课问老师，或者用电子邮件问，这样可以在课堂上维持住中文的气氛。",
+          "evidence_indices": [
+            20,
+            21
+          ],
+          "attribution": "source",
+          "importance": "core",
+          "attribution_start": null,
+          "attribution_end": null
+        }
+      ],
+      "candidate": {
+        "summary": [
+          {
+            "text": "MIT中文课从第二天起全中文授课，第一天说明准备与期望。要维持全中文，关键是课堂用语学生听得懂且不出圈，以及学生备课与课堂练习任务一致；未准备的内容会让学生说英文。学生若听不懂，可在最后五分钟、课后或邮件用英文提问，以维持课堂中文气氛。",
+            "fact_ids": [
+              "F1_1",
+              "F1_2",
+              "F1_3",
+              "F1_4",
+              "F1_5",
+              "F1_7",
+              "F1_9",
+              "F1_11",
+              "F1_12"
+            ]
+          }
+        ],
+        "key_points": [
+          {
+            "topic": "全中文授课的两个关键环节",
+            "text": "课堂用语要让学生听懂且不能出圈，如“请再说一遍”与“请再说一次”不同；备课须反映在课堂练习上，学生按weekly schedule准备，上课就练这些。",
+            "fact_ids": [
+              "F1_3",
+              "F1_4",
+              "F1_6",
+              "F1_9"
+            ]
+          },
+          {
+            "topic": "备课与上课任务一致",
+            "text": "每天学生的备课与上课任务必须一致；一旦练到学生没准备的内容，他们就会说英文。",
+            "fact_ids": [
+              "F1_5",
+              "F1_7",
+              "F1_8"
+            ]
+          },
+          {
+            "topic": "用英文提问的时机",
+            "text": "学生听不懂要用英文问时，可在课堂最后五分钟问，所以前四十五分钟用中文；也可下课或邮件问，以维持课堂中文气氛。",
+            "fact_ids": [
+              "F1_10",
+              "F1_11",
+              "F1_12"
+            ]
+          }
+        ]
+      },
+      "audit": {
+        "facts": [
+          {
+            "id": "F1_1",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 0,
+            "end": 27,
+            "quote": "在 MIT\n的中文课，我们从第二天开始就是用全中文上的",
+            "topic": "MIT中文课从第二天起全中文授课",
+            "claim": "在MIT的中文课，从第二天开始就是用全中文上的。",
+            "evidence_indices": [
+              1,
+              2
+            ],
+            "attribution": "source",
+            "importance": "core",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_2",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 28,
+            "end": 83,
+            "quote": "当然是我们第一天会告诉学生们，我们这个，我们的这个课的\n怎么样准备，这个大纲什么的，学生都清楚我们的期望是什么",
+            "topic": "第一天说明课程准备与期望",
+            "claim": "第一天会告诉学生课程如何准备、大纲等，让学生清楚期望是什么。",
+            "evidence_indices": [
+              3,
+              4
+            ],
+            "attribution": "source",
+            "importance": "support",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_3",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 84,
+            "end": 125,
+            "quote": "那我觉得最重要的，要让一堂课能够用中文上课，最重要有两个 两个非常重要的一个环节。",
+            "topic": "全中文上课的两个重要环节",
+            "claim": "要让一堂课能够用中文上课，最重要的有两个非常重要的环节。",
+            "evidence_indices": [
+              5
+            ],
+            "attribution": "source",
+            "importance": "core",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_4",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 126,
+            "end": 209,
+            "quote": "一个就是你的课堂用语 学生要听得懂，比如说当你说\"请跟我再说一遍\"\n\"请你回答问题\"，\"很好\"，学生们得 听得懂这些、\n这些、 这些词是什么意思，所以课堂用语非常重要",
+            "topic": "课堂用语需让学生听懂",
+            "claim": "第一个重要环节是课堂用语学生要听得懂，例如“请跟我再说一遍”“请你回答问题”“很好”这些词的意思，所以课堂用语非常重要。",
+            "evidence_indices": [
+              6,
+              7,
+              8
+            ],
+            "attribution": "source",
+            "importance": "core",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_5",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 210,
+            "end": 237,
+            "quote": "第二个最重要的是，他们的备课要反映在你课堂的练习上头。",
+            "topic": "备课需反映在课堂练习上",
+            "claim": "第二个最重要的是学生的备课要反映在课堂练习上。",
+            "evidence_indices": [
+              9
+            ],
+            "attribution": "source",
+            "importance": "core",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_6",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 238,
+            "end": 310,
+            "quote": "也就是说 学生们每次在课前，他们会有，我们叫做 weekly\nschedule，会告诉你每天要准备哪些 哪些的这个环节，所以上课你就是练这些东西",
+            "topic": "每周日程与课堂练习内容",
+            "claim": "学生每次课前会收到weekly schedule，告知每天要准备哪些环节，所以上课就是练这些东西。",
+            "evidence_indices": [
+              10,
+              11
+            ],
+            "attribution": "source",
+            "importance": "support",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_7",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 311,
+            "end": 347,
+            "quote": "一旦你练的东西是学生没有准备到的，他们就会跑出英、 英文、 英文来，因为",
+            "topic": "练习未准备内容会导致学生说英文",
+            "claim": "一旦练的东西是学生没有准备到的，他们就会跑出英文来。",
+            "evidence_indices": [
+              12
+            ],
+            "attribution": "source",
+            "importance": "support",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_8",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 348,
+            "end": 390,
+            "quote": "所以我才说这个最重要的就是每天他的备课，跟他每天上课的任务 一定要一致，一定要一致。",
+            "topic": "备课与上课任务必须一致",
+            "claim": "每天学生的备课跟他每天上课的任务一定要一致。",
+            "evidence_indices": [
+              13
+            ],
+            "attribution": "source",
+            "importance": "core",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_9",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 391,
+            "end": 477,
+            "quote": "另外，你说的，你说的中，你说的课堂用语 绝对不能够，我们中文叫出圈。\n比如说，比如说这课堂用语叫\"请你再说\n一遍\"，跟\"请你再说一次\"是完全不同的东西，所以老师第一个得注意",
+            "topic": "课堂用语不能出圈",
+            "claim": "课堂用语绝对不能出圈，例如“请你再说一遍”跟“请你再说一次”是完全不同的东西，所以老师第一个得注意。",
+            "evidence_indices": [
+              14,
+              15,
+              16
+            ],
+            "attribution": "source",
+            "importance": "core",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_10",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 478,
+            "end": 523,
+            "quote": "所以学生备课，你上课练习，当学生真的有问题，他听不懂\n要用英文问的时候，我们常常前面做两、",
+            "topic": "学生听不懂需用英文提问时的处理",
+            "claim": "当学生真的有问题、听不懂要用英文问的时候，常常前面做几件事。",
+            "evidence_indices": [
+              17,
+              18
+            ],
+            "attribution": "source",
+            "importance": "support",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_11",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 524,
+            "end": 561,
+            "quote": "几件事，第一个他可以在课堂最后五分钟问 所以我们前四十五分钟都用中文上课。",
+            "topic": "课堂最后五分钟可用英文提问",
+            "claim": "学生可以在课堂最后五分钟问，所以前四十五分钟都用中文上课。",
+            "evidence_indices": [
+              19
+            ],
+            "attribution": "source",
+            "importance": "core",
+            "attribution_start": null,
+            "attribution_end": null
+          },
+          {
+            "id": "F1_12",
+            "source_id": "part1",
+            "source_sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+            "start": 562,
+            "end": 608,
+            "quote": "第二个他可以下课问你，或者是他用电子邮件问你\n所以这样子我们可以在课堂上维持住这个中文的气氛",
+            "topic": "课后或邮件提问以维持中文气氛",
+            "claim": "学生可以下课问老师，或者用电子邮件问，这样可以在课堂上维持住中文的气氛。",
+            "evidence_indices": [
+              20,
+              21
+            ],
+            "attribution": "source",
+            "importance": "core",
+            "attribution_start": null,
+            "attribution_end": null
+          }
+        ],
+        "output": {
+          "summary": [
+            {
+              "text": "MIT中文课从第二天起全中文授课，第一天说明准备与期望。维持全中文的关键是课堂用语学生听得懂且不出圈，以及学生备课与课堂练习任务一致；未准备的内容会让学生说英文。学生若听不懂，可在最后五分钟、课后或邮件用英文提问，以维持课堂中文气氛。",
+              "fact_ids": [
+                "F1_1",
+                "F1_2",
+                "F1_3",
+                "F1_4",
+                "F1_5",
+                "F1_7",
+                "F1_9",
+                "F1_11",
+                "F1_12"
+              ]
+            }
+          ],
+          "key_points": [
+            {
+              "topic": "全中文授课的两个关键环节",
+              "text": "课堂用语要让学生听懂且不能出圈，如“请再说一遍”与“请再说一次”不同；备课须反映在课堂练习上，学生按weekly schedule准备，上课就练这些。",
+              "fact_ids": [
+                "F1_3",
+                "F1_4",
+                "F1_6",
+                "F1_9"
+              ]
+            },
+            {
+              "topic": "备课与上课任务一致",
+              "text": "每天学生的备课与上课任务必须一致；一旦练到学生没准备的内容，他们就会说英文。",
+              "fact_ids": [
+                "F1_5",
+                "F1_7",
+                "F1_8"
+              ]
+            },
+            {
+              "topic": "用英文提问的时机",
+              "text": "学生听不懂要用英文问时，可在课堂最后五分钟问，所以前四十五分钟用中文；也可下课或邮件问，以维持课堂中文气氛。",
+              "fact_ids": [
+                "F1_10",
+                "F1_11",
+                "F1_12"
+              ]
+            }
+          ]
+        },
+        "checks": [
+          {
+            "item_id": "S1",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          },
+          {
+            "item_id": "P1",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          },
+          {
+            "item_id": "P2",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          },
+          {
+            "item_id": "P3",
+            "supported": true,
+            "qualifiers_preserved": true,
+            "attribution_preserved": true,
+            "scope_preserved": true
+          }
+        ]
+      },
+      "status": "completed"
+    }
+  ]
+}

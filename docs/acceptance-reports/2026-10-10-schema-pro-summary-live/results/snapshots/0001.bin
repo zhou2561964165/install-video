@@ -1,0 +1,43 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "status": "closed",
+  "hard_ceiling": 12,
+  "reserved_posts": 11,
+  "initial_phase_limit": 5,
+  "conditional_followup_limit": 7,
+  "phases": [
+    {
+      "phase": "source-first-summary-live-1",
+      "status": "closed",
+      "maximum_posts": 5,
+      "reserved_posts": 5,
+      "tracker": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\phase-1.json",
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-10-source-first-summary-live\\results\\request-ledger.json",
+      "provenance_sha256": "2488b9f5e0579fae1b0e690290efb9a74c6ae1049df7dc88b1b460cc1c2b1daf",
+      "closed_receipt_sha256": "21a19d7131269c0fc8627daf6a918b42c75fa17792917ab7b031cc9e0d0ef94b"
+    },
+    {
+      "phase": "source-first-summary-staged-2",
+      "status": "closed",
+      "maximum_posts": 7,
+      "reserved_posts": 6,
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-10-staged-summary-live\\results\\request-ledger.json",
+      "tracker": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\phase-2.json",
+      "provenance_sha256": "dd610cfab82fa4107726d8291a8a5e273912bb343d66a77dcd53576de78d57c3",
+      "closed_receipt_sha256": "d467c1b3ed4e035cadf9dc56a8bc8352e796fce5d54bbb49053358c3dfb1e982"
+    }
+  ],
+  "reason": "Finite repair phase maximum7 after offline validation/review; cumulative previous5 plus7 hard12",
+  "authorization": "User 2026-10-10: budget may be increased by agent according to task without asking",
+  "historical_group": "summary-quality-finish-20261008",
+  "historical_group_posts": 26,
+  "historical_group_closed": true,
+  "close_reason": "Finite schema/pro-model continuation; preserve phase2 failures and prior11/ceiling12 without reset",
+  "parent_snapshot": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\budget-group.json",
+  "parent_posts": 5,
+  "budget_adjustment": {
+    "from": 10,
+    "to": 12
+  },
+  "parent_sha256": "eed50a1fe61b58fdb024becb9574fb0ab4b71ee06dbdc2eb3cba73a8219441c1"
+}

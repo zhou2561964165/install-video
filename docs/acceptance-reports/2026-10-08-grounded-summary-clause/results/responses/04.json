@@ -1,0 +1,20 @@
+{
+  "phase": "normalized-clause",
+  "ordinal": 4,
+  "sample": "en-medium",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "c93cdd2ca5d7d0535367a7e46798c63f7cec3f8636461c76c1f4b61869cc7208",
+  "content": "{\n  \"fact_1\": {\n    \"topic\": \"日常评分系统的两个理由\",\n    \"claim\": \"讲者提出两个理由来采用日常评分系统：一是与人互动会留下印象并受到评价，二是只要学生坚持并持续努力修读该课程，就能展示出很好的中文技能。\",\n    \"evidence\": [1, 2, 3, 4, 12, 13, 14, 15, 16, 17, 18, 19, 20],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  },\n  \"fact_2\": {\n    \"topic\": \"每节课提供反馈\",\n    \"claim\": \"讲者表示通常课后会针对每位学生的课堂表现提供反馈，包括语言和文化行为，让学生知道下次课需要改进什么。\",\n    \"evidence\": [21, 22, 23, 24, 25, 26, 27, 28],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  },\n  \"fact_3\": {\n    \"topic\": \"书面反馈与Engrade网站\",\n    \"claim\": \"讲者表示通常使用书面反馈，通过一个名为Engrade的网站，除了录入成绩外，还可以私下给每位学生留言；学生只要登录自己的账户就能读到教师的评论。\",\n    \"evidence\": [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"support\"\n  },\n  \"fact_4\": {\n    \"topic\": \"评论内容取决于学生表现\",\n    \"claim\": \"讲者表示评论内容取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细，例如思考如何用中文应对赞美。\",\n    \"evidence\": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"support\"\n  },\n  \"fact_5\": {\n    \"topic\": \"美国文化中接受赞美的方式\",\n    \"claim\": \"讲者以美国文化为例，说明收到赞美时很自然会说谢谢，例如别人说你的中文很好，你回答谢谢。\",\n    \"evidence\": [56, 57, 58, 59, 60, 61, 62, 63, 64],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"support\"\n  },\n  \"fact_6\": {\n    \"topic\": \"中国文化中收到赞美时保持谦虚\",\n    \"claim\": \"讲者表示在中国文化中收到赞美时保持谦虚是方式，有时不会用谢谢接受，而是说还有很长的路要走、不知道赞美从何而来等；讲者认为中国文化关于赞美的根本理念是保持谦虚。\",\n    \"evidence\": [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  },\n  \"fact_7\": {\n    \"topic\": \"根据教材反馈文化行为\",\n    \"claim\": \"讲者表示如果学生的课堂表现来自其母语（L1），会鼓励他们，并根据课堂所涵盖的教材内容，思考如何在中国文化中应对赞美来给予反馈，让学生知道这是可以努力的方向。\",\n    \"evidence\": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  }\n}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1645,
+    "completion_tokens": 881,
+    "total_tokens": 2526,
+    "prompt_cache_hit_tokens": 1408,
+    "prompt_cache_miss_tokens": 237,
+    "prompt_tokens_details": {
+      "cached_tokens": 1408
+    }
+  }
+}

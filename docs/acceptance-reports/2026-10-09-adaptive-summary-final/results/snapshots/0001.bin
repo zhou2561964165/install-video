@@ -1,0 +1,14 @@
+{
+  "work_id": "summary-quality-finish-20261008",
+  "phase": "adaptive-transcript-repair",
+  "status": "closed",
+  "parent_snapshot": "E:\\install_video\\.planning\\2026-10-08-summary-quality-finish\\budget-group.json",
+  "parent_posts": 22,
+  "hard_ceiling": 26,
+  "maximum_posts": 2,
+  "maximum_work_posts": 24,
+  "reserved_posts": 24,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-09-adaptive-summary-repair\\results\\request-ledger.json",
+  "provenance_sha256": "ac7d390365a62d0c132a854292583a3f5835b2cb3e23c93d1a8d3fca0d5be9bd",
+  "reason": "Offline-confirmed generic prompt repair for overview duplication and missed related conditions"
+}

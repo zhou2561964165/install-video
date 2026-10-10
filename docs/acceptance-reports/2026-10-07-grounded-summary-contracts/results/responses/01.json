@@ -1,0 +1,20 @@
+{
+  "ordinal": 1,
+  "phase": "organization-contracts",
+  "sample": "zh-short",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "d238b30a4256335da3e1c6c63ad6db97faca084c2a60650ad3bdc3186a86a1e7",
+  "content": "{\"fact_1\":{\"topic\":\"MIT中文课从第二天起全中文授课\",\"claim\":\"在MIT的中文课，从第二天开始就用全中文上课；第一天会告诉学生课程如何准备、大纲等，让学生清楚期望。\",\"evidence\":[1,2,3,4],\"attribution\":\"source\",\"importance\":\"core\"},\"fact_2\":{\"topic\":\"全中文上课的两个关键环节\",\"claim\":\"要让一堂课能够用中文上课，最重要的有两个环节：一是课堂用语学生要听得懂，二是学生的备课要反映在课堂练习上。\",\"evidence\":[5,6,7,8,9],\"attribution\":\"source\",\"importance\":\"core\"},\"fact_3\":{\"topic\":\"课堂用语需学生理解\",\"claim\":\"课堂用语非常重要，学生需要听懂诸如“请跟我再说一遍”“请你回答问题”“很好”等词的意思。\",\"evidence\":[6,7,8],\"attribution\":\"source\",\"importance\":\"core\"},\"fact_4\":{\"topic\":\"备课与课堂练习需一致\",\"claim\":\"学生课前会收到weekly schedule，告知每天要准备哪些环节，上课就是练这些东西；如果练的是学生没有准备到的，他们就会跑出英文来，因此每天备课与上课任务一定要一致。\",\"evidence\":[9,10,11,12,13],\"attribution\":\"source\",\"importance\":\"core\"},\"fact_5\":{\"topic\":\"课堂用语不能出圈\",\"claim\":\"课堂用语绝对不能“出圈”，例如“请你再说一遍”与“请你再说一次”是完全不同的东西，老师首先得注意这一点。\",\"evidence\":[14,15,16],\"attribution\":\"source\",\"importance\":\"core\"},\"fact_6\":{\"topic\":\"学生听不懂时的处理方式\",\"claim\":\"当学生真的有问题、听不懂要用英文问时，通常做几件事：第一可以在课堂最后五分钟问，所以前四十五分钟都用中文上课；第二可以下课问，或用电子邮件问，从而在课堂上维持中文气氛。\",\"evidence\":[17,18,19,20,21],\"attribution\":\"source\",\"importance\":\"core\"}}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1265,
+    "completion_tokens": 421,
+    "total_tokens": 1686,
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 881,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    }
+  }
+}

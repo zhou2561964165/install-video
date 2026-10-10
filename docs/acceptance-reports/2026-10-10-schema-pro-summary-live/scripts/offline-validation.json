@@ -1,0 +1,20 @@
+{
+  "new_supplier_posts": 0,
+  "parent_posts": 11,
+  "hard_ceiling": 17,
+  "maximum_posts": 6,
+  "format_extra_calls": 0,
+  "semantic_extra_calls": 0,
+  "new_tests": {
+    "passed": 16,
+    "seconds": 60.1,
+    "red_cases": "missing new runner; parent/temp fixture setup; safe Responses body extraction returned None before fix"
+  },
+  "independent_review": "No unresolved Critical/Important; parent11/native schema/Responses status/no reasoning/dualrole verified",
+  "runner_sha256": "73c473cb0dfafa4b112f433f6a093457727c97904597f86c463d17ec51bfbf6f",
+  "tests_sha256": "6d58410f4b9c65c84c0d591fc6e56ed4a496b2ad86d5cb9f32df1ac38678ceea",
+  "old_artifacts_changed": false,
+  "old_product_tests_reused": true,
+  "official_model": "deepseek-v4-pro",
+  "reasoning_effort": "none"
+}

@@ -1,0 +1,24 @@
+{
+  "real_vendor_posts": 0,
+  "model_semantics_tested": false,
+  "page_errors": 0,
+  "responses": [
+    {
+      "path": "/api/parse",
+      "status": 200
+    },
+    {
+      "path": "/api/summary",
+      "status": 200
+    },
+    {
+      "path": "/api/summary",
+      "status": 502
+    }
+  ],
+  "success_visible": true,
+  "previous_summary_hidden_after_failure": true,
+  "error_visible": true,
+  "action_reenabled": true,
+  "passed": true
+}

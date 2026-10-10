@@ -1,5 +1,8 @@
 # Grounded summary · 句子ID证据实现计划（evidence-id 轮）
 
+<!-- DOCUMENT_ARCHIVE_NOTICE -->
+> **历史文档阅读说明：** 本页保留原阶段设计、任务和当时的验证结果。当前实现以[设计文档](../../design.md)和[需求/实施状态](../../requirements.md)为准，当前任务与预算见[自适应交接](../../handoff-2026-10-09-adaptive.md)。文中的“当前、下一步、待实现、等待授权”表示记录当时，不能据此重复已完成工作或重开关闭phase；仍未实现的能力以当前说明和代码为准。
+
 > 新一轮，不覆盖 `2026-10-05-grounded-summary.md`。设计见[同轮 spec](../specs/2026-10-05-grounded-summary-evidence-design.md)。共享 24 POST 硬预算，旧 5 次已用，剩余 19 次；失败即停、不重试、不改旧台账。
 
 ## 工程约定

@@ -1,0 +1,67 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "phase": "source-first-summary-live-1",
+  "maximum_posts": 5,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "zh-short",
+      "sample_post": 1,
+      "stage": "extract",
+      "status": "response",
+      "reserved_utc": "2026-10-10T02:15:00.651549+00:00",
+      "payload_sha256": "447a41c54429360c56a16bfcf025e27c7c56ba4f2912f2f5deedc9c87e0b60ac",
+      "http_status": 200,
+      "response_sha256": "fcc46b20e867c13040a939fa63d8543892c1a94964f96fe538902bce8284ddb4",
+      "result_sha256": "1f684f992db8ae29647ff29dd56f9616c47a5fedfe0c5939db4d1db3d134c6fc"
+    },
+    {
+      "ordinal": 2,
+      "sample": "en-medium",
+      "sample_post": 1,
+      "stage": "extract",
+      "status": "response",
+      "reserved_utc": "2026-10-10T02:15:02.430162+00:00",
+      "payload_sha256": "46fdc09451db271c2196c6db316293b89de5bcb03baded6e179204c6d1bc37ce",
+      "http_status": 200,
+      "response_sha256": "22f2a0503c8e42f153633da331b1ac76f03b72253d6c31fd6dfbe9e52c9405e6",
+      "result_sha256": "f32a69c8a4d9f184c80214739a943814a0fbf79bd3360ddc57929eb5e56af2a1"
+    },
+    {
+      "ordinal": 3,
+      "sample": "en-long",
+      "sample_post": 1,
+      "stage": "extract",
+      "status": "response",
+      "reserved_utc": "2026-10-10T02:15:04.779605+00:00",
+      "payload_sha256": "002cacf299f215de37090c85c65736edfbe1f9f941b3ce4594c099a95e491140",
+      "http_status": 200,
+      "response_sha256": "40494c88aab170cb53b3f5d37149e5f137025870cabf8368ccbfe2174c1c800e",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    },
+    {
+      "ordinal": 4,
+      "sample": "en-long",
+      "sample_post": 2,
+      "stage": "extract",
+      "status": "response",
+      "reserved_utc": "2026-10-10T02:15:08.974364+00:00",
+      "payload_sha256": "bad24b05685d0bf729a6712d44cdf132ac31d58828409930405be10152840a66",
+      "http_status": 200,
+      "response_sha256": "5dd11849c75dd905207b587e585ee1f885fe76e2ab1632aa32e9a44b94310db9",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    },
+    {
+      "ordinal": 5,
+      "sample": "en-long",
+      "sample_post": 3,
+      "stage": "merge",
+      "status": "response",
+      "reserved_utc": "2026-10-10T02:15:13.477853+00:00",
+      "payload_sha256": "6ddf3711b1bd575d17e442947f84f4a041d4dcb7e170ec9b8c22398f245bedbd",
+      "http_status": 200,
+      "response_sha256": "e8b080fa5f5e9a3a982404e324c8a2e5f465fd83859d39d289cd5296f59e7f63",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    }
+  ]
+}

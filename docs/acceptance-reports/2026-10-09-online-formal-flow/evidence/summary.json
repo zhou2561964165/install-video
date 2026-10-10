@@ -1,0 +1,110 @@
+{
+  "date": "2026-10-10",
+  "directory_date_is_task_start": true,
+  "real_vendor_posts": 0,
+  "old_model_group_posts": 26,
+  "old_model_group_cap": 26,
+  "new_paid_budget": "awaiting explicit answer",
+  "api_cases": [
+    {
+      "case": "unauthenticated_summary",
+      "passed": true
+    },
+    {
+      "case": "existing_session_me",
+      "passed": true
+    },
+    {
+      "case": "invalid_url",
+      "passed": true
+    },
+    {
+      "case": "no_subtitle",
+      "passed": true
+    },
+    {
+      "case": "zh-short_parse",
+      "passed": true
+    },
+    {
+      "case": "zh-short_subtitle",
+      "passed": true
+    },
+    {
+      "case": "zh-short_summary_fixture",
+      "passed": true
+    },
+    {
+      "case": "en-medium_parse",
+      "passed": true
+    },
+    {
+      "case": "en-medium_subtitle",
+      "passed": true
+    },
+    {
+      "case": "en-medium_summary_fixture",
+      "passed": true
+    },
+    {
+      "case": "en-long_parse",
+      "passed": true
+    },
+    {
+      "case": "en-long_subtitle",
+      "passed": true
+    },
+    {
+      "case": "en-long_summary_fixture",
+      "passed": true
+    },
+    {
+      "case": "http_503",
+      "passed": true
+    },
+    {
+      "case": "non_json",
+      "passed": true
+    },
+    {
+      "case": "invalid_summary",
+      "passed": true
+    },
+    {
+      "case": "disconnect",
+      "passed": true
+    },
+    {
+      "case": "timeout",
+      "passed": true
+    },
+    {
+      "case": "length",
+      "passed": true
+    },
+    {
+      "case": "unconfigured_model",
+      "passed": true
+    }
+  ],
+  "api_passed": 20,
+  "api_total": 20,
+  "guard_cases_passed": 10,
+  "guard_local_posts": 16,
+  "api_local_posts": 11,
+  "browser_local_posts": 2,
+  "boundary_tests_passed": 4,
+  "guard_boundary_tests_passed": 8,
+  "protected_files": 118,
+  "protected_changes": [],
+  "evidence_sha256": {
+    "guard-http-report.json": "3d1eee3c9f365a2d105591e425081a3ca48e25402122e7419b4ccfb96f667aa9",
+    "api-http-report.json": "32f856fbc9801287b5ece2df052dc4605d87f46eca13588842c647220d172199",
+    "browser-api-report.json": "93005c4dd90f9a4250e25671e1057a5f5e5a2d85be8f76f0b9f15818fe1accc8",
+    "browser-evidence.json": "ae15e65dcad67e8473125ae2aa7efd00021f7c364a31200f101fe4547f421008",
+    "initialization-failure-report.json": "bb5747161541ee5c9406763086e88f7a68fd4ad00af223969967af7f45ff8e01",
+    "browser-summary.png": "5ec8079ecb0a21cab8ae5f7c2b6cd8d0076791f8d2c8b02db9924d28682c02ac",
+    "browser-upstream-error.png": "a9f53b00a84cdf83302b88b5eec2b224250d5ee494ddaa822ea3c0f45a09b5fd",
+    "protected-hashes.json": "9904a00be39841a1048ab4792d843e7db821c4e913bef11587a590cf81e30b67"
+  }
+}

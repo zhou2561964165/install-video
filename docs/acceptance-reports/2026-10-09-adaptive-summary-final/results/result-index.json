@@ -1,0 +1,18 @@
+{
+  "phase": "adaptive-transcript-repair-final",
+  "posts": 2,
+  "stopped_on_error": false,
+  "samples": [
+    {
+      "sample": "zh-short",
+      "success": true,
+      "result_sha256": "9eb2bfa5f6e011778ed95adffbb803d9a4468db3f97aa0593d60ed20a795cbe8"
+    },
+    {
+      "sample": "en-medium",
+      "success": true,
+      "result_sha256": "d3b4e6c038726275ab651c1f0fd870586afc68b5fb007b98c7f6d81d95707c2c"
+    }
+  ],
+  "ended_utc": "2026-10-09T14:30:07.302487+00:00"
+}

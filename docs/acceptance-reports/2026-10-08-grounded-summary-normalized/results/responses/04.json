@@ -1,0 +1,20 @@
+{
+  "phase": "normalized-retries",
+  "ordinal": 4,
+  "sample": "en-medium",
+  "stage": "extract",
+  "http_status": 200,
+  "body_sha256": "75d0029f13960e9596959f8f4268678b2b79e95e9d5455c44cc2f9d1d845b2bf",
+  "content": "{\n  \"fact_1\": {\n    \"topic\": \"日常评分系统的两个理由\",\n    \"claim\": \"讲者提出，采用日常评分系统有两个理由：一是与人互动时会留下印象并受到评价，因此希望每次表现（即每节课）都给学生评价；二是讲者相信，只要学生坚持并持续努力修读这门课，就能展示出很好的中文技能。\",\n    \"evidence\": [1, 2, 3, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  },\n  \"fact_2\": {\n    \"topic\": \"课后反馈的内容与目的\",\n    \"claim\": \"讲者说明，通常课后会就每位学生的课堂表现提供反馈，包括语言和文化行为，目的是让学生知道下次课需要改进什么。\",\n    \"evidence\": [21, 22, 23, 24, 25, 26, 27, 28],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  },\n  \"fact_3\": {\n    \"topic\": \"书面反馈与Engrade网站\",\n    \"claim\": \"讲者表示，反馈通常采用书面形式，使用一个名为Engrade的网站；除了录入成绩，还可以私下给每位学生留言，学生只要登录自己的账户就能读到教师的评论。\",\n    \"evidence\": [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"support\"\n  },\n  \"fact_4\": {\n    \"topic\": \"评论内容依学生表现而定\",\n    \"claim\": \"讲者指出，评论内容取决于学生的表现，可以简单到提醒注意某些发音，也可以更详细，例如思考如何用中文应对赞美。\",\n    \"evidence\": [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  },\n  \"fact_5\": {\n    \"topic\": \"美国文化中回应赞美的例子\",\n    \"claim\": \"讲者以美国文化为例说明，收到赞美时很自然会说谢谢，例如别人说“你的中文很好”或“你的英文很好”，回应都是“谢谢”。\",\n    \"evidence\": [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"support\"\n  },\n  \"fact_6\": {\n    \"topic\": \"中国文化中回应赞美的方式\",\n    \"claim\": \"讲者说明，在中国文化中收到赞美时，保持谦逊是方式，不会用“谢谢”接受赞美；有时会说“我还有很长的路要走，还差得远”或“我不知道赞美从何而来”，并总结中国文化关于赞美的根本观念是保持谦逊。\",\n    \"evidence\": [65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  },\n  \"fact_7\": {\n    \"topic\": \"基于教材的反馈与练习方向\",\n    \"claim\": \"讲者表示，如果学生的课堂表现来自其母语（L1），会鼓励他们，并依据课堂所覆盖的教材内容，从“如何在中国文化中应对赞美”的角度给予反馈，让学生知道这是可以努力的方向。\",\n    \"evidence\": [81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95],\n    \"attribution\": \"HAOHSIANG LIAO\",\n    \"importance\": \"core\"\n  }\n}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 1645,
+    "completion_tokens": 950,
+    "total_tokens": 2595,
+    "prompt_cache_hit_tokens": 512,
+    "prompt_cache_miss_tokens": 1133,
+    "prompt_tokens_details": {
+      "cached_tokens": 512
+    }
+  }
+}

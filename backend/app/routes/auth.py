@@ -54,5 +54,9 @@ def login(req: LoginRequest, session: Session = Depends(get_session)) -> AuthRes
 @router.get("/api/auth/me", response_model=MeResponse)
 def me(user: User = Depends(get_current_user), session: Session = Depends(get_session)) -> MeResponse:
     used, limit, date = get_quota_info(session, user.id)
-    quota = QuotaInfo(date=date, limit=limit, used=used, remaining=limit - used)
+    quota = QuotaInfo(
+        date=date, limit=limit, used=used,
+        remaining=None if limit is None else limit - used,
+        unlimited=limit is None,
+    )
     return MeResponse(user=_to_user_response(user), quota=quota)

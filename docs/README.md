@@ -1,18 +1,65 @@
 # 项目文档索引
 
-> 更新：2026-10-05，用户要求暂停。事实/主题层代码与证据已保存在工作区但未提交，当前默认legacy；5次模型请求后两个候选均遇来源字段校验失败。已提交基线仍为`be2bdd5` / `1315b31`，234/73/构建是该基线验证，不是本轮完成声明。当前状态见[handoff.md](handoff.md)。
+> **当前入口：[2026-10-10交接](handoff-2026-10-10.md)。** 2026-10-10三轮在线验收已完成并封账：来源优先5POST、阶段分离6POST、原生Schema/Pro对照6POST，累计17/17 POST、74355供应商tokens。第三轮三源结构均通过（短5/中6/长14点），但中篇频率/账户读取/概览重复和长文覆盖/安全范围仍失败；不提升候选为默认，不宣称总体质量解决。默认仍为legacy/adaptive/single。旧26/26工作组原件保持；没有部署。最新证据见[原生Schema/Pro实测](acceptance-reports/2026-10-10-schema-pro-summary-live/report.md)。
 
 ## 工程约定
 
 UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走三层token、能力配置化；yt-dlp仅由 `ytdlp_service.py` 接触，视觉只读场景。以用户当前指令及根工程约定为准。
 
+**2026-10-10追加：成熟方案优先，避免重复造轮子。** 后续开发先复用已有研究并查找成熟库、框架与官方方案，适用时优先实际采用；自研聚焦业务适配与缺失能力，选型记录依据及不适用原因。长期执行规则见 [AGENTS.md §10](../AGENTS.md)，现有资料见 [成熟方案研究](reference-summary-review-2026-10-10.md)；旧自研建议不能覆盖该要求。
+
 ## 当前维护文档
 
 | 文档 | 用途 |
 | --- | --- |
+| [阶段分离实测](acceptance-reports/2026-10-10-staged-summary-live/report.md) | closed6POST/28851tokens；累计11，两role实现但短中仍fail、长20点回显fail |
+| [原生Schema/Pro实测](acceptance-reports/2026-10-10-schema-pro-summary-live/report.md) | closed6POST/25728tokens，累计17；三源结构通过，内容未全过，候选不推广 |
+| [原生schema/Pro对照设计](superpowers/specs/2026-10-10-schema-pro-summary-design.md) | 实测后的协议/模型有限对照，父11/新phase最多6/累计17，已实测并封账 |
+| [来源优先首轮实测](acceptance-reports/2026-10-10-source-first-summary-live/report.md) | closed5POST/19776tokens；短pass、中限定fail、长20点超14结构fail，原件保持 |
+| [串行阶段分离设计](superpowers/specs/2026-10-10-staged-summary-design.md) | 实际LangChainCore编排/禁追踪、双角色与有限format；复用leaf的修复phase≤7，累计≤12 |
+| [来源优先成熟方案整改](acceptance-reports/2026-10-10-source-first-summary/report.md) | Pydantic实际复用、要点先写指导、旧结果修复；108后端/4hook与局部浏览器通过，真实模型质量未验证 |
+| [来源优先局部设计](superpowers/specs/2026-10-10-source-first-summary-design.md) | 实际采用方案、未引入大框架的具体理由、兼容性与调用预算边界 |
+| [新候选内容验收](superpowers/plans/2026-10-10-source-first-summary-acceptance.md) | 首phase5及后续6+6已完成；10→12→17有限调整，所有phase封账 |
+| [正式 HTTP 流程补验](acceptance-reports/2026-10-09-online-formal-flow/report.md) | 2026-10-10：API20/20、页面4/4、旧工具故障10/10；零付费，真实模型阶段待明确新预算 |
+| [参考代码与成熟方案复核](reference-summary-review-2026-10-10.md) | 当前只读代码对照及官方资料：15,000字符截断限制、旧结果处理借鉴、已实现能力复用与候选方案 |
+| [自适应字幕总结](handoff-2026-10-09-adaptive.md) | 历史交接：旧候选结论；当前见2026-10-10交接 |
+| [有限总结修复计划](superpowers/plans/2026-10-09-adaptive-summary-repair.md) | 两版通用提示已实施/有限复验已执行；验收预算耗尽，内容质量仍未全过 |
+| [最终有限复验](acceptance-reports/2026-10-09-adaptive-summary-final/report.md) | closed2POST；短篇通过，中篇逐课评价/重复/归属缺陷未通过 |
+| [首修复复验](acceptance-reports/2026-10-09-adaptive-summary-repair/report.md) | closed2POST；互补能力恢复与残余错误，保留未通过候选 |
+| [设计文档](design.md) | 当前代码对应的架构、接口、鉴权、额度、总结分层与实现边界 |
+| [需求/实施状态](requirements.md) | 已实现能力、候选功能、未解决质量问题与未验证范围 |
+| [根README](../README.md) / [前端README](../frontend/README.md) | 当前安装、启动、环境配置及前端交互说明 |
+| [UI扩展指南](ui-extension-guide.md) | 当前token、主题、模块职责及扩展方式边界 |
+| [长文验收](acceptance-reports/2026-10-09-adaptive-summary/report.md) | 已关闭3POST阶段；长文实际输出与内容复核 |
+| [修复前短中篇验收](acceptance-reports/2026-10-09-adaptive-short-medium/report.md) | 已关闭2POST历史候选；其缺陷不能覆盖最终新结果 |
+| [短中篇验收准则](acceptance-reports/2026-10-09-adaptive-short-medium/review-criteria.md) | 已用于本轮审查的覆盖、条件、归因和组织标准 |
+| 本机历史执行草稿（不入库） | 四个验证步骤均完成；公开证据以上述验收报告及snapshot为准 |
+
+## 历史工程与验收档案
+
+下表的“当前/最新”、测试数量、授权等待和待办均指各自记录当时。旧任务列表不作为新的执行入口；旧组余额不与当前已耗尽26/26组合并。保留原证据，复用已经完成且仍有效的实现与检查。
+
+| 文档 | 历史用途 |
+| --- | --- |
+| [核查质量续验收](acceptance-reports/2026-10-09-summary-quality-repaired/report.md) | 原17POST阶段的输出、失败和离线修复，不是当前总账 |
+| [当前摘要交接](handoff-2026-10-09-quality.md) | 最新模块、1325全量验证、有限复验边界与未解决事项 |
+| [核查质量收尾计划](superpowers/plans/2026-10-08-summary-quality-finish.md) | 纯模块职责、独立审查与当前有限验收工作范围 |
+| [摘要模块化与对应子句复验](acceptance-reports/2026-10-08-grounded-summary-clause/report.md) | 当前三模块/965回归、25有限调用、最新质量缺口与预算停止 |
+| [最新摘要交接](handoff-2026-10-08-normalized.md) | 当前代码、分类策略、实际模型计数、只读复查及后续离线事项 |
+| [规范化与引用实施计划](superpowers/plans/2026-10-08-summary-normalization-retries.md) | 模块边界、并行写集、分类修复与冻结验收要求 |
+| [规范化首轮](acceptance-reports/2026-10-08-grounded-summary-normalized/report.md) / [marker复验](acceptance-reports/2026-10-08-grounded-summary-marker/report.md) | 独立8与4POST、两个已定位并离线修复的故障，保持旧失败原件 |
+| [开发账号与前缀续验收](acceptance-reports/2026-10-08-grounded-summary-prefix/report.md) | 当前不限下载账号/855与84回归、3次有限实测失败及未达质量目标 |
+| [最新开发交接](handoff-2026-10-08-development.md) | 新全局模型路由/持续授权、额度配置、关闭phase只读命令与后续边界 |
+| [开发账号实施计划](superpowers/plans/2026-10-08-development-quota-validation.md) | 配置化现有账号豁免、UI状态与有限模型组预算 |
+| [有限合同与全局主题](acceptance-reports/2026-10-07-grounded-summary-contracts/report.md) | 当前代码/706全量、独立新phase冻结与预算待确认；无新模型质量结果 |
+| [最新contracts交接](handoff-2026-10-08-contracts.md) | 新纯接口/编排/checker、旧资产保持、恢复命令与真实预算边界 |
+| [合同设计/计划](superpowers/specs/2026-10-07-grounded-summary-contracts-design.md) / [实施计划](superpowers/plans/2026-10-07-grounded-summary-contracts.md) | 用户已继续的有限槽与主题分配私有协议，公开API/n+2不变 |
+| [总结质量收尾](acceptance-reports/2026-10-07-grounded-summary-final/report.md) | 当前修订、540项回归、独立9/13实测与未达质量目标 |
+| [前轮final交接](handoff-2026-10-07-final.md) | 前轮冻结与实测状态、预算停止、只读复查命令与完成条件 |
+| [生成合同复审](acceptance-reports/2026-10-07-grounded-summary-final/contract-review.md) | 连续三轮不同结构边界失败、有限生成结构与全局主题规划建议，未实施 |
+| [剩余工作](remaining-work-2026-10-07.md) | 本轮开始前的质量缺口、完成条件和后续候选范围 |
+| [refined 交接](handoff-2026-10-07-refined.md) | 前轮 12/13 实测、5 完整／3 部分／长文 6 未评及离线候选修订 |
 | [handoff.md](handoff.md) | 当前状态、用户决策、子agent停用、启动、验证、边界与剩余事项 |
-| [requirements.md](requirements.md) | v1→v3需求与AI内容总结主目标 |
-| [design.md](design.md) | 当前架构、接口和配置边界；旧视觉章节已标历史 |
 | [v3实现计划](superpowers/plans/2026-10-03-v3-video-intelligence.md) | 当前v3 API、分层和验证范围 |
 | [扩展路线](superpowers/plans/2026-09-21-extension-plan.md) | v2/v3已实现状态及后续候选，不作为自动执行授权 |
 | [参考实现分析](reference-summary-implementation.md) | 参考项目观察、独立实现选择与已测限制 |
@@ -31,10 +78,8 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 | [完整浏览器验收](acceptance-reports/2026-10-04-browser-e2e/report.md) | 本机双视口40项/6保存文件，与独立公网Archive桌面9项 |
 | [总结质量评测](acceptance-reports/2026-10-04-summary-quality/report.md) | 固定语料、真实模型12次before/after、prompt溯源与残余问题 |
 | [平台与总结质量报告](acceptance-reports/2026-10-03-platform-quality/report.md) | 此前三平台字幕请求、LLM总结、质量抽查、下载闭环与TLS限制 |
-| [UI扩展指南](ui-extension-guide.md) | 当前token、主题、模型配置与v3面板边界 |
-| [根README](../README.md) / [前端README](../frontend/README.md) | 安装、运行、配置、模型署名与客户端说明 |
 
-## 证据阅读顺序
+## 历史证据阅读顺序
 
 - [摘要协议/质量](acceptance-reports/2026-10-04-schema-summary-quality/report.md) → [响应式角色](acceptance-reports/2026-10-04-responsive-mascot/report.md)：最新234/73和构建通过。默认5/5/7点、尾部事实恢复与365字末点；上游schema违约使默认保持兼容。19预占不是19有效总结，41/5/焦点不同源码/阶段各自说明，不假称真机。
 - [自然字幕实测](acceptance-reports/2026-10-04-natural-subtitle-quality/report.md) → [来源与冻结事实](acceptance-reports/2026-10-04-natural-subtitle-quality/source-report.md) → [公网移动/GPU](acceptance-reports/2026-10-04-public-mobile-gpu/report.md)：前轮184/66。24个HTTP200不等于有效总结；当时5/6/7点与426字末点对应旧源码，证据保持原样。
@@ -51,4 +96,4 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 
 `handover-phase1.md`、2026-09-20/21前后端旧实现计划、2026-09-22电影感计划与霓虹规范、pidanai分析报告保留设计过程。它们的任务列表、测试数量和配色描述代表当时状态，接手先读当前交接。
 
-本轮供应商/质量/UI及交叉独立复审沿用主agent模型和推理；临时额度/容量限制后恢复同模型，没有改用别的模型。新20次预算使用19次预占后主动停止，剩余1次不调用；旧24次原件不改。测试服务已停止，用户规则和配置未改。
+历史记录：此前供应商/质量/UI复审及20次预算中19次预占属于相应旧阶段，不是当前26/26工作组。历史原件和测试服务状态按各报告时间理解，不重复运行这些阶段。

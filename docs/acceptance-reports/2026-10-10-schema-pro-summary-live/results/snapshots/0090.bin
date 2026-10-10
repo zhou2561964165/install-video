@@ -1,0 +1,133 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "phase": "source-first-summary-staged-2",
+  "maximum_posts": 7,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "zh-short",
+      "sample_post": 1,
+      "stage": "points",
+      "status": "response",
+      "reserved_utc": "2026-10-10T06:46:41.885051+00:00",
+      "diagnostic_started": {
+        "strategy": "legacy",
+        "generation_mode": "staged",
+        "stage": "points",
+        "attempt": 1,
+        "request_count": 1,
+        "status": "started",
+        "format_used": 0
+      },
+      "payload_sha256": "e08cbf38d6098ba5836509ae20a29c86cd85f78465c284d0fea924b50bc0b387",
+      "http_status": 200,
+      "response_sha256": "d701842e9dcf35b5e6dae530615802a8d7d9a2eb1c9a4444214fafc3f0e4c6bb",
+      "result_sha256": "c197a5ad0c335861ecf1f06428ffbb63d8b9e3d7bc125e8708ea7e87b6561da2"
+    },
+    {
+      "ordinal": 2,
+      "sample": "zh-short",
+      "sample_post": 2,
+      "stage": "overview",
+      "status": "response",
+      "reserved_utc": "2026-10-10T06:46:43.879492+00:00",
+      "diagnostic_started": {
+        "strategy": "legacy",
+        "generation_mode": "staged",
+        "stage": "overview",
+        "attempt": 1,
+        "request_count": 2,
+        "status": "started",
+        "format_used": 0
+      },
+      "payload_sha256": "f536fcb79fcae2e0d681dbedfb8c70b5257b4b92f87a06099465085ccde870a2",
+      "http_status": 200,
+      "response_sha256": "f59d03abfca04c37c6b85cdde892f20073da3a5d2b94845e074848c663c18127",
+      "result_sha256": "c197a5ad0c335861ecf1f06428ffbb63d8b9e3d7bc125e8708ea7e87b6561da2"
+    },
+    {
+      "ordinal": 3,
+      "sample": "en-medium",
+      "sample_post": 1,
+      "stage": "points",
+      "status": "response",
+      "reserved_utc": "2026-10-10T06:46:46.133320+00:00",
+      "diagnostic_started": {
+        "strategy": "legacy",
+        "generation_mode": "staged",
+        "stage": "points",
+        "attempt": 1,
+        "request_count": 1,
+        "status": "started",
+        "format_used": 0
+      },
+      "payload_sha256": "b215a1cff1aaf6cc737876fc48117cd4cac42e5fcd2fa52e7ae2c3e60d5473af",
+      "http_status": 200,
+      "response_sha256": "dcaab6eea90c659d24cdf10a9c57167669cfab7805bf5e23c0d3a8258fdae3e3",
+      "result_sha256": "f82b84d1c4ec4de38b4e80c9d2b3989c517870da4ec0689cd8de64a4097bb159"
+    },
+    {
+      "ordinal": 4,
+      "sample": "en-medium",
+      "sample_post": 2,
+      "stage": "overview",
+      "status": "response",
+      "reserved_utc": "2026-10-10T06:46:49.055659+00:00",
+      "diagnostic_started": {
+        "strategy": "legacy",
+        "generation_mode": "staged",
+        "stage": "overview",
+        "attempt": 1,
+        "request_count": 2,
+        "status": "started",
+        "format_used": 0
+      },
+      "payload_sha256": "bf141f03ba122ba5c9d937222c4d5529c164d552d4de9a2711f092419a893508",
+      "http_status": 200,
+      "response_sha256": "5eb9e4dcd5b3c84f9a0fee5444d8c5aca41eebd66d28d93551ca20a507680fa2",
+      "result_sha256": "f82b84d1c4ec4de38b4e80c9d2b3989c517870da4ec0689cd8de64a4097bb159"
+    },
+    {
+      "ordinal": 5,
+      "sample": "en-long",
+      "sample_post": 1,
+      "stage": "points",
+      "status": "response",
+      "reserved_utc": "2026-10-10T06:46:51.423164+00:00",
+      "diagnostic_started": {
+        "strategy": "legacy",
+        "generation_mode": "staged",
+        "stage": "points",
+        "attempt": 1,
+        "request_count": 1,
+        "status": "started",
+        "format_used": 0
+      },
+      "payload_sha256": "95da0eae80df579a4d86d62eeb8449e4d491e6a6d7350b1566c40b60d79bce99",
+      "http_status": 200,
+      "response_sha256": "80f8317f33d4752513639e5feb7e9b584dc6f68784c117f29c0edff339f71a52",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    },
+    {
+      "ordinal": 6,
+      "sample": "en-long",
+      "sample_post": 2,
+      "stage": "points_format",
+      "status": "response",
+      "reserved_utc": "2026-10-10T06:46:56.409290+00:00",
+      "diagnostic_started": {
+        "strategy": "legacy",
+        "generation_mode": "staged",
+        "stage": "points_format",
+        "attempt": 1,
+        "request_count": 2,
+        "status": "started",
+        "format_used": 1
+      },
+      "payload_sha256": "97f383b6fa02e36b99cc3fce451d5a7f896db49ed02cafe65c71cf0ad2b0b494",
+      "http_status": 200,
+      "response_sha256": "7fd4bacaa8e2ef03cb71d88fbd356959ea6aa7c8ec220779553d3868b9a29d51",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "real_vendor_posts": 0,
+  "model_quality_verified": false,
+  "existing_account_identity": true,
+  "passwords_read": false,
+  "password_login_tested": false,
+  "isolated_session": true,
+  "api": "http://127.0.0.1:60777",
+  "source_kind": "loopback HTML5 + unmodified original VTT",
+  "public_native_success_claimed": false,
+  "work": "E:\\install_video\\tmp\\formal-api-zero-oeb5kyre",
+  "cases": [
+    {
+      "case": "unauthenticated_summary",
+      "status": 401,
+      "error_type": "login_required",
+      "local_supplier_posts": 0
+    },
+    {
+      "case": "existing_session_me",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 0
+    },
+    {
+      "case": "invalid_url",
+      "status": 400,
+      "error_type": "invalid_url",
+      "local_supplier_posts": 0
+    },
+    {
+      "case": "no_subtitle",
+      "status": 422,
+      "error_type": "subtitle_unavailable",
+      "local_supplier_posts": 0
+    },
+    {
+      "case": "zh-short_parse",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 0
+    },
+    {
+      "case": "zh-short_subtitle",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 0,
+      "original_text_exact": true,
+      "normalized_text_exact": true
+    },
+    {
+      "case": "zh-short_summary_fixture",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 1
+    },
+    {
+      "case": "en-medium_parse",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 0
+    },
+    {
+      "case": "en-medium_subtitle",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 0,
+      "original_text_exact": true,
+      "normalized_text_exact": true
+    },
+    {
+      "case": "en-medium_summary_fixture",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 1
+    },
+    {
+      "case": "en-long_parse",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 0
+    },
+    {
+      "case": "en-long_subtitle",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 0,
+      "original_text_exact": true,
+      "normalized_text_exact": true
+    },
+    {
+      "case": "en-long_summary_fixture",
+      "status": 200,
+      "error_type": null,
+      "local_supplier_posts": 3
+    },
+    {
+      "case": "http_503",
+      "status": 502,
+      "error_type": "llm_error",
+      "local_supplier_posts": 1,
+      "expected_error_type": "llm_error",
+      "passed": true
+    },
+    {
+      "case": "non_json",
+      "status": 502,
+      "error_type": "llm_error",
+      "local_supplier_posts": 1,
+      "expected_error_type": "llm_error",
+      "passed": true
+    },
+    {
+      "case": "invalid_summary",
+      "status": 502,
+      "error_type": "llm_invalid_response",
+      "local_supplier_posts": 1,
+      "expected_error_type": "llm_invalid_response",
+      "passed": true
+    },
+    {
+      "case": "disconnect",
+      "status": 502,
+      "error_type": "llm_error",
+      "local_supplier_posts": 1,
+      "expected_error_type": "llm_error",
+      "passed": true
+    },
+    {
+      "case": "timeout",
+      "status": 502,
+      "error_type": "llm_error",
+      "local_supplier_posts": 1,
+      "expected_error_type": "llm_error",
+      "passed": true
+    },
+    {
+      "case": "length",
+      "status": 502,
+      "error_type": "llm_incomplete_response",
+      "local_supplier_posts": 1,
+      "expected_error_type": "llm_incomplete_response",
+      "passed": true
+    },
+    {
+      "case": "unconfigured_model",
+      "status": 503,
+      "error_type": "llm_unconfigured",
+      "local_supplier_posts": 0,
+      "passed": true
+    }
+  ],
+  "browser_hold_timed_out": true,
+  "local_supplier_posts": 11,
+  "transport_reservations": 11,
+  "local_supplier_cap": 20,
+  "supplier_events": [
+    {
+      "ordinal": 1,
+      "mode": "healthy",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 2,
+      "mode": "healthy",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 3,
+      "mode": "healthy",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 4,
+      "mode": "healthy",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 5,
+      "mode": "healthy",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 6,
+      "mode": "http_503",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 7,
+      "mode": "non_json",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 8,
+      "mode": "invalid_summary",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 9,
+      "mode": "disconnect",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 10,
+      "mode": "timeout",
+      "model": "formal-local-only"
+    },
+    {
+      "ordinal": 11,
+      "mode": "length",
+      "model": "formal-local-only"
+    }
+  ],
+  "threads_stopped": true,
+  "live_database_unchanged": true,
+  "request_headers_and_tokens_saved": false
+}
