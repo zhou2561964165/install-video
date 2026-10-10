@@ -100,3 +100,9 @@
 - 默认legacy/adaptive/single保持，staged与Pro/schema仍为显式候选；没有部署或升级默认模型。中篇频率/账户读取/概览重复与文化归因、长文求值/重算/安全范围等真正缺陷见`docs/handoff-2026-10-10.md`。
 - 三个新phase与旧26/26均封账，不再freeze/run；原snapshot/raw/ledger/receipt保持。发布后的当前文档及可移植测试可以更新，但旧验收结论只绑定冻结候选，不宣称当前全部live文件哈希仍匹配。
 - 用户已授权个人GitHub推送；已创建private `zhou2561964165/install-video`并配置origin。发布前集成验证、凭据扫描、明确路径stage及原始验收blob字节核对后提交；本机Git登录尚须用户完成，不能从MCP配置提取令牌或上传本机env/账号策略。
+
+## 16. GitHub排除Live2D模型（用户2026-10-10后续更新）
+
+- 用户明确“live2d模型不上传”。排除模型包、纹理、moc3、model3/physics/表情/动作文件及历史记录；Cubism Core运行库是程序依赖，可保留，模型由用户本地补齐，缺失时走已有fallback。
+- 本机原始main和模型文件保留，不在原工作区重写历史或删除资源。发布通过隔离新clone及成熟git-filter-repo过滤模型历史；仅推送已核验无模型的发布副本，不直接推送本机含模型的原始main。
+- `.gitignore`不能清除已有追踪/历史；后续发布继续复用此过滤方式并检查全部可达历史对象。此工具仅为Git发布维护，不是产品新技术栈，不改运行依赖或模型调用预算。

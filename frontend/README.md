@@ -18,6 +18,8 @@
 
 ## 启动说明
 
+GitHub排除Live2D模型、纹理、表情及动作资源；Cubism Core运行库保留。角色模型需要在本机补齐，位置由`src/pixi/mascotConfig.js`的registry指定；缺失时`createMascot`使用已有fallback。本机模型仍保留，ignore规则不等于原历史已经删除，发布须按根交接使用隔离过滤副本。
+
 ```bash
 cd frontend
 npm install

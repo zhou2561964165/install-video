@@ -37,6 +37,8 @@
 
 ## 快速启动
 
+GitHub版本不包含Live2D模型包及其历史。需要角色时，将已获许可的模型放回本机`frontend/public/live2d/`对应目录；未补齐时使用现有fallback。Cubism Core运行库保留。发布维护见[当前交接](docs/handoff-2026-10-10.md)，本机含模型的原历史不直接推送。
+
 ### 1. 后端
 
 ```powershell

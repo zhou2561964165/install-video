@@ -16,6 +16,10 @@ dist/
 .vite/
 *.local
 
+# Local Live2D model bundles are excluded from GitHub publication.
+/frontend/public/live2d/*
+!/frontend/public/live2d/live2dcubismcore.min.js
+
 # IDE
 .idea/
 .vscode/
