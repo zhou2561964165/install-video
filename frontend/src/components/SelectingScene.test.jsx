@@ -32,4 +32,11 @@ describe('SelectingScene 解析展示对齐参考站', () => {
     expect(screen.getByText('MP4 · 含音频')).toBeInTheDocument();
     expect(screen.getByText('MP4 · 仅视频')).toBeInTheDocument();
   });
+
+  it('封面不带 Referer 请求，避免平台图床防盗链返回 403', () => {
+    const { container } = render(<SelectingScene parseResult={parseResult} selectedFormat={null} forceServer={false} onSelect={() => {}} onDownload={() => {}} />);
+    const img = container.querySelector('.cover img');
+    expect(img).toHaveAttribute('src', 'https://i.example/t.jpg');
+    expect(img).toHaveAttribute('referrerpolicy', 'no-referrer');
+  });
 });

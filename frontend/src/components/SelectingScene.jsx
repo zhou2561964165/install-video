@@ -13,7 +13,8 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
       <div className="format-card">
         {thumbnail && (
           <div className="cover">
-            <img src={thumbnail} alt="" />
+            {/* 平台图床（如 B 站 hdslb）按 Referer 防盗链，第三方来源会 403；不带 Referer 即可直接加载 */}
+            <img src={thumbnail} alt="" referrerPolicy="no-referrer" />
             {durationLabel && <span className="cover__duration">{durationLabel}</span>}
           </div>
         )}
