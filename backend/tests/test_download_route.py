@@ -8,6 +8,7 @@ from app.db import engine, init_db
 from app.main import app
 from app.models import Job, JobStatus
 from app.services import ytdlp_service
+from app.services.auth import decode_token
 
 client = TestClient(app)
 
@@ -31,10 +32,11 @@ def test_download_server_mode_creates_job(monkeypatch):
     from app.services import jobs as jobs_module
 
     monkeypatch.setattr(jobs_module, "_run_download", lambda job_id, url, fid: None)
+    headers = _auth_headers()
     r = client.post(
         "/api/download",
         json={"url": "https://example.com/v", "format_id": "bestvideo[height<=1080]+bestaudio"},
-        headers=_auth_headers(),
+        headers=headers,
     )
     assert r.status_code == 200
     data = r.json()
@@ -45,6 +47,7 @@ def test_download_server_mode_creates_job(monkeypatch):
         job = s.get(Job, data["job_id"])
         assert job is not None
         assert job.status == JobStatus.queued
+        assert job.user_id == decode_token(headers["Authorization"].split()[1])
 
 
 def test_download_direct_mode_returns_url(monkeypatch):
@@ -93,25 +96,35 @@ def test_download_requires_login():
 
 def test_get_job_returns_status():
     init_db()
+    headers = _auth_headers()
     with Session(engine) as s:
-        job = Job(url="https://example.com/v", title="t", status=JobStatus.done, progress=100.0)
+        job = Job(
+            url="https://example.com/v", title="t", status=JobStatus.done, progress=100.0,
+            user_id=decode_token(headers["Authorization"].split()[1]),
+        )
         s.add(job)
         s.commit()
         job_id = job.id
-    r = client.get(f"/api/job/{job_id}")
+    r = client.get(f"/api/job/{job_id}", headers=headers)
     assert r.status_code == 200
     assert r.json()["status"] == "done"
 
 
 def test_get_file_streams_content(monkeypatch, tmp_path):
     init_db()
+    headers = _auth_headers()
     f = tmp_path / "v.mp4"
     f.write_bytes(b"VIDEO_BYTES")
     with Session(engine) as s:
-        job = Job(url="https://example.com/v", status=JobStatus.done, file_path=str(f))
+        job = Job(
+            url="https://example.com/v", status=JobStatus.done, file_path=str(f),
+            user_id=decode_token(headers["Authorization"].split()[1]),
+        )
         s.add(job)
         s.commit()
         job_id = job.id
-    r = client.get(f"/api/file/{job_id}")
+    r = client.get(f"/api/file/{job_id}", headers=headers)
     assert r.status_code == 200
     assert r.content == b"VIDEO_BYTES"
+    assert r.headers["content-type"] == "application/octet-stream"
+    assert r.headers["content-disposition"] == 'attachment; filename="v.mp4"'

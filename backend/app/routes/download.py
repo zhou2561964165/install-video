@@ -1,7 +1,7 @@
 from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from ..db import get_session
 from ..models import Job, JobStatus, User
@@ -40,8 +40,12 @@ def download(
 
 
 @router.get("/api/job/{job_id}", response_model=JobResponse)
-def get_job(job_id: str, session: Session = Depends(get_session)) -> JobResponse:
-    job = session.get(Job, job_id)
+def get_job(
+    job_id: str,
+    session: Session = Depends(get_session),
+    user: User = Depends(get_current_user),
+) -> JobResponse:
+    job = session.exec(select(Job).where(Job.id == job_id, Job.user_id == user.id)).first()
     if not job:
         raise HTTPException(status_code=404, detail={"error": "任务不存在"})
     return JobResponse(
@@ -51,8 +55,12 @@ def get_job(job_id: str, session: Session = Depends(get_session)) -> JobResponse
 
 
 @router.get("/api/file/{job_id}")
-def get_file(job_id: str, session: Session = Depends(get_session)):
-    job = session.get(Job, job_id)
+def get_file(
+    job_id: str,
+    session: Session = Depends(get_session),
+    user: User = Depends(get_current_user),
+):
+    job = session.exec(select(Job).where(Job.id == job_id, Job.user_id == user.id)).first()
     if not job or job.status != JobStatus.done or not job.file_path:
         raise HTTPException(status_code=404, detail={"error": "文件不存在或未完成"})
     path = Path(job.file_path)

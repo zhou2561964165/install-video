@@ -1,6 +1,6 @@
-import React, { useEffect, useReducer, useCallback, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useReducer, useCallback, useRef, useState } from 'react';
 import { reduce, initialState, SCENE } from './state/sceneMachine.js';
-import { parseVideo, fileUrl } from './api.js';
+import { parseVideo } from './api.js';
 import { useDownload } from './hooks/useDownload.js';
 import { useAuth } from './hooks/useAuth.js';
 import { useVideoInsights } from './hooks/useVideoInsights.js';
@@ -45,6 +45,13 @@ export default function App() {
   // 登录态（强制门）：未登录渲染 AuthScene，登录后才启动较重的 PIXI / Live2D 视觉层。
   // 账号入口不依赖 16K 模型资源，慢设备上也能立即操作表单。
   const { status, user, quota, login, register, logout, refreshQuota } = useAuth();
+  const sessionKey = status === 'authed' ? user?.id : null;
+  const parseRequest = useRef(null);
+  const cancelParse = useCallback(() => {
+    parseRequest.current?.abort();
+    parseRequest.current = null;
+  }, []);
+  useLayoutEffect(() => cancelParse, [sessionKey, cancelParse]);
 
   const setThemeTier = useCallback((t) => setTheme(t), []);
 
@@ -53,17 +60,33 @@ export default function App() {
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
 
   const handleSubmit = useCallback(async (url) => {
+    cancelParse();
+    const controller = new AbortController();
+    parseRequest.current = controller;
     dispatch({ type: 'SUBMIT_URL', url });
     try {
-      const payload = normalizeParse(await parseVideo(url));
+      const payload = normalizeParse(await parseVideo(url, controller.signal));
+      if (controller.signal.aborted || parseRequest.current !== controller) return;
       dispatch({ type: 'PARSE_SUCCESS', payload });
     } catch (e) {
+      if (controller.signal.aborted || parseRequest.current !== controller) return;
       dispatch({ type: 'PARSE_FAIL', error: e });
+    } finally {
+      if (parseRequest.current === controller) parseRequest.current = null;
     }
-  }, []);
+  }, [cancelParse]);
 
   // 下载编排（发起 + 服务端轮询）下沉到 useDownload，App 只保留 dispatch 与场景渲染
-  const { startDownload: handleDownload } = useDownload(state, dispatch);
+  const { startDownload: handleDownload, save, saveBusy, saveError, cancel } = useDownload(state, dispatch, sessionKey);
+  const handleReset = useCallback(() => {
+    cancelParse();
+    cancel();
+    dispatch({ type: 'RESET' });
+  }, [cancelParse, cancel]);
+  const handleLogout = useCallback(() => {
+    handleReset();
+    logout();
+  }, [handleReset, logout]);
   const insights = useVideoInsights(status === 'authed' ? state.url : '');
 
   // 下载提交成功后刷新额度；收到 quota 错误时刷新额度（拿到最新 used/limit）
@@ -127,9 +150,14 @@ export default function App() {
   }, [state.scene, webgl]);
 
   const mascotSlot = webgl && <div className="mascot-region">
-    <div className="mascot-region__viewport" ref={mascotRegionRef} data-mascot-region />
-    <button type="button" className="mascot-menu-trigger mascot-menu-trigger--compact" disabled={!mascotAvailable}
-      onClick={() => setMenuOpen(true)} aria-haspopup="dialog" aria-expanded={menuOpen}>角色换装</button>
+    <div className="mascot-region__viewport" ref={mascotRegionRef} data-mascot-region
+      role="button" tabIndex={mascotAvailable ? 0 : -1} aria-label="角色换装（按 Enter 或空格）"
+      aria-disabled={!mascotAvailable} aria-haspopup="dialog" aria-expanded={menuOpen}
+      onKeyDown={(event) => {
+        if (!mascotAvailable || event.repeat || (event.key !== 'Enter' && event.key !== ' ')) return;
+        event.preventDefault();
+        setMenuOpen(true);
+      }} />
   </div>;
 
   let scene;
@@ -146,8 +174,8 @@ export default function App() {
       />
     ); break;
     case SCENE.DOWNLOADING: scene = <DownloadingScene job={state.job} mode={state.download?.mode} />; break;
-    case SCENE.DONE: scene = <DoneScene job={state.job} fileUrl={state.job && fileUrl(state.job.id)} onReset={() => dispatch({ type: 'RESET' })} />; break;
-    case SCENE.ERROR: scene = <ErrorScene error={state.error} onReset={() => dispatch({ type: 'RESET' })} />; break;
+    case SCENE.DONE: scene = <DoneScene job={state.job} onSave={save} saveBusy={saveBusy} saveError={saveError} onReset={handleReset} />; break;
+    case SCENE.ERROR: scene = <ErrorScene error={state.error} onReset={handleReset} />; break;
     case SCENE.ENTRY:
     default: scene = <EntryScene onSubmit={handleSubmit} mascotSlot={mascotSlot} />;
   }
@@ -160,7 +188,7 @@ export default function App() {
           <>
             {scene}
             {state.scene !== SCENE.ENTRY && mascotSlot}
-            <AuthBar user={user} quota={quota} onLogout={logout} />
+            <AuthBar user={user} quota={quota} onLogout={handleLogout} />
           </>
         ) : (
           <AuthScene loading={status === 'loading'} onLogin={login} onRegister={register} />
@@ -180,8 +208,6 @@ export default function App() {
         ))}
       </div>
       <ExpressionMenu open={menuOpen} onClose={() => setMenuOpen(false)} onExpression={(pid, v) => mascotRef.current?.setExpression(pid, v)} onScale={(dir) => mascotRef.current?.scaleBy(dir)} />
-      {status === 'authed' && webgl && <button type="button" className="mascot-menu-trigger mascot-menu-trigger--desktop"
-        disabled={!mascotAvailable} onClick={() => setMenuOpen(true)} aria-haspopup="dialog" aria-expanded={menuOpen}>角色换装</button>}
       {status === 'authed' && webgl && <Preloader done={ready} />}
     </>
   );

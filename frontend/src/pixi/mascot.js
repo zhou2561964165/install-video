@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Live2DModel, MotionPriority } from 'pixi-live2d-display/cubism4';
-import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE, PLACEMENT, getModelPlacement, supportsModelTexture } from './mascotConfig.js';
+import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE, PLACEMENT, getModelPlacement, getDraggedModelPosition, supportsModelTexture } from './mascotConfig.js';
 
 // 创建 Live2D 角色并接入「拖动角色」+「点击角色 → onTap（React 弹换装菜单）」。
 //   modelId   —— 初始模型 id（缺省/未命中回落 DEFAULT_MODEL_ID）
@@ -21,6 +21,8 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
   let idle = { cleanup() {}, refreshBase() {} };  // 待机动画句柄（初始为空，加载后替换）
   let randomPropsCleanup = null;            // 随机道具定时器清理句柄（destroy 时调用）
   let scaleFactor = SCALE.initial;          // 等比缩放倍率（初始值来自 SCALE 配置，跨 resize 持久）
+  let manualPosition = null;                // 首次实际拖动后，中心由用户选择，跨滚动/场景/缩放持久
+  let manualRegionRatio = null;             // 保留起拖时区域比例，手动角色尺寸不再跟随文档区域变化
 
   const current = { model: null, cfg: null };
   const cfg = MODELS.find((m) => m.id === modelId) || MODELS[0];
@@ -32,20 +34,26 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
   }
 
   // 响应式摆放：按屏幕高度等比缩放（cfg.heightRatio）+ 相对位置（0~1），
-  // 任意尺寸屏幕都看到等比例的完整模型。读 app.screen，窗口 resize 时重放 place 重新适配。
+  // 首次拖动前保持完整模型的自适应布局；拖动后只按视口约束中心，不重置到初始区域。
   function place(instance, cfg) {
     instance.anchor.set(0.5, 0.5);
-    const p = getModelPlacement(cfg, app.screen, instance.getLocalBounds(), scaleFactor, getRegion?.());
+    const region = manualPosition
+      ? manualRegionRatio && { left: 0, top: 0,
+        width: app.screen.width * manualRegionRatio.width,
+        height: app.screen.height * manualRegionRatio.height }
+      : getRegion?.();
+    const p = getModelPlacement(cfg, app.screen, instance.getLocalBounds(), scaleFactor, region);
     instance.scale.set(p.scale);
-    instance.x = p.x;
-    instance.y = p.y;
-    instance.visible = p.visible;
+    if (manualPosition) manualPosition = getDraggedModelPosition(manualPosition, app.screen);
+    instance.x = manualPosition ? manualPosition.x : p.x;
+    instance.y = manualPosition ? manualPosition.y : p.y;
+    instance.visible = manualPosition ? true : p.visible;
   }
 
   // 交互：可拖动 + 点击（onTap，React 弹换装菜单）。
   //   热区 = 模型自身局部包围盒（不外扩），退化时回落 config.hit 盒 —— 不写死像素。
   //   pointerdown 在模型上起拖；移动/抬起挂在 window 上，拖快时指针移出热区也不丢事件。
-  //   位移 < 3px 视为「点击」：未位移的点击触发 onTap，拖动本身不触发。
+  //   位移未超过配置阈值视为「点击」：点击触发 onTap，实际拖动不触发。
   function makeInteractive(instance, cfg) {
     instance.interactive = true;
     instance.cursor = 'grab';
@@ -66,13 +74,32 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
       const r = app.view.getBoundingClientRect();
       return { x: ((cx - r.left) * app.screen.width) / r.width, y: ((cy - r.top) * app.screen.height) / r.height };
     }
+    // 只保留命中角色的单指手势；背景纵向滚动、双指缩放仍交给浏览器。
+    // 非 passive touchstart 在原生滚动开始前取消其默认行为，避免纵向拖动被 pointercancel 中断。
+    function onTouchStart(e) {
+      if (disposed || !instance.worldVisible || !instance.renderable || e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      const p = toStage(touch.clientX, touch.clientY);
+      const local = instance.toLocal(new PIXI.Point(p.x, p.y));
+      if (instance.hitArea.contains(local.x, local.y)) e.preventDefault();
+    }
+    const view = app.view;
+    view.addEventListener('touchstart', onTouchStart, { passive: false });
     function onMove(e) {
       if (!dragging || disposed) return;
       const p = toStage(e.clientX, e.clientY);
       if (!moved && Math.hypot(p.x - startX, p.y - startY) > PLACEMENT.dragThreshold) moved = true;
-      const area = getModelPlacement(cfg, app.screen, instance.getLocalBounds(), scaleFactor, getRegion?.());
-      instance.x = Math.min(area.maxX, Math.max(area.minX, p.x + offsetX));
-      instance.y = Math.min(area.maxY, Math.max(area.minY, p.y + offsetY));
+      if (!moved) return;
+      if (!manualPosition) {
+        const region = getRegion?.();
+        if (region && region.width > 0 && region.height > 0) {
+          manualRegionRatio = { width: region.width / app.screen.width, height: region.height / app.screen.height };
+        }
+      }
+      manualPosition = getDraggedModelPosition({ x: p.x + offsetX, y: p.y + offsetY }, app.screen);
+      instance.x = manualPosition.x;
+      instance.y = manualPosition.y;
+      instance.visible = true;
     }
     function endDrag(triggerTap) {
       if (!dragging) return;
@@ -101,7 +128,11 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
     }
     instance.on('pointerdown', onDown);
 
-    return () => { endDrag(false); instance.off('pointerdown', onDown); };
+    return () => {
+      endDrag(false);
+      view.removeEventListener('touchstart', onTouchStart);
+      instance.off('pointerdown', onDown);
+    };
   }
 
   // 程序化待机动画：「白」的 model3.json 无 Motions / Breath 字段，角色本身不会自动呼吸/摆动，

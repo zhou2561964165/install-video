@@ -2,12 +2,16 @@ const API_BASE = '/api';
 
 let authToken = null;
 
-async function request(path, options = {}) {
+async function requestResponse(path, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
   const res = await fetch(API_BASE + path, { ...options, headers });
   if (!res.ok) throw await normalizeError(res);
-  return res.json();
+  return res;
+}
+
+async function request(path, options = {}) {
+  return (await requestResponse(path, options)).json();
 }
 
 export function setAuthToken(token) { authToken = token; }
@@ -28,23 +32,44 @@ export async function normalizeError(res) {
   }
 }
 
-export function parseVideo(url) {
-  return request('/parse', { method: 'POST', body: JSON.stringify({ url }) });
+export function parseVideo(url, signal) {
+  return request('/parse', { signal, method: 'POST', body: JSON.stringify({ url }) });
 }
 
-export function startDownload(url, formatId, forceServer = false) {
+export function startDownload(url, formatId, forceServer = false, signal) {
   return request('/download', {
+    signal,
     method: 'POST',
     body: JSON.stringify({ url, format_id: formatId, force_server: forceServer }),
   });
 }
 
-export function getJob(jobId) {
-  return request(`/job/${jobId}`);
+export function getJob(jobId, signal) {
+  return request(`/job/${encodeURIComponent(jobId)}`, { signal });
 }
 
 export function fileUrl(jobId) {
-  return `${API_BASE}/file/${jobId}`;
+  return `${API_BASE}/file/${encodeURIComponent(jobId)}`;
+}
+
+// Prefer RFC 5987 UTF-8 names; malformed extended values fall back to filename.
+function responseFilename(disposition) {
+  let name = '';
+  const extended = /(?:^|;)\s*filename\*\s*=\s*UTF-8'[^']*'([^;]*)/i.exec(disposition || '');
+  if (extended) {
+    try { name = decodeURIComponent(extended[1].trim()); } catch { /* use plain filename */ }
+  }
+  if (!name) {
+    const plain = /(?:^|;)\s*filename\s*=\s*(?:"((?:[^"\\]|\\.)*)"|([^;]*))/i.exec(disposition || '');
+    name = plain ? (plain[1]?.replace(/\\(.)/g, '$1') ?? plain[2].trim()) : '';
+  }
+  return name.split(/[\\/]/).pop().replace(/[\u0000-\u001f\u007f]/g, '').trim() || 'download';
+}
+
+export async function getFile(jobId, signal) {
+  const res = await requestResponse(`/file/${encodeURIComponent(jobId)}`, { signal });
+  const filename = responseFilename(res.headers.get('Content-Disposition'));
+  return { blob: await res.blob(), filename };
 }
 
 export function register(email, password) {
