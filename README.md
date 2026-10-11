@@ -1,6 +1,6 @@
 # 万能视频下载网站
 
-> Claude等新窗口接手请先读[完整交接（更新至2026-10-11）](docs/handoff-2026-10-10.md)。后续开发统一在原目录 `E:\install_video`；访问隔离/UI代码已迁回专用开发分支，沿用原本机配置、账号数据和模型。先核对分支及服务来源，旧worktree服务尚未切换；功能开发仍暂停，模型内容验收已跳过。本地Live2D保留，GitHub仅排模型资源及历史。
+> 新窗口先读[当前交接（2026-10-11续作）](docs/handoff-2026-10-10.md)。开发统一在 `E:\install_video`；访问隔离与封面修复已提交，当前在 `feature/ui-interaction-finish-20261011` 收尾角色拖动、原生双指缩放及键盘焦点。5173/8000服务已从原目录启动。模型内容验收继续跳过，本地Live2D保留，GitHub发布副本仍须过滤模型资源及历史。
 
 注册或登录后，粘贴任意平台视频链接 → 解析 → 选清晰度 → 下载到本地；有字幕的视频还可读取字幕、翻译并生成 AI 总结。依托 yt-dlp 覆盖数千站点，前端采用深色液态玻璃 + 樱花粉辉光主题（PIXI 舞台 + Live2D 白角色，含程序化待机动画），移动端可用。
 
@@ -153,8 +153,8 @@ legacy显式`json_schema`走Responses接口，`strict_tool`返回本次预算数
 | `GET /api/auth/me` | Bearer token | 返回 `user` 和 `quota`，额度字段为 `date`、`limit`、`used`、`remaining`、`unlimited` |
 | `POST /api/parse` | `url` | 需登录；返回视频元数据、字幕语言与可选格式，不扣每日下载额度 |
 | `POST /api/download` | `url`、`format_id`、可选 `force_server=false` | 需登录；提交前预扣1次额度；返回直链 `url`/`headers` 或服务端 `job_id` |
-| `GET /api/job/{job_id}` | 任务ID | 返回 `queued` / `downloading` / `done` / `error` 及进度；当前未接入用户鉴权或任务归属校验 |
-| `GET /api/file/{job_id}` | 任务ID | 下载完成且文件存在时返回文件；当前未接入用户鉴权或任务归属校验 |
+| `GET /api/job/{job_id}` | 任务ID、Bearer token | 仅本人任务返回状态及进度；匿名/无效token为401，他人/无主/不存在任务统一404 |
+| `GET /api/file/{job_id}` | 任务ID、Bearer token | 仅本人完成且文件仍存在的任务返回文件；匿名401，他人/无主/不存在或本人未完成/文件缺失为404 |
 | `POST /api/subtitle` | `url`、可选 `language` | 需登录；返回正文、实际语言、是否自动字幕及可选语言 |
 | `POST /api/subtitle/translate` | `url`、可选 `source_language`、`target_language=zh-CN` | 需登录；读取字幕并调用LLM翻译 |
 | `POST /api/summary` | `url`、可选 `subtitle_language`、`output_language=zh-CN` | 需登录；读取字幕并返回 `summary`、`key_points`、供应商与模型标签 |
@@ -163,9 +163,11 @@ legacy显式`json_schema`走Responses接口，`strict_tool`返回本次预算数
 
 常见错误采用HTTP `detail` 对象承载 `error`，服务错误通常还含 `error_type`：缺失/失效登录token为401 `login_required`；下载额度或IP限流为429 `quota`；无效视频URL为400 `invalid_url`；平台提取及字幕读取失败为422；LLM未配置为503 `llm_unconfigured`，模型请求、响应及输入容量等错误为502。Pydantic请求字段校验也可能返回422，但其 `detail` 是字段错误列表。异步下载失败记录在任务响应的 `error_type` / `error`，不是创建任务接口同步报错。
 
-已实现账号登录、每日下载额度、服务端线程池任务、产物懒清理、字幕读取/翻译、有限字幕分段总结，以及显式facts实验。当前未实现任务读取的用户归属校验、定时TTL清理、下载失败额度退回、分布式限流/队列或重启后自动恢复下载任务；视频无字幕时也没有音轨转写路径。默认自适应总结的已知质量问题仍以当前交接为准，不能把HTTP成功当作语义全面通过。
+已实现账号登录、每日下载额度、本人任务/文件访问隔离、服务端线程池任务、产物懒清理、字幕读取/翻译、有限字幕分段总结，以及显式facts实验。前端服务端文件携Bearer获取Blob后保存，取消/退出/换账号阻止过期保存；Blob缓存完整文件，仍有大文件内存边界。当前未实现定时TTL清理、下载失败额度退回、分布式限流/队列或重启后自动恢复下载任务；视频无字幕时也没有音轨转写路径。总结的已知质量缺陷见当前交接。
 
 ## 验证
+
+2026-10-11交互收尾：前端151项测试及build通过，原生Edge/RTX4050共15项桌面及模拟触摸检查通过，包含单指拖动、背景滚动、先落角色再加第二指的原生pinch、焦点位置及原39项菜单。既有开发账号完成3次真实B站解析；前两次截图尚在渐进加载，第三次等待complete/decode后确认约356×200px正常封面。解析预算因该具体缺口2→3并封账；账号/下载统计未变化，LLM调用0。见[本轮报告](docs/acceptance-reports/2026-10-11-ui-interaction-finish/report.md)。真手机未验证，后端1539项为上一轮记录，本轮未重跑。
 
 > 文档实现核对（2026-10-09）：本次仅读取代码并更新说明，未重跑测试、启动服务或追加模型调用。最新状态与续作入口见上方当前交接段及[文档索引](docs/README.md)；后端1342 passed/1既有警告为历史全量记录，当前自适应验收仍有短篇重复、中篇必要子句遗漏及重复。
 

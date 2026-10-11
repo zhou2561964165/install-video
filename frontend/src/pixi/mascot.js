@@ -8,7 +8,7 @@ import { MODELS, DEFAULT_MODEL_ID, IDLE, EXPRESSIONS, SCALE, PLACEMENT, getModel
 // 返回 { getModelId, setExpression, setStageExpression, startRandomProps, resize, destroy }。
 // 表情/道具走「直接写参数」（setExpression：paramId 置 1 开 / 0 关），与待机正弦驱动（IDLE）
 // 参数不同、互不冲突；角色不随下载场景做奔跑/摆动位移，阶段反馈由表情+背景粒子+音频承担。
-export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
+export async function createMascot(app, modelId, { onTap, getRegion, interactionTarget } = {}) {
   window.PIXI = PIXI;                       // 插件依赖 window.PIXI.Ticker
   Live2DModel.registerTicker(PIXI.Ticker);
 
@@ -25,6 +25,26 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
   let manualRegionRatio = null;             // 保留起拖时区域比例，手动角色尺寸不再跟随文档区域变化
 
   const current = { model: null, cfg: null };
+
+  // 现有 DOM 键盘入口同时承担模型的局部触控表面。只发布视口几何，不接触业务状态。
+  function syncInteraction(instance) {
+    if (!interactionTarget) return;
+    const b = instance.getLocalBounds();
+    const first = instance.toGlobal(new PIXI.Point(b.x, b.y));
+    const last = instance.toGlobal(new PIXI.Point(b.x + b.width, b.y + b.height));
+    const r = app.view.getBoundingClientRect();
+    const left = Math.max(0, first.x), top = Math.max(0, first.y);
+    const width = Math.max(0, Math.min(app.screen.width, last.x) - left);
+    const height = Math.max(0, Math.min(app.screen.height, last.y) - top);
+    Object.assign(interactionTarget.style, {
+      left: `${r.left + left * r.width / app.screen.width}px`,
+      top: `${r.top + top * r.height / app.screen.height}px`,
+      width: `${width * r.width / app.screen.width}px`,
+      height: `${height * r.height / app.screen.height}px`,
+      visibility: instance.visible && width > 0 && height > 0 ? 'visible' : 'hidden',
+      touchAction: PLACEMENT.modelTouchAction,
+    });
+  }
   const cfg = MODELS.find((m) => m.id === modelId) || MODELS[0];
   const gl = app.renderer.gl;
   if (!supportsModelTexture(cfg, gl.getParameter(gl.MAX_TEXTURE_SIZE))) {
@@ -48,6 +68,7 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
     instance.x = manualPosition ? manualPosition.x : p.x;
     instance.y = manualPosition ? manualPosition.y : p.y;
     instance.visible = manualPosition ? true : p.visible;
+    syncInteraction(instance);
   }
 
   // 交互：可拖动 + 点击（onTap，React 弹换装菜单）。
@@ -64,6 +85,10 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
     instance.hitArea = box;
 
     let dragging = false;
+    let activePointer = null;
+    let activePointerType = null;
+    let multipleTouches = false;
+    const touchPointers = new Set();
     let moved = false;
     let startX = 0;
     let startY = 0;
@@ -74,19 +99,33 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
       const r = app.view.getBoundingClientRect();
       return { x: ((cx - r.left) * app.screen.width) / r.width, y: ((cy - r.top) * app.screen.height) / r.height };
     }
-    // 只保留命中角色的单指手势；背景纵向滚动、双指缩放仍交给浏览器。
-    // 非 passive touchstart 在原生滚动开始前取消其默认行为，避免纵向拖动被 pointercancel 中断。
+    // touch-action 在手势开始前确定：模型表面允许 pinch，背景仍允许 pan-y。
+    // 不取消首个 touchstart，否则随后加入第二指也无法恢复原生 pinch。
     function onTouchStart(e) {
-      if (disposed || !instance.worldVisible || !instance.renderable || e.touches.length !== 1) return;
-      const touch = e.touches[0];
-      const p = toStage(touch.clientX, touch.clientY);
-      const local = instance.toLocal(new PIXI.Point(p.x, p.y));
-      if (instance.hitArea.contains(local.x, local.y)) e.preventDefault();
+      if (e.touches.length > 1) { multipleTouches = true; endDrag(false); }
     }
-    const view = app.view;
-    view.addEventListener('touchstart', onTouchStart, { passive: false });
+    function onTouchEnd(e) { if (e.touches.length === 0) multipleTouches = false; }
+    function onAdditionalPointer(e) {
+      if (e.pointerType !== 'touch') return;
+      touchPointers.add(e.pointerId);
+      if (touchPointers.size > 1 || (dragging && activePointerType === 'touch' && e.pointerId !== activePointer)) {
+        multipleTouches = true;
+        endDrag(false);
+      }
+    }
+    function onPointerEnd(e) {
+      touchPointers.delete(e.pointerId);
+      if (touchPointers.size === 0) multipleTouches = false;
+    }
+    window.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true, capture: true });
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true, capture: true });
+    window.addEventListener('pointerdown', onAdditionalPointer, true);
+    window.addEventListener('pointerup', onPointerEnd, true);
+    window.addEventListener('pointercancel', onPointerEnd, true);
+    window.addEventListener('blur', onBlur);
     function onMove(e) {
-      if (!dragging || disposed) return;
+      if (!dragging || disposed || (e.pointerId ?? 1) !== activePointer) return;
       const p = toStage(e.clientX, e.clientY);
       if (!moved && Math.hypot(p.x - startX, p.y - startY) > PLACEMENT.dragThreshold) moved = true;
       if (!moved) return;
@@ -100,21 +139,33 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
       instance.x = manualPosition.x;
       instance.y = manualPosition.y;
       instance.visible = true;
+      syncInteraction(instance);
     }
     function endDrag(triggerTap) {
       if (!dragging) return;
       dragging = false;
+      const pointerId = activePointer;
+      activePointer = null;
+      activePointerType = null;
       instance.cursor = 'grab';
+      if (interactionTarget) {
+        interactionTarget.style.cursor = 'grab';
+        if (interactionTarget.hasPointerCapture?.(pointerId)) interactionTarget.releasePointerCapture(pointerId);
+      }
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onCancel);
       if (triggerTap && !moved) onTap?.();
     }
-    function onUp() { endDrag(true); }
-    function onCancel() { endDrag(false); }
+    function onUp(e) { if ((e.pointerId ?? 1) === activePointer) endDrag(true); }
+    function onCancel(e) { if ((e.pointerId ?? 1) === activePointer) endDrag(false); }
+    function onBlur() { touchPointers.clear(); multipleTouches = false; endDrag(false); }
     function onDown(e) {
-      if (disposed) return;
-      const p = e.data.global;   // 舞台逻辑坐标，与 toStage 一致
+      const original = e.data?.originalEvent || e;
+      if (disposed || dragging || multipleTouches || original.isPrimary === false || (original.button ?? 0) !== 0) return;
+      const p = e.data?.global || toStage(original.clientX, original.clientY);
+      activePointer = original.pointerId ?? e.data?.pointerId ?? 1;
+      activePointerType = original.pointerType || e.data?.pointerType;
       offsetX = instance.x - p.x;
       offsetY = instance.y - p.y;
       startX = p.x;
@@ -122,15 +173,29 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
       dragging = true;
       moved = false;
       instance.cursor = 'grabbing';
+      if (interactionTarget) {
+        interactionTarget.style.cursor = 'grabbing';
+        interactionTarget.setPointerCapture?.(activePointer);
+      }
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup', onUp);
       window.addEventListener('pointercancel', onCancel);
     }
     instance.on('pointerdown', onDown);
+    interactionTarget?.addEventListener('pointerdown', onDown);
+    interactionTarget?.addEventListener('lostpointercapture', onCancel);
 
     return () => {
       endDrag(false);
-      view.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchstart', onTouchStart, true);
+      window.removeEventListener('touchend', onTouchEnd, true);
+      window.removeEventListener('touchcancel', onTouchEnd, true);
+      window.removeEventListener('pointerdown', onAdditionalPointer, true);
+      window.removeEventListener('pointerup', onPointerEnd, true);
+      window.removeEventListener('pointercancel', onPointerEnd, true);
+      window.removeEventListener('blur', onBlur);
+      interactionTarget?.removeEventListener('pointerdown', onDown);
+      interactionTarget?.removeEventListener('lostpointercapture', onCancel);
       instance.off('pointerdown', onDown);
     };
   }
@@ -293,6 +358,7 @@ export async function createMascot(app, modelId, { onTap, getRegion } = {}) {
       idle.cleanup();
       if (randomPropsCleanup) randomPropsCleanup();
       if (detachDrag) detachDrag();   // 结束未完成的拖动并解除 window 监听
+      if (interactionTarget) interactionTarget.style.visibility = 'hidden';
       if (current.model) { app.stage.removeChild(current.model); current.model.destroy(); }
     },
   };

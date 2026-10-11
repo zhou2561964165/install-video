@@ -12,16 +12,19 @@ vi.mock('pixi-live2d-display/cubism4', () => ({
 
 let handles;
 let tickers;
+let surfaces;
 
 beforeEach(() => {
   handles = [];
   tickers = [];
+  surfaces = [];
   vi.stubGlobal('matchMedia', () => ({ matches: true }));
 });
 
 afterEach(() => {
   handles.forEach((mascot) => mascot.destroy());
   tickers.forEach((ticker) => ticker.destroy());
+  surfaces.forEach((surface) => surface.remove());
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
@@ -42,20 +45,24 @@ async function setup({ width = 1440, height = 900, region } = {}) {
   };
   let currentRegion = region;
   const onTap = vi.fn();
-  const mascot = await createMascot(app, 'bai', { onTap, getRegion: () => currentRegion });
+  const interactionTarget = document.createElement('div');
+  document.body.append(view, interactionTarget);
+  surfaces.push(view, interactionTarget);
+  const mascot = await createMascot(app, 'bai', { onTap, interactionTarget, getRegion: () => currentRegion });
   handles.push(mascot);
-  return { app, model, mascot, onTap, setRegion: (next) => { currentRegion = next; } };
+  return { app, model, mascot, onTap, interactionTarget, setRegion: (next) => { currentRegion = next; } };
 }
 
-function pointer(type, x, y, pointerType = 'mouse') {
+function pointer(type, x, y, pointerType = 'mouse', pointerId = 1) {
   const event = new MouseEvent(type, { clientX: x, clientY: y });
   Object.defineProperty(event, 'pointerType', { value: pointerType });
+  Object.defineProperty(event, 'pointerId', { value: pointerId });
   window.dispatchEvent(event);
 }
 
-function down(model, pointerType = 'mouse') {
+function down(model, pointerType = 'mouse', pointerId = 1) {
   model.emit('pointerdown', {
-    data: { global: new Point(model.x, model.y), originalEvent: { pointerType } },
+    data: { global: new Point(model.x, model.y), originalEvent: { pointerType, pointerId } },
   });
 }
 
@@ -66,13 +73,117 @@ function drag(model, x, y, pointerType = 'mouse') {
 }
 
 function touchStart(view, touches) {
-  const event = new Event('touchstart', { cancelable: true });
+  const event = new Event('touchstart', { cancelable: true, bubbles: true });
   Object.defineProperty(event, 'touches', { value: touches });
   view.dispatchEvent(event);
   return event;
 }
 
+function nativeDown(target, model, pointerId, pointerType = 'touch', button = 0) {
+  const event = new MouseEvent('pointerdown', { bubbles: true, clientX: model.x, clientY: model.y, button });
+  Object.defineProperties(event, { pointerId: { value: pointerId }, pointerType: { value: pointerType } });
+  target.dispatchEvent(event);
+}
+
 describe('createMascot free viewport dragging', () => {
+  it('cancels lost native pointer capture without tapping and allows the next drag', async () => {
+    const { model, interactionTarget, onTap } = await setup();
+    nativeDown(interactionTarget, model, 11, 'mouse');
+    const lost = new Event('lostpointercapture');
+    Object.defineProperty(lost, 'pointerId', { value: 11 });
+    interactionTarget.dispatchEvent(lost);
+    const position = [model.x, model.y];
+    pointer('pointermove', 100, 120, 'mouse', 11);
+    pointer('pointerup', 100, 120, 'mouse', 11);
+    expect([model.x, model.y]).toEqual(position);
+    expect(onTap).not.toHaveBeenCalled();
+    nativeDown(interactionTarget, model, 12, 'mouse');
+    pointer('pointermove', 150, 180, 'mouse', 12);
+    pointer('pointerup', 150, 180, 'mouse', 12);
+    expect([model.x, model.y]).toEqual([150, 180]);
+  });
+
+  it.each(['pointerup', 'pointercancel'])('accepts a new drag after a PointerEvents-only two-finger %s', async (end) => {
+    const { model, interactionTarget, onTap } = await setup();
+    nativeDown(interactionTarget, model, 11);
+    nativeDown(document.body, model, 22);
+    pointer(end, model.x, model.y, 'touch', 11);
+    pointer(end, model.x, model.y, 'touch', 22);
+    nativeDown(interactionTarget, model, 33);
+    pointer('pointermove', 150, 180, 'touch', 33);
+    pointer('pointerup', 150, 180, 'touch', 33);
+    expect([model.x, model.y]).toEqual([150, 180]);
+    expect(onTap).not.toHaveBeenCalled();
+  });
+
+  it('restores native drag after window blur during a multi-touch gesture', async () => {
+    const { model, interactionTarget, onTap } = await setup();
+    nativeDown(interactionTarget, model, 11);
+    nativeDown(document.body, model, 22);
+    window.dispatchEvent(new Event('blur'));
+    nativeDown(interactionTarget, model, 33);
+    pointer('pointermove', 150, 180, 'touch', 33);
+    pointer('pointerup', 150, 180, 'touch', 33);
+    expect([model.x, model.y]).toEqual([150, 180]);
+    expect(onTap).not.toHaveBeenCalled();
+  });
+
+  it('ignores another pointer move, release and cancellation throughout a drag', async () => {
+    const { model, onTap } = await setup();
+    const position = [model.x, model.y];
+    down(model, 'touch', 11);
+    pointer('pointermove', 100, 120, 'touch', 22);
+    pointer('pointerup', 100, 120, 'touch', 22);
+    pointer('pointercancel', 100, 120, 'touch', 22);
+    expect([model.x, model.y]).toEqual(position);
+    expect(onTap).not.toHaveBeenCalled();
+    pointer('pointermove', 150, 180, 'touch', 11);
+    pointer('pointerup', 150, 180, 'touch', 11);
+    expect([model.x, model.y]).toEqual([150, 180]);
+  });
+
+  it('cancels a single-finger gesture when a second finger lands outside the model', async () => {
+    const { model, app, onTap } = await setup();
+    down(model, 'touch', 11);
+    pointer('pointermove', 150, 180, 'touch', 11);
+    const position = [model.x, model.y];
+    touchStart(app.view, [{ clientX: 150, clientY: 180 }, { clientX: 400, clientY: 600 }]);
+    pointer('pointermove', 250, 280, 'touch', 11);
+    pointer('pointerup', 250, 280, 'touch', 11);
+    expect([model.x, model.y]).toEqual(position);
+    expect(onTap).not.toHaveBeenCalled();
+  });
+
+  it('does not let a second model pointer reset an already moved gesture into a tap', async () => {
+    const { model, onTap } = await setup();
+    down(model, 'touch', 11);
+    pointer('pointermove', 150, 180, 'touch', 11);
+    down(model, 'touch', 22);
+    pointer('pointerup', 150, 180, 'touch', 22);
+    pointer('pointerup', 150, 180, 'touch', 11);
+    expect(onTap).not.toHaveBeenCalled();
+  });
+
+  it('keeps a clipped DOM interaction and focus surface aligned after drag, scale and resize', async () => {
+    const { model, mascot, interactionTarget, app } = await setup();
+    drag(model, 120, 150);
+    const assertBounds = () => {
+      const b = model.getLocalBounds();
+      const topLeft = model.toGlobal(new Point(b.x, b.y));
+      const bottomRight = model.toGlobal(new Point(b.x + b.width, b.y + b.height));
+      const left = Math.max(0, topLeft.x), top = Math.max(0, topLeft.y);
+      expect(parseFloat(interactionTarget.style.left)).toBeCloseTo(left);
+      expect(parseFloat(interactionTarget.style.top)).toBeCloseTo(top);
+      expect(parseFloat(interactionTarget.style.width)).toBeCloseTo(Math.min(app.screen.width, bottomRight.x) - left);
+      expect(parseFloat(interactionTarget.style.height)).toBeCloseTo(Math.min(app.screen.height, bottomRight.y) - top);
+    };
+    assertBounds();
+    mascot.scaleBy(-1); assertBounds();
+    app.screen.width = 375; app.screen.height = 812;
+    mascot.resize(); assertBounds();
+    expect(interactionTarget.style.touchAction).toBe('pinch-zoom');
+  });
+
   it('moves a large desktop model across its initial placement zone on both axes', async () => {
     const { model, onTap } = await setup();
     drag(model, 120, 150);
@@ -190,35 +301,37 @@ describe('createMascot free viewport dragging', () => {
     expect(onTap).not.toHaveBeenCalled();
   });
 
-  it('reserves only a single-finger start inside the transformed model for dragging', async () => {
-    const { app, model } = await setup();
+  it('preserves native pinch and background scrolling without cancelling touchstart', async () => {
+    const { app, model, interactionTarget } = await setup();
     app.view.getBoundingClientRect = () => ({ left: 100, top: 50, width: 2880, height: 1800 });
     const center = { clientX: 100 + model.x * 2, clientY: 50 + model.y * 2 };
-    expect(touchStart(app.view, [center]).defaultPrevented).toBe(true);
+    expect(touchStart(app.view, [center]).defaultPrevented).toBe(false);
+    expect(interactionTarget.style.touchAction).toBe('pinch-zoom');
     expect(touchStart(app.view, [{ clientX: 100, clientY: 50 }]).defaultPrevented).toBe(false);
     expect(touchStart(app.view, [center, { clientX: 110, clientY: 60 }]).defaultPrevented).toBe(false);
     app.view.getBoundingClientRect = () => ({ left: 0, top: 0, width: 1440, height: 900 });
     drag(model, 120, 150, 'touch');
-    expect(touchStart(app.view, [{ clientX: 120, clientY: 150 }]).defaultPrevented).toBe(true);
+    expect(touchStart(app.view, [{ clientX: 120, clientY: 150 }]).defaultPrevented).toBe(false);
   });
 
   it('allows scrolling over an invisible model and releases its touch listener on destroy', async () => {
-    const add = vi.spyOn(HTMLCanvasElement.prototype, 'addEventListener');
-    const remove = vi.spyOn(HTMLCanvasElement.prototype, 'removeEventListener');
-    const { app, model, mascot, setRegion } = await setup({ width: 375, height: 812,
+    const add = vi.spyOn(window, 'addEventListener');
+    const remove = vi.spyOn(window, 'removeEventListener');
+    const { app, model, mascot, interactionTarget, setRegion } = await setup({ width: 375, height: 812,
       region: { left: 20, top: 590, width: 335, height: 300 } });
     const visibleCenter = { clientX: model.x, clientY: model.y };
-    expect(touchStart(app.view, [visibleCenter]).defaultPrevented).toBe(true);
+    expect(touchStart(app.view, [visibleCenter]).defaultPrevented).toBe(false);
     setRegion({ left: 20, top: -400, width: 335, height: 300 });
     mascot.resize();
+    expect(interactionTarget.style.visibility).toBe('hidden');
     expect(touchStart(app.view, [{ clientX: model.x, clientY: model.y }]).defaultPrevented).toBe(false);
     mascot.destroy();
     expect(touchStart(app.view, [visibleCenter]).defaultPrevented).toBe(false);
     const registrations = add.mock.calls.filter(([type]) => type === 'touchstart');
     expect(registrations).toHaveLength(1);
-    expect(registrations[0][2]).toEqual({ passive: false });
+    expect(registrations[0][2]).toEqual({ passive: true, capture: true });
     expect(remove.mock.calls.filter(([type]) => type === 'touchstart'))
-      .toEqual([['touchstart', registrations[0][1]]]);
+      .toEqual([['touchstart', registrations[0][1], true]]);
   });
 
   it('removes every active window drag listener after release, cancel, and destroy', async () => {
@@ -231,8 +344,8 @@ describe('createMascot free viewport dragging', () => {
       else pointer(end, model.x, model.y);
     }
     for (const type of ['pointermove', 'pointerup', 'pointercancel']) {
-      const registered = add.mock.calls.filter(([name]) => name === type).map(([, fn]) => fn);
-      const removed = remove.mock.calls.filter(([name]) => name === type).map(([, fn]) => fn);
+      const registered = add.mock.calls.filter(([name, , capture]) => name === type && !capture).map(([, fn]) => fn);
+      const removed = remove.mock.calls.filter(([name, , capture]) => name === type && !capture).map(([, fn]) => fn);
       expect(registered).toHaveLength(3);
       expect(removed).toEqual(registered);
     }

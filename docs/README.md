@@ -1,6 +1,6 @@
 # 项目文档索引
 
-> **Claude 当前接手入口：[完整交接（更新至2026-10-11）](handoff-2026-10-10.md)。** 后续开发统一在原目录 `E:\install_video`，已有访问隔离/UI代码已迁回原目录的专用开发分支；旧worktree仅保留作回滚参考，现存旧服务未切换。交接列出原目录运行命令、已验证记录和待确认项。功能开发仍暂停，模型内容验收继续跳过；本地Live2D功能/资源保留，GitHub仅排模型资源及历史。
+> **当前接手入口：[完整交接（2026-10-11续作）](handoff-2026-10-10.md)。** 开发统一在原目录 `E:\install_video`；访问隔离/封面修复已提交，角色交互在 `feature/ui-interaction-finish-20261011` 收尾，5173/8000已启动原目录服务。当前结果与历史迁回快照分开阅读；模型内容验收继续跳过，本地Live2D保留，GitHub发布须过滤模型历史。
 
 > 下方验收表和旧计划按各自历史阶段阅读；不能据此重开closed phase、重复已完成开发，或把结构/单测通过转记真实内容与触摸交互通过。框架实验已回滚，证据在实验分支和本机精确归档，位置见交接。
 
@@ -14,6 +14,7 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 
 | 文档 | 用途 |
 | --- | --- |
+| [角色交互收尾](acceptance-reports/2026-10-11-ui-interaction-finish/report.md) | pointerId/多指恢复/局部pinch与焦点；前端151项/build、Edge15项、真实parse3次（预算2→3，仅补完整封面解码），模型0，真手机未验证 |
 | [阶段分离实测](acceptance-reports/2026-10-10-staged-summary-live/report.md) | closed6POST/28851tokens；累计11，两role实现但短中仍fail、长20点回显fail |
 | [原生Schema/Pro实测](acceptance-reports/2026-10-10-schema-pro-summary-live/report.md) | closed6POST/25728tokens，累计17；三源结构通过，内容未全过，候选不推广 |
 | [原生schema/Pro对照设计](superpowers/specs/2026-10-10-schema-pro-summary-design.md) | 实测后的协议/模型有限对照，父11/新phase最多6/累计17，已实测并封账 |

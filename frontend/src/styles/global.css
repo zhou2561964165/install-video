@@ -83,14 +83,18 @@
   --insight-control-radius: 10px;
   /* primitive → semantic → component：触控和角色独立区域 */
   --size-touch: 44px;
+  --size-focus-ring: 2px;
   --size-mascot-min: 240px;
   --size-mascot-max: 340px;
   --space-safe-header: 140px;
   --space-safe-footer: 80px;
   --control-touch-size: var(--size-touch);
+  --focus-ring-width: var(--size-focus-ring);
   --decoration-height: clamp(var(--size-mascot-min), 38svh, var(--size-mascot-max));
   --mascot-region-height: var(--decoration-height);
   --mascot-trigger-size: var(--control-touch-size);
+  --mascot-focus-color: var(--accent);
+  --mascot-focus-width: var(--focus-ring-width);
   --menu-control-size: var(--control-touch-size);
   --mascot-inline-gap: 28px;
 
@@ -197,6 +201,17 @@ body {
 .stage canvas { pointer-events: auto; }
 
 .mascot-region { position: relative; }
+.mascot-interaction {
+  position: fixed;
+  z-index: 1;
+  cursor: grab;
+  pointer-events: auto;
+}
+.mascot-interaction:focus-visible {
+  outline-width: var(--mascot-focus-width);
+  outline-color: var(--mascot-focus-color);
+  outline-offset: calc(-1 * var(--mascot-focus-width));
+}
 .mascot-menu-trigger {
   position: fixed;
   right: var(--mascot-inline-gap);
@@ -1360,7 +1375,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   }
   .mascot-region {
     width: 100%;
-    height: calc(var(--mascot-region-height) + var(--mascot-trigger-size));
+    height: var(--mascot-region-height);
     margin: 0 auto;
   }
   .mascot-region__viewport { height: var(--mascot-region-height); }

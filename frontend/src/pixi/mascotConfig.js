@@ -35,7 +35,7 @@ export function getModelLayout(model, viewportWidth) {
 
 // 手机由文档流预留区承载；桌面保持原比例并限制在视口内。
 // paddingRatio 给初始完整摆放和拖动中心保留视口边距；拖动不受初始区域限制。
-export const PLACEMENT = { paddingRatio: 0.04, desktopFooterRatio: 0.1, dragThreshold: 3, touchAction: 'pan-y pinch-zoom', autoPreventDefault: false };
+export const PLACEMENT = { paddingRatio: 0.04, desktopFooterRatio: 0.1, dragThreshold: 3, touchAction: 'pan-y pinch-zoom', modelTouchAction: 'pinch-zoom', autoPreventDefault: false };
 // 用户拖动时只约束中心，允许模型部分裁切，避免大角色几乎没有纵向活动空间。
 export function getDraggedModelPosition(position, viewport) {
   const pad = Math.min(viewport.width, viewport.height) * PLACEMENT.paddingRatio;

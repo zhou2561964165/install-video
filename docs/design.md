@@ -1,6 +1,6 @@
 # 方案设计文档 · 万能视频下载网站
 
-> 版本：v3（2026-10-10 成熟方案整改同步；历史视觉与模型实验另作标记）
+> 版本：v3（2026-10-11 任务访问隔离与角色交互同步；历史视觉与模型实验另作标记）
 > 对应需求：见 `docs/requirements.md`
 > 本文档是**技术设计基准**。当前实现见 §1–12，§13–14 保留历史视觉决策；模型历史阶段见 §12.3–12.4，当前默认与验收状态见 §12.6。所有「预留扩展点」在实现时通过接口隔离，后续拓展不触碰下载核心。
 
@@ -120,14 +120,14 @@ install_video/
    → 服务端模式建 Job（status=queued）→ 线程池执行下载
    → 返回 {mode:"direct", url, headers} 或 {mode:"server", job_id}
 
-3. GET /api/job/{id}（前端轮询进度 / 后续可换 SSE）
+3. GET /api/job/{id}（Bearer token必需；查询id+user_id；前端轮询进度 / 后续可换 SSE）
    → {id, status, progress, title, error_type, error}
 
-4. GET /api/file/{job_id}（服务端模式下）
-   → 文件流（Content-Disposition 触发浏览器/手机保存）
+4. GET /api/file/{job_id}（Bearer token必需；仅本人完成且文件仍存在的任务）
+   → FileResponse；前端携Bearer取Blob、解析Content-Disposition文件名后保存
 ```
 
-**鉴权边界（按当前路由）**：注册/登录无需已有 token；`/api/auth/me`、解析、下载、字幕、翻译与总结要求 Bearer token。`GET /api/job/{id}` 和 `GET /api/file/{job_id}` 当前未接 `get_current_user`，也未校验任务归属；不能把登录入口表述为所有任务读取接口均有账户隔离。前端退出清除本地 token，没有服务端 logout/refresh API。
+**鉴权边界（按当前路由）**：注册/登录无需已有 token；`/api/auth/me`、解析、下载、字幕、翻译、总结及job/file读取要求Bearer token。job/file同时按id和user_id查询；匿名/无效token为401，他人/无主/不存在统一404。本人文件仍需完成且存在，未新增即时TTL拒绝或迁移。前端退出清除token并取消当前解析/下载，换账号或迟到响应不能继续保存旧文件；没有服务端logout/refresh API。文件先完整缓存Blob再保存，不是流式直通下载。
 
 **视频智能 API**：`POST /api/subtitle {url, language?}` 返回标题、语言、自动字幕标记、可选语言和正文；`POST /api/subtitle/translate {url, source_language?, target_language:"zh-CN"}` 返回译文及 provider/model；`POST /api/summary {url, subtitle_language?, output_language:"zh-CN"}` 返回标题、源语言、`summary`、`key_points`、provider/model。公开总结响应不包含 facts、trace 或模型修复计数；这些仅在显式诊断中使用。
 
@@ -257,9 +257,9 @@ JSON模式也不保证要点数量。当时实测完整JSON包含12条要点，�
 
 ### 12.5 响应式角色的几何接口
 
-App只把视觉区的矩形通过getRegion传给角色；手机在控件后预留文档流区域，滚动后定位/隐藏，桌面按视口和入口底边空间限制包围盒。拖动、比例、触控默认和纹理需求由配置统一驱动，model资产不改。纹理能力不足时跳过模型目录请求，视觉失败不阻塞解析。
+App通过getRegion提供初始视觉占位，通过interactionTarget提供已有DOM角色入口。手机初始布局使用文档流区域；首次拖动后保留视口中心及尺寸比例，跨滚动/场景/缩放持久，resize只约束可恢复中心。视觉层把模型实际边界同步到局部DOM表面，焦点随角色移动；布局占位不再额外保留已删除按钮的44px空白。模型资源未改，纹理不足仍跳过模型请求，视觉失败不阻塞解析。
 
-菜单具有可见入口、焦点循环/恢复和标准inert；触摸取消不能视作点击。PIXI会覆写canvas touchAction且默认preventDefault，原生纵向触摸须通过配置恢复pan-y/pinch-zoom及公共interaction设置，不能仅凭程序scrollTo声称触摸滚动正常。GPU、模拟8K、聚焦控件避开固定栏、真实touch/cancel验证各自留证，真机范围另列。
+点击角色或聚焦已有入口按Enter/Space打开原39项菜单，不额外添加可见换装按钮；菜单保留焦点循环/恢复和inert。canvas通过已有公共配置允许pan-y/pinch-zoom，模型局部表面在手势开始前设置pinch-zoom；首touchstart不preventDefault。拖动绑定pointerId，第二指加入取消单指拖动而不触发tap；全部释放/cancel/blur后恢复，销毁清理监听。采用现有PIXI6.5/浏览器PointerEvent、CSS touch-action及pointer capture，不加产品依赖。依据[MDN touch-action](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/touch-action)与[Pointer events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events)；同手势开始后改变touch-action不能修复原生冲突。当前Edge/CDP模拟检查见[本轮报告](acceptance-reports/2026-10-11-ui-interaction-finish/report.md)，不等于真手机通过。
 
 ### 12.6 当前字幕总结、实验模块与交付边界（2026-10-10）
 
@@ -390,6 +390,6 @@ CSS 与 PIXI 颜色单一来源 = `global.css` 的 `:root` 语义 token；`theme
 
 - **阶段映射（`EXPRESSIONS.stage`）**：解析中→圈圈眼(Param40)、选清晰度→煎蛋眼(Param38)、下载中→圈圈眼(Param40)、完成→星星眼(Param41)、出错→生气(Param43)、入口→无。
 - **随机道具（`EXPRESSIONS.random`）**：拿手柄(Param35) / 拿话筒(Param32) / 戳脸(Param31)，每 ~20s 随机展示 ~4s 收回。
-- **点击换装菜单（`EXPRESSIONS.menu`，6 组 39 项）**：发型(9, single) / 衣服(4, single) / 大小变(1, toggle) / 配饰(16, multi，含创可贴×4) / 颜色(5, multi) / 情绪(4, multi：黑脸/血迹/哭/脸红)，`ExpressionMenu.jsx` 只读配置渲染。**46 个表情已全量暴露，无闲置。**
+- **点击换装菜单（`EXPRESSIONS.menu`，6 组 39 项）**：发型(9, single) / 衣服(4, single) / 大小变(1, toggle) / 配饰(16, multi，含创可贴×4) / 颜色(5, multi) / 情绪(4, multi：黑脸/血迹/哭/脸红)，`ExpressionMenu.jsx` 只读配置渲染。46份表情资源另包含阶段/随机能力，不能等同于46个手动菜单项；尺寸另有2个按钮。
 - **装饰特效（`EXPRESSIONS.effect` → `edle.motion3.json`）**：单个「星光闪烁」循环装饰动作（`Meta.Loop=true`，~11.9s；`白.model3.json` 的 Motions 仅挂这一个文件、且该文件无 Motions 数组，并非多特效）。命中 `stages`（默认 `done`/`error`）时由 `setStageEffect` 调 `model.motion(group, index, MotionPriority.IDLE)` 循环播放，其余场景 `motionManager.stopAllMotions()` 停止。`edle` motion 已注册进 `白.model3.json` 的 `FileReferences.Motions`；motion 文件按需懒加载（首次触发 `motion()` 时才请求）。
 - **模型切换已删除**（`cycleModel` / 切换特效 / `useModelSwitcher` / toast）。

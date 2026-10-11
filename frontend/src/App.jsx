@@ -34,6 +34,7 @@ export default function App() {
   const bgRef = useRef(null);
   const mascotRef = useRef(null);
   const mascotRegionRef = useRef(null);
+  const mascotInteractionRef = useRef(null);
   const uiRef = useRef(null);
   const [mascotAvailable, setMascotAvailable] = useState(false);
   const [webgl] = useState(() => webglSupported());
@@ -118,7 +119,7 @@ export default function App() {
     const regionObserver = new ResizeObserver(onScroll);
     if (uiRef.current) regionObserver.observe(uiRef.current);
     let stale = false; // StrictMode 双重挂载：旧挂载的 mascot 结果丢弃，不覆盖 ref / 不提前置 ready
-    createMascot(app, DEFAULT_MODEL_ID, { onTap: () => setMenuOpen(true), getRegion: () => mascotRegionRef.current?.getBoundingClientRect() }).then((m) => {
+    createMascot(app, DEFAULT_MODEL_ID, { onTap: () => setMenuOpen(true), getRegion: () => mascotRegionRef.current?.getBoundingClientRect(), interactionTarget: mascotInteractionRef.current }).then((m) => {
       if (stale) { m.destroy(); return; }
       mascotRef.current = m;
       setMascotAvailable(m.isAvailable());
@@ -150,15 +151,17 @@ export default function App() {
   }, [state.scene, webgl]);
 
   const mascotSlot = webgl && <div className="mascot-region">
-    <div className="mascot-region__viewport" ref={mascotRegionRef} data-mascot-region
+    <div className="mascot-region__viewport" ref={mascotRegionRef} data-mascot-region />
+  </div>;
+  const mascotInteraction = webgl && <div className="mascot-interaction" ref={mascotInteractionRef} data-mascot-interaction
       role="button" tabIndex={mascotAvailable ? 0 : -1} aria-label="角色换装（按 Enter 或空格）"
+      hidden={!mascotAvailable}
       aria-disabled={!mascotAvailable} aria-haspopup="dialog" aria-expanded={menuOpen}
       onKeyDown={(event) => {
         if (!mascotAvailable || event.repeat || (event.key !== 'Enter' && event.key !== ' ')) return;
         event.preventDefault();
         setMenuOpen(true);
-      }} />
-  </div>;
+      }} />;
 
   let scene;
   switch (state.scene) {
@@ -182,7 +185,7 @@ export default function App() {
 
   return (
     <>
-      <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'} />
+      <div ref={stageRef} className={webgl ? 'stage' : 'stage css-fallback'}>{mascotInteraction}</div>
       <div ref={uiRef} className="ui">
         {status === 'authed' ? (
           <>

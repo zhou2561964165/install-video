@@ -277,10 +277,13 @@ describe('App 功能闭环', () => {
   it.each(['Enter', ' '])('已有角色区域支持键盘 %s 打开菜单', async (key) => {
     mockVisual.webgl = true;
     render(<App />);
-    const region = document.querySelector('[data-mascot-region]');
+    const region = document.querySelector('[data-mascot-interaction]');
     await waitFor(() => expect(region).toHaveAttribute('tabindex', '0'));
     expect(region).toHaveAttribute('role', 'button');
     expect(region).toHaveAttribute('aria-haspopup', 'dialog');
+    expect(region.closest('.stage')).not.toBeNull();
+    expect(createMascot.mock.calls.at(-1)[2].interactionTarget).toBe(region);
+    expect(document.querySelector('[data-mascot-region]')).not.toHaveAttribute('role');
     region.focus();
     fireEvent.keyDown(region, { key });
     expect(screen.getByRole('dialog', { name: '角色换装' })).toBeInTheDocument();
@@ -293,9 +296,10 @@ describe('App 功能闭环', () => {
     mockVisual.webgl = true; mockVisual.available = false;
     render(<App />);
     await act(async () => {});
-    const region = document.querySelector('[data-mascot-region]');
+    const region = document.querySelector('[data-mascot-interaction]');
     expect(region).toHaveAttribute('aria-disabled', 'true');
     expect(region).toHaveAttribute('tabindex', '-1');
+    expect(region).toHaveAttribute('hidden');
     fireEvent.keyDown(region, { key: 'Enter' });
     expect(screen.queryByRole('dialog', { name: '角色换装' })).toBeNull();
   });

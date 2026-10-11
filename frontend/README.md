@@ -45,12 +45,16 @@ npm run dev
 ## 下载与视频智能交互
 
 - `useDownload` 先调用 `/api/download`。返回 `mode: direct` 时浏览器跳转到服务端给出的 URL；返回 `mode: server` 时每 3 秒轮询 job，完成后自动触发文件保存。格式卡下方的“强制走服务器”开关会随请求发送 `force_server`。直链跳转不能附带后端返回的鉴权 headers，因此需要这些 headers 的来源应选服务端模式。
+- 服务端job/file请求都携Bearer，只读本人任务。文件通过fetch→Blob→objectURL保存，解析UTF-8 filename*及普通文件名；完成页提供自动保存一次、手动保存/重试、忙态和错误。取消/重置/退出/换账号/卸载阻止过期保存并释放Blob URL；整个文件缓存占内存，尚非流式直通。
+- 封面img使用referrerPolicy=no-referrer；不能把图片HTTP加载成功等同于实际显示正常，需同时检查固有尺寸和布局尺寸。
 - `useVideoInsights` 与下载 reducer 分开管理字幕、翻译、总结和错误。结果页可以分别调用“查看字幕”“翻译字幕”“生成总结”；输出语言列表由 `state/insightConfig.js` 提供。没有检测到字幕时操作仍可尝试，后端/上游原因显示在视频智能面板，不替换下载场景或下载错误状态。
 - 每次视频智能操作会中止上一项视频智能请求；视频 URL 改变或退出登录时也会中止并清空结果。`VideoInsights.jsx` 通过 props 接收状态和回调，不直接导入下载逻辑。
 
 开发期测试命令由 `frontend/package.json` 定义：`npm test` 执行 Vitest，`npm run test:watch` 启动监听模式。文档维护自身不触发测试或生产构建。2026-10-10 [旧结果生命周期整改](../docs/acceptance-reports/2026-10-10-source-first-summary/report.md)已清空新请求对应kind的旧结果，保留其他类型缓存及取消/过期响应保护；4项hook回归及headless Edge真实成功→本地上游503回归通过，失败后旧summary不再显示。此前[HTTP页面补验](../docs/acceptance-reports/2026-10-09-online-formal-flow/report.md)记录的旧结果残留属于修复前版本，证据不改。两轮均未实测密码登录、真实模型质量、下载、移动/GPU或重新构建。以往的浏览器、GPU、布局和测试数字只代表各自报告记录的源码、日期和设备；详见[文档索引](../docs/README.md)及[历史浏览器报告](../docs/acceptance-reports/2026-10-04-browser-e2e/report.md)、[历史移动/GPU报告](../docs/acceptance-reports/2026-10-04-public-mobile-gpu/report.md)、[历史响应式角色报告](../docs/acceptance-reports/2026-10-04-responsive-mascot/report.md)。
 
 ## Live2D 模型署名与授权
+
+2026-10-11交互收尾：现有角色点击/Enter/Space继续打开39项换装菜单，未增加可见按钮。App保留初始布局占位，视觉层按模型实际边界同步固定DOM交互面和焦点；拖动绑定pointerId，位置跨scroll/scene/scale保持，resize后仍可恢复。模型表面采用pinch-zoom，背景canvas保持pan-y/pinch-zoom；第二指取消单指拖动，释放/cancel/blur后能再拖，首touchstart不取消。移动占位已移除原按钮44px留白。焦点宽度/颜色复用三层token，配置见PLACEMENT。151项测试/build及Edge/RTX4050桌面/CDP触摸模拟15项通过；真实B站解析共3次，第三次等complete/decode确认约356×200px正常封面，预算2→3的原因和旧结果分别记录。LLM0，真手机未测，详见[本轮报告](../docs/acceptance-reports/2026-10-11-ui-interaction-finish/report.md)。
 
 - **Live2D 角色「白」—— 人物绘制：煎果饼子txy · 建模：逐尾鲨（来源：b站工房，完整版）**；遵循作者使用规则：**非商用、不二传二改**。
 
