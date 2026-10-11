@@ -1,5 +1,7 @@
 # 工程约定（每次必须遵守）
 
+> **Claude 接手先读**：[当前交接文档](docs/handoff-2026-10-10.md)（更新至2026-10-11）。用户指定后续开发统一在 `E:\install_video`；已有访问隔离/UI代码已迁回，当前分支 `feature/job-file-access-isolation-original-20261011`，沿用原配置、账号数据和本地模型。旧worktree只作历史/回滚参考；其运行服务尚未切换，先按交接核对。功能开发仍暂停，模型内容验收已跳过。本文件不覆盖最新用户指令与 `AGENTS.md`。
+
 ## 1. UI 设计必须用 skill
 涉及 UI/视觉/交互（配色、字体、动效、无障碍、组件）时，先调用：
 - `ui-ux-pro-max`（设计决策检索：`--design-system` / `--domain color|typography|ux` / `--stack`）
