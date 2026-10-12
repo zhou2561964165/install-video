@@ -1,0 +1,65 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "status": "closed",
+  "hard_ceiling": 10,
+  "reserved_posts": 10,
+  "initial_phase_limit": 5,
+  "conditional_followup_limit": 5,
+  "phases": [
+    {
+      "phase": "summary-thinking-single-1",
+      "status": "closed",
+      "maximum_posts": 5,
+      "reserved_posts": 5,
+      "tracker": "E:\\install_video\\.planning\\2026-10-11-summary-content-resume\\phase-1.json",
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-11-summary-content-resume\\results\\request-ledger.json",
+      "provenance_sha256": "b38ec8561cc7766fe59bd3a3e45a7e9238ffb1f96399f8d6a641cdd11c39a399",
+      "closed_receipt_sha256": "f7cb9658f3c9ec7f3b6763ff6ea20ab5b1dea60659d39d98cb3679c8e2758e55"
+    },
+    {
+      "phase": "summary-thinking-local-json-2",
+      "status": "closed",
+      "maximum_posts": 5,
+      "reserved_posts": 5,
+      "tracker": "E:\\install_video\\.planning\\2026-10-11-summary-content-resume\\phase-2.json",
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-11-summary-content-local-repair\\results\\request-ledger.json",
+      "provenance_sha256": "503f73f297820029ad70ec8bbf7a2a6540d3c346ecc313df2000583c447ab03c",
+      "closed_receipt_sha256": "dead6785626881adf37d365c1e24473e8883f6197483a88a56da6ca657d13143"
+    }
+  ],
+  "historical_parents": [
+    {
+      "path": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\budget-continuation-schema-pro.json",
+      "sha256": "78e99433aba03f002f40019d73825bc6d6210bf4de88eef43f33e5ab604203f6",
+      "posts": 17,
+      "status": "closed"
+    },
+    {
+      "path": "E:\\install_video\\.planning\\2026-10-08-summary-quality-finish\\budget-continuation-repair-final.json",
+      "sha256": "a211aeb6dcd9758bca2ca285286eccb62e3bd2e783c15a128824b51d95d7cfde",
+      "posts": 26,
+      "status": "closed"
+    },
+    {
+      "path": "E:\\install_video\\.planning\\2026-10-10-llamaindex-langgraph-feasibility\\rollback-2026-10-11\\experiment-446a414-byte-exact.zip",
+      "sha256": "5a81d53330dc64530abe6d70c1b3ef9b71a9d1ff06e6e335415f57c915f45200",
+      "posts": 8,
+      "status": "closed",
+      "receipt_members": [
+        "docs/acceptance-reports/2026-10-10-framework-summary-probe/results/closed-receipt.json",
+        "docs/acceptance-reports/2026-10-10-refine-only-summary-live/results/closed-receipt.json"
+      ],
+      "ledger_members": [
+        "docs/acceptance-reports/2026-10-10-framework-summary-probe/results/request-ledger.json",
+        "docs/acceptance-reports/2026-10-10-refine-only-summary-live/results/request-ledger.json"
+      ]
+    }
+  ],
+  "historical_posts": 51,
+  "historical_linked_posts": 25,
+  "historical_independent_posts": 26,
+  "authorization": "User 2026-10-11 restores content acceptance; ongoing finite autonomous budget authorization",
+  "reason": "Baseline prompt unchanged: reuse paid failures; test existing thinking-enabled single mode with finite token budget, short/medium/full long5; at most5 followup after located offline-verified repair",
+  "product_default_changed": false,
+  "product_env_changed": false
+}

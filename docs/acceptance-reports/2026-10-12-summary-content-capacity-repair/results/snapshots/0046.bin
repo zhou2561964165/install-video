@@ -1,0 +1,27 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-thinking-local-json-2",
+  "posts": 5,
+  "stopped_on_error": true,
+  "samples": [
+    {
+      "sample": "zh-short",
+      "success": true,
+      "result_sha256": "853601e901e0e29ce6f839c00d39422c79c6ff818061752ef1ff9c51ac627ecc",
+      "posts": 1
+    },
+    {
+      "sample": "en-medium",
+      "success": true,
+      "result_sha256": "f0219d29d0cbf2eff6078789f98485a6a2bdb69a4455df0899d4c5c293c15c0c",
+      "posts": 1
+    },
+    {
+      "sample": "en-long",
+      "success": false,
+      "result_sha256": "c7e3c46d1d9386e9c59ee3c22d6b9166196d903aa60ef1ae6e0987c9712440fb",
+      "posts": 3
+    }
+  ],
+  "ended_utc": "2026-10-12T07:43:13.800522+00:00"
+}

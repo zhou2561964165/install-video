@@ -1,6 +1,6 @@
 # 项目文档索引
 
-> **当前接手入口：[完整交接（2026-10-11续作）](handoff-2026-10-10.md)。** 开发统一在原目录 `E:\install_video`；访问隔离/封面修复已提交，角色交互在 `feature/ui-interaction-finish-20261011` 收尾，5173/8000已启动原目录服务。当前结果与历史迁回快照分开阅读；模型内容验收继续跳过，本地Live2D保留，GitHub发布须过滤模型历史。
+> **当前接手入口：[完整交接](handoff-2026-10-10.md)。** 原目录`E:\install_video`、分支`feature/summary-content-resume-20261011`；恢复验收及指定完整long复验共四phase16POST/153697tokens封账。短中PASS；最新完整long14点结构/6项核心覆盖通过，但精度仍FAIL。默认/env未升级，旧phase/回滚按历史阅读，本地Live2D保留，发布过滤模型历史。
 
 > 下方验收表和旧计划按各自历史阶段阅读；不能据此重开closed phase、重复已完成开发，或把结构/单测通过转记真实内容与触摸交互通过。框架实验已回滚，证据在实验分支和本机精确归档，位置见交接。
 
@@ -14,6 +14,10 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 
 | 文档 | 用途 |
 | --- | --- |
+| [用户指定完整长文复验](acceptance-reports/2026-10-12-summary-long-final-check/report.md) | closed3POST/32432tokens；累计16/153697，新完整long14点结构/6项full，精度FAIL，原件不改 |
+| [有限容量/限定复验](acceptance-reports/2026-10-12-summary-content-capacity-repair/report.md) | closed3POST；累计13/121265tokens，短中PASS、长14点结构通过但内容FAIL |
+| [本地无损规范化复验](acceptance-reports/2026-10-11-summary-content-local-repair/report.md) | closed5POST/52139tokens，短PASS、中summary限定FAIL、长reasoning耗尽输出容量 |
+| [总结内容验收恢复](acceptance-reports/2026-10-11-summary-content-resume/report.md) | closed5POST/44968tokens，short/mediumPASS、long缺JSON闭合且诊断精度FAIL；原件不改 |
 | [角色交互收尾](acceptance-reports/2026-10-11-ui-interaction-finish/report.md) | pointerId/多指恢复/局部pinch与焦点；前端151项/build、Edge15项、真实parse3次（预算2→3，仅补完整封面解码），模型0，真手机未验证 |
 | [阶段分离实测](acceptance-reports/2026-10-10-staged-summary-live/report.md) | closed6POST/28851tokens；累计11，两role实现但短中仍fail、长20点回显fail |
 | [原生Schema/Pro实测](acceptance-reports/2026-10-10-schema-pro-summary-live/report.md) | closed6POST/25728tokens，累计17；三源结构通过，内容未全过，候选不推广 |

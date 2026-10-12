@@ -10,6 +10,7 @@ from typing import Any, Callable
 
 import httpx
 from pydantic import ValidationError
+from .summary_json import decode_summary_json
 from langsmith import tracing_context
 
 from ..config import settings
@@ -263,10 +264,9 @@ def translate_text(
 def _parse_summary_json(content: str, *, strict: bool = False, budget: _SummaryBudget | None = None) -> tuple[str, list[str]]:
     maximum_points = budget.max_points if budget else 7
     char_limit = budget.point_char_limit if budget else settings.llm_summary_max_point_chars
-    fenced = content if strict else re.sub(r"^```(?:json)?\s*|\s*```$", "", content.strip(), flags=re.IGNORECASE)
     try:
-        payload = json.loads(fenced)
-    except json.JSONDecodeError as exc:
+        payload = decode_summary_json(content, allow_fences=not strict)
+    except ValueError as exc:
         raise LLMServiceError("llm_invalid_response", "LLM 总结不是有效 JSON") from exc
     try:
         decoded = decode_payload(payload, strict=strict)
@@ -428,6 +428,15 @@ def _summary_request(
                     "Preserve frequency and modality: usually is not always, may is not must, and claims "
                     "by a speaker or source must retain that attribution. Keep named examples within "
                     "their stated situation rather than turning them into universal rules. "
+                    "Resolve local references and enumeration ranges to exactly their antecedent; "
+                    "a rule for a listed subset must not extend to later items in the same topic. "
+                    "Keep claims about a named example or demonstration attached to that example, "
+                    "rather than the entire category. Preserve the anchor of relative time expressions "
+                    "including an event's start or end, without shifting when an example occurs. "
+                    "When reproducing an expression or demonstration, preserve its symbols and ordering "
+                    "instead of paraphrasing it into a different expression. "
+                    "Retain necessary qualifiers in the same field and assertion that states the claim; "
+                    "a qualified key point cannot justify an unqualified assertion in the overview. "
                     + point_guidance + format_guidance
                 ),
             },

@@ -1,0 +1,20 @@
+{
+  "content": "{\"summary\":\"本讲是 MIT 6.0001/600 的第一讲，由 Ana Bell 开场，先概览课程目标与结构，再从高层回答“计算是什么”：计算机执行并存储计算，依赖命令式算法、存储程序架构和图灵原语；最后以英语类比引入 Python 的原语、表达式、语法与静态语义。\",\"key_points\":[\"6.0001/600 的目标包括概念知识、编程技能和通过 psets 解决问题，底层都靠练习；课程内容分三部分：学习编程（对象、数据结构、控制流）、写可读且模块化、组织良好的代码、比较程序效率与算法。\",\"计算机基本做两件事：执行大量计算并把结果存入内存；现代计算机每秒约十亿次计算不夸张，存储可达数百 GB。计算分语言内置的低层原语（加、减、乘、除等）和程序员用这些原语定义的新计算；计算机只做你告诉它的事，并不神奇。\",\"声明式知识是事实陈述，例如“x 的平方根是 y，使得 y*y 等于 x”，计算机不能直接处理；命令式知识是 how-to 或步骤序列，计算机可执行。Ana Bell 用抽奖演示这一点：事实是课前会有人赢得 Google Cardboard，步骤包括打开 Anaconda，并用 Python 随机选人。\",\"求平方根的数值算法示例：从猜测 g 开始（如对 x=16 猜 g=3），计算 g*g；若 g*g 足够接近 x 则停止并返回 g；否则把新猜测设为 g 与 x/g 的平均并重复。算法包含四步序列、控制流（判断和重复）以及停止条件（足够接近，如 .01 或 .001）。\",\"历史上固定程序计算机如计算器只懂加、减、乘、除、等号，不能绘图、上网或发邮件；存储程序计算机能存储并执行指令序列，也能更换序列以在同一机器上完成不同任务。\",\"基本机器架构包含内存、输入/输出、ALU 和带 program counter 的 control unit；control unit 取指令送给 ALU，ALU 可从内存取数据运算并写回，program counter 递增；测试指令返回 true/false，可改变程序计数器以跳过或重复指令，最后可能输出结果。\",\"Alan Turing 用六个原语——move left、move right、read、write、scan、do nothing——和一条纸带表明可计算任何东西；编程语言由此提供更方便的原语。重要结论是：若某程序能用 Python 计算，理论上也能用任何其他语言写出计算完全相同的东西。\",\"程序语言用原语组合成表达式，表达式有值和意义；类比英语，英语的原语是词，Python 的原语包括 floats、Booleans、numbers、strings 以及简单运算符（加、减等）。\",\"语法与静态语义：英语中 “cat dog boy”（名词名词名词）语法无效，“cat hugs boy”（名词动词名词）有效；Python 中 word 后接数字 5 无效，operator operand operator 可以。静态语义上，“I are hungry”语法好但别扭，“I am hungry”更好；Python 中类似 “3.2 * 5” 语法有效，但需理解其含义，并留下“把词加到数上是什么意义”的问题。\"]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 5998,
+    "completion_tokens": 4103,
+    "total_tokens": 10101,
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 5614,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 3392
+    }
+  },
+  "http_status": 200,
+  "received_utc": "2026-10-12T08:57:36.818660+00:00",
+  "model": "deepseek-flash"
+}

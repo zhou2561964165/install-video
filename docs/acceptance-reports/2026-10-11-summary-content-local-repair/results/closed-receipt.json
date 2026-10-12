@@ -1,0 +1,11 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-thinking-local-json-2",
+  "status": "closed",
+  "posts": 5,
+  "work_posts": 10,
+  "hard_ceiling": 10,
+  "ledger_sha256": "37efda4eeb85a1d6c717b83bf8ee04459e8df94cf03d3d2af557b3581c588c54",
+  "index_sha256": "34fcc1eaac5bfbd8433e1a065eeb95962e80afecce5ded643fe2dc0144b1e927",
+  "provenance_sha256": "503f73f297820029ad70ec8bbf7a2a6540d3c346ecc313df2000583c447ab03c"
+}

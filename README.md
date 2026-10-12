@@ -1,6 +1,6 @@
 # 万能视频下载网站
 
-> 新窗口先读[当前交接（2026-10-11续作）](docs/handoff-2026-10-10.md)。开发统一在 `E:\install_video`；访问隔离与封面修复已提交，当前在 `feature/ui-interaction-finish-20261011` 收尾角色拖动、原生双指缩放及键盘焦点。5173/8000服务已从原目录启动。模型内容验收继续跳过，本地Live2D保留，GitHub发布副本仍须过滤模型资源及历史。
+> 新窗口先读[当前交接](docs/handoff-2026-10-10.md)。开发统一在 `E:\install_video`；分支`feature/summary-content-resume-20261011`。恢复总结验收及用户指定的[完整长文复验](docs/acceptance-reports/2026-10-12-summary-long-final-check/report.md)已完成，四phase16/16POST、153697tokens封账：短中通过，长文14点/6项核心覆盖通过但精度仍失败。默认/env未升级，本地Live2D保留，发布仍须过滤模型历史。
 
 注册或登录后，粘贴任意平台视频链接 → 解析 → 选清晰度 → 下载到本地；有字幕的视频还可读取字幕、翻译并生成 AI 总结。依托 yt-dlp 覆盖数千站点，前端采用深色液态玻璃 + 樱花粉辉光主题（PIXI 舞台 + Live2D 白角色，含程序化待机动画），移动端可用。
 
@@ -120,6 +120,8 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `LLM_SUMMARY_QUALITY_CONTRACT` | `compat` | 仅facts实验：`compat`保持原核查合同；`compact`使用有限主题和内嵌四项布尔核查，由程序转换、关联引用并严格验收 |
 
 默认配置组合为 `LLM_SUMMARY_STRATEGY=legacy`、`LLM_SUMMARY_LENGTH_MODE=adaptive`。legacy先去除重复字幕行，再逐段归纳；多段以生成notes和原文边界证据分组、必要时多层合并。单段为1次POST，多段调用数取决于合并层数，不适用facts的 `n+2` 公式。adaptive在每超过8000个清理后源字符的档位增加1024输出tokens和2个可用要点，分别受输出token和主题上限约束；合并按对应源字幕字符总量计算。它保留有限点数和输入/输出容量校验，不以固定摘要或单点字数拒绝，不裁字删点。
+
+legacy raw先经过独立`summary_json.py`再入Pydantic/既有预算校验。合法JSON保持旧兼容；只修可证明全部完成字符串及标点结构保留的终端闭合，使用已有Pydantic核心parser，不补默认值、不吞未完成点、不裁字删点，也不额外调用模型。单边Markdown围栏拒绝；strict仍禁围栏/保留严格schema，但也可接受经无损门证明的闭合修复。该格式层不证明来源忠实或内容质量。
 
 显式 `facts` 保留事实抽取→合成→原文核查实验，仍有固定摘要/要点合同，未采用adaptive预算。`auto` 在付费前预检facts协议和容量，仅预检的 `llm_unconfigured` / `llm_input_too_large` 可选择legacy；非法策略、事实字段/重试/质量合同配置先拒绝。facts阶段一旦发出请求，不会因错误切换legacy或隐藏付费fallback。facts仅支持 `auto` / `text` / `json_object`，不支持 `json_schema` / `strict_tool`。
 

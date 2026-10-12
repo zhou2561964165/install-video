@@ -1,0 +1,27 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-thinking-single-1",
+  "posts": 5,
+  "stopped_on_error": true,
+  "samples": [
+    {
+      "sample": "zh-short",
+      "success": true,
+      "result_sha256": "f79d6bf1c2ce485949bbb78817186da9ddc7bfbda1170f061bc4b4bb943441c3",
+      "posts": 1
+    },
+    {
+      "sample": "en-medium",
+      "success": true,
+      "result_sha256": "464895aa8262752a66697701036d1f15c8e4d04ce24c3038fbf5ab004eacac90",
+      "posts": 1
+    },
+    {
+      "sample": "en-long",
+      "success": false,
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231",
+      "posts": 3
+    }
+  ],
+  "ended_utc": "2026-10-11T12:08:08.104305+00:00"
+}

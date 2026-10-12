@@ -261,7 +261,13 @@ App通过getRegion提供初始视觉占位，通过interactionTarget提供已有
 
 点击角色或聚焦已有入口按Enter/Space打开原39项菜单，不额外添加可见换装按钮；菜单保留焦点循环/恢复和inert。canvas通过已有公共配置允许pan-y/pinch-zoom，模型局部表面在手势开始前设置pinch-zoom；首touchstart不preventDefault。拖动绑定pointerId，第二指加入取消单指拖动而不触发tap；全部释放/cancel/blur后恢复，销毁清理监听。采用现有PIXI6.5/浏览器PointerEvent、CSS touch-action及pointer capture，不加产品依赖。依据[MDN touch-action](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/touch-action)与[Pointer events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events)；同手势开始后改变touch-action不能修复原生冲突。当前Edge/CDP模拟检查见[本轮报告](acceptance-reports/2026-10-11-ui-interaction-finish/report.md)，不等于真手机通过。
 
-### 12.6 当前字幕总结、实验模块与交付边界（2026-10-10）
+### 12.6 字幕总结、实验模块与交付边界
+
+**2026-10-12当前更新：** 已恢复内容验收，四独立phase16POST/153697供应商tokens全部closed。短中在第三phase内容通过，长结构14点成功但仍有时间/例子范围/运算子集精度缺陷；用户指定的第四完整long使用两次新提取和新merge，不是复用第三phase笔记。实际评分及冻结范围见[最新长文报告](acceptance-reports/2026-10-12-summary-long-final-check/report.md)，旧输出不转记新通过，默认/env未升级。
+
+新增独立`summary_json.py`在legacy raw与原字段/预算校验之间，用现有Pydantic核心JSON parser生成有限partial候选，再以完整字符串序列与标点骨架证明无损；只补终端闭合，不吞未完成值/默认补点/裁字、不新增POST。标准合法JSON沿用旧兼容，单边围栏拒绝；strict继续禁止围栏/严格schema，也允许有无损证明的闭合修复。依据[Pydantic部分JSON解析](https://docs.pydantic.dev/latest/concepts/json/#partial-json-parsing)，其默认partial行为可能丢未完值，故项目增加上述保留门；实际第四leaf末]缺失后完整9点恢复，原raw保留。
+
+通用来源指导增加局部枚举前件、具体例子主语、相对时间锚点、符号顺序及各字段断言独立保留限定，不含样本答案/删点器/新facts协议。无新产品依赖，HTTP仍原受控client/root开发验收单caller；显式thinking候选及8192/16384→16384/24576只用于有限对照，不能单因素归因或静默改默认成本。
 
 **实测及阶段分离候选（后续更新）：** 首来源优先phase已5POST/19776tokens并closed；短篇内容通过，中篇summary频率/文化归因未通过，长文raw20点超14结构失败，详见[首轮实测](acceptance-reports/2026-10-10-source-first-summary-live/report.md)。所以进一步采用[阶段分离设计](superpowers/specs/2026-10-10-staged-summary-design.md)，实际引入langchain-core/RunnableSequence两生成边界，Pydantic验证points-only与overview-only；LangSmith依赖仅用于禁用追踪，所有HTTP仍通过原服务受控client，不启用模型SDK、批量、外部上传或fallback。
 

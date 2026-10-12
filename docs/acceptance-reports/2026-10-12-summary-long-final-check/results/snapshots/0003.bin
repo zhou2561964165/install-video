@@ -1,0 +1,12 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-thinking-capacity-3",
+  "status": "closed",
+  "reserved_posts": 3,
+  "maximum_posts": 3,
+  "hard_ceiling": 13,
+  "parent_posts": 10,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-12-summary-content-capacity-repair\\results\\request-ledger.json",
+  "provenance_sha256": "6f77ddb0c6a2417ff96a1ac9161029e79a0796aecc84505809e010dd7abd9e32",
+  "closed_receipt_sha256": "b65e2b9463463133c17b93beefbea3d3efa8db4050ea3404efbc28025a29d377"
+}

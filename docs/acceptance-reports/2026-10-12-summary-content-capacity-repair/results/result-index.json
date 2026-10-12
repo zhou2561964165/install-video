@@ -1,0 +1,27 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-thinking-capacity-3",
+  "posts": 3,
+  "stopped_on_error": false,
+  "samples": [
+    {
+      "sample": "zh-short",
+      "success": true,
+      "result_sha256": "6d169027ea03c2768197178c37b4bc6ef9aa4d127eb8573bfe19ea69669d553d",
+      "posts": 1
+    },
+    {
+      "sample": "en-medium",
+      "success": true,
+      "result_sha256": "534a7caed1ca997796ead4aed55559f52176f0d81cd3f720d5cedbb53ff6dc72",
+      "posts": 1
+    },
+    {
+      "sample": "en-long",
+      "success": true,
+      "result_sha256": "4d12b488f448109a75a0dfa2e625bca296ff1687791c1f3fc87804231f60dbbc",
+      "posts": 1
+    }
+  ],
+  "ended_utc": "2026-10-12T08:23:11.871163+00:00"
+}

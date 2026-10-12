@@ -1,0 +1,20 @@
+{
+  "content": "",
+  "finish_reason": "length",
+  "usage": {
+    "prompt_tokens": 4321,
+    "completion_tokens": 12288,
+    "total_tokens": 16609,
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 3937,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 12288
+    }
+  },
+  "http_status": 200,
+  "received_utc": "2026-10-12T07:43:13.784932+00:00",
+  "model": "deepseek-flash"
+}

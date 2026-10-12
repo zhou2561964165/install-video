@@ -1,0 +1,20 @@
+{
+  "content": "{\"summary\":\"本讲以 Python 为例介绍计算/编程的基本模型：程序由定义和命令组成，通过表达式和赋值操作对象与数值；由于计算机只执行明确写出的指令，程序员必须把意图转化为精确的语法、语义和变量绑定规则，否则可能得到与预期不同的结果。\",\"key_points\":[\"英文中句法正确且静态语义正确的句子可有多种含义，例如“flying planes can be dangerous”可表示开飞机危险或空中的飞机危险，“This reading lamp hasn't uttered a word since I bought it”利用 reading lamp 双关；但在编程语言中程序只有一个含义，计算机只执行写出的语句。问题在于该含义可能不是程序员本意：把数字加到单词上句法可能没问题，但静态语义无意义；Python 可轻易捕获语法错误，静态语义错误只要程序走到相应分支也会被捕获，此外还可能得到不同结果、程序崩溃或程序不停止。\",\"Python 程序由定义和命令序列组成：表达式会被求值，命令告诉解释器执行操作。可以在交互式 shell（右侧）直接输入简单命令做测试，也可以在编辑器（左侧）编写更多行和更复杂的程序后运行。\",\"Python 中一切都是对象，程序操作数据对象；所有对象都有类型，类型决定可执行的操作（如数字 5 可做加法、减法、乘方）。对象分 scalar（基本、不可再分）和 non-scalar（有内部结构、可细分）：数字 5 是 scalar，列表 [5,6,7,8] 是 non-scalar，由数字序列组成。类比：人的类型是 human，可走路、说英语；Chewbacca 的类型是 Wookie，可走路并能发出某种声音。\",\"Python 的 scalar 类型包括：int（所有整数）、float（所有实数/带小数的数）、bool（只有 True 和 False，注意大写 T/F）、NoneType（只有 None，表示没有类型/类型缺失）。用 type() 查对象类型；转换把目标类型放在对象前，如 float(3) 得到 3.0；float 转 int 只截断小数部分，不四舍五入。\",\"print 命令用于向用户输出。在 shell 中输入 3+2 会显示值，但这不是打印；在编辑器中运行 3+2 不会输出任何东西。要输出必须使用 print 语句，例如打印数字 5 到控制台。\",\"对象和运算符组合成表达式，每个表达式求值为一个值，语法为 object operator object。对 int/float 有乘法、除法等常规运算；对前三个常规算术运算，结果类型取决于操作数：两个操作数都是 int 则结果 int，至少一个 float 则结果 float；除法特殊，无论操作数如何结果总是 float。% 用于取余，** 用于乘方；运算优先级遵循数学常规，可用括号改变优先级。\",\"赋值用等号把右侧值绑定到左侧变量名；值存于内存，之后通过变量名引用该值。变量名应具有描述性。例：pi = 3.14159，pi_approx = 22/7；圆面积代码中 pi 和 radius 先赋值，area = 表达式会从内存查找 pi、radius 的值并替换，整个表达式求值成一个 float 并赋给 area。\",\"编程不同于数学：数学中可“solve for x”，计算机需要被告知如何做，程序员必须给出公式。在编程中，赋值语句右侧永远是求值为值的表达式，左侧永远是变量；等号表示赋值，不是数学等号，左侧只能有一个变量。\",\"变量名可通过新赋值重绑定。示例中 pi=3.14、radius=2.2，计算 area 后执行 radius = radius + 1：解除 radius 对 2.2 的绑定，计算新值 3.2 并重新绑定同一变量；旧值 2.2 仍在内存但失去引用，可能被垃圾回收器回收并复用于新值。area 的值不会改变，因为没有告诉计算机重新计算 area；若把该行复制到下面，area 才会改变。计算机只做被告知的事。\"]}",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 4752,
+    "completion_tokens": 7355,
+    "total_tokens": 12107,
+    "prompt_cache_hit_tokens": 384,
+    "prompt_cache_miss_tokens": 4368,
+    "prompt_tokens_details": {
+      "cached_tokens": 384
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 6464
+    }
+  },
+  "http_status": 200,
+  "received_utc": "2026-10-12T07:42:15.766950+00:00",
+  "model": "deepseek-flash"
+}

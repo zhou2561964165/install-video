@@ -1,0 +1,12 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-thinking-local-json-2",
+  "status": "closed",
+  "reserved_posts": 5,
+  "maximum_posts": 5,
+  "hard_ceiling": 10,
+  "parent_posts": 5,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-11-summary-content-local-repair\\results\\request-ledger.json",
+  "provenance_sha256": "503f73f297820029ad70ec8bbf7a2a6540d3c346ecc313df2000583c447ab03c",
+  "closed_receipt_sha256": "dead6785626881adf37d365c1e24473e8883f6197483a88a56da6ca657d13143"
+}

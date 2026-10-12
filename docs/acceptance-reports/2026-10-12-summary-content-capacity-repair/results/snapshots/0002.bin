@@ -1,0 +1,12 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-thinking-single-1",
+  "status": "closed",
+  "reserved_posts": 5,
+  "maximum_posts": 5,
+  "hard_ceiling": 10,
+  "parent_posts": 0,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-11-summary-content-resume\\results\\request-ledger.json",
+  "provenance_sha256": "b38ec8561cc7766fe59bd3a3e45a7e9238ffb1f96399f8d6a641cdd11c39a399",
+  "closed_receipt_sha256": "f7cb9658f3c9ec7f3b6763ff6ea20ab5b1dea60659d39d98cb3679c8e2758e55"
+}
