@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 import yt_dlp.utils
 import httpx
 import pytest
@@ -88,6 +91,7 @@ def test_ydlp_calls_use_configured_finite_retries_and_exponential_backoff(
     class FakeYDL:
         def __init__(self, opts):
             captured["opts"] = opts
+            self.opts = opts
 
         def __enter__(self):
             return self
@@ -96,13 +100,18 @@ def test_ydlp_calls_use_configured_finite_retries_and_exponential_backoff(
             return False
 
         def extract_info(self, url, download):
-            return {
+            info = {
                 "id": "x",
                 "formats": [{"format_id": "best", "url": "https://cdn.example/video.mp4"}],
             }
+            if download:
+                info["requested_downloads"] = [{
+                    "filepath": str(Path(self.opts["outtmpl"]).parent / "out.mp4"),
+                }]
+            return info
 
         def prepare_filename(self, info):
-            return "out.mp4"
+            return str(Path(self.opts["outtmpl"]).parent / "out.mp4")
 
     monkeypatch.setattr(settings, "network_retries", 4)
     monkeypatch.setattr(settings, "network_retry_backoff_seconds", 0.25)
@@ -290,10 +299,193 @@ class _FakeDownloadYDL:
         return False
 
     def extract_info(self, url, download):
-        return {"id": "x"}
+        info = {"id": "x"}
+        if download:
+            info["requested_downloads"] = [{
+                "filepath": str(Path(self.opts["outtmpl"]).parent / "out.mp4"),
+            }]
+        return info
 
     def prepare_filename(self, info):
-        return "out.mp4"
+        return str(Path(self.opts["outtmpl"]).parent / "out.mp4")
+
+
+class _ArtifactDownloadYDL:
+    def __init__(self, opts, info, prepared_filename):
+        self.opts = opts
+        self.info = info
+        self.prepared_filename = prepared_filename
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def extract_info(self, url, download):
+        assert download is True
+        return self.info
+
+    def prepare_filename(self, info):
+        return str(self.prepared_filename)
+
+
+def _download_with_artifacts(monkeypatch, tmp_path, info, prepared_filename, artifacts):
+    out_dir = tmp_path / "job"
+    out_dir.mkdir()
+    for filename, modified in artifacts:
+        path = out_dir / filename
+        path.write_bytes(b"offline test artifact")
+        os.utime(path, (modified, modified))
+
+    monkeypatch.setattr(
+        "app.services.ytdlp_service.yt_dlp.YoutubeDL",
+        lambda opts: _ArtifactDownloadYDL(opts, info, prepared_filename),
+    )
+    outtmpl = str(out_dir / "%(title)s.%(ext)s")
+    return Path(download("https://example.com/v", "best", outtmpl, lambda _: None)), out_dir
+
+
+def test_download_uses_ytdlp_final_filepath_instead_of_newer_unrelated_files(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    final_video = out_dir / "Original lesson.mp4"
+    info = {"title": "Original lesson", "ext": "mp4", "requested_downloads": [{"filepath": str(final_video)}]}
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        out_dir / "Original lesson.mp4",
+        [
+            ("Original lesson.mp4", 10),
+            ("课后总结.json", 20),
+            ("课后总结.mp4", 30),
+        ],
+    )
+
+    assert result == final_video
+
+
+def test_download_uses_final_merged_filepath_not_premerge_filename(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    merged_video = out_dir / "Original lesson.mp4"
+    info = {"title": "Original lesson", "ext": "webm", "requested_downloads": [{"filepath": str(merged_video)}]}
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        out_dir / "Original lesson.webm",
+        [
+            ("Original lesson.mp4", 10),
+            ("Original lesson.webm", 20),
+        ],
+    )
+
+    assert result == merged_video
+
+
+@pytest.mark.parametrize("terminal", ["part", "missing", "outside", "json", "subtitle"])
+def test_download_rejects_invalid_explicit_terminal_filepath(monkeypatch, tmp_path, terminal):
+    out_dir = tmp_path / "job"
+    if terminal == "part":
+        terminal_path = out_dir / "Original lesson.mp4.part"
+    elif terminal == "missing":
+        terminal_path = out_dir / "Missing final.mp4"
+    elif terminal == "outside":
+        terminal_path = tmp_path / "outside.mp4"
+        terminal_path.write_bytes(b"outside output directory")
+    elif terminal == "json":
+        terminal_path = out_dir / "Original lesson.info.json"
+    else:
+        terminal_path = out_dir / "Original lesson.en.vtt"
+
+    info = {"title": "Original lesson", "ext": "mp4", "requested_downloads": [{"filepath": str(terminal_path)}]}
+    artifacts = [("Original lesson.mp4", 10), ("课后总结.mp4", 30)]
+    if terminal == "part":
+        artifacts.append((terminal_path.name, 20))
+    elif terminal == "json":
+        artifacts.append((terminal_path.name, 20))
+    elif terminal == "subtitle":
+        artifacts.append((terminal_path.name, 20))
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            out_dir / "Original lesson.mp4",
+            artifacts,
+        )
+
+
+def test_download_rejects_ambiguous_requested_download_paths(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    info = {
+        "requested_downloads": [
+            {"filepath": str(out_dir / "part-one.mp4")},
+            {"filepath": str(out_dir / "part-two.mp4")},
+        ],
+    }
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            out_dir / "fallback.mp4",
+            [("part-one.mp4", 10), ("part-two.mp4", 20), ("课后总结.mp4", 30)],
+        )
+
+
+def test_download_uses_prepare_filename_when_final_path_metadata_is_absent(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    prepared = out_dir / "Original lesson.mp4"
+    info = {"title": "Original lesson", "ext": "mp4"}
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        prepared,
+        [("Original lesson.mp4", 10), ("课后总结.mp4", 20)],
+    )
+
+    assert result == prepared
+
+
+def test_download_uses_known_merge_extension_for_legacy_filename_fallback(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    merged_video = out_dir / "Original lesson.mp4"
+    info = {
+        "title": "Original lesson",
+        "ext": "webm",
+        "requested_formats": [{"format_id": "video"}, {"format_id": "audio"}],
+    }
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        out_dir / "Original lesson.webm",
+        [("Original lesson.mp4", 10), ("Original lesson.webm", 20)],
+    )
+
+    assert result == merged_video
+
+
+def test_download_fails_when_no_explicit_or_compatible_candidate_exists(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    info = {"title": "Original lesson", "ext": "mp4"}
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            out_dir / "Original lesson.mp4",
+            [("课后总结.mp4", 30)],
+        )
 
 
 def _run_download_capture(monkeypatch, tmp_path):

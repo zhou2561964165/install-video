@@ -78,6 +78,47 @@ def test_summary_route(monkeypatch):
     assert r.json()["key_points"] == ["一", "二", "三"]
 
 
+@pytest.mark.parametrize("source_chars", [500, 2200, 20_000])
+def test_short_and_medium_summary_still_reach_model(monkeypatch, source_chars):
+    monkeypatch.setattr("app.config.settings.summary_max_source_chars", 20_000, raising=False)
+    doc = SubtitleDocument("实际视频标题", "en", False, ["en"], "字" * source_chars)
+    monkeypatch.setattr("app.routes.insight_common.fetch_subtitle_document", lambda url, language: doc)
+    calls = []
+
+    def summarize(text, title, output_language):
+        calls.append((text, title, output_language))
+        return LLMSummaryResult("摘要", ["要点"], "mock", "mock-model")
+
+    monkeypatch.setattr("app.routes.summary.summarize_text", summarize)
+    r = client.post(
+        "/api/summary", json={"url": "https://example.com/v"}, headers=_auth_headers(),
+    )
+    assert r.status_code == 200
+    assert calls == [(doc.text, doc.title, "zh-CN")]
+    assert r.json()["title"] == doc.title
+
+
+@pytest.mark.parametrize("source_chars,limit", [(20_001, 20_000), (35_000, 20_000), (101, 100)])
+def test_long_summary_is_unavailable_before_model_call(monkeypatch, source_chars, limit):
+    monkeypatch.setattr("app.config.settings.summary_max_source_chars", limit, raising=False)
+    doc = SubtitleDocument("实际视频标题", "en", False, ["en"], "字" * source_chars)
+    monkeypatch.setattr("app.routes.insight_common.fetch_subtitle_document", lambda url, language: doc)
+    calls = []
+
+    def summarize(*args, **kwargs):
+        calls.append((args, kwargs))
+        return LLMSummaryResult("不应生成", ["不应生成"], "mock", "mock-model")
+
+    monkeypatch.setattr("app.routes.summary.summarize_text", summarize)
+    r = client.post(
+        "/api/summary", json={"url": "https://example.com/v"}, headers=_auth_headers(),
+    )
+    assert r.status_code == 422
+    assert r.json()["detail"]["error_type"] == "summary_unsupported_length"
+    assert "长文总结暂不支持" in r.json()["detail"]["error"]
+    assert calls == []
+
+
 def test_unconfigured_llm_maps_to_503(monkeypatch):
     monkeypatch.setattr("app.routes.insight_common.fetch_subtitle_document", lambda url, language: _doc())
     monkeypatch.setattr(

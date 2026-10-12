@@ -1,3 +1,5 @@
+import { DEFAULT_FORCE_SERVER } from './downloadConfig.js';
+
 export const SCENE = {
   ENTRY: 'entry',
   PARSING: 'parsing',
@@ -12,7 +14,7 @@ export const initialState = () => ({
   url: '',
   parseResult: null,     // ParseResponse | null
   selectedFormat: null,  // FormatOption | null
-  forceServer: false,
+  forceServer: DEFAULT_FORCE_SERVER,
   download: null,        // DownloadResponse | null
   job: null,             // JobResponse | null
   error: null,           // { error_type, error } | null

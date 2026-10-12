@@ -2,6 +2,14 @@ import { describe, it, expect } from 'vitest';
 import { SCENE, initialState, reduce, ERROR_SCENES } from './sceneMachine.js';
 
 describe('sceneMachine', () => {
+  it('默认按视频标题命名，每个新视频恢复该选项，允许显式选择直链', () => {
+    expect(initialState().forceServer).toBe(true);
+    const direct = reduce(initialState(), { type: 'SELECT_FORMAT', format: null, forceServer: false });
+    expect(direct.forceServer).toBe(false);
+    expect(reduce(direct, { type: 'SUBMIT_URL', url: 'https://b' }).forceServer).toBe(true);
+    expect(reduce(direct, { type: 'RESET' }).forceServer).toBe(true);
+  });
+
   it('starts at entry', () => {
     expect(initialState().scene).toBe(SCENE.ENTRY);
   });

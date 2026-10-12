@@ -12,6 +12,8 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 
 ## 当前维护文档
 
+2026-10-12使用范围更新：网页默认按视频原标题保存，保留可选来源直链；短中总结开放，长文正文超过配置上限时提示暂不支持并阻止模型调用。实现与真实验证范围见[当前交接](handoff-2026-10-10.md)，模型0POST；下列冻结报告及失败评分保持原件。
+
 | 文档 | 用途 |
 | --- | --- |
 | [用户指定完整长文复验](acceptance-reports/2026-10-12-summary-long-final-check/report.md) | closed3POST/32432tokens；累计16/153697，新完整long14点结构/6项full，精度FAIL，原件不改 |

@@ -1,6 +1,7 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SelectingScene from './SelectingScene.jsx';
 import { normalizeParse } from '../lib/videoAdapter.js';
 
@@ -19,6 +20,17 @@ const parseResult = normalizeParse({
 });
 
 describe('SelectingScene 解析展示对齐参考站', () => {
+  it('标题命名选项说明直链的文件名限制，取消后仍可显式走直链', async () => {
+    const onSelect = vi.fn();
+    const format = parseResult.formats[0];
+    render(<SelectingScene parseResult={parseResult} selectedFormat={format} forceServer onSelect={onSelect} onDownload={() => {}} />);
+    const naming = screen.getByRole('checkbox', { name: '按视频标题命名' });
+    expect(naming).toBeChecked();
+    expect(naming).toHaveAccessibleDescription('关闭后使用来源直链，文件名由来源站决定。');
+    await userEvent.click(naming);
+    expect(onSelect).toHaveBeenCalledWith(format, false);
+  });
+
   it('按参考站顺序展示：封面时长角标→标题→up主/平台/播放量→简介→格式两行', () => {
     render(<SelectingScene parseResult={parseResult} selectedFormat={null} forceServer={false} onSelect={() => {}} onDownload={() => {}} />);
     expect(screen.getByText('测试视频')).toBeInTheDocument();

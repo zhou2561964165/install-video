@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TARGET_LANGUAGES } from '../../state/insightConfig.js';
+import { SUMMARY_SUPPORT_NOTICE, TARGET_LANGUAGES } from '../../state/insightConfig.js';
 
 const loadingLabel = {
   subtitle: '正在读取字幕…',
@@ -50,9 +50,11 @@ export default function VideoInsights({ languages = [], insights }) {
           <div className="video-insights__actions">
             <button type="button" onClick={() => insights.loadSubtitle(sourceLanguage)} disabled={busy}>查看字幕</button>
             <button type="button" onClick={() => insights.translate(sourceLanguage, targetLanguage)} disabled={busy}>翻译字幕</button>
-            <button type="button" onClick={() => insights.summarize(sourceLanguage, targetLanguage)} disabled={busy}>生成总结</button>
+            <button type="button" aria-describedby="summary-support-notice" onClick={() => insights.summarize(sourceLanguage, targetLanguage)} disabled={busy}>生成总结</button>
           </div>
         </div>
+
+      <p id="summary-support-notice" className="video-insights__notice">{SUMMARY_SUPPORT_NOTICE}</p>
 
       <div className="video-insights__status" aria-live="polite" aria-atomic="true">
         {insights.loading && <p>{loadingLabel[insights.loading]}</p>}

@@ -41,9 +41,10 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
           ))}
         </div>
         <label className="badge-switch">
-          <input type="checkbox" checked={forceServer} onChange={(e) => { playSfx('select'); onSelect(selectedFormat, e.target.checked); }} />
-          强制走服务器
+          <input type="checkbox" checked={forceServer} aria-describedby="download-naming-help" onChange={(e) => { playSfx('select'); onSelect(selectedFormat, e.target.checked); }} />
+          按视频标题命名
         </label>
+        <p id="download-naming-help" className="download-naming-help">关闭后使用来源直链，文件名由来源站决定。</p>
         <button onClick={onDownload} disabled={!selectedFormat}>下载</button>
         {insights && <VideoInsights languages={parseResult.subtitles || []} insights={insights} />}
       </div>

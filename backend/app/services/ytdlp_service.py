@@ -1,10 +1,11 @@
 import os
 import re
+from pathlib import Path
 from urllib.parse import urlparse
 
 import yt_dlp
 import httpx
-from yt_dlp.utils import GeoRestrictedError, UnsupportedError
+from yt_dlp.utils import MEDIA_EXTENSIONS, GeoRestrictedError, UnsupportedError
 
 from ..config import settings
 from .subtitle_sources import InvalidVideoPartError, resolve_public_subtitles
@@ -306,11 +307,58 @@ def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
         opts["ffmpeg_location"] = settings.ffmpeg_path
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=True)
-    filename = ydl.prepare_filename(info)
-    # 合并后扩展名可能变化（如 .webm → .mp4）；取目录下最新文件作为产物
-    out_dir = os.path.dirname(outtmpl)
-    files = [os.path.join(out_dir, f) for f in os.listdir(out_dir)]
-    files = [f for f in files if os.path.isfile(f)]
-    if not files:
+        out_dir = Path(os.path.dirname(outtmpl) or ".").resolve()
+
+        def validated_output(candidate: str, *, missing_ok: bool = False) -> str | None:
+            if not isinstance(candidate, (str, os.PathLike)) or not os.fspath(candidate):
+                raise FileNotFoundError("下载产物路径无效")
+            path = Path(candidate).resolve()
+            try:
+                path.relative_to(out_dir)
+            except ValueError as exc:
+                raise FileNotFoundError("下载产物路径超出任务目录") from exc
+            if path.suffix.lower().lstrip(".") not in MEDIA_EXTENSIONS.video:
+                raise FileNotFoundError("下载产物不是视频文件")
+            if not path.is_file():
+                if missing_ok:
+                    return None
+                raise FileNotFoundError("下载产物缺失")
+            return str(path)
+
+        # yt-dlp stores the processed per-download dictionaries here. Their filepath is
+        # updated by post-processing and MoveFilesAfterDownloadPP to the terminal output.
+        final_path = info.get("filepath") if isinstance(info, dict) else None
+        requested_downloads = info.get("requested_downloads") if isinstance(info, dict) else None
+        if final_path is not None:
+            return validated_output(final_path)
+        if requested_downloads:
+            if not isinstance(requested_downloads, (list, tuple)) or len(requested_downloads) != 1:
+                raise FileNotFoundError("下载产物路径不唯一")
+            request_info = requested_downloads[0]
+            if not isinstance(request_info, dict):
+                raise FileNotFoundError("下载产物路径无效")
+            final_path = request_info.get("filepath")
+            if final_path is not None:
+                return validated_output(final_path)
+
+        # Compatibility path for older extractors that do not return a terminal filepath.
+        prepared_filename = ydl.prepare_filename(info)
+        if not prepared_filename:
+            raise FileNotFoundError("下载产物缺失")
+        candidates: list[str] = []
+        requested_formats = info.get("requested_formats") if isinstance(info, dict) else None
+        merge_ext = opts.get("merge_output_format")
+        if (
+            isinstance(requested_formats, (list, tuple))
+            and len(requested_formats) > 1
+            and isinstance(merge_ext, str)
+            and merge_ext.lower() in MEDIA_EXTENSIONS.video
+        ):
+            candidates.append(str(Path(prepared_filename).with_suffix(f".{merge_ext.lower()}")))
+        if prepared_filename not in candidates:
+            candidates.append(str(prepared_filename))
+        for candidate in candidates:
+            selected = validated_output(candidate, missing_ok=True)
+            if selected:
+                return selected
         raise FileNotFoundError("下载产物缺失")
-    return max(files, key=os.path.getmtime)

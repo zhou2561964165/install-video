@@ -4,6 +4,8 @@
 
 注册或登录后，粘贴任意平台视频链接 → 解析 → 选清晰度 → 下载到本地；有字幕的视频还可读取字幕、翻译并生成 AI 总结。依托 yt-dlp 覆盖数千站点，前端采用深色液态玻璃 + 樱花粉辉光主题（PIXI 舞台 + Live2D 白角色，含程序化待机动画），移动端可用。
 
+**当前使用范围（2026-10-12）**：网页默认勾选“按视频标题命名”，通过已有服务端下载和文件名响应保存原标题；取消后使用来源直链，文件名由来源站决定。短篇和中篇总结保留现有流程；长文总结暂不支持，字幕正文超过默认20000字符时在调用模型前返回提示。此限制可配置，不代表长文质量缺陷已修复，也不更换默认模型。
+
 ## 工程约定（每次遵守）
 
 > 以最新用户 `AGENTS.md` 和当前有效指令为准。
@@ -96,6 +98,7 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `LLM_MODEL` | 空 | 总结/翻译使用的模型；为空时返回 `llm_unconfigured` |
 | `LLM_TIMEOUT_SECONDS` | `90` | LLM 请求超时 |
 | `LLM_MAX_INPUT_CHARS` | `60000` | legacy单次字幕/合并notes及翻译内容上限；facts按完整序列化请求计算容量 |
+| `SUMMARY_MAX_SOURCE_CHARS` | `20000` | 公开总结接口的字幕正文字符上限，整数1–1000000；超过时422 `summary_unsupported_length`，不调用模型。独立于内部实验分段容量 |
 | `LLM_SUMMARY_CHUNK_CHARS` | `20000` | 总结分段大小；先清理重复内容，再分段归纳并合并 |
 | `LLM_SUMMARY_MAX_CHUNKS` | `16` | 单次总结最多的原始分段数，限制一次请求的模型调用规模 |
 | `LLM_SUMMARY_MAX_OUTPUT_TOKENS` | `4096` | 每次分段或合并总结的基础输出token预算；adaptive可随原字幕规模有限增长 |
@@ -119,7 +122,7 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `LLM_SUMMARY_MAX_EXTRA_CALLS` | `2` | 每次事实总结两类修复共享的附加模型调用上限；整数 `0–2`。网络、供应商、来源、容量和配置错误立即停止 |
 | `LLM_SUMMARY_QUALITY_CONTRACT` | `compat` | 仅facts实验：`compat`保持原核查合同；`compact`使用有限主题和内嵌四项布尔核查，由程序转换、关联引用并严格验收 |
 
-默认配置组合为 `LLM_SUMMARY_STRATEGY=legacy`、`LLM_SUMMARY_LENGTH_MODE=adaptive`。legacy先去除重复字幕行，再逐段归纳；多段以生成notes和原文边界证据分组、必要时多层合并。单段为1次POST，多段调用数取决于合并层数，不适用facts的 `n+2` 公式。adaptive在每超过8000个清理后源字符的档位增加1024输出tokens和2个可用要点，分别受输出token和主题上限约束；合并按对应源字幕字符总量计算。它保留有限点数和输入/输出容量校验，不以固定摘要或单点字数拒绝，不裁字删点。
+默认配置组合为 `LLM_SUMMARY_STRATEGY=legacy`、`LLM_SUMMARY_LENGTH_MODE=adaptive`。公开接口先执行上述正文长度检查；内部legacy仍保留字幕去重、分段归纳和分层合并，供显式实验使用。单段为1次POST，多段调用数取决于合并层数，不适用facts的 `n+2` 公式。adaptive在每超过8000个清理后源字符的档位增加1024输出tokens和2个可用要点，分别受输出token和主题上限约束；合并按对应源字幕字符总量计算。它保留有限点数和输入/输出容量校验，不以固定摘要或单点字数拒绝，不裁字删点。
 
 legacy raw先经过独立`summary_json.py`再入Pydantic/既有预算校验。合法JSON保持旧兼容；只修可证明全部完成字符串及标点结构保留的终端闭合，使用已有Pydantic核心parser，不补默认值、不吞未完成点、不裁字删点，也不额外调用模型。单边Markdown围栏拒绝；strict仍禁围栏/保留严格schema，但也可接受经无损门证明的闭合修复。该格式层不证明来源忠实或内容质量。
 
@@ -154,12 +157,12 @@ legacy显式`json_schema`走Responses接口，`strict_tool`返回本次预算数
 | `POST /api/auth/login` | `email`、`password` | 成功返回登录token |
 | `GET /api/auth/me` | Bearer token | 返回 `user` 和 `quota`，额度字段为 `date`、`limit`、`used`、`remaining`、`unlimited` |
 | `POST /api/parse` | `url` | 需登录；返回视频元数据、字幕语言与可选格式，不扣每日下载额度 |
-| `POST /api/download` | `url`、`format_id`、可选 `force_server=false` | 需登录；提交前预扣1次额度；返回直链 `url`/`headers` 或服务端 `job_id` |
+| `POST /api/download` | `url`、`format_id`、可选 `force_server=false` | 需登录；提交前预扣1次额度；返回直链 `url`/`headers` 或服务端 `job_id`。网页默认显式发送 `true` 保留原标题，API缺省值保持兼容 |
 | `GET /api/job/{job_id}` | 任务ID、Bearer token | 仅本人任务返回状态及进度；匿名/无效token为401，他人/无主/不存在任务统一404 |
 | `GET /api/file/{job_id}` | 任务ID、Bearer token | 仅本人完成且文件仍存在的任务返回文件；匿名401，他人/无主/不存在或本人未完成/文件缺失为404 |
 | `POST /api/subtitle` | `url`、可选 `language` | 需登录；返回正文、实际语言、是否自动字幕及可选语言 |
 | `POST /api/subtitle/translate` | `url`、可选 `source_language`、`target_language=zh-CN` | 需登录；读取字幕并调用LLM翻译 |
-| `POST /api/summary` | `url`、可选 `subtitle_language`、`output_language=zh-CN` | 需登录；读取字幕并返回 `summary`、`key_points`、供应商与模型标签 |
+| `POST /api/summary` | `url`、可选 `subtitle_language`、`output_language=zh-CN` | 需登录；支持范围内字幕返回 `summary`、`key_points`、供应商与模型标签；正文超过 `SUMMARY_MAX_SOURCE_CHARS` 时422提示长文暂不支持，模型零调用 |
 
 下载直链与服务端模式都计入UTC当日额度，下载失败也不自动退回；字幕读取、翻译和总结不扣这项下载额度，但都受API限流约束。指定用户豁免时 `unlimited=true`、`limit=null`、`remaining=null`，`used`仍累加。豁免按明确用户ID匹配，文件只允许 `unlimited_user_ids` 字段、唯一非空ID，不支持通配符；移除ID或无效文件后恢复原有限额度。
 

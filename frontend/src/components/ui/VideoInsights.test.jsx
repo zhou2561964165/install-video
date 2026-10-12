@@ -17,6 +17,25 @@ const baseInsights = {
 };
 
 describe('VideoInsights', () => {
+  it('明确提示长文暂不支持且短篇中篇正常使用', () => {
+    render(<VideoInsights languages={['en']} insights={baseInsights} />);
+    const notice = screen.getByText('当前支持短篇和中篇总结，长文总结暂不支持。');
+    expect(screen.getByRole('button', { name: '生成总结' })).toHaveAccessibleDescription(notice.textContent);
+    expect(screen.getByRole('button', { name: '生成总结' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: '查看字幕' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: '翻译字幕' })).toBeEnabled();
+  });
+
+  it('长文不可用原因就地展示，不展示旧总结', () => {
+    render(<VideoInsights languages={['en']} insights={{
+      ...baseInsights,
+      error: { error_type: 'summary_unsupported_length', error: '长文总结暂不支持，当前仅支持短篇和中篇总结。' },
+    }} />);
+    expect(screen.getByRole('alert')).toHaveTextContent('长文总结暂不支持');
+    expect(screen.queryByTestId('summary-result')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '查看字幕' })).toBeEnabled();
+  });
+
   it('按选择的字幕/输出语言触发三个动作', async () => {
     const insights = { ...baseInsights, loadSubtitle: vi.fn(), translate: vi.fn(), summarize: vi.fn() };
     render(<VideoInsights languages={['en', 'ja']} insights={insights} />);

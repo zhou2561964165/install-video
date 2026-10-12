@@ -15,6 +15,18 @@ def test_settings_defaults():
     assert s.db_url.startswith("sqlite:///")
 
 
+def test_public_summary_limit_default_and_environment(monkeypatch):
+    assert Settings().summary_max_source_chars == 20_000
+    monkeypatch.setenv("SUMMARY_MAX_SOURCE_CHARS", "15000")
+    assert Settings.from_env().summary_max_source_chars == 15_000
+
+
+@pytest.mark.parametrize("value", [0, -1, True, 1.5, "20000", 1_000_001])
+def test_public_summary_limit_is_a_bounded_positive_integer(value):
+    with pytest.raises(ValueError, match="summary_max_source_chars"):
+        Settings(summary_max_source_chars=value)
+
+
 def test_settings_from_env(monkeypatch):
     monkeypatch.setenv("MAX_CONCURRENT", "5")
     monkeypatch.setenv("TTL_SECONDS", "60")

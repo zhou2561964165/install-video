@@ -28,6 +28,8 @@ class Settings:
     # v3 字幕 + LLM（OpenAI-compatible；留空表示未配置，仅字幕读取可用）
     subtitle_max_bytes: int = 5 * 1024 * 1024
     subtitle_timeout_seconds: int = 30
+    # Public summary availability; independent of experimental pipeline capacity.
+    summary_max_source_chars: int = 20_000
     llm_provider: str = "openai-compatible"
     llm_base_url: str = ""
     llm_api_key: str = ""
@@ -59,6 +61,9 @@ class Settings:
     llm_summary_quality_contract: str = "compat"
 
     def __post_init__(self) -> None:
+        if (type(self.summary_max_source_chars) is not int
+                or not 1 <= self.summary_max_source_chars <= 1_000_000):
+            raise ValueError("summary_max_source_chars must be an integer between 1 and 1000000")
         if type(self.llm_summary_generation_mode) is not str or self.llm_summary_generation_mode not in {"single", "staged"}:
             raise ValueError("llm_summary_generation_mode must be single or staged")
         if type(self.llm_summary_length_mode) is not str or self.llm_summary_length_mode not in {"adaptive", "fixed"}:
@@ -140,6 +145,7 @@ class Settings:
             password_iterations=_int("PASSWORD_ITERATIONS", 100_000),
             subtitle_max_bytes=_int("SUBTITLE_MAX_BYTES", 5 * 1024 * 1024),
             subtitle_timeout_seconds=_int("SUBTITLE_TIMEOUT_SECONDS", 30),
+            summary_max_source_chars=_int("SUMMARY_MAX_SOURCE_CHARS", 20_000),
             llm_provider=_str("LLM_PROVIDER", "openai-compatible"),
             llm_base_url=_str("LLM_BASE_URL", ""),
             llm_api_key=_str("LLM_API_KEY", ""),

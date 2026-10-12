@@ -129,6 +129,7 @@ describe('App 功能闭环', () => {
     await userEvent.click(screen.getByRole('button', { name: '解析' }));
 
     expect(await screen.findByTestId('selecting-scene')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('checkbox', { name: '按视频标题命名' }));
     await userEvent.click(screen.getByRole('button', { name: '1080p MP4 · 含音频' }));
     await userEvent.click(screen.getByRole('button', { name: '下载' }));
 
@@ -150,6 +151,7 @@ describe('App 功能闭环', () => {
     await userEvent.click(screen.getByRole('button', { name: '下载' }));
 
     expect(await screen.findByTestId('done-scene', {}, { timeout: 8000 })).toBeInTheDocument();
+    expect(startDownload).toHaveBeenCalledWith('https://example.com/v', 'b', true);
     await waitFor(() => expect(saves).toEqual([{ url: 'blob:app-video', filename: 'actual.mp4' }]));
     expect(screen.getByRole('button', { name: /保存文件/ })).toBeEnabled();
     expect(screen.queryByRole('link', { name: /保存文件/ })).toBeNull();

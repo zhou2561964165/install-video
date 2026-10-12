@@ -115,7 +115,7 @@ install_video/
            formats:[{format_id, label, height, ext, resolution, filesize,
                      has_audio, vcodec, acodec, direct(是否有直链), note}]}
 
-2. POST /api/download {url, format_id, force_server:false}（Authorization: Bearer <token> 必需）
+2. POST /api/download {url, format_id, force_server:true}（网页默认；API字段缺省仍false；Bearer token必需）
    → 判定下载方式（见 §5）
    → 服务端模式建 Job（status=queued）→ 线程池执行下载
    → 返回 {mode:"direct", url, headers} 或 {mode:"server", job_id}
@@ -129,17 +129,18 @@ install_video/
 
 **鉴权边界（按当前路由）**：注册/登录无需已有 token；`/api/auth/me`、解析、下载、字幕、翻译、总结及job/file读取要求Bearer token。job/file同时按id和user_id查询；匿名/无效token为401，他人/无主/不存在统一404。本人文件仍需完成且存在，未新增即时TTL拒绝或迁移。前端退出清除token并取消当前解析/下载，换账号或迟到响应不能继续保存旧文件；没有服务端logout/refresh API。文件先完整缓存Blob再保存，不是流式直通下载。
 
-**视频智能 API**：`POST /api/subtitle {url, language?}` 返回标题、语言、自动字幕标记、可选语言和正文；`POST /api/subtitle/translate {url, source_language?, target_language:"zh-CN"}` 返回译文及 provider/model；`POST /api/summary {url, subtitle_language?, output_language:"zh-CN"}` 返回标题、源语言、`summary`、`key_points`、provider/model。公开总结响应不包含 facts、trace 或模型修复计数；这些仅在显式诊断中使用。
+**视频智能 API**：`POST /api/subtitle {url, language?}` 返回标题、语言、自动字幕标记、可选语言和正文；`POST /api/subtitle/translate {url, source_language?, target_language:"zh-CN"}` 返回译文及 provider/model；`POST /api/summary {url, subtitle_language?, output_language:"zh-CN"}` 对支持长度内字幕返回标题、源语言、`summary`、`key_points`、provider/model。读取字幕后先按 `SUMMARY_MAX_SOURCE_CHARS`（默认20000正文字符）检查，超过时422 `summary_unsupported_length` 提示长文暂不支持，未调用模型；短中继续原流程，内部候选分段/合并能力保持。公开总结响应不包含 facts、trace 或模型修复计数；这些仅在显式诊断中使用。
 
 ## 5. 下载方式：直链 + 服务端自动切换
 
 - **解析时**：返回清晰度与 `direct` 标记；公开格式列表不返回直链 URL 或请求头。下载提交时由 `get_direct_url` 重新提取该格式的 URL 和请求头。
 - **下载时**：
-  1. 直链可用 → 返回 `{mode:"direct", url, headers}`，前端直接浏览器下载；
-  2. 直链探测无结果或抛错 → 自动落到服务端下载 `{mode:"server", job_id}`；
-  3. UI 提供「强制走服务器」开关兜底。
+  1. 网页默认“按视频标题命名”显式发送 `force_server:true`，使用服务端产物；API缺省false保持兼容；
+  2. 取消命名选项且直链可用 → 返回 `{mode:"direct", url, headers}`，来源站决定浏览器保存文件名；
+  3. 直链探测无结果或抛错 → 自动落到服务端下载 `{mode:"server", job_id}`。
 - **服务端下载**：`ytdlp_service.download()` 内用 `YoutubeDL.extract_info(download=True)` 下载到任务临时目录，`progress_hooks` 更新 Job 进度；完成后由 `/api/file/{id}` 流式回传。前端轮询到 `done` 后经 `lib/saveFile.js`（`<a download>`）自动触发浏览器保存，无需手动点链接。
 - **现有直链边界**：前端用 `window.location.assign(url)`，不附服务端返回的 `headers`；浏览器侧过期、请求头限制或保存失败不会自动重新提交服务端任务，需要用户使用强制服务器选项。下载路由会在探测前扣额度，失败不自动返还。
+- **最终产物选择（2026-10-12）**：复用已有 yt-dlp（本机2026.8.19）后处理更新的 `filepath` / 唯一 `requested_downloads[0].filepath`，验证当前任务目录、存在和视频扩展名；显式路径无效即失败，不再挑目录最新文件。缺少终态字段时，仅允许 `prepare_filename` 及已确认多格式合并的配置扩展名兼容候选。适配仍位于唯一 yt-dlp 服务层，无新依赖、代理或额度变化。
 - **ffmpeg 合并阈值（`FFMPEG_MIN_HEIGHT = 1080`）**：有分辨率的清晰度档位优先使用渐进式直链；无直链时，仅对 `>= 1080p` 的档位生成音视频合并格式，低于1080p跳过该档。若最终没有候选，仍提供无指定分辨率的 `best` 兜底；阈值是格式列表策略，不是下载路由对任意format_id的硬限制。
 
 ## 6. 数据模型
