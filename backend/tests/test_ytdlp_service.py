@@ -385,6 +385,283 @@ def test_download_uses_final_merged_filepath_not_premerge_filename(monkeypatch, 
     assert result == merged_video
 
 
+@pytest.mark.parametrize("extension", ["ts", "mpeg", "asf", "m2ts"])
+def test_download_accepts_video_containers_recognized_by_yt_dlp_mime_mapping(monkeypatch, tmp_path, extension):
+    out_dir = tmp_path / "job"
+    final_video = out_dir / f"Original lesson.{extension}"
+    info = {
+        "title": "Original lesson",
+        "requested_downloads": [{"filepath": str(final_video), "vcodec": None}],
+    }
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        final_video,
+        [(final_video.name, 10)],
+    )
+
+    assert result == final_video
+
+
+def test_download_rejects_asf_when_yt_dlp_marks_selected_format_audio_only(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    audio_path = out_dir / "Original lesson.asf"
+    info = {
+        "title": "Original lesson",
+        "requested_downloads": [{"filepath": str(audio_path), "vcodec": "none"}],
+    }
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            audio_path,
+            [(audio_path.name, 10)],
+        )
+
+
+def test_download_rejects_unrecognized_container_without_video_mime(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    candidate = out_dir / "Original lesson.vob"
+    info = {
+        "title": "Original lesson",
+        "requested_downloads": [{"filepath": str(candidate), "vcodec": None}],
+    }
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            candidate,
+            [(candidate.name, 10)],
+        )
+
+
+@pytest.mark.parametrize("video_metadata", [{"vcodec": "mpeg2video"}, {"height": 480}])
+def test_download_accepts_vob_when_terminal_format_metadata_proves_video(monkeypatch, tmp_path, video_metadata):
+    out_dir = tmp_path / "job"
+    video_path = out_dir / "Original lesson.vob"
+    info = {
+        "title": "Original lesson",
+        "ext": "vob",
+        **video_metadata,
+        # yt-dlp may remove fields equal to the parent from this processed entry.
+        "requested_downloads": [{"filepath": str(video_path)}],
+    }
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        video_path,
+        [(video_path.name, 10)],
+    )
+
+    assert result == video_path
+
+
+def test_download_accepts_vob_from_top_level_final_filepath_metadata(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    video_path = out_dir / "Original lesson.vob"
+    info = {
+        "title": "Original lesson",
+        "filepath": str(video_path),
+        "ext": "vob",
+        "height": 576,
+        "vcodec": "mpeg2video",
+    }
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        video_path,
+        [(video_path.name, 10)],
+    )
+
+    assert result == video_path
+
+
+def test_download_accepts_generic_direct_vob_with_video_mime_format_id(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    video_path = out_dir / "Original lesson.vob"
+    info = {
+        "title": "Original lesson",
+        "ext": "vob",
+        "vcodec": None,
+        "height": None,
+        "extractor_key": "Generic",
+        "direct": True,
+        "format_id": "mpeg",
+        # The terminal request entry can omit unchanged parent metadata.
+        "requested_downloads": [{
+            "filepath": str(video_path),
+        }],
+    }
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        video_path,
+        [(video_path.name, 10)],
+    )
+
+    assert result == video_path
+
+
+@pytest.mark.parametrize(("extension", "format_info"), [
+    ("exe", {"ext": "exe", "vcodec": "h264", "height": 720}),
+    ("part", {"ext": "part", "vcodec": "h264", "height": 720}),
+    ("json", {"ext": "json", "vcodec": "h264", "height": 720}),
+    ("vtt", {"ext": "vtt", "vcodec": "h264", "height": 720}),
+    ("vob", {"ext": "vob"}),
+    ("vob", {"ext": "mp4", "vcodec": "h264", "height": 720}),
+    ("vob", {"ext": "vob", "vcodec": "none", "height": 480}),
+])
+def test_download_rejects_unknown_mime_without_matching_video_evidence(monkeypatch, tmp_path, extension, format_info):
+    out_dir = tmp_path / "job"
+    candidate = out_dir / f"Original lesson.{extension}"
+    info = {
+        "title": "Original lesson",
+        **format_info,
+        "requested_downloads": [{"filepath": str(candidate)}],
+    }
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            candidate,
+            [(candidate.name, 10)],
+        )
+
+
+def test_download_rejects_missing_top_level_terminal_path_without_using_other_files(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    missing_video = out_dir / "Original lesson.mp4"
+    info = {
+        "title": "Original lesson",
+        "filepath": str(missing_video),
+        "ext": "mp4",
+        "vcodec": "h264",
+        "height": 720,
+    }
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            missing_video,
+            [("unrelated.mp4", 20)],
+        )
+
+
+def test_download_does_not_use_unknown_video_metadata_for_prepare_filename_fallback(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    prepared = out_dir / "Original lesson.vob"
+    info = {"title": "Original lesson", "ext": "vob", "vcodec": "mpeg2video"}
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            prepared,
+            [(prepared.name, 10)],
+        )
+
+
+def test_download_uses_effective_requested_codec_over_parent_metadata(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    video_path = out_dir / "Original lesson.vob"
+    info = {
+        "title": "Original lesson",
+        "ext": "vob",
+        "vcodec": "none",
+        "requested_downloads": [{"filepath": str(video_path), "vcodec": "mpeg2video"}],
+    }
+
+    result, _ = _download_with_artifacts(
+        monkeypatch,
+        tmp_path,
+        info,
+        video_path,
+        [(video_path.name, 10)],
+    )
+
+    assert result == video_path
+
+
+def test_download_rejects_effective_requested_none_codec_over_parent_video_metadata(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    video_path = out_dir / "Original lesson.vob"
+    info = {
+        "title": "Original lesson",
+        "ext": "vob",
+        "vcodec": "mpeg2video",
+        "height": 480,
+        "requested_downloads": [{"filepath": str(video_path), "vcodec": "none"}],
+    }
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            video_path,
+            [(video_path.name, 10)],
+        )
+
+
+def test_download_does_not_treat_infinite_height_as_video_evidence(monkeypatch, tmp_path):
+    out_dir = tmp_path / "job"
+    candidate = out_dir / "Original lesson.vob"
+    info = {
+        "title": "Original lesson",
+        "ext": "vob",
+        "height": float("inf"),
+        "requested_downloads": [{"filepath": str(candidate)}],
+    }
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            candidate,
+            [(candidate.name, 10)],
+        )
+
+
+@pytest.mark.parametrize("extension", ["tmp", "temp", "ytdl", "lrc"])
+def test_download_rejects_mime_unknown_temp_and_subtitle_extensions_with_video_metadata(monkeypatch, tmp_path, extension):
+    out_dir = tmp_path / "job"
+    candidate = out_dir / f"Original lesson.{extension}"
+    info = {
+        "title": "Original lesson",
+        "ext": extension,
+        "vcodec": "h264",
+        "height": 720,
+        "requested_downloads": [{"filepath": str(candidate)}],
+    }
+
+    with pytest.raises(FileNotFoundError):
+        _download_with_artifacts(
+            monkeypatch,
+            tmp_path,
+            info,
+            candidate,
+            [(candidate.name, 10)],
+        )
+
+
 @pytest.mark.parametrize("terminal", ["part", "missing", "outside", "json", "subtitle"])
 def test_download_rejects_invalid_explicit_terminal_filepath(monkeypatch, tmp_path, terminal):
     out_dir = tmp_path / "job"

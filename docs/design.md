@@ -141,6 +141,8 @@ install_video/
 - **服务端下载**：`ytdlp_service.download()` 内用 `YoutubeDL.extract_info(download=True)` 下载到任务临时目录，`progress_hooks` 更新 Job 进度；完成后由 `/api/file/{id}` 流式回传。前端轮询到 `done` 后经 `lib/saveFile.js`（`<a download>`）自动触发浏览器保存，无需手动点链接。
 - **现有直链边界**：前端用 `window.location.assign(url)`，不附服务端返回的 `headers`；浏览器侧过期、请求头限制或保存失败不会自动重新提交服务端任务，需要用户使用强制服务器选项。下载路由会在探测前扣额度，失败不自动返还。
 - **最终产物选择（2026-10-12）**：复用已有 yt-dlp（本机2026.8.19）后处理更新的 `filepath` / 唯一 `requested_downloads[0].filepath`，验证当前任务目录、存在和视频扩展名；显式路径无效即失败，不再挑目录最新文件。缺少终态字段时，仅允许 `prepare_filename` 及已确认多格式合并的配置扩展名兼容候选。适配仍位于唯一 yt-dlp 服务层，无新依赖、代理或额度变化。
+
+并行复审后的容器兼容补修：视频类型采用 yt-dlp 公共 `ext2mimetype` 与既有类别，恢复 TS/MPEG/ASF/M2TS；MIME未知时仅对绑定终态路径合并父级及唯一下载项元数据，要求后缀匹配且有视频codec/有限正高度，或已确认的Generic直接视频Content-Type信号。公共 `mimetype2ext` 用于后者，覆盖Generic `.vob` 视频且不新增ffprobe请求。显式仅音频、已知非视频MIME、公共字幕/图片/清单/故事板类别和临时后缀拒绝；prepare_filename回退不使用未知类型兜底。缺少可信视频元数据的未知类型仍拒绝，不保证全部容器或探测文件字节。
 - **ffmpeg 合并阈值（`FFMPEG_MIN_HEIGHT = 1080`）**：有分辨率的清晰度档位优先使用渐进式直链；无直链时，仅对 `>= 1080p` 的档位生成音视频合并格式，低于1080p跳过该档。若最终没有候选，仍提供无指定分辨率的 `best` 兜底；阈值是格式列表策略，不是下载路由对任意format_id的硬限制。
 
 ## 6. 数据模型

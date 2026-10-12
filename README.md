@@ -56,7 +56,9 @@ uv sync
 
 # 启动（默认 http://127.0.0.1:8000）
 Set-Location backend
-uv run uvicorn app.main:app --reload --port 8000
+# 已配置 backend/.env 时载入该文件，供字幕翻译及短/中篇总结使用
+uv run uvicorn app.main:app --reload --port 8000 --env-file .env
+# 仅用下载/字幕且没有 .env 时，可省略 --env-file .env
 ```
 
 ### 2. 前端
@@ -105,7 +107,7 @@ npm run dev        # http://localhost:5173，/api 由 Vite 代理转发到 8000
 | `LLM_SUMMARY_STRATEGY` | `legacy` | `legacy`使用字幕分段归纳/合并；`facts`显式事实实验；`auto`先做facts预检，符合条件才选facts |
 | `LLM_SUMMARY_LENGTH_MODE` | `adaptive` | 字幕总结按原内容规模有限拓展，不设固定摘要/要点字数门槛；`fixed`保留旧实验合同 |
 | `LLM_SUMMARY_OUTPUT_TOKEN_CEILING` | `max(8192,基础预算)` | 未设置时保留旧高基础预算；显式值须覆盖基础预算，可配置至65536 |
-| `LLM_SUMMARY_POINT_CEILING` | `14` | 长文可用主题数量上限，配置7–32；短文使用更少，不要求填满 |
+| `LLM_SUMMARY_POINT_CEILING` | `14` | 内部总结主题数量上限，配置7–32；较大字幕分段能力用于显式实验，公开入口另有正文上限；短文使用更少，不要求填满 |
 | `LLM_SUMMARY_RESPONSE_FORMAT` | `auto` | `auto` / `text` / `json_object` / `json_schema` / `strict_tool`；auto对DeepSeek使用JSON模式，对其他供应商不附加输出格式参数；后两项仅legacy显式实验 |
 | `LLM_SUMMARY_THINKING_MODE` | `auto` | `auto` / `enabled` / `disabled`；auto仅DeepSeek摘要关闭推理，避免推理消耗正文预算；明确值由操作者确保供应商支持 |
 | `LLM_SUMMARY_MAX_POINT_CHARS` | `240` | 仅fixed及事实合同实验使用；默认adaptive无单点固定字数硬拒，不裁切 |
@@ -168,7 +170,7 @@ legacy显式`json_schema`走Responses接口，`strict_tool`返回本次预算数
 
 常见错误采用HTTP `detail` 对象承载 `error`，服务错误通常还含 `error_type`：缺失/失效登录token为401 `login_required`；下载额度或IP限流为429 `quota`；无效视频URL为400 `invalid_url`；平台提取及字幕读取失败为422；LLM未配置为503 `llm_unconfigured`，模型请求、响应及输入容量等错误为502。Pydantic请求字段校验也可能返回422，但其 `detail` 是字段错误列表。异步下载失败记录在任务响应的 `error_type` / `error`，不是创建任务接口同步报错。
 
-已实现账号登录、每日下载额度、本人任务/文件访问隔离、服务端线程池任务、产物懒清理、字幕读取/翻译、有限字幕分段总结，以及显式facts实验。前端服务端文件携Bearer获取Blob后保存，取消/退出/换账号阻止过期保存；Blob缓存完整文件，仍有大文件内存边界。当前未实现定时TTL清理、下载失败额度退回、分布式限流/队列或重启后自动恢复下载任务；视频无字幕时也没有音轨转写路径。总结的已知质量缺陷见当前交接。
+已实现账号登录、每日下载额度、本人任务/文件访问隔离、服务端线程池任务、产物懒清理、字幕读取/翻译、正文上限内的短中篇总结，以及内部较大字幕分段/合并和显式facts实验。公开长文总结暂不支持。前端服务端文件携Bearer获取Blob后保存，取消/退出/换账号阻止过期保存；Blob缓存完整文件，仍有大文件内存边界。当前未实现定时TTL清理、下载失败额度退回、分布式限流/队列或重启后自动恢复下载任务；视频无字幕时也没有音轨转写路径。总结的已知质量缺陷见当前交接。
 
 ## 验证
 

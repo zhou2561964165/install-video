@@ -68,7 +68,7 @@ UI先用 `ui-ux-pro-max` + `design-system`，skill优先于旧计划；样式走
 | [生成合同复审](acceptance-reports/2026-10-07-grounded-summary-final/contract-review.md) | 连续三轮不同结构边界失败、有限生成结构与全局主题规划建议，未实施 |
 | [剩余工作](remaining-work-2026-10-07.md) | 本轮开始前的质量缺口、完成条件和后续候选范围 |
 | [refined 交接](handoff-2026-10-07-refined.md) | 前轮 12/13 实测、5 完整／3 部分／长文 6 未评及离线候选修订 |
-| [handoff.md](handoff.md) | 当前状态、用户决策、子agent停用、启动、验证、边界与剩余事项 |
+| [handoff.md](handoff.md) | 历史交接：当时状态和用户决策；当前支持范围、并行工作与启动以[当前交接](handoff-2026-10-10.md)为准 |
 | [v3实现计划](superpowers/plans/2026-10-03-v3-video-intelligence.md) | 当前v3 API、分层和验证范围 |
 | [扩展路线](superpowers/plans/2026-09-21-extension-plan.md) | v2/v3已实现状态及后续候选，不作为自动执行授权 |
 | [参考实现分析](reference-summary-implementation.md) | 参考项目观察、独立实现选择与已测限制 |

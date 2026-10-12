@@ -1,3 +1,4 @@
+import math
 import os
 import re
 from pathlib import Path
@@ -5,7 +6,7 @@ from urllib.parse import urlparse
 
 import yt_dlp
 import httpx
-from yt_dlp.utils import MEDIA_EXTENSIONS, GeoRestrictedError, UnsupportedError
+from yt_dlp.utils import MEDIA_EXTENSIONS, GeoRestrictedError, UnsupportedError, ext2mimetype, mimetype2ext
 
 from ..config import settings
 from .subtitle_sources import InvalidVideoPartError, resolve_public_subtitles
@@ -309,7 +310,13 @@ def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
         info = ydl.extract_info(url, download=True)
         out_dir = Path(os.path.dirname(outtmpl) or ".").resolve()
 
-        def validated_output(candidate: str, *, missing_ok: bool = False) -> str | None:
+        def validated_output(
+            candidate: str,
+            *,
+            missing_ok: bool = False,
+            format_metadata: dict | None = None,
+            allow_unknown_mime_video: bool = False,
+        ) -> str | None:
             if not isinstance(candidate, (str, os.PathLike)) or not os.fspath(candidate):
                 raise FileNotFoundError("下载产物路径无效")
             path = Path(candidate).resolve()
@@ -317,8 +324,53 @@ def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
                 path.relative_to(out_dir)
             except ValueError as exc:
                 raise FileNotFoundError("下载产物路径超出任务目录") from exc
-            if path.suffix.lower().lstrip(".") not in MEDIA_EXTENSIONS.video:
+            extension = path.suffix.lower().lstrip(".")
+            mime_type = ext2mimetype(extension)
+            is_video_container = extension in MEDIA_EXTENSIONS.video or (
+                isinstance(mime_type, str) and mime_type.lower().startswith("video/")
+            )
+            metadata = format_metadata or {}
+            video_codec = metadata.get("vcodec")
+            if isinstance(video_codec, str) and video_codec.strip().lower() == "none":
                 raise FileNotFoundError("下载产物不是视频文件")
+            if not is_video_container:
+                is_sidecar_extension = (
+                    extension in {"part", "ytdl", "tmp", "temp"}
+                    or extension in MEDIA_EXTENSIONS.subtitles
+                    or extension in MEDIA_EXTENSIONS.thumbnails
+                    or extension in MEDIA_EXTENSIONS.manifests
+                    or extension in MEDIA_EXTENSIONS.storyboards
+                )
+                if is_sidecar_extension or not allow_unknown_mime_video:
+                    raise FileNotFoundError("下载产物不是视频文件")
+                if mime_type and mime_type.lower() not in {"application/octet-stream", "binary/octet-stream"}:
+                    raise FileNotFoundError("下载产物不是视频文件")
+                selected_ext = metadata.get("ext")
+                if not isinstance(selected_ext, str) or selected_ext.strip().lower().lstrip(".") != extension:
+                    raise FileNotFoundError("下载产物扩展名与所选格式不符")
+
+                height = metadata.get("height")
+                has_video_metadata = (
+                    isinstance(video_codec, str) and bool(video_codec.strip())
+                    or isinstance(height, (int, float))
+                    and not isinstance(height, bool)
+                    and math.isfinite(height)
+                    and height > 0
+                )
+                if not has_video_metadata:
+                    generic_direct = (
+                        metadata.get("extractor_key") == "Generic"
+                        and metadata.get("direct") is True
+                        and isinstance(metadata.get("format_id"), str)
+                    )
+                    if generic_direct:
+                        inferred_ext = mimetype2ext(f"video/{metadata['format_id']}")
+                        inferred_mime = ext2mimetype(inferred_ext) if inferred_ext else None
+                        has_video_metadata = inferred_ext in MEDIA_EXTENSIONS.video or (
+                            isinstance(inferred_mime, str) and inferred_mime.lower().startswith("video/")
+                        )
+                if not has_video_metadata:
+                    raise FileNotFoundError("下载产物缺少视频格式元数据")
             if not path.is_file():
                 if missing_ok:
                     return None
@@ -329,17 +381,31 @@ def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
         # updated by post-processing and MoveFilesAfterDownloadPP to the terminal output.
         final_path = info.get("filepath") if isinstance(info, dict) else None
         requested_downloads = info.get("requested_downloads") if isinstance(info, dict) else None
+        format_metadata = info if isinstance(info, dict) else {}
+        if isinstance(requested_downloads, (list, tuple)) and len(requested_downloads) == 1:
+            request_info = requested_downloads[0]
+            if isinstance(request_info, dict):
+                format_metadata = {**format_metadata, **request_info}
         if final_path is not None:
-            return validated_output(final_path)
+            return validated_output(
+                final_path,
+                format_metadata=format_metadata,
+                allow_unknown_mime_video=True,
+            )
         if requested_downloads:
             if not isinstance(requested_downloads, (list, tuple)) or len(requested_downloads) != 1:
                 raise FileNotFoundError("下载产物路径不唯一")
             request_info = requested_downloads[0]
             if not isinstance(request_info, dict):
                 raise FileNotFoundError("下载产物路径无效")
+            format_metadata = {**format_metadata, **request_info}
             final_path = request_info.get("filepath")
             if final_path is not None:
-                return validated_output(final_path)
+                return validated_output(
+                    final_path,
+                    format_metadata=format_metadata,
+                    allow_unknown_mime_video=True,
+                )
 
         # Compatibility path for older extractors that do not return a terminal filepath.
         prepared_filename = ydl.prepare_filename(info)
@@ -358,7 +424,7 @@ def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
         if prepared_filename not in candidates:
             candidates.append(str(prepared_filename))
         for candidate in candidates:
-            selected = validated_output(candidate, missing_ok=True)
+            selected = validated_output(candidate, missing_ok=True, format_metadata=format_metadata)
             if selected:
                 return selected
         raise FileNotFoundError("下载产物缺失")
