@@ -111,6 +111,98 @@ describe('App 功能闭环', () => {
     expect(screen.getByRole('button', { name: '下载', exact: true })).toBeEnabled();
   });
 
+  it('解析中返回取消请求，保留可编辑链接并忽略迟到结果', async () => {
+    let resolveParse;
+    parseVideo.mockImplementation(() => new Promise((resolve) => { resolveParse = resolve; }));
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/back');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    const signal = fetch.mock.calls[0][1].signal;
+    await userEvent.click(screen.getByRole('button', { name: '返回输入' }));
+    expect(signal.aborted).toBe(true);
+    expect(screen.getByLabelText('视频链接')).toHaveValue('https://example.com/back');
+    expect(screen.getByLabelText('视频链接')).toHaveFocus();
+    await act(async () => resolveParse(parseFixture));
+    expect(screen.queryByTestId('selecting-scene')).toBeNull();
+  });
+
+  it('下载与完成保留同屏内容页签，返回中断迟到保存', async () => {
+    let resolveFile;
+    parseVideo.mockResolvedValue(parseFixture);
+    startDownload.mockResolvedValue({ mode: 'server', job_id: 'j1' });
+    getJob.mockResolvedValue({ id: 'j1', status: 'done' });
+    getFile.mockImplementation(() => new Promise((resolve) => { resolveFile = resolve; }));
+    render(<App />);
+    await beginServer();
+    expect(screen.getByRole('tablist', { name: '视频内容' })).toBeInTheDocument();
+    await screen.findByTestId('done-scene', {}, { timeout: 5000 });
+    expect(screen.getByRole('tab', { name: '总结摘要' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'T' })).toBeInTheDocument();
+    const signal = getFile.mock.calls[0][1];
+    await userEvent.click(screen.getByRole('button', { name: '返回输入' }));
+    expect(signal.aborted).toBe(true);
+    await act(async () => resolveFile(fileFixture()));
+    expect(saves).toHaveLength(0);
+    expect(screen.getByTestId('entry-scene')).toBeInTheDocument();
+  }, 10000);
+
+  it('下载发起失败保留视频信息与内容面板并提供返回', async () => {
+    parseVideo.mockResolvedValue(parseFixture);
+    startDownload.mockRejectedValue({ error_type: 'network', error: '下载连接失败' });
+    render(<App />);
+    await beginServer();
+    await screen.findByTestId('error-scene');
+    expect(screen.getByRole('heading', { name: 'T' })).toBeInTheDocument();
+    expect(screen.getByRole('tablist', { name: '视频内容' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '返回输入' }));
+    expect(screen.getByTestId('entry-scene')).toBeInTheDocument();
+  });
+
+  it('返回输入使迟到下载创建响应失效，不启动轮询或直链跳转', async () => {
+    let resolveDownload;
+    parseVideo.mockResolvedValue(parseFixture);
+    startDownload.mockImplementation(() => new Promise((resolve) => { resolveDownload = resolve; }));
+    render(<App />);
+    await beginServer();
+    const signal = fetch.mock.calls.find(([path]) => path === '/api/download')[1].signal;
+    await userEvent.click(screen.getByRole('button', { name: '返回输入' }));
+    expect(signal.aborted).toBe(true);
+    await act(async () => resolveDownload({ mode: 'server', job_id: 'late-job' }));
+    expect(getJob).not.toHaveBeenCalled();
+    expect(screen.getByTestId('entry-scene')).toBeInTheDocument();
+    expect(screen.queryByTestId('downloading-scene')).toBeNull();
+  });
+
+  it('解析完成默认选中首个有效格式，但不自动下载或生成总结', async () => {
+    parseVideo.mockResolvedValue(parseFixture);
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/default-format');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    expect(await screen.findByRole('button', { name: '1080p MP4 · 含音频' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: '下载', exact: true })).toBeEnabled();
+    expect(startDownload).not.toHaveBeenCalled();
+    expect(summarizeVideo).not.toHaveBeenCalled();
+  });
+
+  it.each(['字幕文本', '字幕翻译'])('左卡 AI 总结从%s使用当前语种，切回摘要并仅发起一次显式请求', async (tabName) => {
+    parseVideo.mockResolvedValue({ ...parseFixture, subtitles: ['en', 'ja'] });
+    summarizeVideo.mockResolvedValue({ summary: '按选定语言生成', key_points: ['要点'], provider: 'p', model: 'm' });
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/left-summary');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    await screen.findByTestId('selecting-scene');
+    await userEvent.click(screen.getByRole('tab', { name: '字幕翻译' }));
+    await userEvent.selectOptions(screen.getByLabelText('字幕语言'), 'ja');
+    await userEvent.selectOptions(screen.getByLabelText('输出语言'), 'en');
+    await userEvent.click(screen.getByRole('tab', { name: tabName }));
+    await userEvent.click(screen.getByRole('button', { name: 'AI 总结' }));
+    expect(screen.getByRole('tab', { name: '总结摘要' })).toHaveAttribute('aria-selected', 'true');
+    expect(await screen.findByTestId('summary-result')).toHaveTextContent('按选定语言生成');
+    expect(summarizeVideo).toHaveBeenCalledTimes(1);
+    expect(summarizeVideo).toHaveBeenCalledWith('https://example.com/left-summary', 'ja', 'en', expect.any(AbortSignal));
+    expect(startDownload).not.toHaveBeenCalled();
+  });
+
   it('粘贴 → 解析 → 选清晰度 → 直链下载', async () => {
     // jsdom has no navigation; isolate only this browser side effect.
     const assign = vi.fn();

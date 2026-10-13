@@ -269,3 +269,76 @@ def test_oversized_bilibili_part_does_not_fall_back_to_default_video(monkeypatch
         ytdlp_service.extract_subtitle_tracks(VIDEO + "?p=" + "9" * 4301)
     assert ytdlp_service.classify_error(error.value) == "invalid_url"
     assert requested == []
+
+
+@pytest.mark.parametrize("prefix", ["http://", "https://", "//"])
+def test_production_ai_caption_url_upgrades_https_and_preserves_signature(prefix):
+    from app.services.bilibili_subtitle_source import _caption_url
+
+    path = "aisubtitle.hdslb.com/bfs/ai_subtitle/prod/0123456789abcdef_test-caption"
+    assert _caption_url(prefix + path + "?auth_key=synthetic%2Fsignature&expires=123#fragment") == (
+        "https://" + path + "?auth_key=synthetic%2Fsignature&expires=123"
+    )
+
+
+def test_sample_video_empty_query_fetches_production_ai_subtitle_without_generic_extraction(monkeypatch):
+    real_client = httpx.Client
+    video = "https://www.bilibili.com/video/BV1gPH96dEUC/?"
+    caption = "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/test-caption?auth_key=synthetic"
+    requested = []
+
+    def handler(request):
+        requested.append(request)
+        if request.url.path == "/x/web-interface/view":
+            return httpx.Response(200, json={"code": 0, "data": {
+                "bvid": "BV1gPH96dEUC", "aid": 123, "title": "Sample",
+                "pages": [{"page": 1, "cid": 456}],
+            }})
+        if request.url.path == "/x/v2/dm/view":
+            return httpx.Response(200, json={"code": 0, "data": {"subtitle": {"subtitles": [
+                {"lan": "ai-zh", "type": 1, "subtitle_url": caption.replace("https://", "http://")},
+            ]}}})
+        if str(request.url) == caption:
+            return httpx.Response(200, json={"body": [{"from": 0, "to": 1, "content": "公开 AI 字幕"}]})
+        raise AssertionError("Unexpected subtitle request")
+
+    monkeypatch.setattr(httpx, "Client", lambda **kwargs: real_client(transport=httpx.MockTransport(handler), **kwargs))
+    monkeypatch.setattr(ytdlp_service, "extract_info", lambda url: (_ for _ in ()).throw(AssertionError("Generic extraction must not run")))
+    document = subtitle_service.fetch_subtitle_document(video)
+    assert (document.title, document.language, document.is_auto, document.text) == (
+        "Sample", "zh", True, "公开 AI 字幕",
+    )
+    assert len(requested) == 3
+    assert requested[0].url.params["bvid"] == "BV1gPH96dEUC"
+    assert requested[1].url.params["oid"] == "456"
+
+
+@pytest.mark.parametrize("url", [
+    "https://evil.example/bfs/ai_subtitle/prod/caption",
+    "https://aisubtitle.hdslb.com.evil.example/bfs/ai_subtitle/prod/caption",
+    "https://i0.hdslb.com/bfs/ai_subtitle/prod/caption",
+    "https://aisubtitle.hdslb.com/bfs/ai_subtitle/staging/caption",
+    "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/",
+    "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/../private",
+    "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/%2e%2e",
+    "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/caption/other",
+    "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/caption%2Fother",
+    "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/caption.json",
+    "https://user:password@aisubtitle.hdslb.com/bfs/ai_subtitle/prod/caption",
+    "https://aisubtitle.hdslb.com:8080/bfs/ai_subtitle/prod/caption",
+    "file://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/caption",
+])
+def test_production_ai_caption_support_keeps_trusted_host_and_path_boundary(url):
+    from app.services.bilibili_subtitle_source import _caption_url
+
+    with pytest.raises(ValueError, match="字幕来源地址无效"):
+        _caption_url(url)
+
+
+def test_production_ai_caption_rejects_semicolon_parameters():
+    from app.services.bilibili_subtitle_source import _caption_url
+
+    with pytest.raises(ValueError, match="字幕来源地址无效"):
+        _caption_url(
+            "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/caption;extra?auth_key=synthetic"
+        )

@@ -1,87 +1,117 @@
-import React, { useEffect, useState } from 'react';
-import { SUMMARY_SUPPORT_NOTICE, TARGET_LANGUAGES } from '../../state/insightConfig.js';
+import React, { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
+import { INSIGHT_TABS, SUMMARY_SUPPORT_NOTICE, TARGET_LANGUAGES } from '../../state/insightConfig.js';
+import { saveFile } from '../../lib/saveFile.js';
+import VideoIcon from './VideoIcon.jsx';
 
-const loadingLabel = {
-  subtitle: '正在读取字幕…',
-  translation: '正在翻译字幕…',
-  summary: '正在生成总结…',
+const loadingLabel = { subtitle: '正在读取字幕…', translation: '正在翻译字幕…', summary: '正在生成总结…' };
+const sourceLink = (value) => {
+  try { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) ? url.href : null; } catch { return null; }
 };
 
-export default function VideoInsights({ languages = [], insights }) {
+const VideoInsights = forwardRef(function VideoInsights({ languages = [], insights, title = '视频内容', sourceUrl }, ref) {
+  const id = useId();
+  const tabRefs = useRef([]);
+  const [tab, setTab] = useState(insights.active || 'summary');
+  const [errorTab, setErrorTab] = useState(insights.loading || insights.active || 'summary');
   const [sourceLanguage, setSourceLanguage] = useState(languages[0] || '');
   const [targetLanguage, setTargetLanguage] = useState(TARGET_LANGUAGES[0].value);
+  const [localStatus, setLocalStatus] = useState('');
 
   useEffect(() => {
     setSourceLanguage((current) => (current && languages.includes(current) ? current : languages[0] || ''));
   }, [languages]);
-
-  const available = languages.length > 0;
   const busy = Boolean(insights.loading);
+  const result = insights[tab];
+  const config = INSIGHT_TABS.find((item) => item.key === tab);
+  const text = !result ? '' : tab === 'summary'
+    ? [result.summary, ...(result.key_points || []).map((point) => `• ${point}`)].join('\n\n') : result.text;
+  const href = sourceLink(sourceUrl);
+
+  const chooseTab = (key) => { setTab(key); setLocalStatus(''); };
+  const handleKeys = (event, index) => {
+    let next;
+    if (event.key === 'ArrowRight') next = (index + 1) % INSIGHT_TABS.length;
+    if (event.key === 'ArrowLeft') next = (index + INSIGHT_TABS.length - 1) % INSIGHT_TABS.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = INSIGHT_TABS.length - 1;
+    if (next === undefined) return;
+    event.preventDefault();
+    chooseTab(INSIGHT_TABS[next].key);
+    tabRefs.current[next]?.focus();
+  };
+  const run = () => {
+    setErrorTab(tab);
+    setLocalStatus('');
+    if (tab === 'subtitle') insights.loadSubtitle(sourceLanguage);
+    if (tab === 'translation') insights.translate(sourceLanguage, targetLanguage);
+    if (tab === 'summary') insights.summarize(sourceLanguage, targetLanguage);
+  };
+  // 左侧显式总结入口只暴露一个动作，语种及页签仍由内容组件管理。
+  useImperativeHandle(ref, () => ({
+    summarizeCurrent() {
+      if (busy) return;
+      chooseTab('summary');
+      setErrorTab('summary');
+      insights.summarize(sourceLanguage, targetLanguage);
+    },
+  }), [busy, insights.summarize, sourceLanguage, targetLanguage]);
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(text); setLocalStatus('已复制内容'); }
+    catch { setLocalStatus('复制失败，可选择文本后手动复制。'); }
+  };
+  const exportText = () => {
+    let url;
+    try {
+      url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }));
+      saveFile(url, `${title.replace(/[\\/:*?"<>|\u0000-\u001f]/g, '_').slice(0, 100) || '视频内容'}-${config.label}.txt`);
+      setLocalStatus('已导出 TXT');
+    } catch { setLocalStatus('导出失败，请重试。'); }
+    finally { if (url) setTimeout(() => URL.revokeObjectURL(url), 0); }
+  };
 
   return (
-    <section className="video-insights" aria-labelledby="video-insights-title" aria-busy={busy}>
-      <div className="video-insights__heading">
-        <div>
-          <p className="video-insights__eyebrow">读懂视频内容</p>
-          <h3 id="video-insights-title">视频智能</h3>
-        </div>
-        <span className="video-insights__badge">AI</span>
+    <section className="video-insights" aria-label="视频内容工作区">
+      <div className="video-insights__tabs" role="tablist" aria-label="视频内容">
+        {INSIGHT_TABS.map((item, index) => <button key={item.key} type="button" role="tab"
+          id={`${id}-tab-${item.key}`} aria-controls={`${id}-panel-${item.key}`} aria-selected={tab === item.key}
+          tabIndex={tab === item.key ? 0 : -1} ref={(node) => { tabRefs.current[index] = node; }}
+          onKeyDown={(event) => handleKeys(event, index)} onClick={() => chooseTab(item.key)}>
+          <VideoIcon name={item.key} />{item.label}
+        </button>)}
       </div>
-
-      {!available && (
-        <p className="video-insights__empty">尚未检测到字幕。可以尝试读取内容；无可用字幕时会显示原因。</p>
-      )}
-        <div className="video-insights__controls">
-          <label>
-            <span>字幕语言</span>
-            <select value={sourceLanguage} onChange={(event) => setSourceLanguage(event.target.value)}>
-              <option value="">自动选择</option>
-              {languages.map((language) => <option key={language} value={language}>{language}</option>)}
-            </select>
-          </label>
-          <label>
-            <span>输出语言</span>
-            <select value={targetLanguage} onChange={(event) => setTargetLanguage(event.target.value)}>
-              {TARGET_LANGUAGES.map((language) => (
-                <option key={language.value} value={language.value}>{language.label}</option>
-              ))}
-            </select>
-          </label>
-          <div className="video-insights__actions">
-            <button type="button" onClick={() => insights.loadSubtitle(sourceLanguage)} disabled={busy}>查看字幕</button>
-            <button type="button" onClick={() => insights.translate(sourceLanguage, targetLanguage)} disabled={busy}>翻译字幕</button>
-            <button type="button" aria-describedby="summary-support-notice" onClick={() => insights.summarize(sourceLanguage, targetLanguage)} disabled={busy}>生成总结</button>
+      {INSIGHT_TABS.map((item) => <div key={item.key} role="tabpanel" id={`${id}-panel-${item.key}`}
+        aria-labelledby={`${id}-tab-${item.key}`} hidden={tab !== item.key} tabIndex={0}
+        className="video-insights__panel" aria-busy={insights.loading === item.key}>
+        {tab === item.key && <>
+          <div className="video-insights__controls">
+            <label><span>字幕语言</span><select value={sourceLanguage} onChange={(event) => setSourceLanguage(event.target.value)}>
+              <option value="">自动选择</option>{languages.map((language) => <option key={language} value={language}>{language}</option>)}
+            </select></label>
+            {tab !== 'subtitle' && <label><span>输出语言</span><select value={targetLanguage} onChange={(event) => setTargetLanguage(event.target.value)}>
+              {TARGET_LANGUAGES.map((language) => <option key={language.value} value={language.value}>{language.label}</option>)}
+            </select></label>}
+            <button type="button" className="video-insights__generate" aria-describedby={tab === 'summary' ? `${id}-notice` : undefined} onClick={run} disabled={busy}>{config.action}</button>
           </div>
-        </div>
-
-      <p id="summary-support-notice" className="video-insights__notice">{SUMMARY_SUPPORT_NOTICE}</p>
-
-      <div className="video-insights__status" aria-live="polite" aria-atomic="true">
-        {insights.loading && <p>{loadingLabel[insights.loading]}</p>}
-        {insights.error && <p className="video-insights__error" role="alert">{insights.error.error || '处理失败，请重试'}</p>}
-      </div>
-
-      {insights.active === 'summary' && insights.summary && (
-        <article className="video-insights__result" data-testid="summary-result">
-          <h4>内容总结</h4>
-          <p>{insights.summary.summary}</p>
-          <ul>{insights.summary.key_points.map((point, index) => <li key={`${index}-${point}`}>{point}</li>)}</ul>
-          <small>{insights.summary.provider} · {insights.summary.model}</small>
-        </article>
-      )}
-      {insights.active === 'translation' && insights.translation && (
-        <article className="video-insights__result" data-testid="translation-result">
-          <h4>字幕翻译 · {insights.translation.target_language}</h4>
-          <pre>{insights.translation.text}</pre>
-          <small>{insights.translation.provider} · {insights.translation.model}</small>
-        </article>
-      )}
-      {insights.active === 'subtitle' && insights.subtitle && (
-        <article className="video-insights__result" data-testid="subtitle-result">
-          <h4>{insights.subtitle.language} 字幕{insights.subtitle.is_auto ? ' · 自动生成' : ''}</h4>
-          <pre>{insights.subtitle.text}</pre>
-        </article>
-      )}
+          {tab === 'summary' && <p id={`${id}-notice`} className="video-insights__notice">{SUMMARY_SUPPORT_NOTICE}</p>}
+          {!languages.length && <p className="video-insights__empty">尚未检测到字幕。可以尝试读取内容；无可用字幕时会显示原因。</p>}
+          <div className="video-insights__status" aria-live="polite" aria-atomic="true">
+            {insights.loading === tab && <p>{loadingLabel[tab]}</p>}
+            {insights.error && errorTab === tab && <p className="video-insights__error" role="alert">{insights.error.error || '处理失败，请重试'}</p>}
+          </div>
+          {result ? <article className="video-insights__result" data-testid={`${tab}-result`}>
+            <div className="video-insights__result-heading">
+              <h3>{tab === 'summary' ? '内容总结' : tab === 'subtitle' ? `${result.language} 字幕${result.is_auto ? ' · 自动生成' : ''}` : `字幕翻译 · ${result.target_language}`}</h3>
+              <div className="video-insights__local-actions"><button type="button" onClick={copy}>复制</button><button type="button" onClick={exportText}>导出 TXT</button></div>
+            </div>
+            {tab === 'summary' ? <><p>{result.summary}</p><h4>关键要点</h4><ul>{(result.key_points || []).map((point, index) => <li key={index}>{point}</li>)}</ul></> : <pre>{result.text}</pre>}
+            {href && <a href={href} target="_blank" rel="noopener noreferrer">视频来源</a>}
+            {tab !== 'subtitle' && <small>{result.provider} · {result.model}</small>}
+          </article> : insights.loading !== tab && !(insights.error && errorTab === tab) && <div className="video-insights__placeholder"><VideoIcon name={tab} /><h3>{config.label}</h3><p>{config.empty}</p><p>点击“{config.action}”开始处理。</p></div>}
+          <p className="video-insights__local-status" role="status">{localStatus}</p>
+        </>}
+      </div>)}
     </section>
   );
-}
+});
+
+export default VideoInsights;

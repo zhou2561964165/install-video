@@ -42,6 +42,8 @@ export default function App() {
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'dark');
   const [menuOpen, setMenuOpen] = useState(false);
   const [ready, setReady] = useState(false); // Live2D 模型加载完成才隐藏 preloader
+  const [inputDraft, setInputDraft] = useState('');
+  const [focusInput, setFocusInput] = useState(false);
 
   // 登录态（强制门）：未登录渲染 AuthScene，登录后才启动较重的 PIXI / Live2D 视觉层。
   // 账号入口不依赖 16K 模型资源，慢设备上也能立即操作表单。
@@ -61,6 +63,8 @@ export default function App() {
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
 
   const handleSubmit = useCallback(async (url) => {
+    setInputDraft(url);
+    setFocusInput(false);
     cancelParse();
     const controller = new AbortController();
     parseRequest.current = controller;
@@ -69,6 +73,8 @@ export default function App() {
       const payload = normalizeParse(await parseVideo(url, controller.signal));
       if (controller.signal.aborted || parseRequest.current !== controller) return;
       dispatch({ type: 'PARSE_SUCCESS', payload });
+      const firstFormat = payload.formats.find((format) => format?.format_id);
+      if (firstFormat) dispatch({ type: 'SELECT_FORMAT', format: firstFormat });
     } catch (e) {
       if (controller.signal.aborted || parseRequest.current !== controller) return;
       dispatch({ type: 'PARSE_FAIL', error: e });
@@ -83,12 +89,15 @@ export default function App() {
     cancelParse();
     cancel();
     dispatch({ type: 'RESET' });
+    setFocusInput(true);
   }, [cancelParse, cancel]);
   const handleLogout = useCallback(() => {
     handleReset();
+    setInputDraft('');
     logout();
   }, [handleReset, logout]);
   const insights = useVideoInsights(status === 'authed' ? state.url : '');
+  useLayoutEffect(() => { setInputDraft(''); setFocusInput(false); }, [sessionKey]);
 
   // 下载提交成功后刷新额度；收到 quota 错误时刷新额度（拿到最新 used/limit）
   useEffect(() => { if (status !== 'authed' || !state.download) return; refreshQuota(); }, [state.download, status, refreshQuota]);
@@ -166,21 +175,21 @@ export default function App() {
   let scene;
   switch (state.scene) {
     case SCENE.PARSING: scene = <ParsingScene />; break;
-    case SCENE.SELECTING: scene = (
-      <SelectingScene
-        parseResult={state.parseResult}
-        selectedFormat={state.selectedFormat}
-        forceServer={state.forceServer}
-        onSelect={(format, forceServer) => dispatch({ type: 'SELECT_FORMAT', format, forceServer })}
-        onDownload={handleDownload}
-        insights={insights}
-      />
-    ); break;
+    case SCENE.SELECTING: scene = null; break;
     case SCENE.DOWNLOADING: scene = <DownloadingScene job={state.job} mode={state.download?.mode} />; break;
     case SCENE.DONE: scene = <DoneScene job={state.job} onSave={save} saveBusy={saveBusy} saveError={saveError} onReset={handleReset} />; break;
     case SCENE.ERROR: scene = <ErrorScene error={state.error} onReset={handleReset} />; break;
     case SCENE.ENTRY:
-    default: scene = <EntryScene onSubmit={handleSubmit} mascotSlot={mascotSlot} />;
+    default: scene = <EntryScene onSubmit={handleSubmit} mascotSlot={mascotSlot} initialUrl={inputDraft} focusInput={focusInput} />;
+  }
+
+  // 同一个展示组件贯穿格式选择、下载、保存和下载失败，右侧页签不因下载换页而重挂载。
+  if (state.parseResult) {
+    const downloadContent = state.scene === SCENE.SELECTING ? null : scene;
+    scene = <SelectingScene parseResult={state.parseResult} selectedFormat={state.selectedFormat}
+      forceServer={state.forceServer} onSelect={(format, forceServer) => dispatch({ type: 'SELECT_FORMAT', format, forceServer })}
+      onDownload={handleDownload} insights={insights} downloadContent={downloadContent} sourceUrl={state.url}
+      locked={state.scene !== SCENE.SELECTING} />;
   }
 
   return (
@@ -189,7 +198,13 @@ export default function App() {
       <div ref={uiRef} className="ui">
         {status === 'authed' ? (
           <>
-            {scene}
+            {state.scene === SCENE.ENTRY ? scene : <main className="video-workflow">
+              <div className="video-workflow__toolbar">
+                <button type="button" className="video-back" onClick={handleReset}><span aria-hidden="true">←</span> 返回输入</button>
+                <p className="video-workflow__url" title={state.url}>{state.url}</p>
+              </div>
+              {scene}
+            </main>}
             {state.scene !== SCENE.ENTRY && mascotSlot}
             <AuthBar user={user} quota={quota} onLogout={handleLogout} />
           </>

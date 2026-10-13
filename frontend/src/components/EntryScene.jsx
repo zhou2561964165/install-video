@@ -31,9 +31,10 @@ const exampleLabel = (u) => {
   try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u.slice(0, 20); }
 };
 
-export default function EntryScene({ onSubmit, mascotSlot }) {
-  const [url, setUrl] = useState('');
+export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', focusInput = false }) {
+  const [url, setUrl] = useState(initialUrl);
   const inputRef = useRef(null);
+  useEffect(() => { if (focusInput) inputRef.current?.focus(); }, [focusInput]);
 
   const submit = (e) => {
     e.preventDefault();

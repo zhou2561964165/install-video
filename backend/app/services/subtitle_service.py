@@ -240,7 +240,14 @@ def _document_from_tracks(
         )
         raw = content.decode(encoding or "utf-8", errors="replace")
     except httpx.HTTPError as exc:
-        raise SubtitleServiceError("subtitle_fetch_failed", f"字幕获取失败：{exc}") from exc
+        # Provider URLs can contain signed access keys. Never return HTTPX's
+        # raw exception text through the API; retain only a safe status hint.
+        message = (
+            f"字幕获取失败（HTTP {exc.response.status_code}）"
+            if isinstance(exc, httpx.HTTPStatusError)
+            else "字幕获取失败：网络连接异常或请求超时，请稍后重试"
+        )
+        raise SubtitleServiceError("subtitle_fetch_failed", message) from exc
     finally:
         if owns_client:
             http.close()

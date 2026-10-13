@@ -135,3 +135,34 @@ def test_oversized_subtitle_stops_reading_before_entire_body(monkeypatch):
             fetch_subtitle_document("https://example.com/v", client=client)
     assert exc.value.error_type == "subtitle_too_large"
     assert len(chunks_read) < 100
+
+
+@pytest.mark.parametrize("failure", [403, "timeout"])
+def test_subtitle_fetch_failure_api_does_not_expose_signed_source_url(monkeypatch, failure):
+    from fastapi import HTTPException
+    from app.routes.insight_common import load_subtitle
+
+    signed_url = "https://aisubtitle.hdslb.com/bfs/ai_subtitle/prod/test?auth_key=synthetic-secret"
+    monkeypatch.setattr(subtitle_service.settings, "network_retries", 0)
+    monkeypatch.setattr(subtitle_service.ytdlp_service, "extract_subtitle_tracks", lambda url: {
+        "title": "Sample", "tracks": [{"language": "zh", "is_auto": True, "formats": [
+            {"url": signed_url, "ext": "bilibili_json", "http_headers": {}}
+        ]}]
+    })
+    real_client = httpx.Client
+
+    def handler(request):
+        if failure == "timeout":
+            raise httpx.ReadTimeout("Timeout retrieving " + signed_url, request=request)
+        return httpx.Response(failure)
+
+    monkeypatch.setattr(httpx, "Client", lambda **kwargs: real_client(transport=httpx.MockTransport(handler), **kwargs))
+    with pytest.raises(HTTPException) as error:
+        load_subtitle("https://www.bilibili.com/video/BV1gPH96dEUC/?", None)
+    detail = error.value.detail
+    assert error.value.status_code == 422
+    assert detail["error_type"] == "subtitle_fetch_failed"
+    assert "synthetic-secret" not in detail["error"]
+    assert "aisubtitle.hdslb.com" not in detail["error"]
+    if failure == 403:
+        assert "403" in detail["error"]

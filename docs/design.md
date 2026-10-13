@@ -131,6 +131,10 @@ install_video/
 
 **视频智能 API**：`POST /api/subtitle {url, language?}` 返回标题、语言、自动字幕标记、可选语言和正文；`POST /api/subtitle/translate {url, source_language?, target_language:"zh-CN"}` 返回译文及 provider/model；`POST /api/summary {url, subtitle_language?, output_language:"zh-CN"}` 对支持长度内字幕返回标题、源语言、`summary`、`key_points`、provider/model。读取字幕后先按 `SUMMARY_MAX_SOURCE_CHARS`（默认20000正文字符）检查，超过时422 `summary_unsupported_length` 提示长文暂不支持，未调用模型；短中继续原流程，内部候选分段/合并能力保持。公开总结响应不包含 facts、trace 或模型修复计数；这些仅在显式诊断中使用。
 
+**参考视频工作区（2026-10-12）**：借鉴用户本地 `free-video-downloader` 的VideoResult/VideoSummary卡片结构与蓝白token，在现有React组件内适配。App在有parseResult时复用SelectingScene贯穿选择、下载、完成和错误；右侧VideoInsights保留页签/语种缓存。返回输入使用原cancel/RESET并保留输入草稿和焦点；左侧AI操作只经 `summarizeCurrent()` 窄接口使用内容区当前语种、切摘要并显式调用，页签切换不调用模型。原JSON APIs和下载jobs接口继续承担业务，内容按React文本渲染，完整TXT和复制仅在本地；没有伪SSE、时间戳、SRT/VTT或未接入的QA/导图按钮。样式采用新增primitive→semantic→component token，移动语言控件完整宽度，视频范围的账号/主题控件随页面滚出而不遮内容。
+
+**B站AI字幕来源修复**：实测生产地址使用 `aisubtitle.hdslb.com/bfs/ai_subtitle/prod/<object>` 且无.json后缀。`bilibili_subtitle_source` 对exact host及单段alnum/underscore/hyphen object放行，拒params/越界path，沿用HTTPS规范化和query签名保留；人工字幕旧规则保持。`subtitle_service`将HTTPX错误转成安全status或网络提示，API不回传签名URL；原exception cause仍保留，不宣称所有调试日志均脱敏。字幕仍只经yt-dlp服务层的窄入口接入，无新付费步骤。
+
 ## 5. 下载方式：直链 + 服务端自动切换
 
 - **解析时**：返回清晰度与 `direct` 标记；公开格式列表不返回直链 URL 或请求头。下载提交时由 `get_direct_url` 重新提取该格式的 URL 和请求头。

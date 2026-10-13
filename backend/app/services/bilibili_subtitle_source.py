@@ -40,10 +40,16 @@ def _caption_url(value: str) -> str:
     if not isinstance(value, str):
         raise ValueError("字幕来源地址无效")
     parsed = urlparse("https:" + value if value.startswith("//") else value)
+    # AI captions use an extensionless production object on this dedicated host.
+    # Keep its path boundary narrow rather than accepting arbitrary CDN resources.
+    is_ai_caption = parsed.hostname == "aisubtitle.hdslb.com" and not parsed.params and re.fullmatch(
+        r"/bfs/ai_subtitle/prod/[A-Za-z0-9_-]+", parsed.path
+    )
+    is_manual_caption = parsed.path.startswith("/bfs/subtitle/") and parsed.path.endswith(".json")
     if (parsed.scheme not in {"http", "https"} or not parsed.hostname
             or not parsed.hostname.endswith(".hdslb.com") or parsed.username or parsed.password
             or parsed.port not in {None, 80, 443}
-            or not parsed.path.startswith("/bfs/subtitle/") or not parsed.path.endswith(".json")):
+            or not (is_manual_caption or is_ai_caption)):
         raise ValueError("字幕来源地址无效")
     return urlunparse(parsed._replace(scheme="https", netloc=parsed.hostname, fragment=""))
 
