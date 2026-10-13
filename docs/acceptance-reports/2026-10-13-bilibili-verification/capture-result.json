@@ -1,0 +1,295 @@
+{
+  "user_reported_current_proxy": "enabled",
+  "get_limit": 36,
+  "get_reservations": 13,
+  "model_posts": 0,
+  "media_downloads": 0,
+  "attempts": [
+    {
+      "attempt": 1,
+      "proxies": {
+        "http": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "https": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "ftp": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        }
+      },
+      "requests": [
+        {
+          "number": 1,
+          "layer": "yt-dlp",
+          "host": "www.bilibili.com",
+          "path": "/video/BV13vpG67ELM/",
+          "start": 3020.25,
+          "http": 200,
+          "bytes": 254599,
+          "elapsed_ms": 796,
+          "initial_state_present": true,
+          "embedded_playinfo_present": false
+        },
+        {
+          "number": 2,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/pagelist",
+          "start": 3021.062,
+          "http": 200,
+          "bytes": 385,
+          "elapsed_ms": 94,
+          "api_code": 0,
+          "message": "OK"
+        },
+        {
+          "number": 3,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/web-interface/nav",
+          "start": 3021.156,
+          "http": 200,
+          "bytes": 259,
+          "elapsed_ms": 47,
+          "api_code": -101,
+          "message": "账号未登录",
+          "is_login": false
+        },
+        {
+          "number": 4,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/playurl",
+          "start": 3021.203,
+          "http": 200,
+          "bytes": 101,
+          "elapsed_ms": 78,
+          "api_code": 0,
+          "message": "OK",
+          "playback": {
+            "data_keys": [
+              "v_voucher"
+            ],
+            "dash_video": 0,
+            "dash_audio": 0,
+            "usable_video": 0,
+            "usable_audio": 0,
+            "durl": 0,
+            "usable_durl": 0,
+            "quality": null,
+            "has_voucher": true
+          }
+        },
+        {
+          "number": 5,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/v2",
+          "start": 3021.281,
+          "http": 200,
+          "bytes": 2295,
+          "elapsed_ms": 78,
+          "api_code": 0,
+          "message": "OK"
+        }
+      ],
+      "warnings": [],
+      "errors": [
+        "ERROR: [BiliBili] BV13vpG67ELM: No video formats found!; please report this issue on  <url> , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+      ],
+      "success": false,
+      "error_type": "DownloadError",
+      "error": "ERROR: [BiliBili] BV13vpG67ELM: No video formats found!; please report this issue on  <url> , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+      "duration_ms": 1219
+    },
+    {
+      "attempt": 2,
+      "proxies": {
+        "http": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "https": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "ftp": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        }
+      },
+      "requests": [
+        {
+          "number": 6,
+          "layer": "yt-dlp",
+          "host": "www.bilibili.com",
+          "path": "/video/BV13vpG67ELM/",
+          "start": 3024.39,
+          "http": 200,
+          "bytes": 254599,
+          "elapsed_ms": 547,
+          "initial_state_present": true,
+          "embedded_playinfo_present": false
+        },
+        {
+          "number": 7,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/pagelist",
+          "start": 3024.937,
+          "http": 200,
+          "bytes": 385,
+          "elapsed_ms": 156,
+          "api_code": 0,
+          "message": "OK"
+        },
+        {
+          "number": 8,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/playurl",
+          "start": 3025.093,
+          "http": 200,
+          "bytes": 101,
+          "elapsed_ms": 94,
+          "api_code": 0,
+          "message": "OK",
+          "playback": {
+            "data_keys": [
+              "v_voucher"
+            ],
+            "dash_video": 0,
+            "dash_audio": 0,
+            "usable_video": 0,
+            "usable_audio": 0,
+            "durl": 0,
+            "usable_durl": 0,
+            "quality": null,
+            "has_voucher": true
+          }
+        },
+        {
+          "number": 9,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/v2",
+          "start": 3025.203,
+          "http": 200,
+          "bytes": 2295,
+          "elapsed_ms": 78,
+          "api_code": 0,
+          "message": "OK"
+        }
+      ],
+      "warnings": [],
+      "errors": [
+        "ERROR: [BiliBili] BV13vpG67ELM: No video formats found!; please report this issue on  <url> , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+      ],
+      "success": false,
+      "error_type": "DownloadError",
+      "error": "ERROR: [BiliBili] BV13vpG67ELM: No video formats found!; please report this issue on  <url> , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+      "duration_ms": 922
+    },
+    {
+      "attempt": 3,
+      "proxies": {
+        "http": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "https": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "ftp": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        }
+      },
+      "requests": [
+        {
+          "number": 10,
+          "layer": "yt-dlp",
+          "host": "www.bilibili.com",
+          "path": "/video/BV13vpG67ELM/",
+          "start": 3028.328,
+          "http": 200,
+          "bytes": 254599,
+          "elapsed_ms": 640,
+          "initial_state_present": true,
+          "embedded_playinfo_present": false
+        },
+        {
+          "number": 11,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/pagelist",
+          "start": 3028.984,
+          "http": 200,
+          "bytes": 385,
+          "elapsed_ms": 312,
+          "api_code": 0,
+          "message": "OK"
+        },
+        {
+          "number": 12,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/playurl",
+          "start": 3029.296,
+          "http": 200,
+          "bytes": 101,
+          "elapsed_ms": 94,
+          "api_code": 0,
+          "message": "OK",
+          "playback": {
+            "data_keys": [
+              "v_voucher"
+            ],
+            "dash_video": 0,
+            "dash_audio": 0,
+            "usable_video": 0,
+            "usable_audio": 0,
+            "durl": 0,
+            "usable_durl": 0,
+            "quality": null,
+            "has_voucher": true
+          }
+        },
+        {
+          "number": 13,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/v2",
+          "start": 3029.39,
+          "http": 200,
+          "bytes": 2297,
+          "elapsed_ms": 94,
+          "api_code": 0,
+          "message": "OK"
+        }
+      ],
+      "warnings": [],
+      "errors": [
+        "ERROR: [BiliBili] BV13vpG67ELM: No video formats found!; please report this issue on  <url> , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
+      ],
+      "success": false,
+      "error_type": "DownloadError",
+      "error": "ERROR: [BiliBili] BV13vpG67ELM: No video formats found!; please report this issue on  <url> , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U",
+      "duration_ms": 1204
+    }
+  ]
+}

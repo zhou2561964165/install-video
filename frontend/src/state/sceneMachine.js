@@ -62,7 +62,7 @@ export function reduce(state, action) {
   }
 }
 
-// 9 种 error_type → 二次元错误场景文案（spec §4 / design §8）
+// error_type → 二次元错误场景文案（spec §4 / design §8）
 export const ERROR_SCENES = {
   invalid_url:      { emoji: '💫', title: '链接好像不对',   hint: '再检查一下链接吧' },
   unsupported_site: { emoji: '🌐', title: '这个网站还不支持', hint: '换一个网站试试' },
@@ -70,6 +70,7 @@ export const ERROR_SCENES = {
   geo_blocked:      { emoji: '🗺️', title: '地区限制',         hint: '该视频在您所在地区不可用' },
   drm:              { emoji: '🔒', title: '受保护内容',       hint: '版权保护，无法下载' },
   login_required:   { emoji: '🔑', title: '需要登录',         hint: '该视频需登录后才能下载' },
+  verification_required: { emoji: '🔒', title: '平台安全校验', hint: '平台暂未提供视频地址，请稍后重试。' },
   ffmpeg_missing:   { emoji: '🎬', title: '服务器缺少组件',   hint: '请稍后再试，或联系站长' },
   network:          { emoji: '📡', title: '网络出错了',       hint: '检查网络后重试' },
   quota:            { emoji: '⏳', title: '请求太频繁啦',     hint: '休息一下再试' },

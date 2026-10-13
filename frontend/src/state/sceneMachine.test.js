@@ -50,9 +50,17 @@ describe('sceneMachine', () => {
     expect(s).toEqual(initialState());
   });
 
-  it('ERROR_SCENES covers all 9 error types', () => {
+  it('ERROR_SCENES covers all 10 error types', () => {
     expect(Object.keys(ERROR_SCENES).sort()).toEqual(
-      ['age_restricted', 'drm', 'ffmpeg_missing', 'geo_blocked', 'invalid_url', 'login_required', 'network', 'quota', 'unsupported_site'].sort(),
+      ['age_restricted', 'drm', 'ffmpeg_missing', 'geo_blocked', 'invalid_url', 'login_required', 'network', 'quota', 'unsupported_site', 'verification_required'].sort(),
     );
+  });
+
+  it('maps platform verification to its own safe, actionable error copy', () => {
+    expect(ERROR_SCENES.verification_required).toEqual({
+      emoji: '🔒',
+      title: '平台安全校验',
+      hint: '平台暂未提供视频地址，请稍后重试。',
+    });
   });
 });

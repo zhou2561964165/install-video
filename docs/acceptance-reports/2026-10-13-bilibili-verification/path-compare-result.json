@@ -1,0 +1,246 @@
+{
+  "user_reported_current_proxy": "enabled",
+  "get_limit": 36,
+  "get_reservations": 22,
+  "model_posts": 0,
+  "media_downloads": 0,
+  "attempts": [
+    {
+      "attempt": 4,
+      "route": "explicit_current_proxy",
+      "system_proxy_setting_unchanged": true,
+      "proxies": {
+        "http": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "https": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "ftp": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        }
+      },
+      "requests": [
+        {
+          "number": 14,
+          "layer": "yt-dlp",
+          "host": "www.bilibili.com",
+          "path": "/video/BV13vpG67ELM/",
+          "start": 3307.218,
+          "http": 200,
+          "bytes": 254599,
+          "elapsed_ms": 438,
+          "initial_state_present": true,
+          "embedded_playinfo_present": false
+        },
+        {
+          "number": 15,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/pagelist",
+          "start": 3307.671,
+          "http": 200,
+          "bytes": 385,
+          "elapsed_ms": 125,
+          "api_code": 0,
+          "message": "OK"
+        },
+        {
+          "number": 16,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/web-interface/nav",
+          "start": 3307.796,
+          "http": 200,
+          "bytes": 259,
+          "elapsed_ms": 47,
+          "api_code": -101,
+          "message": "账号未登录",
+          "is_login": false
+        },
+        {
+          "number": 17,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/playurl",
+          "start": 3307.843,
+          "http": 200,
+          "bytes": 38367,
+          "elapsed_ms": 94,
+          "api_code": 0,
+          "message": "OK",
+          "playback": {
+            "data_keys": [
+              "accept_description",
+              "accept_format",
+              "accept_quality",
+              "auto_qn_resp",
+              "cur_language",
+              "cur_production_type",
+              "dash",
+              "format",
+              "from",
+              "high_format",
+              "last_play_cid",
+              "last_play_time",
+              "message",
+              "play_conf",
+              "quality",
+              "result",
+              "seek_param",
+              "seek_type",
+              "support_formats",
+              "timelength",
+              "video_codecid",
+              "view_info"
+            ],
+            "dash_video": 4,
+            "dash_audio": 3,
+            "usable_video": 4,
+            "usable_audio": 3,
+            "durl": 0,
+            "usable_durl": 0,
+            "quality": 32,
+            "has_voucher": false
+          }
+        },
+        {
+          "number": 18,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/v2",
+          "start": 3307.937,
+          "http": 200,
+          "bytes": 2295,
+          "elapsed_ms": 78,
+          "api_code": 0,
+          "message": "OK"
+        }
+      ],
+      "warnings": [],
+      "errors": [],
+      "success": true,
+      "title": "“我爱你，从苍白的文字，到纷飞的诗。”|| 浪漫到骨子里的情话",
+      "format_count": 7,
+      "duration_ms": 953
+    },
+    {
+      "attempt": 5,
+      "route": "explicit_no_application_proxy",
+      "system_proxy_setting_unchanged": true,
+      "proxies": {
+        "http": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "https": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        },
+        "ftp": {
+          "scheme": "http",
+          "host": "127.0.0.1",
+          "port": 7898
+        }
+      },
+      "requests": [
+        {
+          "number": 19,
+          "layer": "yt-dlp",
+          "host": "www.bilibili.com",
+          "path": "/video/BV13vpG67ELM/",
+          "start": 3308.093,
+          "http": 200,
+          "bytes": 254539,
+          "elapsed_ms": 469,
+          "initial_state_present": true,
+          "embedded_playinfo_present": false
+        },
+        {
+          "number": 20,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/pagelist",
+          "start": 3308.562,
+          "http": 200,
+          "bytes": 385,
+          "elapsed_ms": 141,
+          "api_code": 0,
+          "message": "OK"
+        },
+        {
+          "number": 21,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/playurl",
+          "start": 3308.703,
+          "http": 200,
+          "bytes": 38407,
+          "elapsed_ms": 78,
+          "api_code": 0,
+          "message": "OK",
+          "playback": {
+            "data_keys": [
+              "accept_description",
+              "accept_format",
+              "accept_quality",
+              "auto_qn_resp",
+              "cur_language",
+              "cur_production_type",
+              "dash",
+              "format",
+              "from",
+              "high_format",
+              "last_play_cid",
+              "last_play_time",
+              "message",
+              "play_conf",
+              "quality",
+              "result",
+              "seek_param",
+              "seek_type",
+              "support_formats",
+              "timelength",
+              "video_codecid",
+              "view_info"
+            ],
+            "dash_video": 4,
+            "dash_audio": 3,
+            "usable_video": 4,
+            "usable_audio": 3,
+            "durl": 0,
+            "usable_durl": 0,
+            "quality": 32,
+            "has_voucher": false
+          }
+        },
+        {
+          "number": 22,
+          "layer": "yt-dlp",
+          "host": "api.bilibili.com",
+          "path": "/x/player/wbi/v2",
+          "start": 3308.796,
+          "http": 200,
+          "bytes": 2296,
+          "elapsed_ms": 63,
+          "api_code": 0,
+          "message": "OK"
+        }
+      ],
+      "warnings": [],
+      "errors": [],
+      "success": true,
+      "title": "“我爱你，从苍白的文字，到纷飞的诗。”|| 浪漫到骨子里的情话",
+      "format_count": 7,
+      "duration_ms": 781
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import { ERROR_SCENES } from '../state/sceneMachine.js';
 import Bubble from './ui/Bubble.jsx';
 import { playSfx } from '../audio/audioManager.js';
 
-// 9 种 error_type → 差异化视觉 class（文案仍来自 ERROR_SCENES）
+// error_type → 差异化视觉 class（文案仍来自 ERROR_SCENES）
 const ERR_CLASS = {
   invalid_url: 'err-invalid',
   unsupported_site: 'err-invalid',
@@ -11,6 +11,7 @@ const ERR_CLASS = {
   geo_blocked: 'err-drm',
   drm: 'err-drm',
   login_required: 'err-drm',
+  verification_required: 'err-drm',
   ffmpeg_missing: 'err-quota',
   network: 'err-quota',
   quota: 'err-quota',

@@ -182,6 +182,7 @@ yt-dlp 异常 → 结构化错误类型，前端据此渲染对应「二次元�
 | geo_blocked | 地区限制 |
 | drm | 受保护内容 |
 | login_required | 需登录 |
+| verification_required | 主播放响应出现安全校验且无有效格式；显示“平台安全校验”，不误标必须登录或断网 |
 | ffmpeg_missing | 缺少 ffmpeg |
 | network | 网络错误 |
 | quota | 每日额度耗尽、IP请求限流或完成文件超出大小上限 |

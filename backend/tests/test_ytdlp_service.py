@@ -62,6 +62,9 @@ def test_extract_info_calls_ydl(monkeypatch):
     calls = {}
 
     class FakeYDL:
+        def add_info_extractor(self, ie):
+            self.info_extractor = ie
+
         def __init__(self, opts):
             self.opts = opts
 
@@ -89,6 +92,9 @@ def test_ydlp_calls_use_configured_finite_retries_and_exponential_backoff(
     captured = {}
 
     class FakeYDL:
+        def add_info_extractor(self, ie):
+            self.info_extractor = ie
+
         def __init__(self, opts):
             captured["opts"] = opts
             self.opts = opts
@@ -289,6 +295,9 @@ def test_multi_video_archive_item_does_not_mix_caption_sources(monkeypatch):
 
 
 class _FakeDownloadYDL:
+    def add_info_extractor(self, ie):
+        self.info_extractor = ie
+
     def __init__(self, opts):
         self.opts = opts
 
@@ -311,6 +320,9 @@ class _FakeDownloadYDL:
 
 
 class _ArtifactDownloadYDL:
+    def add_info_extractor(self, ie):
+        self.info_extractor = ie
+
     def __init__(self, opts, info, prepared_filename):
         self.opts = opts
         self.info = info

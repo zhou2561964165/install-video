@@ -263,6 +263,24 @@ describe('App 功能闭环', () => {
     expect(screen.getByText('链接好像不对')).toBeInTheDocument();
   });
 
+  it('平台安全校验错误显示明确提示且不自动重试或要求登录', async () => {
+    const explanation = '平台暂未提供视频地址，请稍后重试。';
+    parseVideo.mockRejectedValue({ error_type: 'verification_required', error: explanation });
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://www.bilibili.com/video/BV13vpG67ELM');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+
+    const errorScene = await screen.findByTestId('error-scene');
+    expect(screen.getByRole('heading', { name: '平台安全校验' })).toBeInTheDocument();
+    expect(errorScene).toHaveTextContent(explanation);
+    expect(errorScene).toHaveClass('err-drm');
+    expect(screen.getByRole('button', { name: '重试' })).toBeInTheDocument();
+    expect(screen.queryByText('需要登录')).toBeNull();
+    expect(screen.queryByText('网络出错了')).toBeNull();
+    expect(parseVideo).toHaveBeenCalledTimes(1);
+    expect(startDownload).not.toHaveBeenCalled();
+  });
+
   it.each(['invalid_url', 'geo_blocked', 'quota'])('渲染 %s 错误场景', async (type) => {
     parseVideo.mockRejectedValue({ error_type: type, error: 'x' });
     render(<App />);

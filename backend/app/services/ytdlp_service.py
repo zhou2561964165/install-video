@@ -6,7 +6,11 @@ from urllib.parse import urlparse
 
 import yt_dlp
 import httpx
-from yt_dlp.utils import MEDIA_EXTENSIONS, GeoRestrictedError, UnsupportedError, ext2mimetype, mimetype2ext
+from yt_dlp.extractor.bilibili import BiliBiliIE
+from yt_dlp.utils import (
+    MEDIA_EXTENSIONS, DownloadError, ExtractorError, GeoRestrictedError, UnsupportedError,
+    ext2mimetype, mimetype2ext, url_or_none,
+)
 
 from ..config import settings
 from .subtitle_sources import InvalidVideoPartError, resolve_public_subtitles
@@ -20,6 +24,41 @@ ERROR_LOGIN = "login_required"
 ERROR_FFMPEG = "ffmpeg_missing"
 ERROR_NETWORK = "network"
 ERROR_QUOTA = "quota"
+ERROR_VERIFICATION = "verification_required"
+
+
+class _BiliBiliVerificationError(ExtractorError):
+    def __init__(self):
+        super().__init__(
+            "B站触发了安全校验，暂未提供视频流。请稍后重试，避免连续反复解析。",
+            expected=True,
+        )
+
+
+class _BiliBiliVerificationIE(BiliBiliIE):
+    """Retain upstream extraction while recognizing its unhandled voucher response."""
+
+    IE_NAME = BiliBiliIE.IE_NAME
+
+    @classmethod
+    def ie_key(cls):
+        # Replace the existing key in place so redirects and playlists use the same adapter.
+        return BiliBiliIE.ie_key()
+
+    def _download_playinfo(self, bvid, cid, headers=None, query=None, fatal=True):
+        play_info = super()._download_playinfo(bvid, cid, headers=headers, query=query, fatal=fatal)
+        # Extra qn probes are optional; upstream retains the primary formats if one is blocked.
+        if not (query or {}).get("qn") and isinstance(play_info, dict) and play_info.get("v_voucher"):
+            if not any(url_or_none(fmt.get("url")) for fmt in self.extract_formats(play_info)):
+                raise _BiliBiliVerificationError()
+        return play_info
+
+
+def _youtube_dl(opts: dict):
+    ydl = yt_dlp.YoutubeDL(opts)
+    # The public registration interface preserves yt-dlp's normal extractor selection.
+    ydl.add_info_extractor(_BiliBiliVerificationIE())
+    return ydl
 
 _PATTERNS = [
     (ERROR_DRM, re.compile(r"drm|widevine|protected content|encrypted")),
@@ -64,7 +103,7 @@ def extract_info(url: str) -> dict:
         "skip_download": True,
         "noplaylist": True,
     }
-    with yt_dlp.YoutubeDL(opts) as ydl:
+    with _youtube_dl(opts) as ydl:
         return ydl.extract_info(url, download=False)
 
 
@@ -126,6 +165,9 @@ def extract_subtitle_tracks(url: str, *, use_public_sources: bool = True) -> dic
 
 
 def classify_error(exc: Exception) -> str:
+    original = exc.exc_info[1] if isinstance(exc, DownloadError) and exc.exc_info else exc
+    if isinstance(original, _BiliBiliVerificationError):
+        return ERROR_VERIFICATION
     if isinstance(exc, InvalidVideoPartError):
         return ERROR_INVALID_URL
     if isinstance(exc, GeoRestrictedError):
@@ -280,7 +322,7 @@ def get_direct_url(url: str, format_id: str) -> tuple[str | None, dict]:
         "skip_download": True,
         "noplaylist": True,
     }
-    with yt_dlp.YoutubeDL(opts) as ydl:
+    with _youtube_dl(opts) as ydl:
         info = ydl.extract_info(url, download=False)
         for f in info.get("formats") or []:
             if str(f.get("format_id")) == str(format_id):
@@ -306,7 +348,7 @@ def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
     # 仅当显式配置了非默认路径时才传 ffmpeg_location，避免把裸名 "ffmpeg" 误当相对路径。
     if settings.ffmpeg_path and settings.ffmpeg_path != "ffmpeg":
         opts["ffmpeg_location"] = settings.ffmpeg_path
-    with yt_dlp.YoutubeDL(opts) as ydl:
+    with _youtube_dl(opts) as ydl:
         info = ydl.extract_info(url, download=True)
         out_dir = Path(os.path.dirname(outtmpl) or ".").resolve()
 
