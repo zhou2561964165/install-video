@@ -1,0 +1,296 @@
+{
+  "started": "2026-10-13T11:03:30.383Z",
+  "scriptSha256": "897a6c2d96d93d1b8c175310be31b70d550af4137402909c761f743244c63db9",
+  "checks": [
+    {
+      "name": "desktop-region-and-copy",
+      "pass": true,
+      "details": {
+        "area": {
+          "x": 1000,
+          "y": 351,
+          "width": 288,
+          "height": 270
+        },
+        "hit": {
+          "x": 1061.1875,
+          "y": 361.796875,
+          "width": 165.59375,
+          "height": 248.390625
+        }
+      }
+    },
+    {
+      "name": "model-menu-scale-and-focus",
+      "pass": true,
+      "details": {
+        "small": {
+          "x": 1096.078125,
+          "y": 414.125,
+          "width": 95.828125,
+          "height": 143.75
+        },
+        "area": {
+          "x": 1000,
+          "y": 351,
+          "width": 288,
+          "height": 270
+        },
+        "hit": {
+          "x": 1061.1875,
+          "y": 361.796875,
+          "width": 165.59375,
+          "height": 248.390625
+        }
+      }
+    },
+    {
+      "name": "drag-constrained-and-scroll-follows-region",
+      "pass": true,
+      "details": {
+        "before": {
+          "area": {
+            "x": 1000,
+            "y": 351,
+            "width": 288,
+            "height": 270
+          },
+          "hit": {
+            "x": 1010.796875,
+            "y": 361.796875,
+            "width": 138,
+            "height": 207
+          }
+        },
+        "after": {
+          "area": {
+            "x": 1000,
+            "y": 231,
+            "width": 288,
+            "height": 270
+          },
+          "hit": {
+            "x": 1010.796875,
+            "y": 241.796875,
+            "width": 138,
+            "height": 207
+          }
+        }
+      }
+    },
+    {
+      "name": "lens-tokens-title-and-control-proximity",
+      "pass": true,
+      "details": {
+        "diameter": 187,
+        "tilt": "8deg",
+        "roll": "3deg",
+        "active": "true",
+        "plane": true
+      }
+    },
+    {
+      "name": "mascot-footprint-fade-hysteresis-and-restore",
+      "pass": true,
+      "details": {
+        "during": {
+          "opacity": 0.0359502,
+          "transform": "matrix(0.209479, 0, 0, 0.209479, 0, 0)"
+        },
+        "restored": {
+          "x": 767.90625,
+          "y": 287.40625,
+          "width": 187.1875,
+          "height": 187.1875
+        }
+      }
+    },
+    {
+      "name": "dark-and-disable-breakpoint-recovery",
+      "pass": true
+    },
+    {
+      "name": "workflow-slot-remains-below-two-column-content",
+      "pass": true,
+      "details": {
+        "area": {
+          "x": 550,
+          "y": 679.609375,
+          "width": 340,
+          "height": 220
+        },
+        "hit": {
+          "x": 587.984375,
+          "y": 688.40625,
+          "width": 112.4375,
+          "height": 168.65625
+        }
+      }
+    },
+    {
+      "name": "layout-and-model-1024",
+      "pass": true,
+      "details": {
+        "area": {
+          "x": 342,
+          "y": 577.359375,
+          "width": 340,
+          "height": 220
+        },
+        "hit": {
+          "x": 444.53125,
+          "y": 586.15625,
+          "width": 134.921875,
+          "height": 202.390625
+        }
+      }
+    },
+    {
+      "name": "layout-and-model-390",
+      "pass": true,
+      "details": {
+        "area": {
+          "x": 25,
+          "y": 599.625,
+          "width": 340,
+          "height": 220
+        },
+        "hit": {
+          "x": 127.53125,
+          "y": 608.421875,
+          "width": 134.921875,
+          "height": 202.390625
+        }
+      }
+    },
+    {
+      "name": "layout-and-model-320",
+      "pass": true,
+      "details": {
+        "area": {
+          "x": 24,
+          "y": 599.625,
+          "width": 272,
+          "height": 220
+        },
+        "hit": {
+          "x": 92.53125,
+          "y": 608.421875,
+          "width": 134.921875,
+          "height": 202.390625
+        }
+      }
+    },
+    {
+      "name": "reduced-motion-native-pointer",
+      "pass": true
+    },
+    {
+      "name": "network-budget-and-console",
+      "pass": true,
+      "details": {
+        "mockedRequests": 11,
+        "actualModelPosts": 0,
+        "actualPlatformExtractions": 0,
+        "actualMediaDownloads": 0
+      }
+    }
+  ],
+  "hardware": [
+    {
+      "maxTextureSize": 16384,
+      "visibleModel": true,
+      "viewport": 1440
+    },
+    {
+      "maxTextureSize": 16384,
+      "visibleModel": true,
+      "viewport": 1024
+    },
+    {
+      "maxTextureSize": 16384,
+      "visibleModel": true,
+      "viewport": 390
+    },
+    {
+      "maxTextureSize": 16384,
+      "visibleModel": true,
+      "viewport": 320
+    },
+    {
+      "maxTextureSize": 16384,
+      "visibleModel": true,
+      "viewport": 1440
+    }
+  ],
+  "api": [
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/parse",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    }
+  ],
+  "external": [],
+  "downloads": [],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "budget": {
+    "modelPosts": 0,
+    "platformExtractions": 0,
+    "mediaDownloads": 0
+  },
+  "device": "Headless Edge; no physical-phone/pinch/FPS claim",
+  "browser": "155.0.4283.45",
+  "ended": "2026-10-13T11:04:00.741Z",
+  "pass": true
+}

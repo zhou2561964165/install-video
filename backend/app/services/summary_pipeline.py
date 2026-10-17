@@ -23,3 +23,14 @@ def invoke_summary_pipeline(
     # Cover construction's entire invocation, including any nested runnables.
     with tracing_context(enabled=False):
         return pipeline.invoke(source)
+
+
+def invoke_source_review_pipeline(
+    source: dict[str, Any], *, review: Callable[[dict[str, Any]], dict[str, Any]],
+    revise: Callable[[dict[str, Any]], dict[str, Any]],
+) -> dict[str, Any]:
+    """Two fixed successful stages; no feedback edge, retries or provider SDK."""
+    with tracing_context(enabled=False):
+        pipeline = RunnableSequence(RunnableLambda(review, name="source_review"),
+                                    RunnableLambda(revise, name="source_revision"))
+        return pipeline.invoke(source)

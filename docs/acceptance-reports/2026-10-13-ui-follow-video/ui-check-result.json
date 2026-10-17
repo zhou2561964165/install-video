@@ -1,0 +1,237 @@
+{
+  "checks": [
+    {
+      "name": "auth-light-1440",
+      "viewport": 1440,
+      "width": 1440,
+      "title": "万能视频下载",
+      "text": "万能视频下载浅色深色自动让每一段视频，都有去处。登录后开始下载登录注册邮箱密码显示立即登录×尺寸变大变小发型短发披发刘海切换左鬓发右鬓发左马尾右马尾左啾啾右啾啾衣服衣服颜色1衣服颜色2围裙绷带大小变大",
+      "header": {
+        "x": 80,
+        "right": 1360,
+        "bottom": 100,
+        "brandRight": 258.3125,
+        "themeLeft": 1181
+      }
+    },
+    {
+      "name": "auth-dark-1440",
+      "viewport": 1440,
+      "width": 1440,
+      "title": "万能视频下载",
+      "text": "万能视频下载浅色深色自动让每一段视频，都有去处。登录后开始下载登录注册邮箱密码显示立即登录×尺寸变大变小发型短发披发刘海切换左鬓发右鬓发左马尾右马尾左啾啾右啾啾衣服衣服颜色1衣服颜色2围裙绷带大小变大",
+      "header": {
+        "x": 80,
+        "right": 1360,
+        "bottom": 100,
+        "brandRight": 258.3125,
+        "themeLeft": 1181
+      }
+    },
+    {
+      "name": "auth-dark-390",
+      "viewport": 390,
+      "width": 390,
+      "title": "万能视频下载",
+      "text": "万能视频下载浅色深色自动让每一段视频，都有去处。登录后开始下载登录注册邮箱密码显示立即登录×尺寸变大变小发型短发披发刘海切换左鬓发右鬓发左马尾右马尾左啾啾右啾啾衣服衣服颜色1衣服颜色2围裙绷带大小变大",
+      "header": {
+        "x": 16,
+        "right": 374,
+        "bottom": 92,
+        "brandRight": 215,
+        "themeLeft": 227
+      }
+    },
+    {
+      "name": "auth-light-390",
+      "viewport": 390,
+      "width": 390,
+      "title": "万能视频下载",
+      "text": "万能视频下载浅色深色自动让每一段视频，都有去处。登录后开始下载登录注册邮箱密码显示立即登录×尺寸变大变小发型短发披发刘海切换左鬓发右鬓发左马尾右马尾左啾啾右啾啾衣服衣服颜色1衣服颜色2围裙绷带大小变大",
+      "header": {
+        "x": 16,
+        "right": 374,
+        "bottom": 92,
+        "brandRight": 215,
+        "themeLeft": 227
+      }
+    },
+    {
+      "name": "auth-light-320",
+      "viewport": 320,
+      "width": 320,
+      "title": "万能视频下载",
+      "text": "万能视频下载浅色深色自动让每一段视频，都有去处。登录后开始下载登录注册邮箱密码显示立即登录×尺寸变大变小发型短发披发刘海切换左鬓发右鬓发左马尾右马尾左啾啾右啾啾衣服衣服颜色1衣服颜色2围裙绷带大小变大",
+      "header": {
+        "x": 16,
+        "right": 304,
+        "bottom": 92,
+        "brandRight": 153,
+        "themeLeft": 161
+      }
+    },
+    {
+      "name": "entry-light-1440",
+      "viewport": 1440,
+      "width": 1440,
+      "title": "万能视频下载",
+      "text": "万能视频下载功能如何使用preview@example.test今日剩余 7/10退出浅色深色自动把视频，留在身边。解析download.samplelib.combilibili.comyoutub",
+      "header": {
+        "x": 80,
+        "right": 1360,
+        "bottom": 100,
+        "brandRight": 258.3125,
+        "themeLeft": 1181
+      }
+    },
+    {
+      "name": "workspace-light-1440",
+      "viewport": 1440,
+      "width": 1440,
+      "title": "万能视频下载",
+      "text": "万能视频下载preview@example.test今日剩余 7/10退出浅色深色自动从链接，到你的收藏。← 返回输入https://www.bilibili.com/video/BVexample7",
+      "header": {
+        "x": 80,
+        "right": 1360,
+        "bottom": 104,
+        "brandRight": 258.3125,
+        "themeLeft": 1181
+      }
+    },
+    {
+      "name": "summary-copy-export",
+      "pass": true
+    },
+    {
+      "name": "tabs-keyboard-subtitle",
+      "pass": true
+    },
+    {
+      "name": "workspace-dark-1440",
+      "viewport": 1440,
+      "width": 1440,
+      "title": "万能视频下载",
+      "text": "万能视频下载preview@example.test今日剩余 7/10退出浅色深色自动从链接，到你的收藏。← 返回输入https://www.bilibili.com/video/BVexample7",
+      "header": {
+        "x": 80,
+        "right": 1360,
+        "bottom": 104,
+        "brandRight": 258.3125,
+        "themeLeft": 1181
+      }
+    },
+    {
+      "name": "workspace-dark-768",
+      "viewport": 768,
+      "width": 768,
+      "title": "万能视频下载",
+      "text": "万能视频下载preview@example.test今日剩余 7/10退出浅色深色自动从链接，到你的收藏。← 返回输入https://www.bilibili.com/video/BVexample7",
+      "header": {
+        "x": 16,
+        "right": 752,
+        "bottom": 153,
+        "brandRight": 593,
+        "themeLeft": 605
+      }
+    },
+    {
+      "name": "workspace-dark-390",
+      "viewport": 390,
+      "width": 390,
+      "title": "万能视频下载",
+      "text": "万能视频下载preview@example.test今日剩余 7/10退出浅色深色自动从链接，到你的收藏。← 返回输入https://www.bilibili.com/video/BVexample7",
+      "header": {
+        "x": 16,
+        "right": 374,
+        "bottom": 153,
+        "brandRight": 215,
+        "themeLeft": 227
+      }
+    },
+    {
+      "name": "workspace-dark-320",
+      "viewport": 320,
+      "width": 320,
+      "title": "万能视频下载",
+      "text": "万能视频下载preview@example.test今日剩余 7/10退出浅色深色自动从链接，到你的收藏。← 返回输入https://www.bilibili.com/video/BVexample7",
+      "header": {
+        "x": 16,
+        "right": 304,
+        "bottom": 153,
+        "brandRight": 153,
+        "themeLeft": 161
+      }
+    },
+    {
+      "name": "workspace-light-390",
+      "viewport": 390,
+      "width": 390,
+      "title": "万能视频下载",
+      "text": "万能视频下载preview@example.test今日剩余 7/10退出浅色深色自动从链接，到你的收藏。← 返回输入https://www.bilibili.com/video/BVexample7",
+      "header": {
+        "x": 16,
+        "right": 374,
+        "bottom": 153,
+        "brandRight": 215,
+        "themeLeft": 227
+      }
+    },
+    {
+      "name": "entry-light-390",
+      "viewport": 390,
+      "width": 390,
+      "title": "万能视频下载",
+      "text": "万能视频下载功能如何使用preview@example.test今日剩余 7/10退出浅色深色自动把视频，留在身边。解析download.samplelib.combilibili.comyoutub",
+      "header": {
+        "x": 16,
+        "right": 374,
+        "bottom": 153,
+        "brandRight": 215,
+        "themeLeft": 227
+      }
+    },
+    {
+      "name": "entry-light-320",
+      "viewport": 320,
+      "width": 320,
+      "title": "万能视频下载",
+      "text": "万能视频下载功能如何使用preview@example.test今日剩余 7/10退出浅色深色自动把视频，留在身边。解析download.samplelib.combilibili.comyoutub",
+      "header": {
+        "x": 16,
+        "right": 304,
+        "bottom": 153,
+        "brandRight": 153,
+        "themeLeft": 161
+      }
+    },
+    {
+      "name": "return-focus-reduced-motion",
+      "pass": true
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/auth/login",
+      "method": "POST"
+    },
+    {
+      "path": "/api/auth/me",
+      "method": "GET"
+    },
+    {
+      "path": "/api/parse",
+      "method": "POST"
+    },
+    {
+      "path": "/api/summary",
+      "method": "POST"
+    },
+    {
+      "path": "/api/subtitle",
+      "method": "POST"
+    }
+  ],
+  "errors": [],
+  "realProviderPosts": 0,
+  "realPlatformRequests": 0
+}

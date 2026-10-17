@@ -1,0 +1,10 @@
+{
+  "output_text": "{\n  \"statements\": [\n    {\n      \"statement\": \"In this pilot, the internal sensor of A17 reached 82\\u00b0C.\",\n      \"reason\": \"The context states that during the pilot, A17 shut down once when its internal sensor reached 82\\u00b0C, so the sensor reaching 82\\u00b0C is directly supported.\",\n      \"verdict\": 1\n    },\n    {\n      \"statement\": \"A17 shut down once when the internal sensor reached 82\\u00b0C.\",\n      \"reason\": \"The context explicitly states that A17 shut down once when its internal sensor reached 82\\u00b0C.\",\n      \"verdict\": 1\n    }\n  ]\n}",
+  "usage": {
+    "input_tokens": 1100,
+    "output_tokens": 155,
+    "total_tokens": 1255
+  },
+  "status": "completed",
+  "model": "deepseek-v4-pro"
+}

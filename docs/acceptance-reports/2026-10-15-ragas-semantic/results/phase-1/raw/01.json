@@ -1,0 +1,10 @@
+{
+  "output_text": "{\n  \"statements\": [\n    \"In this pilot, the internal sensor of A17 reached 82°C.\",\n    \"A17 shut down once when the internal sensor reached 82°C.\"\n  ]\n}",
+  "usage": {
+    "input_tokens": 460,
+    "output_tokens": 45,
+    "total_tokens": 505
+  },
+  "status": "completed",
+  "model": "deepseek-v4-pro"
+}

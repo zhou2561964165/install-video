@@ -1,0 +1,31 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-3",
+  "planned_posts": 2,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "en-long",
+      "sample_post": 1,
+      "stage": "review",
+      "status": "response",
+      "reserved_utc": "2026-10-14T08:44:23.534222+00:00",
+      "payload_sha256": "fd178b69445bed7cb488ee6455cde5a39c1bed80c9ab59717dc68b49a4e3dcc1",
+      "http_status": 200,
+      "response_sha256": "74ed90f2877f78f397f7a73a8367a248d234f4ab28e478d1ce34802140b329ea",
+      "result_sha256": "31b7a5ab670e2bb274854ba45118eb0f6df6d815dc07be83d1044742589b3152"
+    },
+    {
+      "ordinal": 2,
+      "sample": "en-long",
+      "sample_post": 2,
+      "stage": "refine",
+      "status": "response",
+      "reserved_utc": "2026-10-14T08:44:27.655703+00:00",
+      "payload_sha256": "15aadc618405ea6c1218166527a8fd134a36fb175640fa36908fcc31be69f50b",
+      "http_status": 200,
+      "response_sha256": "5dcea897bea13d913b95597f3202e65d6003b795066468cb027a362da26a1a03",
+      "result_sha256": "31b7a5ab670e2bb274854ba45118eb0f6df6d815dc07be83d1044742589b3152"
+    }
+  ]
+}

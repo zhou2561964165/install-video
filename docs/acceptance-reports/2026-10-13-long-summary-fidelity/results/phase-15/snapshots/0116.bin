@@ -1,0 +1,48 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-14",
+  "planned_posts": 2,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "en-long",
+      "sample_post": 1,
+      "stage": "plan",
+      "status": "response",
+      "reserved_utc": "2026-10-15T15:31:43.906175+00:00",
+      "payload_sha256": "6e2142b93713fee8fed9f1ff74878782d2d54de7fe5630f9c2c43c243d386296",
+      "http_status": 200,
+      "usage": {
+        "input_tokens": 8999,
+        "output_tokens": 108,
+        "total_tokens": 9107,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "response_sha256": "c57f17ce6a17de361a34354aaa0b30ab9cfccb0923afdc6acba7409313599d31",
+      "plan_sha256": "7283c37ab0a33d8d6e695189494c81ded5a1fece8c112b0c2f5c49988f197f44",
+      "result_sha256": "cca6370feb032f9b738896923e47736d445bad239631c172db99d99ac8dd75cb"
+    },
+    {
+      "ordinal": 2,
+      "sample": "en-long",
+      "sample_post": 2,
+      "stage": "generate",
+      "status": "response",
+      "reserved_utc": "2026-10-15T15:31:47.436645+00:00",
+      "payload_sha256": "90b9c5f43e5cc1c678b8192368debbe1ac3a488cd1d2785a56a688e2f7e7c2a6",
+      "http_status": 200,
+      "usage": {
+        "input_tokens": 9270,
+        "output_tokens": 7677,
+        "total_tokens": 16947,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "response_sha256": "c745ea235dbd39cee3883a2f055f5bc8b186212530cd67f000997e244bfc7ce4",
+      "result_sha256": "cca6370feb032f9b738896923e47736d445bad239631c172db99d99ac8dd75cb"
+    }
+  ]
+}

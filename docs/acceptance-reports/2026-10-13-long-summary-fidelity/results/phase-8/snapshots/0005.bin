@@ -1,0 +1,12 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-long-full-final-4",
+  "status": "closed",
+  "reserved_posts": 3,
+  "maximum_posts": 3,
+  "hard_ceiling": 16,
+  "parent_posts": 13,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-12-summary-long-final-check\\results\\request-ledger.json",
+  "provenance_sha256": "52ccf15e01ac35187c0edeede2b768c85c0fbfa907f790066348203be1a693ed",
+  "closed_receipt_sha256": "be8196668b3cec6af1a341fa94f0c4e23eea83a616cc7c8b2bab1c77143916cc"
+}

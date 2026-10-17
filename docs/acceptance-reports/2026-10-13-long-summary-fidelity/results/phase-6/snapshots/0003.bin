@@ -1,0 +1,53 @@
+{
+  "work_id": "source-first-summary-20261010",
+  "status": "closed",
+  "hard_ceiling": 17,
+  "reserved_posts": 17,
+  "initial_phase_limit": 5,
+  "conditional_followup_limit": 6,
+  "phases": [
+    {
+      "phase": "source-first-summary-live-1",
+      "status": "closed",
+      "maximum_posts": 5,
+      "reserved_posts": 5,
+      "tracker": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\phase-1.json",
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-10-source-first-summary-live\\results\\request-ledger.json",
+      "provenance_sha256": "2488b9f5e0579fae1b0e690290efb9a74c6ae1049df7dc88b1b460cc1c2b1daf",
+      "closed_receipt_sha256": "21a19d7131269c0fc8627daf6a918b42c75fa17792917ab7b031cc9e0d0ef94b"
+    },
+    {
+      "phase": "source-first-summary-staged-2",
+      "status": "closed",
+      "maximum_posts": 7,
+      "reserved_posts": 6,
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-10-staged-summary-live\\results\\request-ledger.json",
+      "tracker": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\phase-2.json",
+      "provenance_sha256": "dd610cfab82fa4107726d8291a8a5e273912bb343d66a77dcd53576de78d57c3",
+      "closed_receipt_sha256": "d467c1b3ed4e035cadf9dc56a8bc8352e796fce5d54bbb49053358c3dfb1e982"
+    },
+    {
+      "phase": "source-first-summary-schema-pro-3",
+      "status": "closed",
+      "maximum_posts": 6,
+      "reserved_posts": 6,
+      "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-10-schema-pro-summary-live\\results\\request-ledger.json",
+      "tracker": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\phase-3.json",
+      "provenance_sha256": "2e6f1d86bd1b7d646d1d52b5777696d5b2c02baaf7815ddc801c8b84bb3bb899",
+      "closed_receipt_sha256": "376ad1d23d41241048cb0baa01603663a439bb00032cee4600aeba5892787e9d"
+    }
+  ],
+  "reason": "One bounded native JSON Schema/pro-model comparison, normal6, no format or semantic retry; prior11 remain counted",
+  "authorization": "User 2026-10-10: budget may be increased by agent according to task without asking",
+  "historical_group": "summary-quality-finish-20261008",
+  "historical_group_posts": 26,
+  "historical_group_closed": true,
+  "close_reason": null,
+  "parent_snapshot": "E:\\install_video\\.planning\\2026-10-10-source-first-summary-acceptance\\budget-continuation-staged.json",
+  "parent_posts": 11,
+  "budget_adjustment": {
+    "from": 12,
+    "to": 17
+  },
+  "parent_sha256": "c441371632929b97acff919575913977dae8fc38b82a98eded815d55f0c62d6a"
+}

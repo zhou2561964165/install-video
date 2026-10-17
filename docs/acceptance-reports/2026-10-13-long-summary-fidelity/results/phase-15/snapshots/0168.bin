@@ -1,0 +1,22 @@
+{
+  "content": "{\n  \"target_0\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"There's three big things we want to get out of this course.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_1\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"a billion calculations per second is probably not far off\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_2\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"I'm going to choose a random number between 16 and 272\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_3\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"if g times g is close enough to x, then stop and say, g is the answer\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_4\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"It only knows how to do addition, multiplication, subtraction, division.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_5\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"it contains, I guess, four main parts.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_6\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"he showed that you can compute anything using the six primitives\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_7\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"a word and then the number five doesn't really make sense\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_8\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"flying planes can be dangerous\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_9\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"Python programs are going to be sequences of definitions and commands.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_10\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"everything is an object in Python.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_11\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"If you don't have any \\\"Out,\\\" that means it got printed out to the console.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_12\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"Division is a little bit special in that no matter what the operands are, the result is always going to be a float.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_13\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"the assignment binds the name to the value.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  },\n  \"target_14\": {\n    \"assessment\": \"supported\",\n    \"source_quote\": \"The value of area did not change.\",\n    \"finding\": \"未发现与原文不符的事实性陈述。\"\n  }\n}",
+  "finish_reason": "stop",
+  "usage": {
+    "input_tokens": 12437,
+    "output_tokens": 771,
+    "total_tokens": 13208,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "response_status": "completed",
+  "http_status": 200,
+  "received_utc": "2026-10-14T14:10:00.719660+00:00",
+  "endpoint": "https://api.deepseek.com/responses",
+  "transport": "responses",
+  "max_output_tokens": 3968,
+  "model": "deepseek-v4-pro"
+}

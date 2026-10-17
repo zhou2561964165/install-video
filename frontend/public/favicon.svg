@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>:root{--brand:#345ed5;--on-brand:#fff}rect{fill:var(--brand)}path{stroke:var(--on-brand)}</style>
+  <rect width="32" height="32" rx="10"/>
+  <path d="M16 8v11m-4-4 4 4 4-4M9 24h14" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

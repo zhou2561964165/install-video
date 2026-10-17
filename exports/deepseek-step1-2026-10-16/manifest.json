@@ -1,0 +1,45 @@
+{
+  "purpose": "Single unchanged DeepSeek Pro source generalization screening; step 1 only; two POST cap",
+  "created_utc": "2026-10-16T05:10:50.590141+00:00",
+  "samples": [
+    {
+      "id": "en-long-unseen",
+      "file": "en-long-unseen.txt",
+      "raw_path": "en-long-unseen.vtt",
+      "sha256": "4e8a1ba805030af1a1d61fad202ce4661d8009cca324b5bd2280ae3ccc11a128",
+      "raw_sha256": "2cedaa556b3ab5c5f7ef9eff88c93fa5360815933591838bab9f9b9705dfedcd",
+      "title": "Lecture 2: Branching and Iteration",
+      "language": "en",
+      "source_url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-2-branching-and-iteration/",
+      "raw_url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/8a169eb715615fa0b797f83ff9d20ab8_0jljZRnHwOI.vtt",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "Dr. Ana Bell / Massachusetts Institute of Technology / MIT OpenCourseWare; 6.0001 Fall 2016. MIT does not endorse this model or product.",
+      "transformation": "Existing app.services.subtitle_service.parse_subtitle_text(vtt), removes timestamps/tags and folds only adjacent identical caption lines; UTF-8 LF with trailing newline. No speech rewritten.",
+      "prepared_chars": 33709,
+      "prepared_lines": 1467,
+      "fetched_date": "2026-10-14",
+      "reuse": "Local noncommercial evaluation; source and derivative review retain attribution and share-alike license.",
+      "chars": 33710
+    },
+    {
+      "id": "zh-listening-unseen",
+      "title": "Listening for Success: The Importance of Audio Files (Chinese)",
+      "language": "zh-Hans",
+      "file": "zh-listening.txt",
+      "raw_path": "zh-listening.vtt",
+      "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_trust_ears_chinese-2/",
+      "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/cbceb29c0047537b8e17f0b4872bcb75_MIT21G_101F14_Trust_Ears_Chinese.vtt",
+      "sha256": "90acdee254a5293b6f1def16f0d0bc90f4941fe1a5b516df91a36d2269a7f1b4",
+      "raw_sha256": "d5861211f49a0d424f1ab7e9456ec082f57756234065d9d00ff44d40109ce211",
+      "chars": 402,
+      "lines": 14,
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology / MIT OpenCourseWare",
+      "parser_source_sha256": "05d73b2b6d46455d18d6b1d78a0c6967401aaf8b942ab53d351f5698c717273d"
+    }
+  ],
+  "source_preparation": "Existing timed-caption parser AST; only headers/timestamps/tags/adjacent identical lines removed. Full text preserved. No new model outputs inspected.",
+  "scope": "No cross-model comparison; not evidence of pretraining absence. MIT CC BY-NC-SA4.0 attribution retained; no endorsement."
+}

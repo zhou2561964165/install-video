@@ -16,7 +16,7 @@ def test_settings_defaults():
 
 
 def test_public_summary_limit_default_and_environment(monkeypatch):
-    assert Settings().summary_max_source_chars == 20_000
+    assert Settings().summary_max_source_chars == 60_000
     monkeypatch.setenv("SUMMARY_MAX_SOURCE_CHARS", "15000")
     assert Settings.from_env().summary_max_source_chars == 15_000
 

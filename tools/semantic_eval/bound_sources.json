@@ -1,0 +1,36 @@
+{
+  "assets": [
+    {
+      "path": "docs/acceptance-reports/2026-10-13-long-summary-fidelity/results/phase-4/snapshots/0030.bin",
+      "sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7"
+    },
+    {
+      "path": "docs/acceptance-reports/2026-10-13-long-summary-fidelity/results/phase-4/en-long.json",
+      "sha256": "8c013c57882d281817ac017992a1c6fa138705e52b776a674e2dc08c510be616"
+    },
+    {
+      "path": "docs/acceptance-reports/2026-10-13-long-summary-fidelity/results/phase-4/response-02.json",
+      "sha256": "099f662a8e616ce37e075c7d4055eb13ec1862e164461a37cf6e14b27fc4d13c"
+    },
+    {
+      "path": "docs/acceptance-reports/2026-10-13-long-summary-fidelity/results/phase-4/closed-receipt.json",
+      "sha256": "b950cce30b6dfc9baef5d8a0ab14f5970bd1942e517e9f0284ce88c5a45e360c"
+    },
+    {
+      "path": "docs/acceptance-reports/2026-10-13-long-summary-fidelity/results/phase-4/provenance.json",
+      "sha256": "d087b2b2d71800c0b67e01a37724239cef6f5c052e7fe3ab5091fcdd0bfb1944"
+    },
+    {
+      "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/LICENSE.md",
+      "sha256": "4e87f1f901d907368e4f206da8ed5da72964d648b9cc516f44d4b02950a157a5"
+    },
+    {
+      "path": "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/license-evidence.json",
+      "sha256": "8feb064b9a171423968c685b10e82af027d1388ad949e10c442762027b2e41a4"
+    }
+  ],
+  "source_license": "CC BY-NC-SA 4.0",
+  "attribution": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare; Lecture 1: What is Computation?",
+  "url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+  "derivation": "Full source snapshot plus original phase4 key_points[3]; comparison modifies only the initial subject. Diagnostic fixtures only, not production answers."
+}

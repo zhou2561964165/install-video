@@ -1,226 +1,7 @@
-/* =====================================================================
-   global.css —— 深色液态玻璃 + 樱花粉辉光（深色默认 + 三档主题 浅/深/自动）
-   三层 token：primitive（色板）→ semantic（--accent/--surface/--text-*）→ component
-   颜色/字体/时长一律走 token，不散落硬编码（工程约定 §3）
-   折射彩虹（--refract-* ×5）只用于玻璃描边/光斑/背景点缀，跨主题恒定；
-   品牌主色仍是樱花粉（--accent）；视频工作区独立使用参考白蓝 token。
-   ===================================================================== */
+@import './tokens.css';
 
-/* ── L1 Primitive 色板（樱花粉 + 深色 ink + 折射彩虹 + 浅色灰阶） / L2 Semantic / L3 Component ── */
-:root {
-  /* primitive：樱花粉阶（深→浅）——品牌主色，主按钮「粉胶囊白字」 */
-  --sakura-700: #b2214f;
-  --sakura-600: #bd2a5b;
-  --sakura-500: #d6336c;   /* 主强调：深樱（白字对比 4.6:1；勿再浅，否则白字失读） */
-  --sakura-400: #ec6a8c;
-  --sakura-300: #f5a6b8;
-  --sakura-200: #f8c3cd;   /* 浅樱：能量条渐变/光晕/芯片底（hex，PIXI 需 hex 解析） */
-  --sakura-100: #ffb3c1;
-  --sakura-050: #fdf0f3;
-
-  /* primitive：深色基底 ink 阶（近黑，深色/自动深色主题用） */
-  --ink-950: #050507;
-  --ink-900: #0a0a0f;   /* 页面底 */
-  --ink-800: #12121a;   /* 抬升面 */
-  --ink-700: #1a1a24;   /* 更高面 */
-
-  /* primitive：折射彩虹（5 色，玻璃描边/光斑/背景点缀；hex，跨主题恒定） */
-  --refract-cyan: #47a9ff;
-  --refract-violet: #996fff;
-  --refract-pink: #ff6cae;
-  --refract-mint: #53ddb8;
-  --refract-warm: #ffc062;
-
-  /* primitive：浅色主题中性灰阶（仅浅色主题用） */
-  --gray-900: #333333;
-  --gray-600: #666666;
-  --gray-500: #999999;
-  --gray-300: #d9d9d9;
-  --gray-200: #e8e8e8;
-  --gray-100: #f6f7f7;
-  --cream: #fcfcfc;
-
-  /* semantic：品牌粉（主按钮/强调）+ 折射色（装饰点缀），跨主题一致 */
-  --accent: var(--sakura-500);
-  --accent-hover: var(--sakura-600);
-  --accent-soft: var(--sakura-200);      /* 能量条渐变/光晕（hex） */
-  --accent-lilac: var(--refract-violet); /* PIXI 二级色（极光/星尘）→ 折射紫 */
-  --accent-pink: var(--refract-pink);    /* PIXI 花瓣粉 → 折射粉 */
-  --grad-accent: linear-gradient(135deg, var(--refract-cyan), var(--refract-violet), var(--refract-pink), var(--refract-mint));  /* 折射彩虹渐变 */
-
-  /* semantic：深色基底（默认主题 = 深色液态玻璃） */
-  --surface: var(--ink-900);
-  --surface-raised: var(--ink-800);
-  --surface-glass: color-mix(in srgb, #ffffff 6%, transparent);   /* 深色玻璃底（浅色 72% 反转为 6%） */
-  --text-primary: #f5f5f7;
-  --text-secondary: rgba(245, 245, 247, .58);
-  --text-muted: rgba(245, 245, 247, .42);
-  --border: rgba(255, 255, 255, .08);
-  --border-strong: rgba(255, 255, 255, .18);
-
-  --accent-tint: rgba(255, 108, 174, .18);   /* 樱花粉辉光（深色底） */
-  --on-accent: #ffffff;   /* 深樱底白字已达标；勿换成浅樱底 */
-  --overlay: rgba(0, 0, 0, .7);   /* 封面时长角标底（半透明黑，与缩略图叠加） */
-  --scrim: rgba(0, 0, 0, .18);    /* 弹层/菜单遮罩（token 化自 .expression-menu-backdrop） */
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, .5);
-
-  /* component */
-  --btn-bg: var(--accent);
-  --btn-bg-hover: var(--accent-hover);
-  --btn-fg: var(--on-accent);
-  --card-radius: 14px;
-  --pill-radius: 999px;
-  --glass-blur: 18px;          /* 液态玻璃模糊半径（对齐参考站） */
-  --glass-saturate: 1.16;      /* 玻璃色增强：折射色透过更鲜 */
-  --glass-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));  /* 玻璃滤镜统一配方 */
-  --insight-bg: color-mix(in srgb, var(--surface-raised) 72%, transparent);
-  --insight-result-bg: color-mix(in srgb, var(--surface) 82%, transparent);
-  --insight-border: color-mix(in srgb, var(--refract-violet) 34%, var(--border));
-  --insight-label-size: 11px;
-  --insight-body-size: 13px;
-  --insight-control-radius: 10px;
-  --insight-notice-fg: var(--text-primary);
-  --insight-notice-size: var(--insight-body-size);
-  --insight-notice-leading: 1.6;
-  --download-help-fg: var(--text-primary);
-  --download-help-size: var(--insight-body-size);
-  /* primitive → semantic → component：触控和角色独立区域 */
-  --size-touch: 44px;
-  --size-focus-ring: 2px;
-  --size-mascot-min: 240px;
-  --size-mascot-max: 340px;
-  --space-safe-header: 140px;
-  --space-safe-footer: 80px;
-  --control-touch-size: var(--size-touch);
-  --focus-ring-width: var(--size-focus-ring);
-  --decoration-height: clamp(var(--size-mascot-min), 38svh, var(--size-mascot-max));
-  --mascot-region-height: var(--decoration-height);
-  --mascot-trigger-size: var(--control-touch-size);
-  --mascot-focus-color: var(--accent);
-  --mascot-focus-width: var(--focus-ring-width);
-  --menu-control-size: var(--control-touch-size);
-  --mascot-inline-gap: 28px;
-
-  /* 折射描边环：玻璃卡的 1px 彩虹描边（伪元素 + mask 只留环，不遮玻璃底；跨主题恒定） */
-  --refract-ring: linear-gradient(135deg,
-    color-mix(in srgb, var(--refract-cyan) 72%, transparent),
-    color-mix(in srgb, var(--refract-violet) 72%, transparent),
-    color-mix(in srgb, var(--refract-pink) 72%, transparent),
-    color-mix(in srgb, var(--refract-mint) 72%, transparent));
-
-  /* 字体 / 动效 token（换字体只改这里）。
-     「阿里妈妈/普惠体」优先（本机装有则用），回落已由 index.html 从 Google Fonts 加载的
-     思源黑体（Noto Sans SC）；不另引阿里 CDN 字体，避免多 MB CJK 字体拖慢首屏。 */
-  --font-body: "Alibaba PuHuiTi", "Alimama ShuHeiTi", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Arial Black", Impact, var(--font-body);   /* 超大展示字（渐进增强，无圆体时用粗黑体） */
-  --fs-display: clamp(40px, 8vw, 104px);   /* 展示字号：随视口缩放 */
-  --ls-display: -0.06em;                    /* 展示字字距：微收紧 */
-  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace;
-  --dur: .25s;
-  --ease: cubic-bezier(.2, .7, .3, 1);
-  /* 动画节奏 token：循环/反馈类动画时长，避免 keyframe 散落硬编码（--dur 为通用过渡时长） */
-  --dur-shake: .35s;      /* 错误抖动 */
-  --dur-breathe: 2.4s;    /* 错误呼吸 */
-  --dur-dim: 3s;          /* 错误渐隐 */
-  --dur-progress: .3s;    /* 进度条宽度过渡 */
-  --dur-spin: 1s;         /* spinner 旋转 */
-  --dur-spin-fast: .8s;   /* preloader spinner */
-  --dur-pulse: 1.8s;      /* preloader mark 脉冲 */
-  --dur-reveal: .76s;                          /* 滚动揭示：进场时长（对齐参考站 760ms） */
-  --ease-reveal: cubic-bezier(.16, 1, .3, 1);  /* 滚动揭示：进场缓动（easeOutExpo 感） */
-  --dur-focus: .5s;                            /* 滚动聚焦：失焦/锐利过渡时长 */
-  --blur-focus: 8px;                           /* 滚动聚焦：上下页失焦模糊量 */
-
-  color-scheme: dark;
-}
-
-/* 浅色主题：深色为默认，浅色只覆盖 surface/text/border/shadow 等少量 token（accent/折射色两套一致） */
-[data-theme='light'] {
-  --surface: var(--cream);
-  --surface-raised: #ffffff;
-  --surface-glass: color-mix(in srgb, #ffffff 72%, transparent);
-  --text-primary: var(--gray-900);
-  --text-secondary: var(--gray-600);
-  --text-muted: var(--gray-500);
-  --border: var(--gray-200);
-  --border-strong: var(--gray-300);
-  --accent-tint: rgba(214, 51, 108, .12);
-  --scrim: rgba(51, 51, 51, .12);   /* 浅色底遮罩更轻 */
-  --shadow-sm: 0 1px 2px rgba(51, 51, 51, .06);
-  --shadow-md: 0 8px 24px rgba(214, 51, 108, .12);
-  color-scheme: light;
-}
-
-/* 深色主题 = 默认（:root 即深色液态玻璃），data-theme='dark' 命中默认值，无需覆盖 */
-
-/* 自动主题：跟随系统（三档开关的「自动」）。默认走 :root（深色）；
-   系统浅色时套用 [data-theme='light'] 同款浅色 token。 */
-[data-theme='auto'] { color-scheme: light dark; }
-@media (prefers-color-scheme: light) {
-  [data-theme='auto'] {
-    --surface: var(--cream);
-    --surface-raised: #ffffff;
-    --surface-glass: color-mix(in srgb, #ffffff 72%, transparent);
-    --text-primary: var(--gray-900);
-    --text-secondary: var(--gray-600);
-    --text-muted: var(--gray-500);
-    --border: var(--gray-200);
-    --border-strong: var(--gray-300);
-    --accent-tint: rgba(214, 51, 108, .12);
-    --scrim: rgba(51, 51, 51, .12);   /* 浅色底遮罩更轻 */
-    --shadow-sm: 0 1px 2px rgba(51, 51, 51, .06);
-    --shadow-md: 0 8px 24px rgba(214, 51, 108, .12);
-    color-scheme: light;
-  }
-}
-
+/* 既有功能组件基础样式；参考视觉在 reference.css，语义在 tokens.css。 */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-/* 视频流程：primitive → semantic → component，取参考站原 palette；小文本与白字 CTA 用深蓝。 */
-:root {
-  --video-blue-500: #1777ff;
-  --video-blue-600: #1260dd;
-  --video-blue-700: #0e4ead;
-  --video-blue-050: #e8f1ff;
-  --video-white: #ffffff;
-  --video-gray-050: #f8fafc;
-  --video-gray-100: #f3f4f6;
-  --video-gray-200: #e5e7eb;
-  --video-gray-500: #6b7280;
-  --video-gray-900: #1f1f1f;
-  --video-red-700: #b91c1c;
-  --video-shadow-raw: 0 2px 6px rgba(31, 31, 31, .08), 0 8px 24px rgba(31, 31, 31, .04);
-  --video-radius-lg: 16px;
-  --video-radius-md: 12px;
-  --video-size-small: 12px;
-  --video-size-label: 14px;
-  --video-size-body: 16px;
-  --video-size-heading: 18px;
-  --video-duration-fast: .15s;
-  --video-color-primary: var(--video-blue-600);
-  --video-color-hover: var(--video-blue-700);
-  --video-color-accent: var(--video-blue-500);
-  --video-color-soft: var(--video-blue-050);
-  --video-color-surface: var(--video-white);
-  --video-color-muted-surface: var(--video-gray-050);
-  --video-color-text: var(--video-gray-900);
-  --video-color-secondary: var(--video-gray-500);
-  --video-color-border: var(--video-gray-200);
-  --video-color-error: var(--video-red-700);
-  --video-card-bg: var(--video-color-surface);
-  --video-card-border: var(--video-color-border);
-  --video-card-radius: var(--video-radius-lg);
-  --video-card-shadow: var(--video-shadow-raw);
-  --video-button-bg: var(--video-color-primary);
-  --video-button-fg: var(--video-color-surface);
-  --video-tab-active: var(--video-color-primary);
-  --video-format-selected-bg: var(--video-color-soft);
-  --video-font: var(--font-body);
-  --video-control-duration: var(--video-duration-fast);
-  --video-mobile-header-space: 176px;
-  --video-mobile-theme-offset: 88px;
-}
 html, body, #root { height: 100%; }
 html { scroll-snap-type: y mandatory; }  /* 落地页：章节强制按页吸附，突出“选择页” */
 
@@ -469,7 +250,7 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   padding: 2px 8px;
   border-radius: var(--pill-radius);
   background: var(--overlay);
-  color: var(--on-accent);
+  color: var(--overlay-fg);
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.4;
@@ -1477,20 +1258,8 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   }
 }
 
-/* 局部参考视频工作区：不修改登录、入口、PIXI 或下载核心的主题。 */
+/* 视频工作区：复用全站语义，保留原展示组件与下载/字幕状态接口。 */
 .video-workflow {
-  --text-primary: var(--video-color-text);
-  --text-secondary: var(--video-color-secondary);
-  --text-muted: var(--video-color-secondary);
-  --accent: var(--video-color-primary);
-  --accent-soft: var(--video-color-soft);
-  --accent-tint: var(--video-color-soft);
-  --border: var(--video-color-border);
-  --on-accent: var(--video-color-surface);
-  --btn-bg: var(--video-button-bg);
-  --btn-bg-hover: var(--video-color-hover);
-  --btn-fg: var(--video-button-fg);
-  color-scheme: light;
   width: min(100% - 48px, 1280px);
   margin: 0 auto;
   padding: 116px 0 32px;
@@ -1506,8 +1275,8 @@ html:has(.video-workflow) { scroll-snap-type: none; }
 .video-workflow .format-card, .video-workflow .video-insights { min-width: 0; max-width: none; width: 100%; padding: 0; gap: 0; border: 1px solid var(--video-card-border); border-radius: var(--video-card-radius); background: var(--video-card-bg); box-shadow: var(--video-card-shadow); backdrop-filter: none; overflow: hidden; align-items: stretch; }
 .video-workflow .format-card::before, .video-workflow .bubble::before { display: none; }
 .video-card__info, .video-card__download { display: flex; flex-direction: column; gap: 14px; padding: 24px; }
-.video-card__download { border-top: 1px solid var(--video-gray-100); }
-.video-workflow .cover { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--video-radius-md); background: var(--video-gray-100); display: grid; place-items: center; overflow: hidden; }
+.video-card__download { border-top: 1px solid var(--video-color-muted-surface); }
+.video-workflow .cover { width: 100%; aspect-ratio: 16 / 9; border-radius: var(--video-radius-md); background: var(--video-color-muted-surface); display: grid; place-items: center; overflow: hidden; }
 .video-workflow .cover img { width: 100%; height: 100%; max-height: none; object-fit: cover; border-radius: 0; }
 .video-workflow .cover img[hidden] { display: none; }
 .video-workflow .cover > .video-icon { width: 48px; height: 48px; color: var(--video-color-secondary); }
@@ -1519,13 +1288,13 @@ html:has(.video-workflow) { scroll-snap-type: none; }
 .video-icon { display: inline-block; flex-shrink: 0; width: 18px; height: 18px; vertical-align: middle; }
 .video-card__section-title .video-icon { color: var(--video-color-primary); }
 .video-workflow .format-list { display: flex; flex-direction: column; gap: 10px; }
-.video-workflow .format-list button { width: 100%; display: flex; flex-direction: row; gap: 12px; padding: 12px 16px; text-align: left; align-items: center; border-radius: var(--video-radius-md); background: var(--video-color-surface); color: var(--video-color-text); border-color: var(--video-gray-100); }
+.video-workflow .format-list button { width: 100%; display: flex; flex-direction: row; gap: 12px; padding: 12px 16px; text-align: left; align-items: center; border-radius: var(--video-radius-md); background: var(--video-color-surface); color: var(--video-color-text); border-color: var(--video-color-muted-surface); }
 .video-workflow .format-list button:hover:not(:disabled), .video-workflow .format-list button.selected { color: var(--video-color-text); background: var(--video-format-selected-bg); border-color: var(--video-color-accent); }
 .video-workflow .format-list button.selected:hover:not(:disabled) { background: var(--video-format-selected-bg); border-color: var(--video-color-primary); }
 .format-list__text { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .video-workflow .format-list__label { overflow-wrap: anywhere; font-size: var(--video-size-label); }
 .video-workflow .format-list__meta, .video-workflow .format-list button.selected .format-list__meta { font-size: var(--video-size-small); color: var(--video-color-secondary); opacity: 1; }
-.format-list__icon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; color: var(--video-color-secondary); background: var(--video-gray-100); }
+.format-list__icon { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; color: var(--video-color-secondary); background: var(--video-color-muted-surface); }
 .selected .format-list__icon { color: var(--video-color-surface); background: var(--video-color-primary); }
 .video-workflow .badge-switch { padding: 8px 0; border: none; border-radius: 0; color: var(--video-color-text); font-size: var(--video-size-label); }
 .video-workflow .download-naming-help, .video-card__selection { color: var(--video-color-secondary); font-size: var(--video-size-small); }
@@ -1538,7 +1307,7 @@ html:has(.video-workflow) { scroll-snap-type: none; }
 .video-workflow .video-summary-button:hover:not(:disabled) { background: var(--video-color-soft); }
 .video-workflow :focus-visible { outline-color: var(--video-color-primary); outline-width: var(--focus-ring-width); outline-offset: 3px; }
 .video-workflow .video-insights { display: flex; flex-direction: column; min-height: 560px; margin: 0; }
-.video-insights__tabs { display: flex; border-bottom: 1px solid var(--video-gray-100); padding: 0 12px; flex-wrap: wrap; }
+.video-insights__tabs { display: flex; border-bottom: 1px solid var(--video-color-muted-surface); padding: 0 12px; flex-wrap: wrap; }
 .video-workflow .video-insights__tabs button { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 12px; border-radius: 0; border: none; border-bottom: 2px solid transparent; background: transparent; color: var(--video-color-secondary); }
 .video-workflow .video-insights__tabs button:hover:not(:disabled) { background: var(--video-color-muted-surface); color: var(--video-color-text); }
 .video-workflow .video-insights__tabs button[aria-selected='true'] { color: var(--video-tab-active); border-bottom-color: var(--video-color-accent); }
@@ -1549,7 +1318,7 @@ html:has(.video-workflow) { scroll-snap-type: none; }
 .video-workflow .video-insights__controls select { width: 100%; min-height: var(--control-touch-size); padding: 8px 12px; border: 1px solid var(--video-color-border); border-radius: var(--video-radius-md); font-family: var(--video-font); font-size: var(--video-size-label); background: var(--video-color-surface); color: var(--video-color-text); }
 .video-workflow .video-insights__generate { border: 1px solid var(--video-color-primary); background: var(--video-color-surface); color: var(--video-color-primary); }
 .video-workflow .video-insights__generate:hover:not(:disabled) { background: var(--video-color-soft); }
-.video-workflow .video-insights__notice { margin: 16px 0; padding: 12px 14px; border-radius: var(--video-radius-md); background: var(--video-color-muted-surface); color: var(--video-color-secondary); border: 1px solid var(--video-gray-100); font-size: var(--video-size-small); }
+.video-workflow .video-insights__notice { margin: 16px 0; padding: 12px 14px; border-radius: var(--video-radius-md); background: var(--video-color-muted-surface); color: var(--video-color-secondary); border: 1px solid var(--video-color-muted-surface); font-size: var(--video-size-small); }
 .video-workflow .video-insights__empty { color: var(--video-color-secondary); font-size: var(--video-size-label); margin-top: 16px; }
 .video-workflow .video-insights__status { margin-top: 16px; min-height: 0; font-size: var(--video-size-label); }
 .video-workflow .video-insights__error { color: var(--video-color-error); padding: 12px 0; }

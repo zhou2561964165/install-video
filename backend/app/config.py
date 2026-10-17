@@ -1,5 +1,6 @@
 import math
 import os
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -29,7 +30,13 @@ class Settings:
     subtitle_max_bytes: int = 5 * 1024 * 1024
     subtitle_timeout_seconds: int = 30
     # Public summary availability; independent of experimental pipeline capacity.
-    summary_max_source_chars: int = 20_000
+    summary_max_source_chars: int = 60_000
+    summary_long_threshold_chars: int = 20_000
+    llm_long_summary_model: str = "deepseek-v4-pro"
+    llm_long_summary_max_input_chars: int = 60_000
+    llm_long_summary_max_output_tokens: int = 16_384
+    llm_long_summary_timeout_seconds: int = 300
+    llm_long_summary_max_concurrent: int = 1
     llm_provider: str = "openai-compatible"
     llm_base_url: str = ""
     llm_api_key: str = ""
@@ -47,6 +54,11 @@ class Settings:
     llm_summary_thinking_mode: str = "auto"
     llm_summary_max_point_chars: int = 240
     llm_summary_source_context_chars: int = 1200
+    llm_summary_notes_language: str = "source"
+    llm_summary_source_context_mode: str = "auto"
+    llm_summary_fidelity_mode: str = "off"
+    llm_summary_review_max_output_tokens: int = 4096
+    llm_summary_subject_checks_max_output_tokens: int = 8192
     llm_summary_strategy: str = "legacy"
     llm_summary_facts_max_source_chars: int = 40_000
     llm_summary_facts_chunk_chars: int = 8_000
@@ -61,6 +73,29 @@ class Settings:
     llm_summary_quality_contract: str = "compat"
 
     def __post_init__(self) -> None:
+        for name, maximum in (("summary_long_threshold_chars", 60_000),
+                              ("llm_long_summary_max_input_chars", 60_000),
+                              ("llm_long_summary_max_output_tokens", 65_536),
+                              ("llm_long_summary_timeout_seconds", 900),
+                              ("llm_long_summary_max_concurrent", 32)):
+            value = getattr(self, name)
+            if type(value) is not int or not 1 <= value <= maximum:
+                raise ValueError(f"{name} must be an integer between 1 and {maximum}")
+        if (type(self.llm_long_summary_model) is not str
+                or re.fullmatch(r"deepseek-v[4-9][0-9]*-pro", self.llm_long_summary_model) is None):
+            raise ValueError("llm_long_summary_model must be a DeepSeek v4+ Pro model")
+        if type(self.llm_summary_notes_language) is not str or self.llm_summary_notes_language not in {"source", "output"}:
+            raise ValueError("llm_summary_notes_language must be source or output")
+        if type(self.llm_summary_source_context_mode) is not str or self.llm_summary_source_context_mode not in {"auto", "boundary"}:
+            raise ValueError("llm_summary_source_context_mode must be auto or boundary")
+        if type(self.llm_summary_fidelity_mode) is not str or self.llm_summary_fidelity_mode not in {"off", "long", "review", "checks", "subject_checks"}:
+            raise ValueError("llm_summary_fidelity_mode must be off, long, review, checks or subject_checks")
+        if (type(self.llm_summary_review_max_output_tokens) is not int
+                or not 1 <= self.llm_summary_review_max_output_tokens <= 65536):
+            raise ValueError("llm_summary_review_max_output_tokens must be an integer between 1 and 65536")
+        if (type(self.llm_summary_subject_checks_max_output_tokens) is not int
+                or not 1 <= self.llm_summary_subject_checks_max_output_tokens <= 65536):
+            raise ValueError("llm_summary_subject_checks_max_output_tokens must be an integer between 1 and 65536")
         if (type(self.summary_max_source_chars) is not int
                 or not 1 <= self.summary_max_source_chars <= 1_000_000):
             raise ValueError("summary_max_source_chars must be an integer between 1 and 1000000")
@@ -145,7 +180,13 @@ class Settings:
             password_iterations=_int("PASSWORD_ITERATIONS", 100_000),
             subtitle_max_bytes=_int("SUBTITLE_MAX_BYTES", 5 * 1024 * 1024),
             subtitle_timeout_seconds=_int("SUBTITLE_TIMEOUT_SECONDS", 30),
-            summary_max_source_chars=_int("SUMMARY_MAX_SOURCE_CHARS", 20_000),
+            summary_max_source_chars=_int("SUMMARY_MAX_SOURCE_CHARS", 60_000),
+            summary_long_threshold_chars=_int("SUMMARY_LONG_THRESHOLD_CHARS", 20_000),
+            llm_long_summary_model=_str("LLM_LONG_SUMMARY_MODEL", "deepseek-v4-pro"),
+            llm_long_summary_max_input_chars=_int("LLM_LONG_SUMMARY_MAX_INPUT_CHARS", 60_000),
+            llm_long_summary_max_output_tokens=_int("LLM_LONG_SUMMARY_MAX_OUTPUT_TOKENS", 16_384),
+            llm_long_summary_timeout_seconds=_int("LLM_LONG_SUMMARY_TIMEOUT_SECONDS", 300),
+            llm_long_summary_max_concurrent=_int("LLM_LONG_SUMMARY_MAX_CONCURRENT", 1),
             llm_provider=_str("LLM_PROVIDER", "openai-compatible"),
             llm_base_url=_str("LLM_BASE_URL", ""),
             llm_api_key=_str("LLM_API_KEY", ""),
@@ -166,6 +207,11 @@ class Settings:
             llm_summary_thinking_mode=_str("LLM_SUMMARY_THINKING_MODE", "auto"),
             llm_summary_max_point_chars=_int("LLM_SUMMARY_MAX_POINT_CHARS", 240),
             llm_summary_source_context_chars=_int("LLM_SUMMARY_SOURCE_CONTEXT_CHARS", 1200),
+            llm_summary_notes_language=_str("LLM_SUMMARY_NOTES_LANGUAGE", "source"),
+            llm_summary_source_context_mode=_str("LLM_SUMMARY_SOURCE_CONTEXT_MODE", "auto"),
+            llm_summary_fidelity_mode=_str("LLM_SUMMARY_FIDELITY_MODE", "off"),
+            llm_summary_review_max_output_tokens=_int("LLM_SUMMARY_REVIEW_MAX_OUTPUT_TOKENS", 4096),
+            llm_summary_subject_checks_max_output_tokens=_int("LLM_SUMMARY_SUBJECT_CHECKS_MAX_OUTPUT_TOKENS", 8192),
             llm_summary_strategy=_str("LLM_SUMMARY_STRATEGY", "legacy"),
             llm_summary_facts_max_source_chars=_int("LLM_SUMMARY_FACTS_MAX_SOURCE_CHARS", 40_000),
             llm_summary_facts_chunk_chars=_int("LLM_SUMMARY_FACTS_CHUNK_CHARS", 8_000),

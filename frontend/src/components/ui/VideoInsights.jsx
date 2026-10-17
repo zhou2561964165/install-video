@@ -1,4 +1,5 @@
 import React, { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { INSIGHT_TABS, SUMMARY_SUPPORT_NOTICE, TARGET_LANGUAGES } from '../../state/insightConfig.js';
 import { saveFile } from '../../lib/saveFile.js';
 import VideoIcon from './VideoIcon.jsx';
@@ -6,6 +7,16 @@ import VideoIcon from './VideoIcon.jsx';
 const loadingLabel = { subtitle: '正在读取字幕…', translation: '正在翻译字幕…', summary: '正在生成总结…' };
 const sourceLink = (value) => {
   try { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) ? url.href : null; } catch { return null; }
+};
+const markdownComponents = {
+  a: ({ href, children }) => {
+    const safeHref = sourceLink(href);
+    return safeHref
+      ? <a href={safeHref} target="_blank" rel="noopener noreferrer">{children}</a>
+      : <>{children}</>;
+  },
+  // Remote images can disclose that a summary was opened. Keep the alt text without fetching them.
+  img: ({ alt }) => <span className="video-insights__markdown-image">{alt ? `图片未加载：${alt}` : '图片未加载'}</span>,
 };
 
 const VideoInsights = forwardRef(function VideoInsights({ languages = [], insights, title = '视频内容', sourceUrl }, ref) {
@@ -22,9 +33,11 @@ const VideoInsights = forwardRef(function VideoInsights({ languages = [], insigh
   }, [languages]);
   const busy = Boolean(insights.loading);
   const result = insights[tab];
+  const isMarkdownSummary = tab === 'summary' && result?.format === 'markdown';
   const config = INSIGHT_TABS.find((item) => item.key === tab);
   const text = !result ? '' : tab === 'summary'
-    ? [result.summary, ...(result.key_points || []).map((point) => `• ${point}`)].join('\n\n') : result.text;
+    ? (isMarkdownSummary ? result.summary : [result.summary, ...(result.key_points || []).map((point) => `• ${point}`)].join('\n\n'))
+    : result.text;
   const href = sourceLink(sourceUrl);
 
   const chooseTab = (key) => { setTab(key); setLocalStatus(''); };
@@ -103,7 +116,13 @@ const VideoInsights = forwardRef(function VideoInsights({ languages = [], insigh
               <h3>{tab === 'summary' ? '内容总结' : tab === 'subtitle' ? `${result.language} 字幕${result.is_auto ? ' · 自动生成' : ''}` : `字幕翻译 · ${result.target_language}`}</h3>
               <div className="video-insights__local-actions"><button type="button" onClick={copy}>复制</button><button type="button" onClick={exportText}>导出 TXT</button></div>
             </div>
-            {tab === 'summary' ? <><p>{result.summary}</p><h4>关键要点</h4><ul>{(result.key_points || []).map((point, index) => <li key={index}>{point}</li>)}</ul></> : <pre>{result.text}</pre>}
+            {tab === 'summary' ? isMarkdownSummary
+              ? <div className="video-insights__markdown" data-testid="summary-markdown"><ReactMarkdown components={markdownComponents}>{result.summary || ''}</ReactMarkdown></div>
+              : <>
+                <p>{result.summary}</p>
+                {!!result.key_points?.length && <><h4>关键要点</h4><ul>{result.key_points.map((point, index) => <li key={index}>{point}</li>)}</ul></>}
+              </>
+              : <pre>{result.text}</pre>}
             {href && <a href={href} target="_blank" rel="noopener noreferrer">视频来源</a>}
             {tab !== 'subtitle' && <small>{result.provider} · {result.model}</small>}
           </article> : insights.loading !== tab && !(insights.error && errorTab === tab) && <div className="video-insights__placeholder"><VideoIcon name={tab} /><h3>{config.label}</h3><p>{config.empty}</p><p>点击“{config.action}”开始处理。</p></div>}

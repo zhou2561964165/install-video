@@ -1,0 +1,19 @@
+[project]
+name = "semantic-eval"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx",
+    "langchain-community==0.3.31",
+    "python-dotenv",
+    "ragas==0.4.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+]
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple"
+default = true

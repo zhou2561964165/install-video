@@ -1,0 +1,108 @@
+{
+  "started": "2026-10-13T07:32:27.241Z",
+  "checks": [
+    {
+      "name": "repeat-scene-replacement",
+      "pass": true,
+      "details": {
+        "cycles": 4
+      }
+    },
+    {
+      "name": "console-and-resource-integrity",
+      "pass": true,
+      "details": {
+        "mockedApiRequests": 6,
+        "externalRequests": 0,
+        "pageErrors": 0,
+        "consoleErrors": 0
+      }
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/parse",
+      "mocked": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/parse",
+      "mocked": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/parse",
+      "mocked": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/parse",
+      "mocked": true
+    }
+  ],
+  "blockedExternal": [],
+  "limitations": [],
+  "budget": {
+    "modelPosts": 0,
+    "platformExtractions": 0,
+    "mediaDownloads": 0
+  },
+  "scriptSha256": "d62a42a450cbb83df6fb56767ea32ae99124147b81518ae3d735c450590cbd2a",
+  "selectedChecks": [
+    "repeat-scene-replacement",
+    "console-and-resource-integrity"
+  ],
+  "browserVersion": "155.0.4283.45",
+  "reconnaissance": {
+    "title": "万能视频下载",
+    "headings": [
+      "把视频，留在身边。",
+      "先看清信息，再决定怎么保存",
+      "下载视频，也整理视频内容",
+      "三步，完成下载或字幕整理",
+      "视频下载与字幕整理"
+    ],
+    "hosts": [
+      {
+        "id": "",
+        "className": "landing-hero"
+      },
+      {
+        "id": "features",
+        "className": "landing-chapter is-pending"
+      },
+      {
+        "id": "",
+        "className": "landing-chapter is-pending"
+      },
+      {
+        "id": "how-it-works",
+        "className": "landing-chapter is-pending"
+      },
+      {
+        "id": "",
+        "className": "landing-outro is-pending"
+      }
+    ],
+    "themes": [
+      "浅色",
+      "深色",
+      "自动"
+    ]
+  },
+  "ended": "2026-10-13T07:32:34.423Z",
+  "pass": true
+}

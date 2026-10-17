@@ -1,0 +1,94 @@
+{
+  "checks": [
+    {
+      "name": "auth-lens-and-tilt",
+      "state": {
+        "active": "true",
+        "rendering": "filter",
+        "opacity": "1",
+        "x": 380,
+        "y": 440,
+        "width": 244.796875,
+        "blend": "normal",
+        "events": "none",
+        "native": true,
+        "planes": [
+          "matrix3d(0.999408, -0.0101653, 0.0328742, -3.28742e-05, 0.0098842, 0.999913, 0.00870302, -8.70302e-06, -0.0329598, -0.00837293, 0.999422, -0.000999422, -5.67728, -1.38227, -0.198811, 1.0002)"
+        ]
+      }
+    },
+    {
+      "name": "input-native-pointer",
+      "pass": true
+    },
+    {
+      "name": "hero-pointer-mask",
+      "state": {
+        "active": "true",
+        "rendering": "filter",
+        "opacity": "1",
+        "x": 762.0125122070312,
+        "y": 412.96875,
+        "width": 244.796875,
+        "blend": "normal",
+        "events": "none",
+        "native": true,
+        "planes": [
+          "matrix3d(0.999987, 0.00152536, -0.00486872, 4.86872e-06, -0.00146606, 0.999925, 0.0121613, -1.21613e-05, 0.0048869, -0.012154, 0.999914, -0.000999914, 0.843052, -2.08776, -0.0294972, 1.00003)",
+          "none",
+          "none",
+          "none",
+          "none"
+        ]
+      }
+    },
+    {
+      "name": "loading-keeps-native-pointer",
+      "pass": true
+    },
+    {
+      "name": "dark-follow",
+      "state": {
+        "active": "true",
+        "rendering": "filter",
+        "opacity": "1",
+        "x": 762.0125122070312,
+        "y": 412.96875,
+        "width": 244.796875,
+        "blend": "normal",
+        "events": "none",
+        "native": true,
+        "planes": [
+          "matrix3d(0.999987, 0.00152536, -0.00486872, 4.86872e-06, -0.00146606, 0.999925, 0.0121613, -1.21613e-05, 0.0048869, -0.012154, 0.999914, -0.000999914, 0.843052, -2.08776, -0.0294972, 1.00003)",
+          "none",
+          "none",
+          "none",
+          "none"
+        ]
+      }
+    },
+    {
+      "name": "live-reduced-motion-reset",
+      "pass": true
+    },
+    {
+      "name": "small-viewport-reset",
+      "pass": true
+    },
+    {
+      "name": "blur-resets-cursor",
+      "pass": true
+    },
+    {
+      "name": "scene-host-refresh",
+      "pass": true
+    },
+    {
+      "name": "coarse-pointer-disabled",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "providerPosts": 0,
+  "platformRequests": 0
+}

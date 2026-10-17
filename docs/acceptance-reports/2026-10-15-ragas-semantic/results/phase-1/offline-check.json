@@ -1,0 +1,12 @@
+{
+  "checked_utc": "2026-10-15T07:30:08.681285+00:00",
+  "provenance_sha256": "c9f5202007a54bb3dd9bce633fd805cff375e62cb8b09528c92a0a1a08a3d731",
+  "live_assets_checked": 20,
+  "installed_packages": 99,
+  "phase_post_cap": 16,
+  "planned_posts": 16,
+  "historical_reserved_posts": 10,
+  "phase7_reserved_posts": 0,
+  "network": false,
+  "dotenv_read": false
+}

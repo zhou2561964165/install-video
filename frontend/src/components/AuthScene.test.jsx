@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AuthScene from './AuthScene.jsx';
 
@@ -10,6 +10,29 @@ vi.mock('../audio/audioManager.js', () => ({
 }));
 
 describe('AuthScene', () => {
+  it('进入登录页聚焦邮箱，返回按钮调用首页回调', async () => {
+    const onBack = vi.fn();
+    render(<AuthScene loading={false} onLogin={vi.fn()} onRegister={vi.fn()} onBack={onBack} />);
+    expect(screen.getByLabelText('邮箱')).toHaveFocus();
+    await userEvent.click(screen.getByRole('button', { name: '返回首页' }));
+    expect(onBack).toHaveBeenCalledOnce();
+  });
+
+  it('提交中禁止返回，请求失败后可返回', async () => {
+    let reject;
+    const onLogin = vi.fn(() => new Promise((_resolve, rejectRequest) => { reject = rejectRequest; }));
+    const onBack = vi.fn();
+    render(<AuthScene loading={false} onLogin={onLogin} onRegister={vi.fn()} onBack={onBack} />);
+    await userEvent.type(screen.getByLabelText('邮箱'), 'a@b.com');
+    await userEvent.type(screen.getByLabelText('密码'), 'password123');
+    await userEvent.click(screen.getByRole('button', { name: '立即登录' }));
+    expect(screen.getByRole('button', { name: '返回首页' })).toBeDisabled();
+    await userEvent.click(screen.getByRole('button', { name: '返回首页' }));
+    expect(onBack).not.toHaveBeenCalled();
+    await act(async () => reject({ error: '登录失败' }));
+    expect(screen.getByRole('button', { name: '返回首页' })).toBeEnabled();
+  });
+
   it('loading 时显示恢复态，无表单', () => {
     render(<AuthScene loading onLogin={vi.fn()} onRegister={vi.fn()} />);
     expect(screen.getByTestId('auth-scene')).toBeInTheDocument();

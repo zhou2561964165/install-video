@@ -1,0 +1,10 @@
+{
+  "output_text": "{\n  \"statements\": [\n    \"在此次试点中，每台M系列设备的内部传感器达到82°C。\",\n    \"每台M系列设备在内部传感器达到82°C时都关机过一次。\"\n  ]\n}",
+  "usage": {
+    "input_tokens": 463,
+    "output_tokens": 50,
+    "total_tokens": 513
+  },
+  "status": "completed",
+  "model": "deepseek-v4-pro"
+}

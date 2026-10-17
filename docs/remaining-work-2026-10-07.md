@@ -1,15 +1,15 @@
 # 项目剩余工作清单（2026-10-07）
 
 <!-- DOCUMENT_ARCHIVE_NOTICE -->
-> **历史文档阅读说明：** 本页保留原阶段设计、任务和当时的验证结果。当前实现以[设计文档](design.md)和[需求/实施状态](requirements.md)为准，当前任务与预算见[自适应交接](handoff-2026-10-09-adaptive.md)。文中的“当前、下一步、待实现、等待授权”表示记录当时，不能据此重复已完成工作或重开关闭phase；仍未实现的能力以当前说明和代码为准。
+> **历史文档阅读说明：** 本页的“当前/下一步/待实现/等待授权”、预算、测试与服务状态均指记录当时。最新用户决定、活动任务与全部后续计划先读[统一总表](follow-up-plan.md)，phase15证据读[阶段交接](handoff-2026-10-16-deepseek-step1.md)；产品实际实现参照[设计](design.md)、[需求](requirements.md)和[UI指南](ui-extension-guide.md)。长文已获准上线使用但质量仍待整改，现有公开20000字符保护和embedded区域约束尚未在本轮调整。历史候选统一汇入总表，不据旧待办启动开发/服务/模型或重开closed phase；原验收及冻结证据保持原字节。
 
 > **用户2026-10-09要求暂停，新窗口继续。** 最新方向以[自适应字幕总结交接](handoff-2026-10-09-adaptive.md)为准：复用字幕→LLM归纳与合并，字数按任务有限扩展。新代码1342全量通过，新路径模型质量未评；固定800/7/240及逐ID完全覆盖不再作为默认产品成功条件。当前17/26真实POST，旧结果保留；下文是历史快照。
 
 > 最新2026-10-08：规范化、程序引用和格式/语义分类有限重试已实现，后端965项通过，前端本次不改。独立新工作组25/26POST已关闭：短中8项essential完整，长文audit非法JSON、6项未评；中文姓名来源与主题组织仍未通过。默认legacy、现有开发账号不限下载保持。先读[当前交接](handoff-2026-10-08-normalized.md)与[最新报告](acceptance-reports/2026-10-08-grounded-summary-clause/report.md)。下文为历史快照，其无自动重试和预算等待规则已被用户新要求及根AGENTS第6条替代；旧失败原件与余额仍不重用。
 
-本文件补充当前完成状态、未完成事项和后续验收条件，便于后续 Codex 接手。旧设计、计划、报告、冻结快照及预算台账保留原样。本次只更新文档，不调用模型、不开发扩展功能、不提交代码。
+本文件保留2026-10-07阶段的完成状态、缺口与验收条件，供历史追溯。活动任务与全部后续计划统一见[总表](follow-up-plan.md)；下文固定合同、旧预算及执行顺序不是当前安排，原设计、报告、冻结快照及台账保留原样。
 
-阅读顺序：本清单 → [最新交接](handoff-2026-10-07-refined.md) → [refined 实测报告](acceptance-reports/2026-10-07-grounded-summary-refined/report.md) → [逐子句审核清单](acceptance-reports/2026-10-07-grounded-summary-refined/semantic-review-checklist.md)。
+历史追溯顺序：本清单 → [当时refined交接](handoff-2026-10-07-refined.md) → [refined 实测报告](acceptance-reports/2026-10-07-grounded-summary-refined/report.md) → [逐子句审核清单](acceptance-reports/2026-10-07-grounded-summary-refined/semantic-review-checklist.md)。当前接手先读[总表](follow-up-plan.md)。
 
 ## 工程约定
 

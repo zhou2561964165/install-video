@@ -1,0 +1,157 @@
+{
+  "counts": {
+    "passed": 22,
+    "unverified": 2
+  },
+  "total_unique_checks": 24,
+  "checks": [
+    {
+      "name": "pointer-burst-and-settle",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "lens-delay-and-title-return",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "stationary-pointer-fast-scroll",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "scroll-rehit-without-mousemove",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "continuous-resize-and-breakpoint",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "pointerleave-reenter-no-corner-flight",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "real-tab-visibility-recovery",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "unverified",
+      "reason": "Headless tab probe never observed document.hidden=true; raw pass only means probe/re-entry assertions did not fail."
+    },
+    {
+      "name": "blur-and-visibility-event-recovery",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "keyboard-focus-and-native-controls",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "live-motion-and-forced-color-toggle",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "scroll-focus-return-to-input",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "repeat-scene-replacement",
+      "evidence_file": "follow-scene-rerun.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "rendering-blend",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "rendering-unsupported",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "touch-narrow-wide-and-orientation",
+      "evidence_file": "follow-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "console-and-resource-integrity",
+      "evidence_file": "follow-scene-rerun.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "model-keyboard-menu-and-focus",
+      "evidence_file": "stage-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "model-desktop-two-axis-drag",
+      "evidence_file": "stage-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "model-position-scroll-resize-and-blur-recovery",
+      "evidence_file": "stage-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "model-single-touch-drag-no-scroll",
+      "evidence_file": "stage-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "model-first-touch-then-pinch",
+      "evidence_file": "stage-first.json",
+      "raw_pass": false,
+      "status": "unverified",
+      "reason": "Application zoom assertion failed; all four no-application controls also failed to demonstrate native zoom. Application pinch is not declared passing or definitively faulty."
+    },
+    {
+      "name": "model-touch-cancel-next-gesture",
+      "evidence_file": "stage-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "model-background-touch-scroll",
+      "evidence_file": "stage-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    },
+    {
+      "name": "stage-console-and-network",
+      "evidence_file": "stage-first.json",
+      "raw_pass": true,
+      "status": "passed"
+    }
+  ],
+  "first_run_locator_failure_preserved_in": "follow-first.json",
+  "scope": "Fresh browser/UI checks only; historical unit/build and model content acceptance not counted."
+}

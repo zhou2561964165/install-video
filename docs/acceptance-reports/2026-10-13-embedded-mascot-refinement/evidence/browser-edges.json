@@ -1,0 +1,119 @@
+{
+  "checks": [
+    {
+      "name": "mix-blend-fallback",
+      "pass": true
+    },
+    {
+      "name": "forced-colors-disable",
+      "pass": true
+    },
+    {
+      "name": "no-webgl-no-ghost-region",
+      "pass": true
+    },
+    {
+      "name": "invalid-region-menu-focus-and-recovery",
+      "pass": true
+    },
+    {
+      "name": "menu-close-clears-lens-exclusion-without-scroll",
+      "pass": true,
+      "details": {
+        "point": {
+          "x": 216,
+          "y": 745
+        },
+        "scrollY": 0,
+        "target": "",
+        "hero": {
+          "left": 120,
+          "top": 0,
+          "right": 1320,
+          "bottom": 900
+        },
+        "region": {
+          "left": 1000,
+          "top": 351,
+          "right": 1288,
+          "bottom": 621
+        },
+        "menu": {
+          "rect": {
+            "left": -316,
+            "top": 130,
+            "right": -36,
+            "bottom": 770
+          },
+          "inert": true,
+          "hidden": "true"
+        }
+      }
+    },
+    {
+      "name": "network-audit",
+      "pass": true
+    }
+  ],
+  "api": [
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    }
+  ],
+  "external": [],
+  "downloads": [],
+  "errors": [],
+  "budget": {
+    "modelPosts": 0,
+    "platformExtractions": 0,
+    "mediaDownloads": 0
+  },
+  "pass": true
+}

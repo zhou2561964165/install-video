@@ -1,0 +1,25 @@
+{
+  "purpose": "Previously unused long source; criteria must be derived before model generation.",
+  "engineering_conventions": "Skills and mature components first; narrow one-way interfaces; protect existing work and all historical evidence. UI uses ui-ux-pro-max/design-system and three-layer tokens.",
+  "samples": [
+    {
+      "id": "en-long-unseen",
+      "file": "en-long-unseen.txt",
+      "raw_path": "en-long-unseen.vtt",
+      "sha256": "4e8a1ba805030af1a1d61fad202ce4661d8009cca324b5bd2280ae3ccc11a128",
+      "raw_sha256": "2cedaa556b3ab5c5f7ef9eff88c93fa5360815933591838bab9f9b9705dfedcd",
+      "title": "Lecture 2: Branching and Iteration",
+      "language": "en",
+      "source_url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-2-branching-and-iteration/",
+      "raw_url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/8a169eb715615fa0b797f83ff9d20ab8_0jljZRnHwOI.vtt",
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "attribution": "Dr. Ana Bell / Massachusetts Institute of Technology / MIT OpenCourseWare; 6.0001 Fall 2016. MIT does not endorse this model or product.",
+      "transformation": "Existing app.services.subtitle_service.parse_subtitle_text(vtt), removes timestamps/tags and folds only adjacent identical caption lines; UTF-8 LF with trailing newline. No speech rewritten.",
+      "prepared_chars": 33709,
+      "prepared_lines": 1467,
+      "fetched_date": "2026-10-14",
+      "reuse": "Local noncommercial evaluation; source and derivative review retain attribution and share-alike license."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "phase": "phase-15",
+  "phase_post_cap": 2,
+  "provenance_sha256": "3160b10297b28602f108c4a101fde759f7092c8224244751018345974801bfe1",
+  "network": false,
+  "dotenv_read": false
+}

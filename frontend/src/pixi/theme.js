@@ -1,7 +1,7 @@
 // PIXI 侧统一颜色来源：从 CSS :root token 读取，消除 JS/CSS 双源漂移（H-1）。
 //
-// 单一来源（source of truth）是 global.css 的 :root 语义 token；本模块的 fallback
-// 值与 token 当前值保持一致，仅在「无 DOM / CSS 未就绪（如 jsdom 测试）」时兜底。
+// 单一来源（source of truth）是 styles/tokens.css 的 :root 语义 token；palette fallback
+// 对齐浅色语义，仅在「无 DOM / CSS 未就绪（如 jsdom 测试）」时兜底。
 // 二者任何一侧改动时需同步维护，避免两侧数值再次漂移。
 
 function cssVar(name, fallback) {
@@ -25,11 +25,11 @@ export function rgb(num) {
   return `${(num >> 16) & 255},${(num >> 8) & 255},${num & 255}`;
 }
 
-// 语义 token（key 对齐 global.css :root；fallback 即当前值）
+// 语义 token（key 对齐 tokens.css :root；fallback 为浅色值）
 export const palette = {
-  accent: cssVar('--accent', '#d6336c'),
-  accentHover: cssVar('--accent-hover', '#bd2a5b'),
-  accentSoft: cssVar('--accent-soft', '#f8c3cd'),
+  accent: cssVar('--accent', '#345ed5'),
+  accentHover: cssVar('--accent-hover', '#294bb2'),
+  accentSoft: cssVar('--accent-soft', '#b9ccff'),
   accentLilac: cssVar('--accent-lilac', '#996fff'),
   accentPink: cssVar('--accent-pink', '#ff6cae'),
   // 折射五色（跨主题恒定，对齐 global.css --refract-*；PIXI 光点/描边用，必须 hex 否则 hex() 回退白）
@@ -40,5 +40,5 @@ export const palette = {
   refractWarm: cssVar('--refract-warm', '#ffc062'),
 };
 
-// PIXI 渲染器底色：对齐 CSS 深色底（--ink-900），画布透明时的兜底色，避免纯黑闪烁（必须 hex）
-export const baseColor = cssVar('--ink-900', '#0a0a0f');
+// 初始化时读取 surface（必须 hex），无 CSS 时用纯白安全兜底；透明画布的可见底色由 CSS 响应主题。
+export const baseColor = cssVar('--surface', '#ffffff');

@@ -1,0 +1,99 @@
+{
+  "samples": [
+    {
+      "id": "zh-short",
+      "language": "zh-Hans",
+      "title": "Creating an Immersive Classroom Environment (Chinese)",
+      "creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+      "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_immersive_environment_chinese-2/",
+      "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/50e5414eeb1e526bbb94593453e9c84a_MIT21G_101F14_Immersive_Environment_Chinese.vtt",
+      "retrieved_utc": "2026-10-04T07:57:47.511576+00:00",
+      "source_page_sha256": "466d203dd55f718e74db8180b216a10ef831dca187b6c229aa7acd66820da69b",
+      "raw_path": "zh-short.vtt",
+      "file": "zh-short.txt",
+      "raw_sha256": "27c9f20e7174f5a4c24175da802069d53184ec5f7469f2515ef5a1f4426206f8",
+      "sha256": "4e62d9c0f1d25734be1af8dfa7f1328c5f1982590734ca8453b0c2f926e0ae9b",
+      "cleaned_chars": 608,
+      "cleaned_lines": 21,
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "changes": "Removed only VTT headers, timestamps, cue IDs, markup, and adjacent exact duplicate lines; no added or corrected words.",
+      "source_is_natural_caption": true,
+      "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare; Creating an Immersive Classroom Environment (Chinese); https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/mit21g_101f14_immersive_environment_chinese-2/",
+      "expectations": [],
+      "forbidden_inventions": [],
+      "semantic_duplicate_groups": []
+    },
+    {
+      "id": "en-medium",
+      "language": "en",
+      "title": "Daily Grading System",
+      "creator": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare",
+      "page": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/daily-grading-system/",
+      "retrieved_utc": "2026-10-04T07:57:48.377320+00:00",
+      "source_page_sha256": "c7e99da39e3516b96a0869330200a8c343cf4236b65c9af550d352d1843d2b32",
+      "caption": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/e9d389e4d81e5391b948a1981fc7ef4c_hNUoYTJl3j4.vtt",
+      "raw_path": "en-medium.vtt",
+      "file": "en-medium.txt",
+      "raw_sha256": "cbd05069baa999d80750c6e18786a7dd10d47dd2eb45fac623e355089a7c97c5",
+      "sha256": "4b1b09addb5ad3cab6dc885fb4f0a805fede65b2eecc8976b232e180a427edb9",
+      "cleaned_chars": 2199,
+      "cleaned_lines": 95,
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "changes": "Removed only VTT headers, timestamps, cue IDs, markup, and adjacent exact duplicate lines; no added or corrected words.",
+      "source_is_natural_caption": true,
+      "attribution": "Dr. Haohsiang Liao / Massachusetts Institute of Technology, MIT OpenCourseWare; Daily Grading System; https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/resources/daily-grading-system/",
+      "expectations": [],
+      "forbidden_inventions": [],
+      "semantic_duplicate_groups": []
+    },
+    {
+      "id": "en-long",
+      "language": "en",
+      "title": "Lecture 1: What is Computation?",
+      "creator": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare",
+      "page": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+      "retrieved_utc": "2026-10-04T07:57:49.711762+00:00",
+      "source_page_sha256": "3d9522e74adff230dac7f70054af7cde4d0b9fd531e560a31dbebf851816a49e",
+      "caption": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/a746f6bc380f5e6d807ffff5f56cd877_nykOeWgQcHM.vtt",
+      "raw_path": "en-long.vtt",
+      "file": "en-long.txt",
+      "raw_sha256": "404eb34eff454f97932952f677ce4bec0457488616dc5548ed8be81f70210a9f",
+      "sha256": "c53d556b0a0d10504e1acdb9d0645f6573596bac6d110eb610c29fd8bf1ed5b7",
+      "cleaned_chars": 34894,
+      "cleaned_lines": 1516,
+      "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "changes": "Removed only VTT headers, timestamps, cue IDs, markup, and adjacent exact duplicate lines; no added or corrected words.",
+      "source_is_natural_caption": true,
+      "attribution": "Dr. Ana Bell / Massachusetts Institute of Technology, MIT OpenCourseWare; Lecture 1: What is Computation?; https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/resources/lecture-1-what-is-computation/",
+      "expectations": [],
+      "forbidden_inventions": [],
+      "semantic_duplicate_groups": []
+    }
+  ],
+  "probes": [
+    {
+      "id": "zh-short",
+      "page_status": 200,
+      "caption_status": 200,
+      "caption_url": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/50e5414eeb1e526bbb94593453e9c84a_MIT21G_101F14_Immersive_Environment_Chinese.vtt",
+      "cleaned_chars": 608
+    },
+    {
+      "id": "en-medium",
+      "page_status": 200,
+      "caption_status": 200,
+      "caption_url": "https://ocw.mit.edu/courses/21g-101-chinese-i-regular-fall-2014/e9d389e4d81e5391b948a1981fc7ef4c_hNUoYTJl3j4.vtt",
+      "cleaned_chars": 2199
+    },
+    {
+      "id": "en-long",
+      "page_status": 200,
+      "caption_status": 200,
+      "caption_url": "https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/a746f6bc380f5e6d807ffff5f56cd877_nykOeWgQcHM.vtt",
+      "cleaned_chars": 34894
+    }
+  ]
+}

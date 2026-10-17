@@ -1,0 +1,82 @@
+"""Local structured review feedback using the installed LCEL output parser.
+
+No clients, tracing, source IDs, fact contracts or semantic success certificate.
+"""
+import json
+import re
+from functools import lru_cache
+from typing import Literal
+
+from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, create_model, field_validator
+
+
+class SummaryReviewFeedback(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    feedback: StrictStr
+
+    @field_validator("feedback")
+    @classmethod
+    def nonempty_feedback(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Review feedback must be nonempty")
+        return value.strip()
+
+
+_PARSER = PydanticOutputParser(pydantic_object=SummaryReviewFeedback)
+
+
+def parse_feedback(payload: dict) -> str:
+    """The caller decodes JSON losslessly and rejects duplicate keys first."""
+    return _PARSER.parse(json.dumps(payload, ensure_ascii=False)).feedback
+
+
+def feedback_schema() -> dict:
+    return SummaryReviewFeedback.model_json_schema()
+
+
+class SourceCheck(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    assessment: Literal["supported", "needs_correction", "uncertain"]
+    source_quote: StrictStr = Field(min_length=1, max_length=120)
+    finding: StrictStr = Field(min_length=1, max_length=80)
+
+
+def _validate_point_count(point_count: int) -> None:
+    if type(point_count) is not int or not 1 <= point_count <= 32:
+        raise ValueError("Invalid point count for a complete source review")
+
+
+@lru_cache(maxsize=32)
+def checks_model(point_count: int):
+    _validate_point_count(point_count)
+    return create_model(f"CompleteSourceChecks{point_count}",
+        __config__=ConfigDict(extra="forbid"),
+        **{f"target_{i}": (SourceCheck, ...) for i in range(point_count + 1)})
+
+
+def checks_schema(point_count: int) -> dict:
+    return checks_model(point_count).model_json_schema()
+
+
+def checks_output_tokens(point_count: int) -> int:
+    """Finite review allowance; the caller checks its configured ceiling."""
+    _validate_point_count(point_count)
+    return 128 + 256 * (point_count + 1)
+
+
+def parse_checks(payload: dict, *, source: str, draft: dict) -> str:
+    """Verify coverage and quote origin, never certify semantic correctness."""
+    targets = [draft["summary"], *draft["key_points"]]
+    parsed = PydanticOutputParser(pydantic_object=checks_model(len(targets) - 1)).parse(json.dumps(payload, ensure_ascii=False))
+    def whitespace(text):
+        return re.sub(r"\s+", " ", text).strip()
+    original = whitespace(source)
+    feedback = []
+    for index, target in enumerate(targets):
+        check = getattr(parsed, f"target_{index}")
+        if (not whitespace(check.source_quote) or whitespace(check.source_quote) not in original
+                or not check.finding.strip()):
+            raise ValueError("Source review quote does not belong to its bound source")
+        feedback.append(f"Target {index}:\nDraft assertion: {target}\nAssessment: {check.assessment}\nOriginal evidence: {check.source_quote}\nFinding: {check.finding}")
+    return "\n\n".join(feedback)

@@ -1,0 +1,43 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-8",
+  "planned_posts": 3,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "en-long",
+      "sample_post": 1,
+      "stage": "extract",
+      "status": "response",
+      "reserved_utc": "2026-10-15T07:49:08.947695+00:00",
+      "payload_sha256": "dc511b277abc1f9145500660018524c665d00e6cb264890c538f201c1e2f514a",
+      "http_status": 200,
+      "response_sha256": "6e2f968394e48c04e713fc1f96f9e0c9e2060c9d806acf2d924dac96f722141d",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    },
+    {
+      "ordinal": 2,
+      "sample": "en-long",
+      "sample_post": 2,
+      "stage": "extract",
+      "status": "response",
+      "reserved_utc": "2026-10-15T07:49:16.679504+00:00",
+      "payload_sha256": "cbb8f51446868bb14b2501abd9a9412c4ea9f578ee3256dd3e86dcbd5c3617e9",
+      "http_status": 200,
+      "response_sha256": "0dd07ca33fc55c6c0e789971744aea6204edcd2810e602e12c39878b3ba6eebd",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    },
+    {
+      "ordinal": 3,
+      "sample": "en-long",
+      "sample_post": 3,
+      "stage": "merge",
+      "status": "response",
+      "reserved_utc": "2026-10-15T07:49:23.347172+00:00",
+      "payload_sha256": "c38d2ea650e70e2fead4ad59d61f0f7f193cf8fd6547894297f81d692b36d78a",
+      "http_status": 200,
+      "response_sha256": "736c0ceb12e49a6b1d72f9bdd4c08e48f2efe53773f5e1c49b76603f066819d4",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    }
+  ]
+}

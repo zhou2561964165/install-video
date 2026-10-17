@@ -1,0 +1,31 @@
+{
+  "object": "response",
+  "status": "completed",
+  "error_present": false,
+  "incomplete_present": false,
+  "output": [
+    {
+      "type": "message",
+      "role": "assistant",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "text": "{\n  \"topics\": [\n    \"课程概览与学习路径\",\n    \"计算基础与计算机工作原理\",\n    \"声明式知识与命令式知识\",\n    \"固定程序与存储程序计算机\",\n    \"编程语言语法、静态语义与语义\",\n    \"Python对象与标量类型\",\n    \"Python表达式与运算符\",\n    \"变量与赋值\",\n    \"打印与交互\",\n    \"程序错误类型与调试\",\n    \"算法与控制流初步\",\n    \"下讲预告：控制流\"\n  ]\n}"
+        }
+      ]
+    }
+  ],
+  "content": "{\n  \"topics\": [\n    \"课程概览与学习路径\",\n    \"计算基础与计算机工作原理\",\n    \"声明式知识与命令式知识\",\n    \"固定程序与存储程序计算机\",\n    \"编程语言语法、静态语义与语义\",\n    \"Python对象与标量类型\",\n    \"Python表达式与运算符\",\n    \"变量与赋值\",\n    \"打印与交互\",\n    \"程序错误类型与调试\",\n    \"算法与控制流初步\",\n    \"下讲预告：控制流\"\n  ]\n}",
+  "usage": {
+    "input_tokens": 8999,
+    "output_tokens": 108,
+    "total_tokens": 9107,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "http_status": 200,
+  "received_utc": "2026-10-15T15:31:46.525869+00:00",
+  "model": "deepseek-v4-pro"
+}

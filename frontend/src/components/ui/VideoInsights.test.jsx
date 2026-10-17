@@ -36,9 +36,9 @@ describe('VideoInsights', () => {
     expect(insights.translate).not.toHaveBeenCalled();
     expect(insights.loadSubtitle).not.toHaveBeenCalled();
   });
-  it('明确提示长文暂不支持且短篇中篇正常使用', () => {
+  it('提示长文支持范围与结果核对建议', () => {
     render(<VideoInsights languages={['en']} insights={baseInsights} />);
-    const notice = screen.getByText('当前支持短篇和中篇总结，长文总结暂不支持。');
+    const notice = screen.getByText('支持有长度上限的长文总结；处理可能需要较长时间，请对照原字幕核对结果。');
     expect(screen.getByRole('button', { name: '生成总结' })).toHaveAccessibleDescription(notice.textContent);
     expect(screen.getByRole('button', { name: '生成总结' })).toBeEnabled();
     expect(screen.getByRole('tab', { name: '字幕文本' })).toBeEnabled();
@@ -78,6 +78,71 @@ describe('VideoInsights', () => {
     }} />);
     expect(screen.getByTestId('summary-result')).toHaveTextContent('这是摘要');
     expect(screen.getByText('要点一')).toBeInTheDocument();
+  });
+
+  it('安全渲染长文 Markdown，不执行 raw HTML、不加载远程图片并限定外链', () => {
+    const markdown = [
+      '# 长文标题',
+      '',
+      '正文包含 **重点**、`行内代码` 和完整条件。',
+      '',
+      '- 第一条要点',
+      '- 第二条要点',
+      '',
+      '```text',
+      '可滚动查看的代码片段',
+      '```',
+      '',
+      '[参考资料](https://example.com/reference)',
+      '[危险链接](javascript:alert%281%29)',
+      '',
+      '![远程图片](https://tracker.example/pixel.png)',
+      '<script>window.__summaryInjected = true</script>',
+      '<img src="https://tracker.example/raw.png" onerror="alert(1)">',
+    ].join('\n');
+    render(<VideoInsights languages={['en']} insights={{ ...baseInsights, active: 'summary', summary: {
+      format: 'markdown', summary: markdown, key_points: [], provider: 'mock', model: 'm',
+    } }} />);
+
+    const result = screen.getByTestId('summary-markdown');
+    expect(screen.getByRole('heading', { name: '长文标题' })).toBeInTheDocument();
+    expect(result.querySelector('strong')).toHaveTextContent('重点');
+    expect(result.querySelector('code')).toHaveTextContent('行内代码');
+    expect(result.querySelector('pre code')).toHaveTextContent('可滚动查看的代码片段');
+    expect(screen.getByRole('link', { name: '参考资料' })).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(screen.getByRole('link', { name: '参考资料' })).toHaveAttribute('target', '_blank');
+    expect(screen.queryByRole('link', { name: '危险链接' })).toBeNull();
+    expect(screen.getByText('图片未加载：远程图片')).toBeInTheDocument();
+    expect(document.querySelector('img, script')).toBeNull();
+    expect(window.__summaryInjected).toBeUndefined();
+    expect(screen.queryByRole('heading', { name: '关键要点' })).toBeNull();
+  });
+
+  it('复制与导出 Markdown 总结时保留原始完整文本', async () => {
+    const markdown = '# 完整总结\n\n第一段。\n\n- 原始要点\n\n> 保留限定条件。';
+    const insights = { ...baseInsights, active: 'summary', summary: {
+      format: 'markdown', summary: markdown, key_points: [], provider: 'mock', model: 'm',
+    } };
+    let outputBlob;
+    const user = userEvent.setup();
+    vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined);
+    vi.stubGlobal('URL', Object.assign(class extends URL {}, {
+      createObjectURL: vi.fn((blob) => { outputBlob = blob; return 'blob:markdown'; }),
+      revokeObjectURL: vi.fn(),
+    }));
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    render(<VideoInsights insights={insights} />);
+
+    await user.click(screen.getByRole('button', { name: '导出 TXT' }));
+    const exported = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsText(outputBlob);
+    });
+    expect(exported).toBe(markdown);
+    await user.click(screen.getByRole('button', { name: '复制' }));
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(markdown);
+    expect(insights.summarize).not.toHaveBeenCalled();
   });
 
   it('无字幕和错误状态均就地展示', () => {

@@ -1,0 +1,14 @@
+{
+  "work_id": "summary-quality-finish-20261008",
+  "phase": "adaptive-transcript-repair-final",
+  "status": "closed",
+  "parent_snapshot": "E:\\install_video\\.planning\\2026-10-08-summary-quality-finish\\budget-group.json",
+  "parent_posts": 24,
+  "hard_ceiling": 26,
+  "maximum_posts": 2,
+  "maximum_work_posts": 26,
+  "reserved_posts": 26,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-09-adaptive-summary-final\\results\\request-ledger.json",
+  "provenance_sha256": "742cb57c62deab0d662c14bdbcc1c8b8e7d687bbebcbe10510376add3141f5b3",
+  "reason": "Final finite validation of overview/detail separation and claim qualifiers; stop at 26 work POSTs"
+}

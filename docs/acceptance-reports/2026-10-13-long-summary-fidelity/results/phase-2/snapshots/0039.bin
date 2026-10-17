@@ -1,0 +1,15 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-long-full-final-4",
+  "posts": 3,
+  "stopped_on_error": false,
+  "samples": [
+    {
+      "sample": "en-long",
+      "success": true,
+      "result_sha256": "c639b5116db54c59ff5f76d35d99ed5e031a14f018c9cff55f0b285c60ed7e73",
+      "posts": 3
+    }
+  ],
+  "ended_utc": "2026-10-12T08:58:49.392192+00:00"
+}

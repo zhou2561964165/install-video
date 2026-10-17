@@ -1,0 +1,606 @@
+{
+  "started": "2026-10-13T07:34:42.830Z",
+  "scriptSha256": "a6ed7296371f47e2d373d57832b1ad1d0c706c78925565a795a7bd6e6b4e47f6",
+  "checks": [
+    {
+      "name": "model-keyboard-menu-and-focus",
+      "pass": true,
+      "details": {
+        "focused": true,
+        "style": "solid",
+        "width": "2px",
+        "color": "rgb(52, 94, 213)"
+      }
+    },
+    {
+      "name": "model-desktop-two-axis-drag",
+      "pass": true,
+      "details": {
+        "before": {
+          "x": 852,
+          "y": 36,
+          "width": 552,
+          "height": 828
+        },
+        "after": {
+          "x": 522,
+          "y": 0,
+          "width": 552,
+          "height": 694
+        },
+        "delta": {
+          "x": -330,
+          "y": -103
+        },
+        "start": {
+          "x": 1128,
+          "y": 450
+        }
+      }
+    },
+    {
+      "name": "model-position-scroll-resize-and-blur-recovery",
+      "pass": true,
+      "details": {
+        "before": {
+          "x": 522,
+          "y": 0,
+          "width": 552,
+          "height": 694
+        },
+        "scrolled": {
+          "x": 522,
+          "y": 0,
+          "width": 552,
+          "height": 694
+        },
+        "resize": {
+          "x": 586.03125,
+          "y": 0,
+          "width": 423.921875,
+          "height": 597.9375
+        },
+        "blurEvent": "synthetic"
+      }
+    },
+    {
+      "name": "model-single-touch-drag-no-scroll",
+      "pass": true,
+      "details": {
+        "before": {
+          "x": 121.390625,
+          "y": 608.84375,
+          "width": 147.1875,
+          "height": 220.796875
+        },
+        "after": {
+          "x": 121.390625,
+          "y": 524.84375,
+          "width": 147.1875,
+          "height": 220.796875
+        },
+        "delta": {
+          "x": 0,
+          "y": -84
+        },
+        "events": [
+          {
+            "type": "pointerdown",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "touchstart",
+            "touches": 1,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "pointermove",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "pointermove",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "pointermove",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "pointermove",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "pointermove",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "pointermove",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "pointermove",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "pointerup",
+            "pointerType": "touch",
+            "pointerId": 2,
+            "target": "mascot-interaction",
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 0,
+            "target": "mascot-interaction",
+            "prevented": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "model-first-touch-then-pinch",
+      "pass": false,
+      "error": "AssertionError [ERR_ASSERTION]: {\"before\":{\"scale\":1,\"modelCursor\":\"grab\"},\"after\":{\"scale\":1,\"modelCursor\":\"grab\"}}\n    at E:\\install_video\\.planning\\ui-follow-video-20261013\\continuation\\stage-check.cjs:61:68\n    at async check (E:\\install_video\\.planning\\ui-follow-video-20261013\\continuation\\stage-check.cjs:11:49)\n    at async main (E:\\install_video\\.planning\\ui-follow-video-20261013\\continuation\\stage-check.cjs:57:2)"
+    },
+    {
+      "name": "model-touch-cancel-next-gesture",
+      "pass": true,
+      "details": {
+        "cancelled": {
+          "x": 121.390625,
+          "y": 504.84375,
+          "width": 147.1875,
+          "height": 220.796875
+        },
+        "after": {
+          "x": 121.390625,
+          "y": 444.84375,
+          "width": 147.1875,
+          "height": 220.796875
+        }
+      }
+    },
+    {
+      "name": "model-background-touch-scroll",
+      "pass": true,
+      "details": {
+        "before": 0,
+        "after": 345,
+        "point": {
+          "x": 10,
+          "y": 680
+        }
+      }
+    },
+    {
+      "name": "stage-console-and-network",
+      "pass": true,
+      "details": {
+        "pageErrors": 0,
+        "consoleErrors": 0,
+        "externalRequests": 0,
+        "mockedApiRequests": 4
+      }
+    }
+  ],
+  "hardware": [
+    {
+      "webgl": true,
+      "maxTextureSize": 16384,
+      "visible": true,
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      }
+    },
+    {
+      "webgl": true,
+      "maxTextureSize": 16384,
+      "visible": true,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "events": [
+    {
+      "context": "desktop",
+      "events": [
+        {
+          "type": "pointerdown",
+          "pointerType": "mouse",
+          "pointerId": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerup",
+          "pointerType": "mouse",
+          "pointerId": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerdown",
+          "pointerType": "mouse",
+          "pointerId": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerup",
+          "pointerType": "mouse",
+          "pointerId": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        }
+      ]
+    },
+    {
+      "context": "touch",
+      "events": [
+        {
+          "type": "pointerdown",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchstart",
+          "touches": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerup",
+          "pointerType": "touch",
+          "pointerId": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchend",
+          "touches": 0,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerdown",
+          "pointerType": "touch",
+          "pointerId": 3,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchstart",
+          "touches": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerdown",
+          "pointerType": "touch",
+          "pointerId": 4,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchstart",
+          "touches": 2,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 4,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 3,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 4,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 3,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 4,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 3,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 4,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 3,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointercancel",
+          "pointerType": "touch",
+          "pointerId": 3,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointercancel",
+          "pointerType": "touch",
+          "pointerId": 4,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchend",
+          "touches": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchend",
+          "touches": 0,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerdown",
+          "pointerType": "touch",
+          "pointerId": 5,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchstart",
+          "touches": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 5,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointercancel",
+          "pointerType": "touch",
+          "pointerId": 5,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchcancel",
+          "touches": 0,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerdown",
+          "pointerType": "touch",
+          "pointerId": 6,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchstart",
+          "touches": 1,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 6,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 6,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 6,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 6,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 6,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 6,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerup",
+          "pointerType": "touch",
+          "pointerId": 6,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "touchend",
+          "touches": 0,
+          "target": "mascot-interaction",
+          "prevented": false
+        },
+        {
+          "type": "pointerdown",
+          "pointerType": "touch",
+          "pointerId": 7,
+          "target": "",
+          "prevented": false
+        },
+        {
+          "type": "touchstart",
+          "touches": 1,
+          "target": "",
+          "prevented": false
+        },
+        {
+          "type": "pointermove",
+          "pointerType": "touch",
+          "pointerId": 7,
+          "target": "",
+          "prevented": false
+        },
+        {
+          "type": "pointercancel",
+          "pointerType": "touch",
+          "pointerId": 7,
+          "target": "",
+          "prevented": false
+        },
+        {
+          "type": "touchend",
+          "touches": 0,
+          "target": "",
+          "prevented": false
+        }
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "mockedApiRequests": [
+    "/api/auth/me",
+    "/api/auth/me",
+    "/api/auth/me",
+    "/api/auth/me"
+  ],
+  "externalRequests": [],
+  "limits": {
+    "modelPosts": 0,
+    "platformExtractions": 0,
+    "mediaDownloads": 0
+  },
+  "device": "Headless Edge / CDP touch emulation; not a physical phone",
+  "browser": "155.0.4283.45",
+  "ended": "2026-10-13T07:34:58.722Z",
+  "pass": false
+}

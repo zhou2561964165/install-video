@@ -1,0 +1,23 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-15",
+  "posts": 2,
+  "stopped_on_error": false,
+  "samples": [
+    {
+      "sample": "en-long-unseen",
+      "success": true,
+      "skipped": false,
+      "result_sha256": "5a6f7440a0387ff75b3342d4da0ddb8354f1955cd745c799b21e7299148dd3c9",
+      "posts": 1
+    },
+    {
+      "sample": "zh-listening-unseen",
+      "success": true,
+      "skipped": false,
+      "result_sha256": "d829cdf81b7258559f26fd0c4dccbe8d5f6e863c676a5cde898d3c81d19e31f3",
+      "posts": 1
+    }
+  ],
+  "ended_utc": "2026-10-16T05:24:37.647878+00:00"
+}

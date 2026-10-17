@@ -1,0 +1,21 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "topics": {
+      "items": {
+        "maxLength": 120,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 12,
+      "minItems": 1,
+      "title": "Topics",
+      "type": "array"
+    }
+  },
+  "required": [
+    "topics"
+  ],
+  "title": "TopicPlan",
+  "type": "object"
+}

@@ -1,0 +1,28 @@
+{
+  "pass": true,
+  "stage": {
+    "canvas": true,
+    "mascotVisible": true,
+    "background": "rgb(251, 252, 255)",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "region": {
+      "x": 1096,
+      "y": 742,
+      "width": 240,
+      "height": 250
+    }
+  },
+  "colors": {
+    "scheme": "dark",
+    "surface": "#0c101a",
+    "overlayFg": "#ffffff",
+    "accent": "#92b1ff",
+    "onAccent": "#0c101a"
+  },
+  "pageErrors": [],
+  "modelProviderPosts": 0,
+  "platformRequests": 0
+}

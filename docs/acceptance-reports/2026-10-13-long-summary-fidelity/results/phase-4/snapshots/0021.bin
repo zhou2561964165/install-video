@@ -1,0 +1,32 @@
+"""Local structured review feedback using the installed LCEL output parser.
+
+No clients, tracing, source IDs, fact contracts or semantic success certificate.
+"""
+import json
+
+from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+
+
+class SummaryReviewFeedback(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    feedback: StrictStr
+
+    @field_validator("feedback")
+    @classmethod
+    def nonempty_feedback(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Review feedback must be nonempty")
+        return value.strip()
+
+
+_PARSER = PydanticOutputParser(pydantic_object=SummaryReviewFeedback)
+
+
+def parse_feedback(payload: dict) -> str:
+    """The caller decodes JSON losslessly and rejects duplicate keys first."""
+    return _PARSER.parse(json.dumps(payload, ensure_ascii=False)).feedback
+
+
+def feedback_schema() -> dict:
+    return SummaryReviewFeedback.model_json_schema()

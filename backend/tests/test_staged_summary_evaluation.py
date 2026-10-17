@@ -60,7 +60,11 @@ def entry(tmp_path, monkeypatch):
     frozen = module.read(module.PARENT_RESULTS / "provenance.json")
     settings = SimpleNamespace(**module.CONFIG, llm_provider=frozen["provider"], llm_model=frozen["model"],
         llm_api_key="", llm_base_url="https://offline.invalid", llm_timeout_seconds=1,
-        llm_summary_max_point_chars=240)
+        llm_summary_max_point_chars=240, llm_summary_notes_language="output",
+        llm_summary_source_context_mode="boundary")
+    # This continuation checks source parts bound by the closed parent's
+    # globally unique preparation, not the current production caption policy.
+    monkeypatch.setattr(service, "_summary_input", module.base.cleaned)
     monkeypatch.setattr(service, "settings", settings)
     monkeypatch.setattr(module, "runtime", lambda: (settings, service, service._endpoint()))
     module.test_service, module.test_settings, module.test_artifact = service, settings, artifact

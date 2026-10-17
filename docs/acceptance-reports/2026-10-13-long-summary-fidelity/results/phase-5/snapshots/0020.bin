@@ -1,0 +1,98 @@
+"""Complete coverage and quote origin are guardrails, not semantic scoring."""
+import json
+
+import pytest
+from app.services import summary_review as review
+from app.services import llm_service as service
+from app.config import settings
+from test_summary_source_review import configured, client_for, evidence
+
+SOURCE = "A particular device supports addition. It cannot do other tasks."
+DRAFT = {"summary": "The video explains a device.", "key_points": ["The category supports only addition."]}
+
+
+def checks():
+    return {"checks": [
+        {"target": 0, "draft_quote": "a device", "source_quote": "A particular device", "finding": "The overview names the example."},
+        {"target": 1, "draft_quote": DRAFT["key_points"][0], "source_quote": "A particular device supports addition.",
+         "finding": "The draft promotes the particular example to its category; preserve the example scope."}]}
+
+
+def test_valid_complete_review_retains_every_finding_in_bound_order():
+    value = checks()
+    value["checks"].reverse()
+    result = review.parse_checks(value, source=SOURCE, draft=DRAFT)
+    assert result.index("Target 0") < result.index("Target 1")
+    assert all(row["finding"] in result and row["source_quote"] in result and row["draft_quote"] in result for row in value["checks"])
+
+
+@pytest.mark.parametrize("fault", ["missing", "duplicate", "wrong_target", "wrong_source", "wrong_draft", "empty", "bool_target", "extra"])
+def test_missing_target_or_unbound_quote_cannot_be_accepted(fault):
+    value = checks()
+    if fault == "missing":
+        value["checks"].pop()
+    elif fault == "duplicate":
+        value["checks"][1]["target"] = 0
+    elif fault == "wrong_target":
+        value["checks"][1]["target"] = 3
+    elif fault == "wrong_source":
+        value["checks"][1]["source_quote"] = "A source sentence that was never supplied."
+    elif fault == "wrong_draft":
+        value["checks"][1]["draft_quote"] = "An invented draft sentence."
+    elif fault == "empty":
+        value["checks"][1]["finding"] = "   "
+    elif fault == "bool_target":
+        value["checks"][1]["target"] = True
+    else:
+        value["checks"][1]["answer"] = "Unrequested field"
+    with pytest.raises(ValueError):
+        review.parse_checks(value, source=SOURCE, draft=DRAFT)
+
+
+def test_only_whitespace_is_normalized_for_quote_origin():
+    value = checks()
+    value["checks"][1]["source_quote"] = "A particular\n device supports addition."
+    review.parse_checks(value, source=SOURCE, draft=DRAFT)
+
+
+def test_fixed_two_calls_carry_verified_checks_to_revision(configured, monkeypatch):
+    monkeypatch.setattr(settings, "llm_summary_fidelity_mode", "checks")
+    draft = service.LLMSummaryResult(DRAFT["summary"], DRAFT["key_points"], "saved", "model")
+    final = {"summary": DRAFT["summary"], "key_points": ["The particular device supports addition."]}
+    captured = []
+    with client_for([checks(), final], captured) as client:
+        result = service.review_summary(SOURCE, draft, title="Title", output_language="en", client=client)
+    assert len(captured) == 2 and result.key_points == final["key_points"]
+    feedback = evidence(captured[1])["review_feedback"]
+    assert "Target 0" in feedback and "Target 1" in feedback and checks()["checks"][1]["finding"] in feedback
+    assert evidence(captured[0])["original_transcript"] == evidence(captured[1])["original_transcript"] == SOURCE
+
+
+@pytest.mark.parametrize("fault", ["missing", "duplicate", "false_quote", "wrong_target", "boolean_target", "extra"])
+def test_invalid_model_checks_stop_after_first_paid_attempt(configured, monkeypatch, fault):
+    monkeypatch.setattr(settings, "llm_summary_fidelity_mode", "checks")
+    value = checks()
+    if fault == "missing":
+        value["checks"].pop()
+    elif fault == "duplicate":
+        value["checks"][1]["target"] = 0
+    elif fault == "false_quote":
+        value["checks"][1]["source_quote"] = "Not in the source."
+    elif fault == "wrong_target":
+        value["checks"][1]["target"] = 3
+    elif fault == "boolean_target":
+        value["checks"][1]["target"] = True
+    else:
+        value["checks"][1]["extra"] = "Unrequested"
+    captured = []
+    with client_for([value], captured) as client:
+        with pytest.raises(service.LLMServiceError) as error:
+            service.review_summary(SOURCE, service.LLMSummaryResult(DRAFT["summary"], DRAFT["key_points"], "saved", "model"),
+                                   title="Title", output_language="en", client=client)
+    assert error.value.error_type == "llm_invalid_response" and len(captured) == 1
+
+
+def test_schema_count_is_derived_from_actual_draft_not_a_fixed_answer():
+    for count in (1, 7, 14, 32):
+        schema = review.checks_schema(count)["properties"]["checks"]
+        assert schema["minItems"] == schema["maxItems"] == count + 1

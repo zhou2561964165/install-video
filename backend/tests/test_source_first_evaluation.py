@@ -47,7 +47,28 @@ def entry(tmp_path, monkeypatch):
     from app.services import llm_service as service
     settings = SimpleNamespace(**module.CONFIG, llm_provider="offline", llm_model="offline-model",
         llm_api_key="", llm_base_url="https://offline.invalid", llm_timeout_seconds=1,
-        llm_summary_max_point_chars=240)
+        llm_summary_max_point_chars=240, llm_summary_notes_language="output",
+        llm_summary_source_context_mode="boundary")
+    # Historical guards compare the exact JSON prompt string, including field
+    # order. Keep their synthetic runtime on the original note serialization;
+    # production can independently put source evidence before generated notes.
+    def historical_section_notes(results, contexts=None):
+        notes = []
+        for index, result in enumerate(results):
+            note = {"section": index + 1, "summary": result.summary,
+                    "key_points": result.key_points}
+            if contexts and contexts[index]:
+                note["source_context"] = contexts[index]
+            notes.append(note)
+        return json.dumps(notes, ensure_ascii=False)
+
+    monkeypatch.setattr(service, "_section_notes", historical_section_notes)
+    # Freeze plans own their original globally unique caption preparation. Use
+    # that existing helper only in this temporary synthetic fixture; production
+    # retains later repeated fragments whose antecedents can differ.
+    # Continuation adapters export sample_plan but keep cleaned in that original
+    # function's module. Bind exactly the helper used by their frozen planner.
+    monkeypatch.setattr(service, "_summary_input", module.sample_plan.__globals__["cleaned"])
     monkeypatch.setattr(service, "settings", settings)
     monkeypatch.setattr(module, "runtime", lambda: (settings, service, service._endpoint()))
     module.test_settings, module.test_service, module.test_asset = settings, service, asset

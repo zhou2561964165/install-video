@@ -1,0 +1,10 @@
+{
+  "output_text": "{\n  \"statements\": [\n    \"The archive shows that a calibration meeting was held once a week on Mondays during the pilot from July 6 to August 2.\"\n  ]\n}",
+  "usage": {
+    "input_tokens": 460,
+    "output_tokens": 39,
+    "total_tokens": 499
+  },
+  "status": "completed",
+  "model": "deepseek-v4-pro"
+}

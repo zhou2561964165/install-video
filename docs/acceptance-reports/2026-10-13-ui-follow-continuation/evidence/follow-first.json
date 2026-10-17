@@ -1,0 +1,1396 @@
+{
+  "started": "2026-10-13T07:29:55.692Z",
+  "checks": [
+    {
+      "name": "pointer-burst-and-settle",
+      "pass": true,
+      "details": {
+        "samples": 35,
+        "final": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 825.04296875,
+            "y": 398.92498779296875
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "",
+              "className": "landing-hero",
+              "x": "0.1751",
+              "y": "-0.2022"
+            }
+          ],
+          "planes": [
+            "matrix3d(0.999919, 0.00383946, -0.0121709, 1.21709e-05, -0.003667, 0.999893, 0.0141605, -1.41605e-05, 0.012224, -0.0141147, 0.999826, -0.000999826, 2.10993, -2.41807, -0.0599325, 1.00006)",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        }
+      }
+    },
+    {
+      "name": "lens-delay-and-title-return",
+      "pass": true,
+      "details": {
+        "moving": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 616.0477294921875,
+            "y": 396.201904296875
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "",
+              "className": "landing-hero",
+              "x": "0.2125",
+              "y": "-0.2076"
+            }
+          ],
+          "planes": [
+            "matrix3d(0.99992, -0.00380453, 0.0120444, -1.20444e-05, 0.00362931, 0.999888, 0.0145365, -1.45365e-05, -0.0120983, -0.0144916, 0.999822, -0.000999822, -2.08848, -2.48301, -0.0612609, 1.00006)",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        },
+        "settled": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 847.5258178710938,
+            "y": 396.201904296875
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "",
+              "className": "landing-hero",
+              "x": "0.2125",
+              "y": "-0.2076"
+            }
+          ],
+          "planes": [
+            "matrix3d(0.99988, 0.0046651, -0.0147685, 1.47685e-05, -0.00445009, 0.999884, 0.0145586, -1.45586e-05, 0.0148348, -0.0144911, 0.999785, -0.000999785, 2.56078, -2.47902, -0.0739281, 1.00007)",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        },
+        "cleared": {
+          "active": "false",
+          "rendering": "filter",
+          "opacity": 0,
+          "display": "block",
+          "center": {
+            "x": 847.5258178710938,
+            "y": 396.201904296875
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": false,
+          "hidden": false,
+          "focused": true,
+          "host": [],
+          "planes": [
+            "none",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        },
+        "tokens": {
+          "--cursor-lens-size": "clamp(130px, 17vw, 245px)",
+          "--cursor-lens-duration": ".16s",
+          "--follow-plane-duration": ".3s",
+          "--follow-tilt": "4deg",
+          "--follow-distance": "12px"
+        }
+      }
+    },
+    {
+      "name": "stationary-pointer-fast-scroll",
+      "pass": true,
+      "details": {
+        "samples": [
+          {
+            "active": "true",
+            "rendering": "filter",
+            "opacity": 1,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 398.92498779296875
+            },
+            "width": 244.796875,
+            "pointerEvents": "none",
+            "nativeHidden": true,
+            "hidden": false,
+            "focused": true,
+            "host": [
+              {
+                "tag": "SECTION",
+                "id": "",
+                "className": "landing-hero",
+                "x": "-0.0000",
+                "y": "0.7978"
+              }
+            ],
+            "planes": [
+              "matrix3d(1, 0, 0, 0, 0, 0.999335, -0.0364729, 3.64729e-05, 0, 0.0364729, 0.999335, -0.000999335, 0, 6.26644, -0.228707, 1.00023)",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 500,
+            "viewport": {
+              "width": 1440,
+              "height": 1000
+            },
+            "scrollWidth": 1440
+          },
+          {
+            "active": "true",
+            "rendering": "filter",
+            "opacity": 1,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 398.92498779296875
+            },
+            "width": 244.796875,
+            "pointerEvents": "none",
+            "nativeHidden": true,
+            "hidden": false,
+            "focused": true,
+            "host": [
+              {
+                "tag": "SECTION",
+                "id": "features",
+                "className": "landing-chapter",
+                "x": "0.6666",
+                "y": "0.0960"
+              }
+            ],
+            "planes": [
+              "matrix3d(1, 0, 0, 0, 0, 0.999893, -0.0146506, 5.17345e-06, 0, 0.0146506, 0.999893, -0.000353083, 0, 2.51808, -0.0368954, 1.00001)",
+              "matrix3d(0.999918, 0.00365227, -0.0122836, 3.23999e-06, -0.00368221, 0.99999, -0.00241582, 6.37211e-07, 0.0122747, 0.00246086, 0.999922, -0.000263745, 2.10818, 0.430724, -0.0269393, 1.00001)",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 1131,
+            "viewport": {
+              "width": 1440,
+              "height": 1000
+            },
+            "scrollWidth": 1440
+          },
+          {
+            "active": "true",
+            "rendering": "filter",
+            "opacity": 1,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 398.92498779296875
+            },
+            "width": 244.796875,
+            "pointerEvents": "none",
+            "nativeHidden": true,
+            "hidden": false,
+            "focused": true,
+            "host": [
+              {
+                "tag": "SECTION",
+                "id": "",
+                "className": "landing-chapter",
+                "x": "0.6666",
+                "y": "-0.2602"
+              }
+            ],
+            "planes": [
+              "matrix3d(1, 0, 0, 0, 0, 0.999998, -0.00199213, 9.56505e-08, 0, 0.00199213, 0.999998, -4.80141e-05, 0, 0.342422, -0.00068215, 1)",
+              "matrix3d(0.999983, 0.00166006, -0.00555597, 6.63094e-07, -0.00166622, 0.999998, -0.00110431, 1.31797e-07, 0.00555413, 0.00111355, 0.999984, -0.000119346, 0.954354, 0.192993, -0.0055156, 1)",
+              "matrix3d(0.999979, 0.00188882, -0.00623862, 8.36968e-07, -0.00187299, 0.999995, 0.00254189, -3.41018e-07, 0.00624339, -0.00253015, 0.999977, -0.000134156, 1.07396, -0.43288, -0.00780057, 1)",
+              "none",
+              "none"
+            ],
+            "scrollY": 1901,
+            "viewport": {
+              "width": 1440,
+              "height": 1000
+            },
+            "scrollWidth": 1440
+          },
+          {
+            "active": "true",
+            "rendering": "filter",
+            "opacity": 1,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 398.92498779296875
+            },
+            "width": 244.796875,
+            "pointerEvents": "none",
+            "nativeHidden": true,
+            "hidden": false,
+            "focused": true,
+            "host": [
+              {
+                "tag": "SECTION",
+                "id": "features",
+                "className": "landing-chapter",
+                "x": "0.6666",
+                "y": "-0.1956"
+              }
+            ],
+            "planes": [
+              "matrix3d(1, 0, 0, 0, 0, 1, -4.41767e-05, 4.70368e-11, 0, 4.41767e-05, 1, -1.06474e-06, 0, 0.00759341, -3.35452e-07, 1)",
+              "matrix3d(0.999872, 0.00463118, -0.0152972, 5.03233e-06, -0.00459229, 0.999986, 0.00257643, -8.47571e-07, 0.0153089, -0.00250585, 0.99988, -0.000328932, 2.63315, -0.418582, -0.0413645, 1.00001)",
+              "matrix3d(0.999998, 0.00056918, -0.00189199, 7.69373e-08, -0.000567728, 1, 0.000767997, -3.12303e-08, 0.00189243, -0.000766921, 0.999998, -4.06646e-05, 0.325359, -0.131639, -0.000716677, 1)",
+              "none",
+              "none"
+            ],
+            "scrollY": 990,
+            "viewport": {
+              "width": 1440,
+              "height": 1000
+            },
+            "scrollWidth": 1440
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0.2172,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 398.92498779296875
+            },
+            "width": 244.796875,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "matrix3d(0.99999, 0.0012679, -0.00421575, 3.81977e-07, -0.00126498, 0.999999, 0.000695593, -6.30258e-08, 0.00421662, -0.000690253, 0.999991, -9.06065e-05, 0.724929, -0.117728, -0.00313804, 1)",
+              "matrix3d(1, 9.01604e-05, -0.000300402, 1.93918e-09, -9.01238e-05, 1, 0.000121772, -7.86071e-10, 0.000300413, -0.000121745, 1, -6.45529e-06, 0.051639, -0.0209217, -1.80601e-05, 1)",
+              "none",
+              "none"
+            ],
+            "scrollY": 101,
+            "viewport": {
+              "width": 1440,
+              "height": 1000
+            },
+            "scrollWidth": 1440
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0.00724727,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 398.92498779296875
+            },
+            "width": 244.796875,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "matrix3d(1, 0.000169147, -0.000563633, 6.82656e-09, -0.000169094, 1, 9.2364e-05, -1.11869e-09, 0.000563648, -9.22687e-05, 1, -1.21117e-05, 0.0968867, -0.0158434, -5.60719e-05, 1)",
+              "matrix3d(1, 3.61236e-07, -1.20412e-06, 3.11555e-14, -3.61235e-07, 1, 4.87978e-07, -1.2626e-14, 1.20412e-06, -4.87978e-07, 1, -2.58741e-08, 0.000206972, -8.38772e-05, -2.90149e-10, 1)",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 1440,
+              "height": 1000
+            },
+            "scrollWidth": 1440
+          }
+        ],
+        "final": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 720.9921875,
+            "y": 398.92498779296875
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "",
+              "className": "landing-hero",
+              "x": "0.0017",
+              "y": "-0.2022"
+            }
+          ],
+          "planes": [
+            "matrix3d(1, 3.72765e-05, -0.000118168, 1.18168e-07, -3.56047e-05, 0.9999, 0.0141158, -1.41158e-05, 0.000118682, -0.0141158, 0.9999, -0.0009999, 0.0204864, -2.42616, -0.0342529, 1.00003)",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        }
+      }
+    },
+    {
+      "name": "scroll-rehit-without-mousemove",
+      "pass": true,
+      "details": {
+        "state": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 720.00390625,
+            "y": 396.64056396484375
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "features",
+              "className": "landing-chapter",
+              "x": "0.6667",
+              "y": "-0.2479"
+            }
+          ],
+          "planes": [
+            "none",
+            "matrix3d(0.99882, 0.0147659, -0.0462745, 4.62745e-05, -0.0139478, 0.999742, 0.0179537, -1.79537e-05, 0.0465276, -0.0172871, 0.998767, -0.000998767, 8.03245, -2.8559, -0.423623, 1.00042)",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 967,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        },
+        "hit": {
+          "className": "stage css-fallback",
+          "control": false
+        }
+      }
+    },
+    {
+      "name": "continuous-resize-and-breakpoint",
+      "pass": true,
+      "details": {
+        "samples": [
+          {
+            "active": "true",
+            "rendering": "filter",
+            "opacity": 1,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 232.046875,
+            "pointerEvents": "none",
+            "nativeHidden": true,
+            "hidden": false,
+            "focused": true,
+            "host": [
+              {
+                "tag": "SECTION",
+                "id": "",
+                "className": "landing-hero",
+                "x": "0.0617",
+                "y": "-0.2068"
+              }
+            ],
+            "planes": [
+              "matrix3d(0.999996, 0.000898007, -0.00284353, 2.84353e-06, -0.000856858, 0.999895, 0.0144393, -1.44393e-05, 0.0028562, -0.0144368, 0.999892, -0.000999892, 0.49307, -2.4809, -0.0372286, 1.00004)",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 1365,
+              "height": 1000
+            },
+            "scrollWidth": 1365
+          },
+          {
+            "active": "true",
+            "rendering": "filter",
+            "opacity": 1,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 174.078125,
+            "pointerEvents": "none",
+            "nativeHidden": true,
+            "hidden": false,
+            "focused": true,
+            "host": [
+              {
+                "tag": "SECTION",
+                "id": "",
+                "className": "landing-hero",
+                "x": "0.4333",
+                "y": "-0.2068"
+              }
+            ],
+            "planes": [
+              "matrix3d(0.999703, 0.00734328, -0.0232501, 2.32501e-05, -0.00700494, 0.999869, 0.0146001, -1.46001e-05, 0.0233542, -0.0144329, 0.999623, -0.000999623, 4.03085, -2.45179, -0.129573, 1.00013)",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 1024,
+              "height": 1000
+            },
+            "scrollWidth": 1024
+          },
+          {
+            "active": "true",
+            "rendering": "filter",
+            "opacity": 1,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 144.5,
+            "pointerEvents": "none",
+            "nativeHidden": true,
+            "hidden": false,
+            "focused": true,
+            "host": [
+              {
+                "tag": "SECTION",
+                "id": "",
+                "className": "landing-hero",
+                "x": "0.7506",
+                "y": "-0.2068"
+              }
+            ],
+            "planes": [
+              "matrix3d(0.998924, 0.0139681, -0.0442136, 4.42136e-05, -0.0133152, 0.999798, 0.0150275, -1.50275e-05, 0.0444146, -0.0144226, 0.998909, -0.000998909, 7.66165, -2.37443, -0.374943, 1.00037)",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 850,
+              "height": 1000
+            },
+            "scrollWidth": 850
+          },
+          {
+            "active": "true",
+            "rendering": "filter",
+            "opacity": 1,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 136.15625,
+            "pointerEvents": "none",
+            "nativeHidden": true,
+            "hidden": false,
+            "focused": true,
+            "host": [
+              {
+                "tag": "SECTION",
+                "id": "",
+                "className": "landing-hero",
+                "x": "0.8670",
+                "y": "-0.2068"
+              }
+            ],
+            "planes": [
+              "matrix3d(0.99823, 0.0179178, -0.0567021, 5.67021e-05, -0.0170696, 0.999736, 0.0154086, -1.54086e-05, 0.0569632, -0.0144134, 0.998272, -0.000998272, 9.82158, -2.30541, -0.593723, 1.00059)",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 801,
+              "height": 1000
+            },
+            "scrollWidth": 801
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0.176135,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 136,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "matrix3d(0.999876, 0.00458454, -0.0150741, 3.94227e-06, -0.00452707, 0.999982, 0.00384403, -1.00532e-06, 0.0150914, -0.00377531, 0.999879, -0.000261495, 2.59674, -0.6371, -0.0415989, 1.00001)",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 800,
+              "height": 844
+            },
+            "scrollWidth": 800
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0.00182281,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 130.546875,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "matrix3d(0.999999, 0.000475727, -0.00158348, 4.34554e-08, -0.000475099, 1, 0.000396957, -1.08937e-08, 0.00158366, -0.000396204, 0.999999, -2.7443e-05, 0.272244, -0.0679731, -0.000458075, 1)",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 768,
+              "height": 844
+            },
+            "scrollWidth": 768
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 130,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 390,
+              "height": 844
+            },
+            "scrollWidth": 390
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 130,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 320,
+              "height": 844
+            },
+            "scrollWidth": 320
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 136.328125,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 802,
+              "height": 1000
+            },
+            "scrollWidth": 802
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 187,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 1100,
+              "height": 1000
+            },
+            "scrollWidth": 1100
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0,
+            "display": "block",
+            "center": {
+              "x": 719.9921875,
+              "y": 396.59429931640625
+            },
+            "width": 244.796875,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 1440,
+              "height": 1000
+            },
+            "scrollWidth": 1440
+          }
+        ],
+        "final": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 719.9921875,
+            "y": 398.92498779296875
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "",
+              "className": "landing-hero",
+              "x": "-0.0000",
+              "y": "-0.2022"
+            }
+          ],
+          "planes": [
+            "matrix3d(1, 0, 0, 0, 0, 0.9999, 0.0141158, -1.41158e-05, 0, -0.0141158, 0.9999, -0.0009999, 0, -2.42616, -0.0342505, 1.00003)",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        }
+      }
+    },
+    {
+      "name": "pointerleave-reenter-no-corner-flight",
+      "pass": true,
+      "details": {
+        "active": "true",
+        "rendering": "filter",
+        "opacity": 0,
+        "display": "block",
+        "center": {
+          "x": 804.151611328125,
+          "y": 396.59429931640625
+        },
+        "width": 244.796875,
+        "pointerEvents": "none",
+        "nativeHidden": true,
+        "hidden": false,
+        "focused": true,
+        "host": [
+          {
+            "tag": "SECTION",
+            "id": "",
+            "className": "landing-hero",
+            "x": "0.1403",
+            "y": "-0.2068"
+          }
+        ],
+        "planes": [
+          "matrix3d(1, 0.00017554, -0.00055586, 5.5586e-07, -0.000167501, 0.999896, 0.0144304, -1.44304e-05, 0.000558335, -0.0144303, 0.999896, -0.000999896, 0.0963862, -2.48019, -0.0358474, 1.00004)",
+          "none",
+          "none",
+          "none",
+          "none"
+        ],
+        "scrollY": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "real-tab-visibility-recovery",
+      "pass": true,
+      "details": {
+        "background": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 720.1151123046875,
+            "y": 396.54833984375
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "",
+              "className": "landing-hero",
+              "x": "0.0002",
+              "y": "-0.2069"
+            }
+          ],
+          "planes": [
+            "matrix3d(1, 4.39003e-06, -1.39007e-05, 1.39007e-08, -4.18879e-06, 0.999896, 0.0144438, -1.44438e-05, 1.39626e-05, -0.0144438, 0.999896, -0.000999896, 0.0024104, -2.48254, -0.0358612, 1.00004)",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        },
+        "actualHiddenObserved": false,
+        "recovered": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 719.9935913085938,
+            "y": 396.59153747558594
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "",
+              "className": "landing-hero",
+              "x": "-0.0000",
+              "y": "-0.2068"
+            }
+          ],
+          "planes": [
+            "matrix3d(1, 0, 0, 0, 0, 0.999896, 0.0144369, -1.44369e-05, 0, -0.0144369, 0.999896, -0.000999896, 0, -2.48134, -0.0358265, 1.00004)",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        }
+      }
+    },
+    {
+      "name": "blur-and-visibility-event-recovery",
+      "pass": true,
+      "details": {
+        "syntheticEvent": true,
+        "recovered": {
+          "active": "true",
+          "rendering": "filter",
+          "opacity": 1,
+          "display": "block",
+          "center": {
+            "x": 719.9921875,
+            "y": 396.7493896484375
+          },
+          "width": 244.796875,
+          "pointerEvents": "none",
+          "nativeHidden": true,
+          "hidden": false,
+          "focused": true,
+          "host": [
+            {
+              "tag": "SECTION",
+              "id": "",
+              "className": "landing-hero",
+              "x": "-0.0000",
+              "y": "-0.2065"
+            }
+          ],
+          "planes": [
+            "matrix3d(1, 0, 0, 0, 0, 0.999896, 0.0144159, -1.44159e-05, 0, -0.0144159, 0.999896, -0.000999896, 0, -2.47774, -0.0357226, 1.00004)",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        }
+      }
+    },
+    {
+      "name": "keyboard-focus-and-native-controls",
+      "pass": true,
+      "details": {
+        "inputWorks": true,
+        "nativeControls": true
+      }
+    },
+    {
+      "name": "live-motion-and-forced-color-toggle",
+      "pass": true,
+      "details": {
+        "reducedMotionCycles": 3,
+        "forced": {
+          "active": "false",
+          "rendering": "filter",
+          "opacity": 0,
+          "display": "none",
+          "center": {
+            "x": 0,
+            "y": 0
+          },
+          "width": 0,
+          "pointerEvents": "none",
+          "nativeHidden": false,
+          "hidden": false,
+          "focused": true,
+          "host": [],
+          "planes": [
+            "none",
+            "none",
+            "none",
+            "none",
+            "none"
+          ],
+          "scrollY": 0,
+          "viewport": {
+            "width": 1440,
+            "height": 1000
+          },
+          "scrollWidth": 1440
+        }
+      }
+    },
+    {
+      "name": "scroll-focus-return-to-input",
+      "pass": true,
+      "details": {
+        "scrollY": 0,
+        "focus": "视频链接"
+      }
+    },
+    {
+      "name": "repeat-scene-replacement",
+      "pass": false,
+      "error": "locator.click: Timeout 12000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '返回', exact: true })\u001b[22m\n\n    at E:\\install_video\\.planning\\ui-follow-video-20261013\\continuation\\check.cjs:185:69\n    at async check (E:\\install_video\\.planning\\ui-follow-video-20261013\\continuation\\check.cjs:58:25)\n    at async main (E:\\install_video\\.planning\\ui-follow-video-20261013\\continuation\\check.cjs:180:5)",
+      "state": {
+        "active": "true",
+        "rendering": "filter",
+        "opacity": 1,
+        "display": "block",
+        "center": {
+          "x": 600,
+          "y": 180.79999542236328
+        },
+        "width": 244.796875,
+        "pointerEvents": "none",
+        "nativeHidden": true,
+        "hidden": false,
+        "focused": true,
+        "host": [
+          {
+            "tag": "DIV",
+            "id": "",
+            "className": "video-workflow__heading",
+            "x": "-0.2000",
+            "y": "-0.2000"
+          }
+        ],
+        "planes": [
+          "matrix3d(0.999894, -0.00438331, 0.0139022, -1.39022e-05, 0.00418837, 0.999893, 0.0140205, -1.40205e-05, -0.0139622, -0.0139608, 0.999805, -0.000999805, -2.4098, -2.38922, -0.0670146, 1.00007)"
+        ],
+        "scrollY": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "rendering-blend",
+      "pass": true,
+      "details": {
+        "active": "true",
+        "rendering": "blend",
+        "opacity": 1,
+        "display": "block",
+        "center": {
+          "x": 719.9921875,
+          "y": 398.92498779296875
+        },
+        "width": 244.796875,
+        "pointerEvents": "none",
+        "nativeHidden": true,
+        "hidden": false,
+        "focused": true,
+        "host": [
+          {
+            "tag": "SECTION",
+            "id": "",
+            "className": "landing-hero",
+            "x": "-0.0000",
+            "y": "-0.2022"
+          }
+        ],
+        "planes": [
+          "matrix3d(1, 0, 0, 0, 0, 0.9999, 0.0141158, -1.41158e-05, 0, -0.0141158, 0.9999, -0.0009999, 0, -2.42616, -0.0342505, 1.00003)",
+          "none",
+          "none",
+          "none",
+          "none"
+        ],
+        "scrollY": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "rendering-unsupported",
+      "pass": true,
+      "details": {
+        "active": "false",
+        "opacity": 0,
+        "display": "block",
+        "center": {
+          "x": 0,
+          "y": 0
+        },
+        "width": 244.796875,
+        "pointerEvents": "none",
+        "nativeHidden": false,
+        "hidden": false,
+        "focused": true,
+        "host": [],
+        "planes": [
+          "none",
+          "none",
+          "none",
+          "none",
+          "none"
+        ],
+        "scrollY": 0,
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "scrollWidth": 1440
+      }
+    },
+    {
+      "name": "touch-narrow-wide-and-orientation",
+      "pass": true,
+      "details": {
+        "samples": [
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0,
+            "display": "block",
+            "center": {
+              "x": 0,
+              "y": 0
+            },
+            "width": 130,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 390,
+              "height": 844
+            },
+            "scrollWidth": 390
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0,
+            "display": "block",
+            "center": {
+              "x": 0,
+              "y": 0
+            },
+            "width": 143.46875,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 844,
+              "height": 390
+            },
+            "scrollWidth": 844
+          },
+          {
+            "active": "false",
+            "rendering": "filter",
+            "opacity": 0,
+            "display": "block",
+            "center": {
+              "x": 0,
+              "y": 0
+            },
+            "width": 174.078125,
+            "pointerEvents": "none",
+            "nativeHidden": false,
+            "hidden": false,
+            "focused": true,
+            "host": [],
+            "planes": [
+              "none",
+              "none",
+              "none",
+              "none",
+              "none"
+            ],
+            "scrollY": 0,
+            "viewport": {
+              "width": 1024,
+              "height": 768
+            },
+            "scrollWidth": 1024
+          }
+        ],
+        "backgroundTouchScroll": {
+          "before": 0,
+          "after": 771
+        },
+        "device": "Headless Edge mobile emulation, not a physical phone"
+      }
+    },
+    {
+      "name": "console-and-resource-integrity",
+      "pass": true,
+      "details": {
+        "mockedApiRequests": 9,
+        "externalRequests": 0,
+        "pageErrors": 0,
+        "consoleErrors": 0
+      }
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/parse",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/auth/me",
+      "mocked": true
+    }
+  ],
+  "blockedExternal": [],
+  "limitations": [
+    "Headless Edge did not expose a hidden background tab; actual desktop tab/window visibility remains unverified. blur/visibility event paths checked separately."
+  ],
+  "budget": {
+    "modelPosts": 0,
+    "platformExtractions": 0,
+    "mediaDownloads": 0
+  },
+  "browserVersion": "155.0.4283.45",
+  "reconnaissance": {
+    "title": "万能视频下载",
+    "headings": [
+      "把视频，留在身边。",
+      "先看清信息，再决定怎么保存",
+      "下载视频，也整理视频内容",
+      "三步，完成下载或字幕整理",
+      "视频下载与字幕整理"
+    ],
+    "hosts": [
+      {
+        "id": "",
+        "className": "landing-hero"
+      },
+      {
+        "id": "features",
+        "className": "landing-chapter is-pending"
+      },
+      {
+        "id": "",
+        "className": "landing-chapter is-pending"
+      },
+      {
+        "id": "how-it-works",
+        "className": "landing-chapter is-pending"
+      },
+      {
+        "id": "",
+        "className": "landing-outro is-pending"
+      }
+    ],
+    "themes": [
+      "浅色",
+      "深色",
+      "自动"
+    ]
+  },
+  "ended": "2026-10-13T07:30:38.998Z",
+  "pass": false
+}

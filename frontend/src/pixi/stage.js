@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { hex, baseColor } from './theme.js';
 import { PLACEMENT } from './mascotConfig.js';
 
 export function webglSupported() {
@@ -25,7 +24,9 @@ export function detectTier() {
 export function initStage(container) {
   const app = new PIXI.Application({
     resizeTo: window,
-    backgroundColor: hex(baseColor), // 底色对齐深色底（--ink-900），配合 backgroundAlpha:0 兜底
+    // Alpha-zero framebuffer pixels must also have zero RGB for premultiplied
+    // canvas compositing. This is a transparent clear value, not a theme color.
+    backgroundColor: 0,
     backgroundAlpha: 0,      // 背景透明，深色底渐变由 body CSS 提供（透过画布）
     antialias: true,
     resolution: window.devicePixelRatio || 1,

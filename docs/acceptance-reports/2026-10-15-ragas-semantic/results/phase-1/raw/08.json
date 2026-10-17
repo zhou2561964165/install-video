@@ -1,0 +1,10 @@
+{
+  "output_text": "{\n    \"statements\": [\n        {\n            \"statement\": \"档案显示全年每周一举行一次校准会。\",\n            \"reason\": \"The context explicitly states that the archive covers only the four-week pilot and contains no schedule or attendance records for the rest of the year, and it does not infer an annual pattern from the pilot.\",\n            \"verdict\": 0\n        }\n    ]\n}",
+  "usage": {
+    "input_tokens": 1070,
+    "output_tokens": 82,
+    "total_tokens": 1152
+  },
+  "status": "completed",
+  "model": "deepseek-v4-pro"
+}

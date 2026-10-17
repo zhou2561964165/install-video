@@ -135,3 +135,4 @@ class SummaryResponse(BaseModel):
     key_points: list[str]
     provider: str
     model: str
+    format: Literal["structured", "markdown"] = "structured"

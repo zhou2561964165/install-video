@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { detectTier } from './stage.js';
+import { detectTier, initStage } from './stage.js';
+import * as PIXI from 'pixi.js';
 
-vi.mock('pixi.js', () => ({}));
+vi.mock('pixi.js', () => ({ Application: vi.fn(function () {
+  this.view = document.createElement('canvas');
+  this.renderer = { plugins: { interaction: {} } };
+}) }));
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -32,4 +36,10 @@ describe('detectTier', () => {
     });
     expect(detectTier()).toBe('high');
   });
+});
+
+it('clears transparent overlay with zero RGB so premultiplied compositing cannot paint white', () => {
+  const container = document.createElement('div');
+  initStage(container);
+  expect(PIXI.Application).toHaveBeenLastCalledWith(expect.objectContaining({ backgroundColor: 0, backgroundAlpha: 0 }));
 });

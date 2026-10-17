@@ -1,23 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { unlock, playSfx } from '../audio/audioManager.js';
+import VideoIcon from './ui/VideoIcon.jsx';
 
 // 落地页文案/数据：数据驱动，加卡片/步骤/示例只改这里（工程约定 §3 不写死）
 const PARSE_POINTS = [
-  { title: '多平台识别', desc: 'B站、YouTube、抖音、快手… 粘贴即自动识别来源，无需手动选平台。' },
-  { title: '元数据一次到位', desc: '标题、封面、时长、UP主、播放量、字幕一并解析，下载前先看全。' },
-  { title: '清晰度自动预选', desc: '列出全部档位与音视频组合，替你挑好最合适的那一条。' },
+  { title: '链接解析', desc: '粘贴支持站点的视频链接，查看来源可提供的视频信息与格式。' },
+  { title: '信息预览', desc: '有可用信息时，可查看标题、封面、时长、作者与格式选项。' },
+  { title: '按需选择', desc: '解析后预选首个可用格式，也可以自行调整清晰度与保存方式。' },
 ];
 
 const DOWNLOAD_POINTS = [
-  { title: '清晰度分档', desc: '360p 到 4K 逐档可选，1080p 起自动合并音视频，画质不妥协。' },
-  { title: '音视频分离', desc: '只想听歌下音频，只想存画面下视频，各取所需互不浪费。' },
-  { title: '直链秒下', desc: '支持直链的资源免服务器中转，浏览器原生下载，快且不排队。' },
+  { title: '格式选择', desc: '在来源提供的选项中选择视频清晰度和封装格式。' },
+  { title: '原标题保存', desc: '网页默认按视频标题命名，也可选择使用来源直链。' },
+  { title: '字幕整理', desc: '可查看、翻译字幕，并为短篇、中篇和长篇生成 AI 内容总结。' },
 ];
 
 const STEPS = [
-  { num: '01', title: '粘贴链接', desc: '把视频链接粘进上方输入框。' },
-  { num: '02', title: '选择格式', desc: '挑清晰度与文件类型。' },
-  { num: '03', title: '下载保存', desc: '一键保存到本地，完成！' },
+  { num: '01', title: '粘贴链接', desc: '输入支持站点的视频链接。' },
+  { num: '02', title: '查看解析', desc: '选择可用格式与保存方式。' },
+  { num: '03', title: '下载或整理', desc: '保存视频，或读取、翻译字幕并生成内容总结。' },
 ];
 
 const EXAMPLES = [
@@ -31,8 +32,10 @@ const exampleLabel = (u) => {
   try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u.slice(0, 20); }
 };
 
-export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', focusInput = false }) {
-  const [url, setUrl] = useState(initialUrl);
+export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', onUrlChange, focusInput = false, notice = '' }) {
+  const [localUrl, setLocalUrl] = useState(initialUrl);
+  const url = onUrlChange ? initialUrl : localUrl;
+  const setUrl = onUrlChange || setLocalUrl;
   const inputRef = useRef(null);
   useEffect(() => { if (focusInput) inputRef.current?.focus(); }, [focusInput]);
 
@@ -99,23 +102,21 @@ export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', focu
   return (
     <div data-testid="entry-scene" className="entry-scene">
       <div className="landing">
-        <section className="landing-hero" aria-label="粘贴视频链接">
+        <section className="landing-hero" aria-label="粘贴视频链接" data-ui-follow>
           <div className="landing-hero__content">
-            <p className="landing-hero__eyebrow">视频下载 · 多平台</p>
-            <h1 className="landing-hero__title">粘贴链接，秒速下载</h1>
-            <p className="landing-hero__subtitle">
-              B站 · YouTube · 抖音 等平台视频与音频，粘贴即可解析，一键保存到本地。
-            </p>
-            <form className="landing-form" onSubmit={submit}>
+            <h1 className="landing-hero__title" data-follow-plane><span className="landing-hero__title-line">把视频，</span><span className="landing-hero__title-line">留在身边。</span></h1>
+            <form className="landing-form" data-follow-exclude="parse" onSubmit={submit}>
               <input
                 ref={inputRef}
                 aria-label="视频链接"
+                aria-describedby={notice ? 'entry-auth-notice' : undefined}
                 placeholder="https://…"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               />
-              <button type="submit">解析</button>
+              <button type="submit"><VideoIcon name="video" />解析</button>
             </form>
+            {notice && <p id="entry-auth-notice" className="landing-form__notice" role="status">{notice}</p>}
             <div className="landing-examples">
               <span className="landing-examples__label">试试</span>
               {EXAMPLES.map((ex) => (
@@ -131,17 +132,12 @@ export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', focu
             </div>
           </div>
           {mascotSlot}
-          <div className="landing-hero__scroll" aria-hidden="true">
-            <span>向下滚动</span>
-          </div>
         </section>
 
-        <section className="landing-chapter" aria-labelledby="parse-title">
-          <p className="landing-chapter__eyebrow">一键解析 · 多平台</p>
-          <h2 id="parse-title" className="landing-chapter__title">粘贴即解析，秒出结果</h2>
+        <section id="features" className="landing-chapter" aria-labelledby="parse-title" data-ui-follow>
+          <h2 id="parse-title" className="landing-chapter__title" data-follow-plane>先看清信息，再决定怎么保存</h2>
           <p className="landing-chapter__desc">
-            不用下载任何软件，也不用先选平台。把链接丢进来，来源识别、元数据、清晰度档位一次算好，
-            你要做的只剩「点下载」。
+            可用的平台信息和格式由视频来源提供；解析后先预选一个格式，你仍可按需调整。
           </p>
           <div className="landing-points">
             {PARSE_POINTS.map((p) => (
@@ -153,10 +149,9 @@ export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', focu
           </div>
         </section>
 
-        <section className="landing-chapter" aria-labelledby="download-title">
-          <p className="landing-chapter__eyebrow">多格式下载</p>
-          <h2 id="download-title" className="landing-chapter__title">要视频要音频，随你挑</h2>
-          <p className="landing-chapter__desc">按需选择格式与清晰度，想怎么下就怎么下。</p>
+        <section className="landing-chapter" aria-labelledby="download-title" data-ui-follow>
+          <h2 id="download-title" className="landing-chapter__title" data-follow-plane>下载视频，也整理视频内容</h2>
+          <p className="landing-chapter__desc">字幕功能取决于来源是否提供可读取的字幕；总结支持短篇、中篇和有长度上限的长篇内容。</p>
           <div className="landing-points">
             {DOWNLOAD_POINTS.map((p) => (
               <article key={p.title} className="landing-point">
@@ -167,9 +162,8 @@ export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', focu
           </div>
         </section>
 
-        <section className="landing-chapter" aria-labelledby="howto-title">
-          <p className="landing-chapter__eyebrow">三步搞定</p>
-          <h2 id="howto-title" className="landing-chapter__title">三步，从链接到本地文件</h2>
+        <section id="how-it-works" className="landing-chapter" aria-labelledby="howto-title" data-ui-follow>
+          <h2 id="howto-title" className="landing-chapter__title" data-follow-plane>三步，完成下载或字幕整理</h2>
           <ol className="landing-steps">
             {STEPS.map((s) => (
               <li key={s.num} className="landing-step">
@@ -181,12 +175,10 @@ export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', focu
           </ol>
         </section>
 
-        <section className="landing-outro" aria-label="开始下载">
-          <p className="landing-chapter__eyebrow">视频下载 · 多平台 · 免安装</p>
-          <h2 className="landing-chapter__title">你好，这里是万能视频下载</h2>
-          <p className="landing-outro__tagline">从粘贴链接到保存文件，只隔一次点击。现在就把链接交给我。</p>
+        <section className="landing-outro" aria-label="开始下载" data-ui-follow>
+          <h2 className="landing-chapter__title" data-follow-plane>视频下载与字幕整理</h2>
           <button type="button" className="landing-outro__cta" onClick={backToTop}>
-            立即解析
+            回到链接输入
           </button>
         </section>
       </div>

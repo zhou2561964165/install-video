@@ -1,0 +1,10 @@
+{
+  "output_text": "{\n  \"statements\": [\n    \"档案显示全年每周一举行一次校准会。\"\n  ]\n}",
+  "usage": {
+    "input_tokens": 451,
+    "output_tokens": 23,
+    "total_tokens": 474
+  },
+  "status": "completed",
+  "model": "deepseek-v4-pro"
+}

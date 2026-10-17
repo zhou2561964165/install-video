@@ -5,6 +5,7 @@ never model correctness or semantic coverage. Historical evidence stays read-onl
 """
 import copy
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 
@@ -12,6 +13,7 @@ import httpx
 import pytest
 
 from app.config import settings
+from app.services import llm_service as service
 from app.services.llm_service import LLMServiceError, summarize_text
 from test_grounded_pipeline import composition_response, extraction_response
 
@@ -23,6 +25,13 @@ CORPUS = PROJECT / "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/
 
 @pytest.fixture
 def refined(monkeypatch):
+    # Reuse the established historical caption preparation without changing
+    # production or replacing the frozen sources/facts expected by the guards.
+    script = PROJECT / "docs/acceptance-reports/2026-10-10-source-first-summary-live/scripts/evaluate.py"
+    spec = importlib.util.spec_from_file_location("refined_historical_preparation", script)
+    historical = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(historical)
+    monkeypatch.setattr(service, "_summary_input", historical.cleaned)
     for name, value in {
         "llm_base_url": "https://offline.invalid/v1", "llm_api_key": "offline-only",
         "llm_model": "offline-model", "llm_provider": "compatible",

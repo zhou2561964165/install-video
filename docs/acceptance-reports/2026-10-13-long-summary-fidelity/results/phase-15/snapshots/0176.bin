@@ -1,0 +1,33 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-7",
+  "planned_posts": 2,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "en-long",
+      "sample_post": 1,
+      "stage": "review",
+      "endpoint": "https://api.deepseek.com/responses",
+      "transport": "responses",
+      "max_output_tokens": 7808,
+      "status": "response",
+      "reserved_utc": "2026-10-15T07:35:00.428487+00:00",
+      "payload_sha256": "76bcaeca3f2eee275a0d69f87657c0722e31c2ad1a287a1b58b68f618216c8a7",
+      "http_status": 200,
+      "usage": {
+        "input_tokens": 12708,
+        "output_tokens": 1456,
+        "total_tokens": 14164,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        }
+      },
+      "response_sha256": "a8eca20a7286acb068d43fc4fcf137669b0615aa2decb2c1dcefc537938ff42c",
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231"
+    }
+  ]
+}

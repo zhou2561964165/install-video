@@ -1,10 +1,25 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App.jsx';
 
-const mockVisual = vi.hoisted(() => ({ webgl: false, available: true, onTap: null }));
+const mockVisual = vi.hoisted(() => ({ webgl: false, available: true, visual: true, onTap: null, instance: null }));
+function visualFixture() {
+  return { isAvailable: () => mockVisual.available, hasVisual: () => mockVisual.visual, resize: vi.fn(), destroy: vi.fn(), startRandomProps: vi.fn(), setStageExpression: vi.fn(), setExpression: vi.fn(), scaleBy: vi.fn(), moveBy: vi.fn(), resetPosition: vi.fn(), setMotionEnabled: vi.fn() };
+}
+
+function phoneViewport(width) {
+  const media = new EventTarget();
+  media.matches = width <= 800;
+  vi.stubGlobal('innerWidth', width);
+  vi.stubGlobal('matchMedia', (query) => query === '(max-width: 800px)' ? media : { matches: false, addEventListener() {}, removeEventListener() {} });
+  return (nextWidth) => {
+    window.innerWidth = nextWidth;
+    media.matches = nextWidth <= 800;
+    media.dispatchEvent(new Event('change'));
+  };
+}
 
 vi.mock('pixi.js', () => ({}));
 vi.mock('pixi-live2d-display/cubism4', () => ({
@@ -26,7 +41,7 @@ vi.mock('./pixi/background.js', () => ({
 vi.mock('./pixi/mascot.js', () => ({
   createMascot: vi.fn(async (_app, _modelId, options) => {
     mockVisual.onTap = options.onTap;
-    return { isAvailable: () => mockVisual.available, resize: vi.fn(), destroy: vi.fn(), startRandomProps: vi.fn(), setStageExpression: vi.fn(), setExpression: vi.fn(), scaleBy: vi.fn() };
+    return (mockVisual.instance = visualFixture());
   }),
 }));
 
@@ -63,15 +78,15 @@ async function beginServer() {
   await userEvent.click(screen.getByRole('button', { name: '下载', exact: true }));
 }
 
-afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); clearAuthToken(); });
+afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals(); clearAuthToken(); });
 
 describe('App 功能闭环', () => {
   beforeEach(() => {
-    vi.resetAllMocks(); mockAuth.status = 'authed'; mockAuth.user = { id: 'u1', email: 't@e.com' }; mockVisual.webgl = false; mockVisual.available = true; mockVisual.onTap = null;
+    vi.resetAllMocks(); mockAuth.status = 'authed'; mockAuth.user = { id: 'u1', email: 't@e.com' }; mockVisual.webgl = false; mockVisual.available = true; mockVisual.onTap = null; mockVisual.visual = true; mockVisual.instance = null;
     createBackground.mockImplementation(() => ({ resize: vi.fn(), destroy: vi.fn(), setIntensity: vi.fn() }));
     createMascot.mockImplementation(async (_app, _modelId, options) => {
       mockVisual.onTap = options.onTap;
-      return { isAvailable: () => mockVisual.available, resize: vi.fn(), destroy: vi.fn(), startRandomProps: vi.fn(), setStageExpression: vi.fn(), setExpression: vi.fn(), scaleBy: vi.fn() };
+      return (mockVisual.instance = visualFixture());
     });
     vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
     setAuthToken('owner-token');
@@ -289,15 +304,114 @@ describe('App 功能闭环', () => {
     expect(await screen.findByTestId('error-scene')).toBeInTheDocument();
   });
 
-  it('未登录时渲染登录场景（强制门）', () => {
+  it('访客默认显示首页与顶部登录入口，不加载角色', () => {
     mockAuth.status = 'gate';
     mockVisual.webgl = true;
     render(<App />);
-    expect(screen.getByTestId('auth-scene')).toBeInTheDocument();
-    expect(screen.queryByLabelText('视频链接')).not.toBeInTheDocument();
+    expect(screen.getByTestId('entry-scene')).toBeInTheDocument();
+    expect(screen.queryByTestId('auth-scene')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '登录', exact: true })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: '页面导航' })).toBeInTheDocument();
     expect(screen.queryByTestId('preloader')).not.toBeInTheDocument();
     expect(createMascot).not.toHaveBeenCalled();
     expect(createBackground).not.toHaveBeenCalled();
+  });
+
+  it('访客解析留在首页提示顶部登录，不发业务请求', async () => {
+    mockAuth.status = 'gate';
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/guest');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    expect(screen.getByRole('status')).toHaveTextContent('请先点击顶部登录按钮登录后再解析');
+    expect(screen.getByTestId('entry-scene')).toBeInTheDocument();
+    expect(screen.queryByTestId('auth-scene')).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+    expect(startDownload).not.toHaveBeenCalled();
+    expect(summarizeVideo).not.toHaveBeenCalled();
+  });
+
+  it('只有顶部按钮打开登录，往返保留未提交草稿并恢复焦点', async () => {
+    mockAuth.status = 'gate';
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/draft');
+    await userEvent.click(screen.getByRole('button', { name: '登录', exact: true }));
+    expect(screen.getByTestId('auth-scene')).toBeInTheDocument();
+    expect(screen.getByLabelText('邮箱')).toHaveFocus();
+    await userEvent.click(screen.getByRole('button', { name: '返回首页' }));
+    expect(screen.getByLabelText('视频链接')).toHaveValue('https://example.com/draft');
+    expect(screen.getByLabelText('视频链接')).toHaveFocus();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('认证恢复期间首页可输入，解析不发请求，恢复登录后保留输入且不自动解析', async () => {
+    mockAuth.status = 'loading';
+    const view = render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/restoring');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    expect(screen.getByRole('status')).toHaveTextContent('正在验证登录状态，请稍后再解析');
+    expect(fetch).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: '登录', exact: true }));
+    expect(screen.getByTestId('auth-scene')).toBeInTheDocument();
+    expect(screen.queryByLabelText('邮箱')).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: '返回首页' }));
+    mockAuth.status = 'authed';
+    view.rerender(<App />);
+    expect(screen.getByLabelText('视频链接')).toHaveValue('https://example.com/restoring');
+    expect(within(screen.getByTestId('entry-scene')).queryByRole('status')).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('认证恢复失败回到访客态时保留链接，提示同步为顶部登录且不发业务请求', async () => {
+    mockAuth.status = 'loading';
+    const view = render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/restore-failed');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    expect(screen.getByRole('status')).toHaveTextContent('正在验证登录状态');
+    mockAuth.status = 'gate';
+    view.rerender(<App />);
+    expect(screen.getByLabelText('视频链接')).toHaveValue('https://example.com/restore-failed');
+    expect(screen.getByRole('status')).toHaveTextContent('请先点击顶部登录按钮登录后再解析');
+    expect(screen.getByRole('status')).not.toHaveTextContent('正在验证');
+    expect(screen.queryByTestId('auth-scene')).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it.each(['登录', '注册'])('%s成功返回首页保留访客草稿，显式解析才发请求', async (mode) => {
+    mockAuth.status = 'gate';
+    const view = render(<App />);
+    const authenticate = mode === '登录' ? mockAuth.login : mockAuth.register;
+    authenticate.mockImplementation(async () => {
+      mockAuth.status = 'authed';
+      view.rerender(<App />);
+    });
+    parseVideo.mockResolvedValue(parseFixture);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/after-login');
+    await userEvent.click(screen.getByRole('button', { name: '登录', exact: true }));
+    if (mode === '注册') await userEvent.click(within(screen.getByTestId('auth-scene')).getByRole('button', { name: '注册', exact: true }));
+    await userEvent.type(screen.getByLabelText('邮箱'), 'guest@example.com');
+    await userEvent.type(screen.getByLabelText('密码'), 'password123');
+    await userEvent.click(screen.getByRole('button', { name: `立即${mode}` }));
+    expect(screen.queryByTestId('auth-scene')).toBeNull();
+    expect(screen.getByLabelText('视频链接')).toHaveValue('https://example.com/after-login');
+    expect(screen.getByLabelText('视频链接')).toHaveFocus();
+    expect(fetch).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    await screen.findByTestId('selecting-scene');
+    expect(parseVideo).toHaveBeenCalledWith('https://example.com/after-login');
+  });
+
+  it('退出清空当前账号输入，其他账号登录也不保留上一账号草稿', async () => {
+    const view = render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/private');
+    mockAuth.user = { id: 'u2', email: 'other@example.com' };
+    view.rerender(<App />);
+    expect(screen.getByLabelText('视频链接')).toHaveValue('');
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/private2');
+    await userEvent.click(screen.getByRole('button', { name: '退出', exact: true }));
+    mockAuth.status = 'gate';
+    view.rerender(<App />);
+    expect(screen.getByLabelText('视频链接')).toHaveValue('');
+    expect(screen.queryByTestId('auth-scene')).toBeNull();
   });
 
   it('退出后清理下载会话，重新登录回到入口', async () => {
@@ -309,7 +423,8 @@ describe('App 功能闭环', () => {
 
     mockAuth.status = 'gate';
     view.rerender(<App />);
-    expect(screen.getByTestId('auth-scene')).toBeInTheDocument();
+    expect(screen.getByTestId('entry-scene')).toBeInTheDocument();
+    expect(screen.queryByTestId('auth-scene')).toBeNull();
 
     mockAuth.status = 'authed';
     view.rerender(<App />);
@@ -369,11 +484,12 @@ describe('App 功能闭环', () => {
     expect(screen.queryByTestId('selecting-scene')).toBeNull();
   });
 
-  it('不增设可见换装按键，原角色点击仍打开原菜单', async () => {
+  it('点击模型可打开菜单且页面没有角色悬浮按钮', async () => {
     mockVisual.webgl = true;
     render(<App />);
     await waitFor(() => expect(mockVisual.onTap).toBeTypeOf('function'));
-    expect(document.querySelector('button.mascot-menu-trigger')).toBeNull();
+    expect(document.querySelector('.mascot-controls')).toBeNull();
+    expect(screen.queryByRole('button', { name: '角色菜单', exact: true })).toBeNull();
     expect(screen.queryByRole('dialog', { name: '角色换装' })).toBeNull();
     act(() => mockVisual.onTap());
     const menu = screen.getByRole('dialog', { name: '角色换装' });
@@ -386,6 +502,18 @@ describe('App 功能闭环', () => {
     expect(screen.getByRole('button', { name: '变小', exact: true })).toBeInTheDocument();
   });
 
+  it('只恢复示例网站前的唯一试试，角色提供独立可见区域标记', async () => {
+    mockVisual.webgl = true;
+    render(<App />);
+    await waitFor(() => expect(document.querySelector('[data-mascot-interaction]')).toHaveAttribute('tabindex', '0'));
+    const examples = document.querySelector('.landing-examples');
+    expect(examples.firstElementChild).toHaveTextContent('试试');
+    expect(screen.getAllByText('试试', { exact: true })).toHaveLength(1);
+    expect(document.querySelector('[data-mascot-region]')).toBeNull();
+    expect(createMascot.mock.calls.at(-1)[2].placementMode).toBe('free');
+    expect(document.querySelector('[data-mascot-interaction]')).toHaveAttribute('data-follow-exclude', 'mascot');
+  });
+
   it.each(['Enter', ' '])('已有角色区域支持键盘 %s 打开菜单', async (key) => {
     mockVisual.webgl = true;
     render(<App />);
@@ -395,7 +523,7 @@ describe('App 功能闭环', () => {
     expect(region).toHaveAttribute('aria-haspopup', 'dialog');
     expect(region.closest('.stage')).not.toBeNull();
     expect(createMascot.mock.calls.at(-1)[2].interactionTarget).toBe(region);
-    expect(document.querySelector('[data-mascot-region]')).not.toHaveAttribute('role');
+    expect(document.querySelector('[data-mascot-region]')).toBeNull();
     region.focus();
     fireEvent.keyDown(region, { key });
     expect(screen.getByRole('dialog', { name: '角色换装' })).toBeInTheDocument();
@@ -405,7 +533,7 @@ describe('App 功能闭环', () => {
   });
 
   it('模型不可用时角色区域不接受键盘换装操作', async () => {
-    mockVisual.webgl = true; mockVisual.available = false;
+    mockVisual.webgl = true; mockVisual.available = false; mockVisual.visual = false;
     render(<App />);
     await act(async () => {});
     const region = document.querySelector('[data-mascot-interaction]');
@@ -414,6 +542,196 @@ describe('App 功能闭环', () => {
     expect(region).toHaveAttribute('hidden');
     fireEvent.keyDown(region, { key: 'Enter' });
     expect(screen.queryByRole('dialog', { name: '角色换装' })).toBeNull();
+  });
+  it('嵌入角色不可见后关闭菜单，回焦主区域的可见输入', async () => {
+    mockVisual.webgl = true; render(<App />);
+    const target = document.querySelector('[data-mascot-interaction]');
+    await waitFor(() => expect(target).toHaveAttribute('tabindex', '0'));
+    target.focus(); fireEvent.keyDown(target, { key: 'Enter' });
+    target.style.visibility = 'hidden'; fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.getByLabelText('视频链接')).toHaveFocus();
+  });
+
+  it('保留方向键手动移动，菜单开关和重新聚焦不暂停模型且保留业务输入', async () => {
+    mockVisual.webgl = true;
+    render(<App />);
+    const target = document.querySelector('[data-mascot-interaction]');
+    await waitFor(() => expect(target).toHaveAttribute('tabindex', '0'));
+    const model = mockVisual.instance;
+    const input = screen.getByLabelText('视频链接');
+    fireEvent.change(input, { target: { value: 'https://example.com/kept' } });
+    fireEvent.keyDown(target, { key: 'ArrowRight' });
+    fireEvent.keyDown(target, { key: 'ArrowUp' });
+    fireEvent.keyDown(target, { key: 'Home' });
+    expect(model.moveBy.mock.calls).toEqual([[24, 0], [0, -24]]);
+    expect(model.resetPosition).toHaveBeenCalledOnce();
+    model.setMotionEnabled.mockClear();
+    target.focus();
+    fireEvent.keyDown(target, { key: 'Enter' });
+    const menu = screen.getByRole('dialog', { name: '角色换装' });
+    expect(model.setMotionEnabled).not.toHaveBeenCalledWith(false);
+    for (const name of ['向上移动', '向下移动', '向左移动', '向右移动', '角色复位', '暂停活动', '恢复活动']) {
+      expect(within(menu).queryByRole('button', { name })).toBeNull();
+    }
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(model.setMotionEnabled).not.toHaveBeenCalledWith(false);
+    expect(target).toHaveFocus();
+    target.focus();
+    fireEvent.keyDown(target, { key: 'Enter' });
+    const reopenedMenu = screen.getByRole('dialog', { name: '角色换装' });
+    expect(reopenedMenu).toBeVisible();
+    expect(model.setMotionEnabled).not.toHaveBeenCalledWith(false);
+    expect(input).toHaveValue('https://example.com/kept');
+  });
+
+  it('fallback仅显示静态角色，不展示空菜单或无效换装', async () => {
+    mockVisual.webgl = true; mockVisual.available = false;
+    render(<App />);
+    const target = document.querySelector('[data-mascot-interaction]');
+    await waitFor(() => expect(target).not.toHaveAttribute('hidden'));
+    target.focus();
+    fireEvent.keyDown(target, { key: 'Enter' });
+    expect(target).toHaveAttribute('role', 'img');
+    expect(target).toHaveAttribute('tabindex', '-1');
+    expect(target).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByRole('dialog', { hidden: true })).toBeNull();
+    expect(document.querySelector('.expression-menu')).toBeNull();
+    expect(screen.queryByRole('button', { name: '短发', exact: true })).toBeNull();
+    expect(screen.queryByRole('button', { name: '变大', exact: true })).toBeNull();
+  });
+
+  it('慢模型不挡输入，超时取消且晚到结果只释放一次', async () => {
+    vi.useFakeTimers();
+    mockVisual.webgl = true;
+    let resolve;
+    createMascot.mockImplementation(() => new Promise((done) => { resolve = done; }));
+    const model = visualFixture();
+    const view = render(<App />);
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    expect(screen.queryByTestId('preloader')).toBeNull();
+    expect(screen.getByLabelText('视频链接')).toBeEnabled();
+    await act(async () => vi.advanceTimersByTime(8000));
+    expect(signal.aborted).toBe(true);
+    await act(async () => resolve(model));
+    expect(model.destroy).toHaveBeenCalledOnce();
+    expect(document.querySelector('.mascot-controls')).toBeNull();
+    expect(screen.queryByRole('button', { name: '角色菜单', exact: true })).toBeNull();
+    view.unmount();
+    expect(model.destroy).toHaveBeenCalledOnce();
+    vi.useRealTimers();
+  });
+
+  it('未完成模型卸载时取消，拒绝结果不泄露且视觉资源清理一次', async () => {
+    mockVisual.webgl = true;
+    let reject;
+    createMascot.mockImplementation(() => new Promise((_resolve, fail) => { reject = fail; }));
+    const view = render(<App />);
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    const bg = createBackground.mock.results.at(-1).value;
+    view.unmount();
+    expect(signal.aborted).toBe(true);
+    await act(async () => reject(new Error('cancelled')));
+    expect(bg.destroy).toHaveBeenCalledOnce();
+  });
+
+  it('慢模型就绪时使用加载期间已经切换的新场景', async () => {
+    mockVisual.webgl = true;
+    let resolve;
+    createMascot.mockImplementation(() => new Promise((done) => { resolve = done; }));
+    const model = visualFixture();
+    parseVideo.mockResolvedValue(parseFixture);
+    render(<App />);
+    fireEvent.change(screen.getByLabelText('视频链接'), { target: { value: 'https://example.com/new-scene' } });
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    await screen.findByTestId('selecting-scene');
+    await act(async () => resolve(model));
+    expect(model.setStageExpression.mock.calls[0]).toEqual(['selecting']);
+  });
+
+  it('卸载已就绪模型只销毁一次并取消加载controller', async () => {
+    mockVisual.webgl = true;
+    const model = visualFixture();
+    createMascot.mockImplementation(async (_app, _id, { signal }) => {
+      const dispose = () => model.destroy();
+      signal.addEventListener('abort', dispose);
+      model.destroy.mockImplementation(() => signal.removeEventListener('abort', dispose));
+      return model;
+    });
+    const view = render(<App />);
+    const target = document.querySelector('[data-mascot-interaction]');
+    await waitFor(() => expect(target).toHaveAttribute('tabindex', '0'));
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    view.unmount();
+    expect(signal.aborted).toBe(true);
+    expect(model.destroy).toHaveBeenCalledOnce();
+  });
+
+  it.each([390, 800])('手机宽度%s初始不创建任何角色或fallback，业务输入可聚焦', async (width) => {
+    mockVisual.webgl = true;
+    phoneViewport(width);
+    parseVideo.mockResolvedValue(parseFixture);
+    render(<App />);
+    await act(async () => {});
+    expect(createMascot).not.toHaveBeenCalled();
+    expect(document.querySelector('[data-mascot-interaction], [data-mascot-region], .mascot-controls')).toBeNull();
+    expect(screen.queryByRole('dialog', { hidden: true })).toBeNull();
+    const input = screen.getByLabelText('视频链接');
+    input.focus();
+    expect(input).toHaveFocus();
+    fireEvent.change(input, { target: { value: 'https://example.com/mobile' } });
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    expect(await screen.findByTestId('selecting-scene')).toBeInTheDocument();
+    expect(createMascot).not.toHaveBeenCalled();
+  });
+
+  it.each(['Android', 'iPhone', 'iPod', 'IEMobile', 'Windows Phone'])('手机UA %s即使宽屏也不创建角色', async (ua) => {
+    mockVisual.webgl = true;
+    phoneViewport(1200);
+    vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(`Mozilla/5.0 ${ua}`);
+    render(<App />);
+    await act(async () => {});
+    expect(createMascot).not.toHaveBeenCalled();
+    expect(document.querySelector('[data-mascot-interaction], .mascot-controls')).toBeNull();
+  });
+
+  it('桌面缩窄立即清理模型，菜单回焦业务输入，恢复宽屏可重新加载', async () => {
+    mockVisual.webgl = true;
+    const resize = phoneViewport(1200);
+    render(<App />);
+    const target = document.querySelector('[data-mascot-interaction]');
+    await waitFor(() => expect(target).toHaveAttribute('tabindex', '0'));
+    target.focus();
+    fireEvent.keyDown(target, { key: 'Enter' });
+    const model = mockVisual.instance;
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    act(() => resize(800));
+    expect(signal.aborted).toBe(true);
+    expect(model.destroy).toHaveBeenCalledOnce();
+    expect(document.querySelector('[data-mascot-interaction], .mascot-controls')).toBeNull();
+    expect(screen.queryByRole('dialog', { hidden: true })).toBeNull();
+    expect(screen.getByLabelText('视频链接')).toHaveFocus();
+    expect(createMascot).toHaveBeenCalledTimes(1);
+    act(() => resize(801));
+    await waitFor(() => expect(target).toHaveAttribute('tabindex', '0'));
+    expect(createMascot).toHaveBeenCalledTimes(2);
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('桌面模型加载中缩窄取消请求并释放晚到模型', async () => {
+    mockVisual.webgl = true;
+    const resize = phoneViewport(1200);
+    let resolve;
+    createMascot.mockImplementation(() => new Promise((done) => { resolve = done; }));
+    render(<App />);
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    act(() => resize(390));
+    expect(signal.aborted).toBe(true);
+    const late = visualFixture();
+    await act(async () => resolve(late));
+    expect(late.destroy).toHaveBeenCalledOnce();
+    expect(createMascot).toHaveBeenCalledTimes(1);
+    expect(document.querySelector('[data-mascot-interaction], .mascot-controls')).toBeNull();
+    expect(screen.getByLabelText('视频链接')).toBeEnabled();
   });
 
   it('解析响应包含真实接口字段时仍显示封面与视频信息卡', async () => {

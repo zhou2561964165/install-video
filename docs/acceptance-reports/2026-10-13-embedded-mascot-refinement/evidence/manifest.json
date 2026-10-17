@@ -1,0 +1,86 @@
+﻿[
+    {
+        "path":  "frontend/src/App.jsx",
+        "sha256":  "5be9a5848ee0123cd883abf50d2f52cd408008554e759b6039d33478f728bfd1"
+    },
+    {
+        "path":  "frontend/src/components/EntryScene.jsx",
+        "sha256":  "cc5335f560725e7a28c629350ce7c285c64c9631155bda1fb99659ebe6559844"
+    },
+    {
+        "path":  "frontend/src/components/ui/ExpressionMenu.jsx",
+        "sha256":  "6bbbb62754e2ecf7e9e2f9d98de793c302f710a76a38ca2d8986d721673f0536"
+    },
+    {
+        "path":  "frontend/src/components/ui/PointerFollower.jsx",
+        "sha256":  "47799cb1849e07fc63d023c5228dc4c8002f884f5e60cadb11271c2f74ca1749"
+    },
+    {
+        "path":  "frontend/src/pixi/mascot.js",
+        "sha256":  "66768d65eb6ae1beda70ff202fc24129443732aab53063df858ee35f6e0fa6f4"
+    },
+    {
+        "path":  "frontend/src/pixi/mascotConfig.js",
+        "sha256":  "fd27ddc5c329513b755e7d86d44bd62ba24eb99a1da96a932b2f94086b30fb79"
+    },
+    {
+        "path":  "frontend/src/styles/tokens.css",
+        "sha256":  "bd107b0557a8cea888320c2bef3e147768709e1d6b1c0eca7dd1ed1cff48df94"
+    },
+    {
+        "path":  "frontend/src/styles/reference.css",
+        "sha256":  "f55b2bca0d6d4c720702c3872876aea12ed7519b2de25f423fe6d4b84a48c144"
+    },
+    {
+        "path":  "frontend/src/App.test.jsx",
+        "sha256":  "7f38e5c743dfa66c348d2026bd8b684d303423902aa087ddd119fc8d98bf760c"
+    },
+    {
+        "path":  "frontend/src/components/ui/ExpressionMenu.test.jsx",
+        "sha256":  "7ad921bcfb5e01dd309f411b42c6c692e3263b59f13d5ff864dc48a6dfc4a109"
+    },
+    {
+        "path":  "frontend/src/components/ui/PointerFollower.test.jsx",
+        "sha256":  "7c49c670165a2460f9eb93a8b7ce61a02d4c5a486ef7139408473895f9a050f1"
+    },
+    {
+        "path":  "frontend/src/pixi/mascot.test.js",
+        "sha256":  "0deb5af48255510876ed5b96af9030729e100fdb5c64c5f3b863c035464fd43d"
+    },
+    {
+        "path":  "frontend/src/pixi/mascotConfig.test.js",
+        "sha256":  "25f03295842ddcc6ee868434934fe2ff89e66eeb022eaad74d986a6bf78bcf55"
+    },
+    {
+        "path":  ".planning/ui-embedded-implementation-20261013/browser-check.cjs",
+        "sha256":  "897a6c2d96d93d1b8c175310be31b70d550af4137402909c761f743244c63db9"
+    },
+    {
+        "path":  ".planning/ui-embedded-implementation-20261013/browser-edge-check.cjs",
+        "sha256":  "7be7b92f9c923ecd87deaa3d8290f6e63c3fd025d5c4e99852053ac9a891fd2d"
+    },
+    {
+        "path":  ".planning/ui-embedded-implementation-20261013/frontend-final-suite.log",
+        "sha256":  "c27d8169cca405b3828b0ca89201722f6e3abefccef8fa928b52598ae489dff8"
+    },
+    {
+        "path":  ".planning/ui-embedded-implementation-20261013/build-final.log",
+        "sha256":  "2effa4f8d9ffc677d88f11ae57515137bd78bee57e8a11d47cf46c108c0871cf"
+    },
+    {
+        "path":  ".planning/ui-embedded-implementation-20261013/review-fixes-red.log",
+        "sha256":  "5a503b852c9dbfdbc53cd73a9f5c4bb874cfd12169f489676d7441ede06fc048"
+    },
+    {
+        "path":  ".planning/ui-embedded-implementation-20261013/review-fixes-green.log",
+        "sha256":  "7a7cf3ff40ffa3bbf1af788d473aa62d2b18b395a9e89ddf1ceedf1cb9c871b3"
+    },
+    {
+        "path":  "docs/acceptance-reports/2026-10-13-embedded-mascot-refinement/evidence/browser-main.json",
+        "sha256":  "b31652292c2114cc6812dbbaba3a76a01ba31ff5bc1ce3dd6905b3987f22efbe"
+    },
+    {
+        "path":  "docs/acceptance-reports/2026-10-13-embedded-mascot-refinement/evidence/browser-edges.json",
+        "sha256":  "34e2a2fb18e8172ef8c9f7cc8ae18d885cc62561ea513f36819ab5a5c1c691d3"
+    }
+]

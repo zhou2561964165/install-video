@@ -1,0 +1,19 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-11",
+  "planned_posts": 1,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "en-long",
+      "sample_post": 1,
+      "stage": "merge",
+      "status": "response",
+      "reserved_utc": "2026-10-15T09:15:43.606256+00:00",
+      "payload_sha256": "e4afb7f54169dc7003f290d44d6d9cf25aa722414dbfc24eebc425b8e75abe35",
+      "http_status": 200,
+      "response_sha256": "74edc19c5b3937045014387ffc47e3c11439cf806ea3ab98d3909645ccc4b4da",
+      "result_sha256": "31f7c013a42f785f7ca56c760af959e7e2dbb583af2c7d4e60973d05a4d36290"
+    }
+  ]
+}

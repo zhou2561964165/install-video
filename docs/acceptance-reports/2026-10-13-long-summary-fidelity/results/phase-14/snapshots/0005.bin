@@ -1,0 +1,13 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-1",
+  "status": "closed",
+  "reserved_posts": 3,
+  "parent_posts": 0,
+  "planned_posts": 3,
+  "budget_mode": "uncapped",
+  "hard_ceiling": null,
+  "ledger": "E:\\install_video\\docs\\acceptance-reports\\2026-10-13-long-summary-fidelity\\results\\phase-1\\request-ledger.json",
+  "provenance_sha256": "bc41c59218b321dee28781af5154db660b4b8f1d38b6f4355bfd89027d991f5d",
+  "closed_receipt_sha256": "5a213722c0290de9bc477fb3f8e73ea3289c4b1f8dec6ab760ef1b6e292475cd"
+}

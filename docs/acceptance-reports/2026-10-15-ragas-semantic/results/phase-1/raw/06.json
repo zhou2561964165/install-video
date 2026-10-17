@@ -1,0 +1,10 @@
+{
+  "output_text": "{\n    \"statements\": [\n        {\n            \"statement\": \"The archive shows that a calibration meeting was held once a week on Mondays during the pilot from July 6 to August 2.\",\n            \"reason\": \"The context states the archive lists exactly one calibration meeting on each Monday in the four-week period from July 6 through August 2, which means once a week on Mondays.\",\n            \"verdict\": 1\n        }\n    ]\n}",
+  "usage": {
+    "input_tokens": 1086,
+    "output_tokens": 95,
+    "total_tokens": 1181
+  },
+  "status": "completed",
+  "model": "deepseek-v4-pro"
+}

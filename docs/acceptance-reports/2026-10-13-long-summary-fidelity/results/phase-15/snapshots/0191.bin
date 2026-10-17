@@ -1,0 +1,15 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-8",
+  "posts": 3,
+  "stopped_on_error": true,
+  "samples": [
+    {
+      "sample": "en-long",
+      "success": false,
+      "result_sha256": "69c9b65866d194d7647992ca1000c859850e40436057fa49d18251d76f7b3231",
+      "posts": 3
+    }
+  ],
+  "ended_utc": "2026-10-15T07:49:35.090566+00:00"
+}

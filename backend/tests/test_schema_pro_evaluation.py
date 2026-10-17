@@ -127,7 +127,11 @@ def entry(tmp_path, monkeypatch):
     module.io.exclusive(module.GROUP, group)
     from app.services import llm_service as service
     settings = SimpleNamespace(**module.CONFIG, llm_provider="deepseek", llm_api_key="",
-        llm_base_url="https://offline.invalid/v1", llm_timeout_seconds=1, llm_summary_max_point_chars=240)
+        llm_base_url="https://offline.invalid/v1", llm_timeout_seconds=1, llm_summary_max_point_chars=240,
+        llm_summary_notes_language="output", llm_summary_source_context_mode="boundary")
+    # Preserve the exact source preparation owned by the immutable first
+    # parent's planner; today's adjacent-copy policy has different source parts.
+    monkeypatch.setattr(service, "_summary_input", module.prior.base.cleaned)
     monkeypatch.setattr(service, "settings", settings)
     monkeypatch.setattr(module, "runtime", lambda: (settings, service, service._endpoint(responses=True)))
     module.test_service, module.test_settings = service, settings

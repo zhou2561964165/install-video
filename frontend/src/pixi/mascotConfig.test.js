@@ -1,10 +1,24 @@
 import { describe, it, expect } from 'vitest';
-import { MODELS, DEFAULT_MODEL_ID, EXPRESSIONS, SCALE, getModelLayout, getModelPlacement, supportsModelTexture } from './mascotConfig.js';
+import { MODELS, DEFAULT_MODEL_ID, EXPRESSIONS, SCALE, PLACEMENT, getModelLayout, getModelPlacement, supportsModelTexture } from './mascotConfig.js';
 
 describe('角色完整摆放与能力降级', () => {
   const bounds = { width: 1400, height: 2000 };
+  it('默认free在所有宽度不依赖文档区域，并正确处理非中心pivot', () => {
+    expect(PLACEMENT.mode).toBe('free');
+    expect(SCALE.initial).toBe(1);
+    for (const width of [320, 390, 1440]) {
+      const b = { x: 100, y: -50, width: 1000, height: 1600 };
+      const pivot = { x: 400, y: 900 };
+      const p = getModelPlacement(MODELS[0], { width, height: 812 }, b, SCALE.initial, undefined, { pivot });
+      expect(p.visible).toBe(true);
+      expect(p.x + (b.x - pivot.x) * p.scale).toBeGreaterThanOrEqual(0);
+      expect(p.x + (b.x + b.width - pivot.x) * p.scale).toBeLessThanOrEqual(width);
+      expect(p.y + (b.y - pivot.y) * p.scale).toBeGreaterThanOrEqual(0);
+      expect(p.y + (b.y + b.height - pivot.y) * p.scale).toBeLessThanOrEqual(812);
+    }
+  });
   it('桌面最大倍率仍完整落在视口内', () => {
-    const p = getModelPlacement(MODELS[0], { width: 1440, height: 900 }, bounds, SCALE.max);
+    const p = getModelPlacement(MODELS[0], { width: 1440, height: 900 }, bounds, SCALE.max, undefined, { mode: 'free' });
     expect(p.x - bounds.width * p.scale / 2).toBeGreaterThanOrEqual(0);
     expect(p.x + bounds.width * p.scale / 2).toBeLessThanOrEqual(1440);
     expect(p.y - bounds.height * p.scale / 2).toBeGreaterThanOrEqual(0);
@@ -12,7 +26,7 @@ describe('角色完整摆放与能力降级', () => {
   });
   it.each([320, 375, 720])('窄屏 %i 仅在内容之后的装饰区摆放', (width) => {
     const region = { left: 20, top: 590, width: width - 40, height: 300 };
-    const p = getModelPlacement(MODELS[0], { width, height: 812 }, bounds, SCALE.initial, region);
+    const p = getModelPlacement(MODELS[0], { width, height: 812 }, bounds, SCALE.initial, region, { mode: 'embedded' });
     expect(p.y - bounds.height * p.scale / 2).toBeGreaterThanOrEqual(region.top);
     expect(p.y + bounds.height * p.scale / 2).toBeLessThanOrEqual(region.top + region.height);
     expect(p.x - bounds.width * p.scale / 2).toBeGreaterThanOrEqual(region.left);
@@ -20,11 +34,42 @@ describe('角色完整摆放与能力降级', () => {
   });
   it('窄屏装饰区离开视口时隐藏角色', () => {
     expect(getModelPlacement(MODELS[0], { width: 375, height: 812 }, bounds, 2,
-      { left: 20, top: -400, width: 335, height: 300 }).visible).toBe(false);
+      { left: 20, top: -400, width: 335, height: 300 }, { mode: 'embedded' }).visible).toBe(false);
   });
   it('8K GPU 不会请求 16K 模型，16K GPU 保持可用', () => {
     expect(supportsModelTexture(MODELS[0], 8192)).toBe(false);
     expect(supportsModelTexture(MODELS[0], 16384)).toBe(true);
+  });
+});
+
+describe('显式嵌入兼容布局', () => {
+  it('显式embedded在所有宽度都contain到专属区域', () => {
+    for (const width of [1440, 1024, 390, 320]) {
+      const region = { left: 16, top: 180, width: Math.min(280, width - 32), height: 240 };
+      const bounds = { x: 0, y: 0, width: 1400, height: 2000 };
+      const pivot = { x: 700, y: 1000 };
+      const p = getModelPlacement(MODELS[0], { width, height: 900 }, bounds, SCALE.max, region, { pivot, mode: 'embedded' });
+      expect(p.visible).toBe(true);
+      expect(p.x + (bounds.x - pivot.x) * p.scale).toBeGreaterThanOrEqual(region.left);
+      expect(p.x + (bounds.x + bounds.width - pivot.x) * p.scale).toBeLessThanOrEqual(region.left + region.width);
+      expect(p.y + (bounds.y - pivot.y) * p.scale).toBeGreaterThanOrEqual(region.top);
+      expect(p.y + (bounds.y + bounds.height - pivot.y) * p.scale).toBeLessThanOrEqual(region.top + region.height);
+    }
+  });
+  it('非中心bounds和pivot仍完整可见', () => {
+    const region = { left: 800, top: 180, width: 260, height: 300 };
+    const bounds = { x: 100, y: -50, width: 1000, height: 1600 };
+    const pivot = { x: 400, y: 900 };
+    const p = getModelPlacement(MODELS[0], { width: 1440, height: 900 }, bounds, SCALE.max, region, { pivot, mode: 'embedded' });
+    expect(p.x + (bounds.x - pivot.x) * p.scale).toBeGreaterThanOrEqual(region.left);
+    expect(p.x + (bounds.x + bounds.width - pivot.x) * p.scale).toBeLessThanOrEqual(region.left + region.width);
+    expect(p.y + (bounds.y - pivot.y) * p.scale).toBeGreaterThanOrEqual(region.top);
+    expect(p.y + (bounds.y + bounds.height - pivot.y) * p.scale).toBeLessThanOrEqual(region.top + region.height);
+  });
+  it.each([undefined, { left: 0, top: 0, width: 0, height: 240 }, { left: NaN, top: 0, width: 260, height: 240 }, { left: 1450, top: 100, width: 260, height: 240 }])('无有效可见区域时隐藏，不漂回视口中央：%j', (region) => {
+    const p = getModelPlacement(MODELS[0], { width: 1440, height: 900 }, { x: -700, y: -1000, width: 1400, height: 2000 }, SCALE.initial, region, { mode: 'embedded' });
+    expect(p.visible).toBe(false);
+    expect(Number.isFinite(p.scale)).toBe(true);
   });
 });
 

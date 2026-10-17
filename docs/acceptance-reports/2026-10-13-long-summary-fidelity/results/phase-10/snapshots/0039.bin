@@ -1,0 +1,11 @@
+{
+  "work_id": "summary-content-resume-20261011",
+  "phase": "summary-long-full-final-4",
+  "status": "closed",
+  "posts": 3,
+  "work_posts": 16,
+  "hard_ceiling": 16,
+  "ledger_sha256": "e995656472d966fac1fb388b4fd63864edb6ee946b2b4a00907d39169088963f",
+  "index_sha256": "21159750a2ab24842077a2f141d8b99aa241462b13680159c33d42a7580bf80b",
+  "provenance_sha256": "52ccf15e01ac35187c0edeede2b768c85c0fbfa907f790066348203be1a693ed"
+}

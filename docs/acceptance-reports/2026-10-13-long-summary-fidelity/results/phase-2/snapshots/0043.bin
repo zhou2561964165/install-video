@@ -1,0 +1,43 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-1",
+  "planned_posts": 3,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "en-long",
+      "sample_post": 1,
+      "stage": "extract",
+      "status": "response",
+      "reserved_utc": "2026-10-13T16:00:59.443338+00:00",
+      "payload_sha256": "747bfaa78d6ea0ab44f32bc7b5d1e0c38c99718a9bb106afe1b301e195734847",
+      "http_status": 200,
+      "response_sha256": "9c4ff447a2b1a8262ad5957facaccbd548a5e082aaab20ec8de789e454c95389",
+      "result_sha256": "f851d818b0d85bc059bef47d74eb18ab61272f4b8d74c10b3c9db1d130ea5765"
+    },
+    {
+      "ordinal": 2,
+      "sample": "en-long",
+      "sample_post": 2,
+      "stage": "extract",
+      "status": "response",
+      "reserved_utc": "2026-10-13T16:01:50.816398+00:00",
+      "payload_sha256": "2300cca280be210ff1728fd18c78df3c9f4e95d7dfbdf564d3a473b58ee15c20",
+      "http_status": 200,
+      "response_sha256": "03c8f54b634ff49170625a0eeb69f70e34f043b8bf526ea11ecc04c69662fd48",
+      "result_sha256": "f851d818b0d85bc059bef47d74eb18ab61272f4b8d74c10b3c9db1d130ea5765"
+    },
+    {
+      "ordinal": 3,
+      "sample": "en-long",
+      "sample_post": 3,
+      "stage": "merge",
+      "status": "response",
+      "reserved_utc": "2026-10-13T16:02:21.233859+00:00",
+      "payload_sha256": "6ccfae31f4075b01a5461f7eb39482d344d3db2878a29afd7bfa4769a57c0766",
+      "http_status": 200,
+      "response_sha256": "9d67dd83aadf29c6b5fafd776302aeef1258d179848ecc6d37190530a5ae8515",
+      "result_sha256": "f851d818b0d85bc059bef47d74eb18ab61272f4b8d74c10b3c9db1d130ea5765"
+    }
+  ]
+}

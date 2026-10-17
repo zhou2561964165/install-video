@@ -3,7 +3,7 @@
 //   id          —— 唯一标识，也是 public/live2d/<id>/ 的目录名
 //   name        —— 切换 UI 里显示的名称
 //   url         —— 模型入口（.model3.json）
-//   heightRatio —— 模型占屏幕高度的比例（0~1）；渲染时按屏幕高等比缩放，任意尺寸屏幕都看到等比例模型。
+//   heightRatio —— free模式中的视口高度比例；显式embedded兼容使用区域contain。
 //                 0.49 ≈ 白自然高 1680 × 0.28（470px）÷ 27 寸（2560×1440 @150%）全屏高 960px。
 //   x/y         —— 相对屏幕宽高的占比（0~1），决定角色摆放位置（渲染与兜底图共用，勿写死）
 //   fallback    —— Live2D 加载失败时的静态兜底图 { url }（与主模型一致，按 heightRatio 等比缩放）
@@ -17,8 +17,7 @@ export const MODELS = [
     heightRatio: 0.49,
     x: 0.82,
     y: 0.62,
-    // 窄屏相对文档流预留区居中，高度上限同时服从区域和视口比例。
-    // maxWidth 与 CSS 移动断点一致；位置不是固定视口坐标。
+    // 窄屏采用更小的视口高度比例，避免遮挡主要操作。
     mobile: { maxWidth: 720, heightRatio: 0.2, x: 0.5, y: 0.5 },
     fallback: { url: '/live2d/bai/白.16384/texture_00.png' },
     hit: { width: 1400, height: 2000 },
@@ -33,11 +32,14 @@ export function getModelLayout(model, viewportWidth) {
   return model.mobile && viewportWidth <= model.mobile.maxWidth ? model.mobile : model;
 }
 
-// 手机由文档流预留区承载；桌面保持原比例并限制在视口内。
-// paddingRatio 给初始完整摆放和拖动中心保留视口边距；拖动不受初始区域限制。
-export const PLACEMENT = { paddingRatio: 0.04, desktopFooterRatio: 0.1, dragThreshold: 3, touchAction: 'pan-y pinch-zoom', modelTouchAction: 'pinch-zoom', autoPreventDefault: false };
-// 用户拖动时只约束中心，允许模型部分裁切，避免大角色几乎没有纵向活动空间。
-export function getDraggedModelPosition(position, viewport) {
+// 默认独立于文档的视口活动；embedded仅供显式旧调用兼容。
+export const PLACEMENT = { mode: 'free', x: 0.5, y: 0.5, paddingRatio: 0.04, dragThreshold: 3, touchAction: 'pan-y pinch-zoom', modelTouchAction: 'pinch-zoom', autoPreventDefault: false };
+// 渲染层必须传入当前完整bounds推导的placement，约束全部可见范围。
+export function getDraggedModelPosition(position, viewport, placement) {
+  if (placement) return {
+    x: Math.min(placement.maxX, Math.max(placement.minX, position.x)),
+    y: Math.min(placement.maxY, Math.max(placement.minY, position.y)),
+  };
   const pad = Math.min(viewport.width, viewport.height) * PLACEMENT.paddingRatio;
   return {
     x: Math.min(viewport.width - pad, Math.max(pad, position.x)),
@@ -45,22 +47,38 @@ export function getDraggedModelPosition(position, viewport) {
   };
 }
 
-export function getModelPlacement(model, viewport, bounds, scaleFactor, region) {
+export function getModelPlacement(model, viewport, bounds, scaleFactor, region, { mode = PLACEMENT.mode, pivot = { x: 0, y: 0 } } = {}) {
+  if (mode === 'embedded') {
+    const valid = region && ['left', 'top', 'width', 'height'].every((key) => Number.isFinite(region[key])) && region.width > 0 && region.height > 0 && bounds.width > 0 && bounds.height > 0;
+    if (!valid) return { scale: 0, x: 0, y: 0, minX: 0, maxX: 0, minY: 0, maxY: 0, visible: false };
+    const pad = Math.min(region.width, region.height) * PLACEMENT.paddingRatio;
+    const fraction = Math.min(1, Math.max(SCALE.min / SCALE.max, scaleFactor / SCALE.max));
+    const scale = Math.min((region.width - pad * 2) / bounds.width, (region.height - pad * 2) / bounds.height) * fraction;
+    const left = ((bounds.x ?? -bounds.width / 2) - pivot.x) * scale;
+    const top = ((bounds.y ?? -bounds.height / 2) - pivot.y) * scale;
+    const right = left + bounds.width * scale, bottom = top + bounds.height * scale;
+    const minX = region.left + pad - left, maxX = region.left + region.width - pad - right;
+    const minY = region.top + pad - top, maxY = region.top + region.height - pad - bottom;
+    const x = region.left + region.width * PLACEMENT.x - (left + right) / 2;
+    const y = region.top + region.height * PLACEMENT.y - (top + bottom) / 2;
+    return { scale, x: Math.min(maxX, Math.max(minX, x)), y: Math.min(maxY, Math.max(minY, y)), minX, maxX, minY, maxY,
+      visible: region.left < viewport.width && region.left + region.width > 0 && region.top < viewport.height && region.top + region.height > 0 };
+  }
   const layout = getModelLayout(model, viewport.width);
-  const compact = layout !== model;
-  const area = compact && region ? region : { left: 0, top: 0, width: viewport.width, height: viewport.height * (1 - PLACEMENT.desktopFooterRatio) };
+  const area = { left: 0, top: 0, width: viewport.width, height: viewport.height };
   const pad = Math.min(area.width, area.height) * PLACEMENT.paddingRatio;
-  const desiredHeight = compact ? Math.min(area.height * (scaleFactor / SCALE.max), viewport.height * layout.heightRatio * scaleFactor) : viewport.height * layout.heightRatio * scaleFactor;
+  const desiredHeight = viewport.height * layout.heightRatio * scaleFactor;
   const scale = Math.min(desiredHeight / bounds.height, (area.width - pad * 2) / bounds.width, (area.height - pad * 2) / bounds.height);
-  const halfWidth = bounds.width * scale / 2;
-  const halfHeight = bounds.height * scale / 2;
-  const minX = area.left + pad + halfWidth, maxX = area.left + area.width - pad - halfWidth;
-  const minY = area.top + pad + halfHeight, maxY = area.top + area.height - pad - halfHeight;
-  const x = compact ? area.left + area.width * layout.x : viewport.width * layout.x;
-  const y = compact ? area.top + area.height * layout.y : viewport.height * layout.y;
+  const left = ((bounds.x ?? -bounds.width / 2) - pivot.x) * scale;
+  const top = ((bounds.y ?? -bounds.height / 2) - pivot.y) * scale;
+  const right = left + bounds.width * scale, bottom = top + bounds.height * scale;
+  const minX = pad - left, maxX = viewport.width - pad - right;
+  const minY = pad - top, maxY = viewport.height - pad - bottom;
+  const x = viewport.width * layout.x - (left + right) / 2;
+  const y = viewport.height * layout.y - (top + bottom) / 2;
   return { scale, x: Math.min(maxX, Math.max(minX, x)), y: Math.min(maxY, Math.max(minY, y)),
     minX, maxX, minY, maxY,
-    visible: !compact || Boolean(region && region.top < viewport.height && region.top + region.height > 0) };
+    visible: bounds.width > 0 && bounds.height > 0 && viewport.width > 0 && viewport.height > 0 };
 }
 
 export function supportsModelTexture(model, maxTextureSize) {
@@ -75,7 +93,7 @@ export function supportsModelTexture(model, maxTextureSize) {
 //               （错开各参数，避免同步抖动）。
 //   注意：只驱动「物理输入」参数（ParamAngleX/Y/Z、ParamBreath 在 physics3.json 里是 Input），
 //   头摆会经物理级联出身体/头发摆动；ParamBodyAngleX 是物理 Output（每帧被物理覆写），不可驱动。
-//   fallback —— 模型没有任何匹配参数时，退化为容器级 scale 呼吸（幅度/频率）。
+//   fallback —— 仅free无匹配参数时退化为scale呼吸；embedded静止，保持稳定热区。
 export const IDLE = {
   params: [
     { id: 'ParamAngleX', base: 0, amplitude: 5, frequency: 0.35, phase: 0 },
@@ -87,9 +105,9 @@ export const IDLE = {
 };
 
 // 模型等比缩放配置：菜单「变大/变小」按 step 倍率累积，clamp 到 [min,max]；
-// initial 为初始/默认倍率（相对默认高度的倍率，初始即按最大值展示，可用「变小」缩回）。
+// initial 为初始倍率；embedded最大值对应区域contain容量，free相对视口默认高度。
 // 改这里调步长/边界/初始值，不改渲染逻辑。
-export const SCALE = { step: 1.2, min: 0.5, max: 2.0, initial: 2.0 };
+export const SCALE = { step: 1.2, min: 0.5, max: 2.0, initial: 1.0 };
 
 // 表情/道具配置：「白」完整版带 46 个 .exp3.json，每个 = 单参数 Value=1（Add 混合）。
 // 标准 expression manager 是单选（一次一个 currentExpression），无法「换发型+换衣服+戴耳机」并存，

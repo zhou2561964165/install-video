@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-13T07:56:44.435200+00:00",
+  "unchanged_source_files": 60,
+  "unchanged_historical_files": 19,
+  "evidence_sha256": {
+    "audit.json": "fc8cfebae18175fb37213c610d7cd4ebfc73900a33466d29e635d20eb7efa29e",
+    "coverage.json": "bcc385ec01b4612443b21f448f95f705cd552c5338e5359eaa7b86badfb3f0ca",
+    "follow-first.json": "af90374b68723ee91d7a44a570f3be341d3ae53b626999d341ea3ad8d8b1491c",
+    "follow-scene-rerun.json": "bbaa6de1d16601753626a686f9fac4242e1082b726b4b5a2fdbca9014ca9beff",
+    "pinch-controls.json": "493d9282ef63da53cb1a150d81514f7692ffb0034ba39d59f88b319f7909bb47",
+    "provenance-before.json": "2f8f8017e0ad2ab3287879a8023912a91de36a445854337712a10bd9208a80e1",
+    "stage-first.json": "caad46a84f93ce3fccf4d15ef812ab8f5b8bfee8cc1b005f4acfb04cb448e40e"
+  },
+  "rerun_script_sha256": "d62a42a450cbb83df6fb56767ea32ae99124147b81518ae3d735c450590cbd2a",
+  "rerun_back_button_locator": "await page.getByRole('button', { name: '返回输入', exact: true }).click(); await page.getByLabel('视频链接', { exact: true }).waitFor();",
+  "coverage": {
+    "passed": 22,
+    "unverified": 2
+  },
+  "independent_review": "Read-only reviewer confirmed evidence classification and identified one stale handoff wording; wording corrected.",
+  "limits_and_actual": {
+    "model_posts": 0,
+    "real_platform_extractions": 0,
+    "real_media_downloads": 0
+  }
+}

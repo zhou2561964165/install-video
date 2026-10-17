@@ -1,0 +1,12 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-10",
+  "status": "closed",
+  "posts": 1,
+  "work_posts": 16,
+  "budget_mode": "uncapped",
+  "hard_ceiling": null,
+  "ledger_sha256": "44f777ca50d5dbf55a0180841a0eff73163821dafbf432fb4407a9f220bdc97d",
+  "index_sha256": "5a743160aabfd3b104229d6238e573d6e8bb9d4ec178cfe62812e80804eb7f41",
+  "provenance_sha256": "0745cb907d9e40704f65070f77af60d8c70ed15418f6d76f953c540798e45622"
+}

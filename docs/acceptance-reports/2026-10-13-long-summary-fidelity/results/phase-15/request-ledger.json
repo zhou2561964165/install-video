@@ -1,0 +1,47 @@
+{
+  "work_id": "long-summary-fidelity-20261013",
+  "phase": "phase-15",
+  "planned_posts": 2,
+  "requests": [
+    {
+      "ordinal": 1,
+      "sample": "en-long-unseen",
+      "sample_post": 1,
+      "stage": "direct_pro_text",
+      "status": "response",
+      "reserved_utc": "2026-10-16T05:22:05.983946+00:00",
+      "payload_sha256": "6170b8c68756eb7b088c8b8edd5d9174f7110171b6943fe29ffde452caa6c6cd",
+      "http_status": 200,
+      "usage": {
+        "input_tokens": 9139,
+        "output_tokens": 10652,
+        "total_tokens": 19791,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "response_sha256": "3c8fc644dd5d0664c923a17404a7d4292ac80b7592147249d1a2971852f9b7cb",
+      "result_sha256": "5a6f7440a0387ff75b3342d4da0ddb8354f1955cd745c799b21e7299148dd3c9"
+    },
+    {
+      "ordinal": 2,
+      "sample": "zh-listening-unseen",
+      "sample_post": 1,
+      "stage": "direct_pro_text",
+      "status": "response",
+      "reserved_utc": "2026-10-16T05:23:59.683735+00:00",
+      "payload_sha256": "59de7c7194355f96e5f3c20d2453e1dba1e7e1b01846fd935ac60ccd4663b387",
+      "http_status": 200,
+      "usage": {
+        "input_tokens": 538,
+        "output_tokens": 2946,
+        "total_tokens": 3484,
+        "input_tokens_details": {
+          "cached_tokens": 256
+        }
+      },
+      "response_sha256": "9014d76503535e3c37bdae5f4e82266220460c5330b2a7493aefac50d31fd620",
+      "result_sha256": "d829cdf81b7258559f26fd0c4dccbe8d5f6e863c676a5cde898d3c81d19e31f3"
+    }
+  ]
+}

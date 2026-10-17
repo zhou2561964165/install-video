@@ -1,0 +1,770 @@
+{
+  "scenarios": [
+    {
+      "method": "dispatchTouchEvent",
+      "maxTouchPoints": null,
+      "before": {
+        "scale": 1,
+        "maxTouchPoints": 1,
+        "innerWidth": 390
+      },
+      "after": {
+        "scale": 1,
+        "innerWidth": 390,
+        "events": [
+          {
+            "type": "touchstart",
+            "touches": 1,
+            "prevented": false
+          },
+          {
+            "type": "touchstart",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "pointercancel",
+            "prevented": false
+          },
+          {
+            "type": "pointercancel",
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 1,
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 0,
+            "prevented": false
+          }
+        ]
+      },
+      "zoomObserved": false
+    },
+    {
+      "method": "synthesizePinchGesture",
+      "maxTouchPoints": null,
+      "before": {
+        "scale": 1,
+        "maxTouchPoints": 1,
+        "innerWidth": 390
+      },
+      "after": {
+        "scale": 1,
+        "innerWidth": 390,
+        "events": [
+          {
+            "type": "touchstart",
+            "touches": 1,
+            "prevented": false
+          },
+          {
+            "type": "touchstart",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 1,
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 0,
+            "prevented": false
+          }
+        ]
+      },
+      "zoomObserved": false
+    },
+    {
+      "method": "dispatchTouchEvent",
+      "maxTouchPoints": 2,
+      "before": {
+        "scale": 1,
+        "maxTouchPoints": 2,
+        "innerWidth": 390
+      },
+      "after": {
+        "scale": 1,
+        "innerWidth": 390,
+        "events": [
+          {
+            "type": "touchstart",
+            "touches": 1,
+            "prevented": false
+          },
+          {
+            "type": "touchstart",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "pointercancel",
+            "prevented": false
+          },
+          {
+            "type": "pointercancel",
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 1,
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 0,
+            "prevented": false
+          }
+        ]
+      },
+      "zoomObserved": false
+    },
+    {
+      "method": "synthesizePinchGesture",
+      "maxTouchPoints": 2,
+      "before": {
+        "scale": 1,
+        "maxTouchPoints": 2,
+        "innerWidth": 390
+      },
+      "after": {
+        "scale": 1,
+        "innerWidth": 390,
+        "events": [
+          {
+            "type": "touchstart",
+            "touches": 1,
+            "prevented": false
+          },
+          {
+            "type": "touchstart",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchmove",
+            "touches": 2,
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 1,
+            "prevented": false
+          },
+          {
+            "type": "touchend",
+            "touches": 0,
+            "prevented": false
+          }
+        ]
+      },
+      "zoomObserved": false
+    }
+  ],
+  "budget": {
+    "modelPosts": 0,
+    "platformRequests": 0,
+    "mediaDownloads": 0
+  },
+  "browser": "155.0.4283.45"
+}

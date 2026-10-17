@@ -28,3 +28,7 @@ docs/acceptance-reports/2026-10-07-grounded-summary-refined/** -text whitespace=
 
 # Preserve all acceptance snapshots/raw/receipts on personal GitHub unchanged.
 docs/acceptance-reports/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve delivered exports and the independently frozen semantic-evaluation assets.
+exports/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tools/semantic_eval/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
