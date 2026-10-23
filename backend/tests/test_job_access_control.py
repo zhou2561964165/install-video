@@ -2,6 +2,7 @@ from collections import defaultdict
 from uuid import uuid4
 
 import pytest
+pytestmark = pytest.mark.usefixtures("vip_entitlements")
 from fastapi.testclient import TestClient
 from sqlmodel import Session, select
 

@@ -11,3 +11,19 @@ from pathlib import Path
 _tmpdir = Path(tempfile.mkdtemp(prefix="video-dl-tests-"))
 _tmp_db = (_tmpdir / "test.db").as_posix()
 os.environ["DB_URL"] = f"sqlite:///{_tmp_db}"
+
+
+import pytest
+
+
+@pytest.fixture
+def vip_entitlements(monkeypatch):
+    """Legacy route mechanics run as entitled users; H-005 tests exercise real DB gates."""
+    monkeypatch.setattr("app.services.membership.is_vip", lambda session, uid: True)
+
+
+@pytest.fixture
+def legacy_daily_quota(monkeypatch, vip_entitlements):
+    """Keep old finite-quota race and exemption regression coverage explicit."""
+    from app.config import settings
+    monkeypatch.setattr(settings, "membership_unlimited_downloads", False)

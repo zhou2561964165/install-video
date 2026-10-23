@@ -2,11 +2,46 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
   parseVideo, startDownload, getJob, fileUrl, normalizeError, register, login, getMe,
   getSubtitle, translateSubtitle, summarizeVideo, setAuthToken, clearAuthToken, getFile,
+  exportSubtitle, getTranscriptionCapabilities, transcribeVideo, exportTranscription, generateMindmap,
+  getMembershipPlans, getMembership, createCheckout, createBillingPortal,
 } from './api.js';
 
 afterEach(() => { vi.restoreAllMocks(); clearAuthToken(); });
 
 describe('api', () => {
+  it('uses account authorization and abort signals without accepting client prices or identities for billing', async () => {
+    const signal = new AbortController().signal;
+    setAuthToken('billing-owner'); vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
+    await getMembershipPlans(signal); await getMembership(signal); await createCheckout(signal); await createBillingPortal(signal);
+    expect(fetch.mock.calls.map(([path]) => path)).toEqual(['/api/membership/plans', '/api/membership', '/api/billing/checkout', '/api/billing/portal']);
+    for (const [, options] of fetch.mock.calls) { expect(options.headers.Authorization).toBe('Bearer billing-owner'); expect(options.signal).toBe(signal); expect(options.body).toBeUndefined(); }
+    expect(fetch.mock.calls.slice(2).every(([, options]) => options.method === 'POST')).toBe(true);
+  });
+  it.each([['zh-TW', 'zh'], ['EN_us', 'en'], ['auto', null], [undefined, null]])('normalizes ASR language %s consistently for generate and cached export', async (input, language) => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
+    await transcribeVideo('https://example.com/v', input);
+    await exportTranscription('https://example.com/v', input, 'srt');
+    for (const [, options] of fetch.mock.calls) expect(JSON.parse(options.body).language).toBe(language);
+  });
+  it('content tools preserve bearer, cancellation and their distinct contracts', async () => {
+    setAuthToken('content-owner');
+    const signal = new AbortController().signal;
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
+    await exportSubtitle('https://example.com/v', 'en', 'vtt', signal);
+    await getTranscriptionCapabilities(signal);
+    await transcribeVideo('https://example.com/v', 'zh-CN', signal);
+    await exportTranscription('https://example.com/v', '', 'srt', signal);
+    await generateMindmap('https://example.com/v', 'en', 'ja', signal);
+    expect(fetch.mock.calls.map(([path]) => path)).toEqual(['/api/subtitle/export', '/api/transcribe/capabilities', '/api/transcribe', '/api/transcribe/export', '/api/mindmap']);
+    expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({ url: 'https://example.com/v', language: 'en', format: 'vtt' });
+    expect(JSON.parse(fetch.mock.calls[2][1].body).language).toBe('zh');
+    expect(JSON.parse(fetch.mock.calls[3][1].body).language).toBeNull();
+    expect(JSON.parse(fetch.mock.calls[4][1].body)).toEqual({ url: 'https://example.com/v', subtitle_language: 'en', output_language: 'ja' });
+    for (const [, options] of fetch.mock.calls) {
+      expect(options.signal).toBe(signal);
+      expect(options.headers.Authorization).toBe('Bearer content-owner');
+    }
+  });
   it('parseVideo POSTs to /api/parse and returns json', async () => {
     const json = { title: 'x', formats: [] };
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve(json) }));
@@ -19,6 +54,24 @@ describe('api', () => {
     await startDownload('https://example.com/v', 'best', true);
     const [, opts] = fetch.mock.calls[0];
     expect(JSON.parse(opts.body)).toEqual({ url: 'https://example.com/v', format_id: 'best', force_server: true });
+  });
+
+  it('startDownload adds an optional idempotency header without changing the body, bearer or signal', async () => {
+    const controller = new AbortController();
+    setAuthToken('owner-token');
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ mode: 'server', job_id: '1' }) }));
+    await startDownload('https://example.com/v', 'best', true, controller.signal, 'submission-key');
+    expect(fetch).toHaveBeenCalledWith('/api/download', expect.objectContaining({
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer owner-token', 'Idempotency-Key': 'submission-key' },
+      body: JSON.stringify({ url: 'https://example.com/v', format_id: 'best', force_server: true }),
+    }));
+  });
+
+  it.each([undefined, null, ''])('startDownload omits an empty optional key (%s) for older callers', async (key) => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
+    await startDownload('https://example.com/v', 'best', false, undefined, key);
+    expect(fetch.mock.calls[0][1].headers).not.toHaveProperty('Idempotency-Key');
   });
 
   it('getJob hits /api/job/:id', async () => {
@@ -69,6 +122,21 @@ describe('api', () => {
   it('normalizeError extracts error_type from detail', async () => {
     const res = { json: () => Promise.resolve({ detail: { error_type: 'quota', error: '请求过于频繁' } }) };
     await expect(normalizeError(res)).resolves.toEqual({ error_type: 'quota', error: '请求过于频繁' });
+  });
+
+  it.each(['complete', null, 'uncertain'])('normalizeError recognizes only the complete idempotency receipt (%s)', async (receipt) => {
+    const res = {
+      headers: new Headers(receipt ? { 'Idempotency-Status': receipt } : {}),
+      json: async () => ({ detail: { error_type: 'quota', error: '请求过于频繁' } }),
+    };
+    const expected = { error_type: 'quota', error: '请求过于频繁' };
+    if (receipt === 'complete') expected.idempotency_complete = true;
+    await expect(normalizeError(res)).resolves.toEqual(expected);
+  });
+
+  it('normalizeError keeps a complete receipt when the response error body cannot be parsed', async () => {
+    const res = { headers: new Headers({ 'Idempotency-Status': 'complete' }), json: async () => { throw new SyntaxError('invalid JSON'); } };
+    await expect(normalizeError(res)).resolves.toEqual({ error_type: 'network', error: '请求失败', idempotency_complete: true });
   });
 
   it('normalizeError falls back to network', async () => {

@@ -3,6 +3,7 @@ import { Container, Point, Rectangle, Ticker, InteractionManager, Sprite, Textur
 import { Live2DModel } from 'pixi-live2d-display/cubism4';
 import { createMascot as createActualMascot } from './mascot.js';
 import { getMascotSilhouette } from './mascotSilhouette.js';
+import { installMascotLoadTokens } from '../test/mascotLoadTokens.js';
 
 // 默认视口手动定位，原生动作与参数待机持续；embedded保留显式兼容回归。
 const createMascot = createActualMascot;
@@ -117,6 +118,21 @@ function mockModelLoad(model, error) {
 }
 
 describe('bounded mascot loading', () => {
+  it('real stylesheet budget permits the measured 185-second transfer and cancels on owner disposal', async () => {
+    vi.useFakeTimers(); installMascotLoadTokens();
+    const { app, interactionTarget } = loadingScene(); const controller = new AbortController();
+    const model = new Container(); model.anchor = new Point(); model.internalModel = { destroy: vi.fn() };
+    model.getLocalBounds = () => new Rectangle(-700, -1000, 1400, 2000);
+    let resolve;
+    Live2DModel.fromSync.mockImplementationOnce((_url, options) => { resolve = options.onLoad; return model; });
+    const pending = createMascot(app, 'bai', { interactionTarget, signal: controller.signal });
+    await flushLoad(); await vi.advanceTimersByTimeAsync(185029);
+    expect(model.destroyed).toBe(false); expect(controller.signal.aborted).toBe(false);
+    resolve(); const handle = await pending; handles.push(handle);
+    expect(handle.isAvailable()).toBe(true); expect(handle.hasVisual()).toBe(true);
+    controller.abort(); expect(handle.hasVisual()).toBe(false); expect(model.destroyed).toBe(true);
+  });
+
   it('publishes the model alpha provider only during the mascot lifetime', async () => {
     const { interactionTarget, mascot } = await setup();
     expect(getMascotSilhouette(interactionTarget)?.overlapsCircle).toBeTypeOf('function');

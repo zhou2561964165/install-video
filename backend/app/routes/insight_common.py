@@ -2,6 +2,11 @@ from fastapi import HTTPException
 
 from ..services import ytdlp_service
 from ..services.subtitle_service import SubtitleServiceError, fetch_subtitle_document
+from ..services.request_cache import reuse
+
+
+def load_cached_subtitle(user_id: str, url: str, language: str | None):
+    return reuse('subtitle', user_id, (url, language), lambda: load_subtitle(url, language))
 
 
 def load_subtitle(url: str, language: str | None):

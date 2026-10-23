@@ -1,6 +1,32 @@
 /* 皮蛋 AI / DeepSeek 参考迭代：primitive → semantic → component。
    全站与 PIXI 共用语义，浅色默认，深色/自动只覆盖语义层。 */
 :root {
+  /* Membership L2 semantic aliases → L3 component aliases; L1 reuses the shared palette. */
+  --membership-premium-surface: var(--blue-600);
+  --membership-premium-text: var(--white);
+  --membership-neutral-surface: var(--surface-raised);
+  --membership-neutral-text: var(--text-primary);
+  --membership-card-bg: var(--membership-neutral-surface);
+  --membership-card-fg: var(--membership-neutral-text);
+  --membership-card-radius: var(--radius-lg);
+  --membership-card-padding: var(--space-10);
+  --membership-vip-bg: var(--membership-premium-surface);
+  --membership-vip-fg: var(--membership-premium-text);
+  --membership-vip-action-bg: var(--white);
+  --membership-vip-action-fg: var(--blue-700);
+  --membership-vip-action-hover: var(--blue-050);
+  --membership-price-size: var(--font-section);
+  --membership-check-size: var(--space-6);
+  --membership-section-gap: var(--space-8);
+  /* Marketing table component aliases reuse the existing palette and scale. */
+  --capabilities-width: var(--page-width);
+  --capabilities-surface: var(--surface-raised);
+  --capabilities-header-surface: var(--surface-muted);
+  --capabilities-feature-surface: var(--accent-tint);
+  --capabilities-accent: var(--accent);
+  --capabilities-cell-padding: var(--space-3) var(--space-5);
+  --capabilities-metric-font: var(--font-xl);
+  --capabilities-section-gap: var(--space-6);
   /* L1: 色板、尺度、字体和时间 */
   --white: #ffffff;
   --cream: #fbfcff;
@@ -69,7 +95,8 @@
   --height-mascot-compact: 220px;
   --dur-cursor-follow: .16s;
   --dur-plane-follow: .3s;
-  --dur-character-load: 8s;
+  /* 首次加载约75MB模型含慢速网络传输与解码；有限5分钟预算，业务输入不等待角色。 */
+  --dur-character-load: 300s;
   --dur-character-outline-cache: .15s;
   --space-1: 4px;
   --space-2: 8px;
@@ -115,6 +142,11 @@
   --reading-measure: var(--measure-prose);
   --heading-leading: var(--leading-heading);
   --reading-leading: var(--leading-reading);
+  --reading-title-size: var(--font-xl);
+  --reading-section-size: var(--font-lg);
+  --reading-detail-size: var(--font-base);
+  --reading-section-gap: var(--space-6);
+  --reading-heading-gap: var(--space-3);
   --motion-title-tilt: var(--angle-title-tilt);
   --motion-title-roll: var(--angle-title-roll);
   --motion-avoid-hide: var(--dur-avoid-hide);
@@ -189,6 +221,9 @@
   --menu-control-size: var(--control-touch-size);
   --mascot-inline-gap: var(--space-6);
   --mascot-load-timeout: var(--motion-character-load);
+  --mascot-status-fg: var(--text-secondary);
+  --mascot-status-size: var(--font-sm);
+  --mascot-status-gutter: var(--space-4);
   --mascot-keyboard-step: var(--space-6);
   --mascot-silhouette-cache: var(--motion-character-outline-cache);
   --insight-bg: var(--surface-glass);
@@ -203,6 +238,16 @@
   --insight-markdown-measure: var(--reading-measure);
   --insight-markdown-heading-leading: var(--heading-leading);
   --insight-markdown-leading: var(--reading-leading);
+  --insight-summary-title-size: var(--reading-title-size);
+  --insight-summary-section-size: var(--reading-section-size);
+  --insight-summary-detail-size: var(--reading-detail-size);
+  --insight-summary-section-gap: var(--reading-section-gap);
+  --insight-summary-heading-gap: var(--reading-heading-gap);
+  --insight-time-font: var(--font-mono);
+  --insight-time-fg: var(--text-secondary);
+  --insight-tree-border: var(--border-strong);
+  --insight-tree-bg: var(--surface-muted);
+  --insight-disclosure-size: var(--control-touch-size);
   --download-help-fg: var(--text-secondary);
   --download-help-size: var(--font-xs);
   --header-width: 1280px;

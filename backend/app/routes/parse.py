@@ -3,7 +3,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from ..models import User
 from ..schemas import FormatOption, ParseRequest, ParseResponse
 from ..services.auth import get_current_user
-from ..services.ytdlp_service import classify_error, is_valid_url, parse_video
+from ..services.ytdlp_service import (
+    classify_error, is_valid_url, parse_video, public_error_message,
+)
 
 router = APIRouter()
 
@@ -15,7 +17,9 @@ def parse(req: ParseRequest, _user: User = Depends(get_current_user)) -> ParseRe
     try:
         meta, options = parse_video(req.url)
     except Exception as exc:  # noqa: BLE001
-        raise HTTPException(status_code=422, detail={"error_type": classify_error(exc), "error": str(exc)})
+        error_type = classify_error(exc)
+        message = public_error_message(exc)
+        raise HTTPException(status_code=422, detail={"error_type": error_type, "error": message})
     return ParseResponse(
         title=meta["title"],
         thumbnail=meta["thumbnail"],

@@ -1,4 +1,5 @@
 import os
+import shutil
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
@@ -9,8 +10,36 @@ from sqlmodel import Session, select
 from ..config import settings
 from ..db import engine
 from ..models import Job, JobStatus
-from .ytdlp_service import classify_error
+from .ytdlp_service import DownloadQuotaError, classify_error, public_error_message
 from .ytdlp_service import download as _ytdlp_download
+
+
+def _job_directory(job_id: str) -> Path:
+    root = Path(settings.temp_dir).resolve()
+    # IDs must be one component; a symlink must never redirect cleanup to a
+    # neighboring task or outside the media root.
+    if not job_id or job_id in {'.', '..'} or Path(job_id).name != job_id:
+        raise ValueError('下载任务目录无效')
+    directory = root / job_id
+    if directory.is_symlink() or directory.resolve() != directory:
+        raise ValueError('下载任务目录无效')
+    return directory
+
+
+def _cleanup_failed_download(job_id: str) -> None:
+    try:
+        directory = _job_directory(job_id)
+        if directory.is_dir():
+            shutil.rmtree(directory)
+    except (OSError, ValueError):
+        # Cleanup must never hide the original download failure or broaden scope.
+        pass
+
+
+def _check_download_space(path: Path) -> None:
+    minimum = settings.download_min_free_bytes
+    if minimum and shutil.disk_usage(path).free < minimum:
+        raise DownloadQuotaError('下载存储空间不足，请稍后重试')
 
 
 def _run_download(job_id: str, url: str, format_id: str) -> None:
@@ -23,11 +52,14 @@ def _run_download(job_id: str, url: str, format_id: str) -> None:
         s.add(job)
         s.commit()
 
-    job_dir = Path(settings.temp_dir) / job_id
+    job_dir = _job_directory(job_id)
+    job_dir.parent.mkdir(parents=True, exist_ok=True)
+    _check_download_space(job_dir.parent)
     job_dir.mkdir(parents=True, exist_ok=True)
     outtmpl = str(job_dir / "%(title)s.%(ext)s")
 
     def hook(d):
+        _check_download_space(job_dir)
         if d.get("status") == "downloading":
             total = d.get("total_bytes") or d.get("total_bytes_estimate") or 0
             pct = (d.get("downloaded_bytes") or 0) / total * 100 if total else 0
@@ -39,16 +71,7 @@ def _run_download(job_id: str, url: str, format_id: str) -> None:
 
     size = os.path.getsize(file_path)
     if size > settings.max_file_size:
-        Path(file_path).unlink(missing_ok=True)
-        with Session(engine) as s:
-            job = s.get(Job, job_id)
-            job.status = JobStatus.error
-            job.error_type = "quota"
-            job.error = "文件超过大小上限"
-            job.updated_at = datetime.now(timezone.utc)
-            s.add(job)
-            s.commit()
-        return
+        raise DownloadQuotaError('文件超过大小上限')
 
     with Session(engine) as s:
         job = s.get(Job, job_id)
@@ -85,6 +108,7 @@ class JobManager:
         try:
             _run_download(job_id, url, format_id)
         except Exception as exc:  # noqa: BLE001
+            _cleanup_failed_download(job_id)
             self._mark_error(job_id, exc)
 
     def _mark_error(self, job_id: str, exc: Exception) -> None:
@@ -93,7 +117,7 @@ class JobManager:
             if job:
                 job.status = JobStatus.error
                 job.error_type = classify_error(exc)
-                job.error = str(exc)
+                job.error = public_error_message(exc)
                 job.updated_at = datetime.now(timezone.utc)
                 s.add(job)
                 s.commit()

@@ -1,4 +1,6 @@
-const API_BASE = '/api';
+import { appPath } from './lib/appBase.js';
+
+const API_BASE = appPath('api');
 
 let authToken = null;
 
@@ -20,15 +22,16 @@ export function getAuthToken() { return authToken; }
 
 // 后端错误体：{ detail: { error_type, error } } 或 { detail: { error } } 或 { detail: "..." }
 export async function normalizeError(res) {
+  const receipt = res.headers?.get?.('Idempotency-Status') === 'complete' ? { idempotency_complete: true } : {};
   try {
     const body = await res.json();
     const d = body && body.detail;
     if (d && typeof d === 'object') {
-      return { error_type: d.error_type || 'network', error: d.error || String(d) };
+      return { error_type: d.error_type || 'network', error: d.error || String(d), ...receipt };
     }
-    return { error_type: 'network', error: typeof d === 'string' ? d : '请求失败' };
+    return { error_type: 'network', error: typeof d === 'string' ? d : '请求失败', ...receipt };
   } catch {
-    return { error_type: 'network', error: '请求失败' };
+    return { error_type: 'network', error: '请求失败', ...receipt };
   }
 }
 
@@ -36,10 +39,11 @@ export function parseVideo(url, signal) {
   return request('/parse', { signal, method: 'POST', body: JSON.stringify({ url }) });
 }
 
-export function startDownload(url, formatId, forceServer = false, signal) {
+export function startDownload(url, formatId, forceServer = false, signal, idempotencyKey) {
   return request('/download', {
     signal,
     method: 'POST',
+    ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
     body: JSON.stringify({ url, format_id: formatId, force_server: forceServer }),
   });
 }
@@ -84,6 +88,22 @@ export function getMe() {
   return request('/auth/me');
 }
 
+export function getMembershipPlans(signal) {
+  return request('/membership/plans', { signal });
+}
+
+export function getMembership(signal) {
+  return request('/membership', { signal });
+}
+
+export function createCheckout(signal) {
+  return request('/billing/checkout', { method: 'POST', signal });
+}
+
+export function createBillingPortal(signal) {
+  return request('/billing/portal', { method: 'POST', signal });
+}
+
 export function getSubtitle(url, language, signal) {
   return request('/subtitle', {
     signal,
@@ -114,4 +134,29 @@ export function summarizeVideo(url, subtitleLanguage, outputLanguage = 'zh-CN', 
       output_language: outputLanguage,
     }),
   });
+}
+
+export function exportSubtitle(url, language, format, signal) {
+  return request('/subtitle/export', { signal, method: 'POST', body: JSON.stringify({ url, language: language || null, format }) });
+}
+
+export function getTranscriptionCapabilities(signal) {
+  return request('/transcribe/capabilities', { signal });
+}
+
+// Platform subtitle codes may include a region; Whisper accepts language codes.
+function transcriptionLanguage(language) {
+  return !language || language === 'auto' ? null : language.toLowerCase().split(/[-_]/)[0];
+}
+
+export function transcribeVideo(url, language, signal) {
+  return request('/transcribe', { signal, method: 'POST', body: JSON.stringify({ url, language: transcriptionLanguage(language) }) });
+}
+
+export function exportTranscription(url, language, format, signal) {
+  return request('/transcribe/export', { signal, method: 'POST', body: JSON.stringify({ url, language: transcriptionLanguage(language), format }) });
+}
+
+export function generateMindmap(url, subtitleLanguage, outputLanguage = 'zh-CN', signal) {
+  return request('/mindmap', { signal, method: 'POST', body: JSON.stringify({ url, subtitle_language: subtitleLanguage || null, output_language: outputLanguage }) });
 }

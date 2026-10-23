@@ -141,6 +141,7 @@ def test_selected_subtitle_body_get_retries_and_returns_complete_document(monkey
         "settings",
         SimpleNamespace(
             subtitle_max_bytes=1024,
+            subtitle_max_cues=10000,
             network_retries=1,
             network_retry_backoff_seconds=0.3,
         ),

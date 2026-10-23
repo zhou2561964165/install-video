@@ -3,6 +3,7 @@ import json
 from collections import defaultdict
 
 import pytest
+pytestmark = pytest.mark.usefixtures("legacy_daily_quota")
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine, select
 

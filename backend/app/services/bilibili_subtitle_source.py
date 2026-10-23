@@ -1,4 +1,4 @@
-"""Anonymous Bilibili subtitle metadata; no cookies or yt-dlp dependency."""
+"""Bilibili subtitle metadata through the isolated server session interface."""
 from __future__ import annotations
 
 import json
@@ -9,10 +9,21 @@ import httpx
 
 from ..config import settings
 from . import network_retry
+from .bilibili_session import cookie_jar_for_url, is_bilibili_url
 
 
 class InvalidVideoPartError(ValueError):
     """Explicit user part selection must never default to a different video."""
+
+
+def apply_session_cookies(request: httpx.Request, cookies) -> None:
+    """Reapply the original jar policy to one request, after HTTPX builds it."""
+    for name in ("Cookie", "Cookie2", "Authorization", "Proxy-Authorization"):
+        request.headers.pop(name, None)
+    if is_bilibili_url(str(request.url)):
+        # HTTPX build_request copies CookieJar into a default-policy jar. Using
+        # the original jar here preserves its strict host-only/domain rules.
+        httpx.Cookies(cookies).set_cookie_header(request)
 
 
 def _metadata(client: httpx.Client, endpoint: str, params: dict) -> dict:
@@ -68,7 +79,12 @@ def bilibili_tracks(url: str) -> dict:
     except ValueError as exc:
         raise InvalidVideoPartError("视频分P编号无效") from exc
     headers = {"User-Agent": "Mozilla/5.0", "Referer": f"https://www.bilibili.com/video/{bvid}"}
-    with httpx.Client(timeout=settings.subtitle_timeout_seconds, headers=headers, follow_redirects=False) as client:
+    # HTTPX applies the jar's domain/path/secure rules; never serialize these
+    # credentials into track headers returned to other layers or CDN requests.
+    cookies = cookie_jar_for_url(url)
+    with httpx.Client(timeout=settings.subtitle_timeout_seconds, headers=headers,
+                      cookies=cookies, follow_redirects=False,
+                      event_hooks={"request": [lambda request: apply_session_cookies(request, cookies)]}) as client:
         view = _metadata(client, "https://api.bilibili.com/x/web-interface/view", {"bvid": bvid})
         if view.get("bvid") != bvid or type(view.get("aid")) is not int or view["aid"] <= 0 or not isinstance(view.get("title"), str):
             raise ValueError("视频元数据关联无效")

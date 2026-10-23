@@ -8,11 +8,18 @@ from typing import Annotated, Any
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, create_model
 
 
-class SummaryPayload(BaseModel):
-    model_config = ConfigDict(strict=True, extra="ignore", hide_input_in_errors=True)
+class _CoreSummaryPayload(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid", hide_input_in_errors=True)
 
     key_points: list[StrictStr]
     summary: StrictStr
+
+
+class SummaryPayload(_CoreSummaryPayload):
+    model_config = ConfigDict(strict=True, extra="ignore", hide_input_in_errors=True)
+
+    title: StrictStr = ""
+    conclusion: StrictStr = ""
 
 
 class _StrictSummaryPayload(SummaryPayload):
@@ -24,7 +31,7 @@ def decode_payload(payload: Any, *, strict: bool = False) -> SummaryPayload:
     return model.model_validate(payload)
 
 
-def output_schema(max_points: int, point_char_limit: int | None) -> dict[str, Any]:
+def output_schema(max_points: int, point_char_limit: int | None, *, include_editorial: bool = False) -> dict[str, Any]:
     """Generate the existing strict JSON schema using the installed library."""
     constraints = {"min_length": 1}
     if point_char_limit is not None:
@@ -32,7 +39,7 @@ def output_schema(max_points: int, point_char_limit: int | None) -> dict[str, An
     point_type = Annotated[StrictStr, Field(**constraints)]
     schema_model = create_model(
         "VideoSummaryOutput",
-        __base__=_StrictSummaryPayload,
+        __base__=_StrictSummaryPayload if include_editorial else _CoreSummaryPayload,
         key_points=(Annotated[list[point_type], Field(min_length=1, max_length=max_points)], ...),
         summary=(Annotated[StrictStr, Field(min_length=1)], ...),
     )

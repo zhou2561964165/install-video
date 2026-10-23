@@ -91,6 +91,17 @@ describe('MODELS 模型注册表', () => {
   it('DEFAULT_MODEL_ID 指向唯一模型', () => {
     expect(DEFAULT_MODEL_ID).toBe('bai');
   });
+  it('资源目录版本不改变模型标识，并让入口、相对资源和兜底共同绕过旧缓存', () => {
+    const model = MODELS[0];
+    expect(model.id).toBe('bai');
+    expect(model.assetPath).toBe('live2d/bai-v1');
+    expect(model.url).toBe('/live2d/bai-v1/白.model3.json');
+    expect(model.fallback.url).toBe('/live2d/bai-v1/白.16384/texture_00.png');
+    const entry = new URL(model.url, 'https://example.test');
+    for (const resource of ['白.moc3', '白.physics3.json', '白.16384/texture_00.png']) {
+      expect(new URL(resource, entry).pathname).toMatch(/^\/live2d\/bai-v1\//);
+    }
+  });
   it('窄屏使用配置化布局，角色高度小于桌面布局', () => {
     const m = MODELS[0];
     expect(getModelLayout(m, 375)).toBe(m.mobile);

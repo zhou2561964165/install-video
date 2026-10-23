@@ -7,14 +7,19 @@ import json
 import math
 import re
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from contextlib import contextmanager
 from typing import Any
+from urllib.parse import urlsplit
 
 import httpx
 
 from ..config import settings
 from . import network_retry
 from . import ytdlp_service
+from .bilibili_session import SessionError, cookie_jar_for_url, is_bilibili_url
+from .bilibili_subtitle_source import apply_session_cookies
+from .subtitle_timing import SubtitleSegment, TimingError, parse_segments
 
 _FORMAT_PRIORITY = {"vtt": 0, "srt": 1, "json3": 2, "ttml": 3, "srv3": 4, "bilibili_json": 5}
 _LANGUAGE_PRIORITY = ("zh-hans", "zh-cn", "zh", "en", "en-us")
@@ -38,6 +43,7 @@ class SubtitleDocument:
     is_auto: bool
     available_languages: list[str]
     text: str
+    segments: list[SubtitleSegment] = field(default_factory=list)
 
 
 def _dedupe_lines(lines: list[str]) -> str:
@@ -185,17 +191,26 @@ def fetch_subtitle_document(
     *,
     client: httpx.Client | None = None,
 ) -> SubtitleDocument:
-    payload = ytdlp_service.extract_subtitle_tracks(video_url)
     try:
-        return _document_from_tracks(payload, language, client=client)
+        payload = ytdlp_service.extract_subtitle_tracks(video_url)
+    except SessionError as exc:
+        raise SubtitleServiceError("verification_required", ytdlp_service.public_error_message(exc)) from None
+    try:
+        return _document_from_tracks(payload, language, video_url=video_url, client=client)
     except SubtitleServiceError as native_error:
-        if payload.get("_source") != "public":
+        if native_error.error_type == "verification_required" or payload.get("_source") != "public":
             raise
         # Native captions can expire or lack the requested language. Try the narrow
         # generic entrypoint once, retaining the native error if it cannot help.
         try:
             generic = ytdlp_service.extract_subtitle_tracks(video_url, use_public_sources=False)
-            return _document_from_tracks(generic, language, client=client)
+            return _document_from_tracks(generic, language, video_url=video_url, client=client)
+        except SessionError as exc:
+            raise SubtitleServiceError("verification_required", ytdlp_service.public_error_message(exc)) from None
+        except SubtitleServiceError as exc:
+            if exc.error_type == "verification_required":
+                raise
+            raise native_error from None
         except Exception:
             raise native_error from None
 
@@ -204,6 +219,7 @@ def _document_from_tracks(
     payload: dict,
     language: str | None,
     *,
+    video_url: str,
     client: httpx.Client | None,
 ) -> SubtitleDocument:
     tracks = payload["tracks"]
@@ -215,16 +231,45 @@ def _document_from_tracks(
             raise SubtitleServiceError("subtitle_invalid", "字幕内容格式无效")
         if len(raw.encode("utf-8")) > settings.subtitle_max_bytes:
             raise SubtitleServiceError("subtitle_too_large", "字幕文件超过大小限制")
-        return SubtitleDocument(
-            title=payload["title"], language=selected["language"], is_auto=bool(selected["is_auto"]),
-            available_languages=_available_languages(tracks), text=parse_subtitle_text(raw, selected_format["ext"]),
-        )
+        return _build_document(payload, selected, tracks, raw, selected_format["ext"])
     owns_client = client is None
-    http = client or httpx.Client(follow_redirects=True, timeout=float(settings.subtitle_timeout_seconds))
+    bili_source = is_bilibili_url(video_url)
+    try:
+        cookies = cookie_jar_for_url(video_url)
+    except SessionError as exc:
+        raise SubtitleServiceError("verification_required", ytdlp_service.public_error_message(exc)) from None
+    client_options = {"cookies": cookies,
+                      "event_hooks": {"request": [lambda request: apply_session_cookies(request, cookies)]}} if bili_source else {}
+    http = client or httpx.Client(follow_redirects=True, timeout=float(settings.subtitle_timeout_seconds), **client_options)
+    # Extractor headers may contain credentials scoped to the original page.
+    # Caption URLs can point to unrelated CDNs; only the domain-aware jar may
+    # supply cookies, and no unscoped Authorization header crosses this boundary.
+    headers = dict(selected_format["http_headers"])
+    if bili_source:
+        headers = {key: value for key, value in headers.items()
+                   if key.lower() not in {"cookie", "cookie2", "authorization", "proxy-authorization"}}
+        # User-controlled query parameters are unnecessary for anti-hotlinking.
+        headers["Referer"] = f"https://www.bilibili.com{urlsplit(video_url).path}"
+
+    @contextmanager
+    def caption_response():
+        if bili_source and not owns_client:
+            # Work on a concrete request rather than changing shared client
+            # hooks/cookies. This also removes any caller-level credentials.
+            request = http.build_request("GET", selected_format["url"], headers=headers)
+            apply_session_cookies(request, cookies)
+            response = http.send(request, stream=True, follow_redirects=False, auth=None)
+            try:
+                yield response
+            finally:
+                response.close()
+        else:
+            redirect_options = {"follow_redirects": False} if bili_source or selected_format["ext"] == "bilibili_json" else {}
+            with http.stream("GET", selected_format["url"], headers=headers, **redirect_options) as response:
+                yield response
     try:
         def get_caption() -> tuple[bytes, str | None]:
-            redirect_options = {"follow_redirects": False} if selected_format["ext"] == "bilibili_json" else {}
-            with http.stream("GET", selected_format["url"], headers=selected_format["http_headers"], **redirect_options) as response:
+            with caption_response() as response:
                 response.raise_for_status()
                 content = bytearray()
                 for chunk in response.iter_bytes():
@@ -252,10 +297,20 @@ def _document_from_tracks(
         if owns_client:
             http.close()
 
+    return _build_document(payload, selected, tracks, raw, selected_format["ext"])
+
+
+def _build_document(payload: dict, selected: dict, tracks: list[dict], raw: str, ext: str) -> SubtitleDocument:
+    text = parse_subtitle_text(raw, ext)
+    try:
+        segments = parse_segments(raw, ext, max_cues=settings.subtitle_max_cues)
+    except TimingError as exc:
+        raise SubtitleServiceError(exc.error_type, str(exc)) from exc
     return SubtitleDocument(
         title=payload["title"],
         language=selected["language"],
         is_auto=bool(selected["is_auto"]),
         available_languages=_available_languages(tracks),
-        text=parse_subtitle_text(raw, selected_format["ext"]),
+        text=text,
+        segments=segments,
     )

@@ -122,3 +122,23 @@ def test_malformed_fences_are_rejected(decode, raw):
 def test_strict_fence_setting_still_allows_lossless_json_closing_repair(decode):
     assert decode('{"summary":"overview","key_points":["point"}', allow_fences=False) == {
         "summary": "overview", "key_points": ["point"]}
+
+
+@pytest.mark.parametrize("fields", [
+    {"title": "A source-grounded topic"},
+    {"conclusion": "A conditional result"},
+    {"title": "Topic", "conclusion": "Result"},
+])
+def test_editorial_fields_are_retained_during_lossless_closing_repair(decode, fields):
+    body = {"key_points": ["## Topic\n\nA supported detail"], "summary": "Overview", **fields}
+    assert decode(json.dumps(body, ensure_ascii=False)[:-1]) == body
+
+
+@pytest.mark.parametrize("raw", [
+    '{"summary":"overview","key_points":["point"],"title":"unfinished',
+    '{"summary":"overview","key_points":["point"],"conclusion":',
+    '{"summary":"overview","key_points":["point"],"title":"old","title":"new"',
+])
+def test_incomplete_or_duplicate_editorial_values_are_not_silently_repaired(decode, raw):
+    with pytest.raises(ValueError):
+        decode(raw)

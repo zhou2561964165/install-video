@@ -61,6 +61,7 @@ vi.mock('./hooks/useAuth.js', () => ({
 import { clearAuthToken, setAuthToken } from './api.js';
 import { createBackground } from './pixi/background.js';
 import { createMascot } from './pixi/mascot.js';
+import { installMascotLoadTokens } from './test/mascotLoadTokens.js';
 
 // HTTP fixture handlers; the real API, download hook and reducer run in these tests.
 const parseVideo = vi.fn();
@@ -68,6 +69,8 @@ const startDownload = vi.fn();
 const getJob = vi.fn();
 const summarizeVideo = vi.fn();
 const getFile = vi.fn();
+const membershipAccount = vi.fn();
+const membershipPlans = vi.fn();
 let saves;
 const parseFixture = { title: 'T', formats: [{ format_id: 'b', label: '1080p', height: 1080, ext: 'mp4', direct: false }] };
 const fileFixture = () => ({ ok: true, blob: async () => new Blob(['video']), headers: new Headers({ 'Content-Disposition': 'attachment; filename="actual.mp4"' }) });
@@ -91,6 +94,9 @@ describe('App 功能闭环', () => {
     vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
     setAuthToken('owner-token');
     saves = [];
+    membershipAccount.mockResolvedValue({ plan: 'vip', status: 'active', checkout_available: false, features: { max_height: null, subtitles: true, translation: true, summary: true } });
+    membershipPlans.mockResolvedValue({ enabled: false, checkout_available: false, price_label: null });
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
     getFile.mockImplementation(fileFixture);
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function () { saves.push({ url: this.href, filename: this.download }); });
     vi.stubGlobal('URL', Object.assign(class extends URL {}, { createObjectURL: vi.fn(() => 'blob:app-video'), revokeObjectURL: vi.fn() }));
@@ -98,7 +104,9 @@ describe('App 功能闭环', () => {
       const body = options.body ? JSON.parse(options.body) : {};
       try {
         let value;
-        if (path === '/api/parse') value = await parseVideo(body.url);
+        if (path === '/api/membership') value = await membershipAccount();
+        else if (path === '/api/membership/plans') value = await membershipPlans();
+        else if (path === '/api/parse') value = await parseVideo(body.url);
         else if (path === '/api/download') value = await startDownload(body.url, body.format_id, body.force_server);
         else if (path.startsWith('/api/job/')) value = await getJob(path.slice('/api/job/'.length));
         else if (path.startsWith('/api/file/')) return await getFile(path.slice('/api/file/'.length), options.signal);
@@ -109,6 +117,34 @@ describe('App 功能闭环', () => {
         return { ok: false, json: async () => ({ detail: error }) };
       }
     }));
+  });
+
+  it('会员开通登录后保留意图并返回会员页，未自动创建支付', async () => {
+    mockAuth.status = 'gate';
+    membershipPlans.mockResolvedValue({ enabled: true, checkout_available: true, price_label: '$5 / 月', billing_mode: 'subscription' });
+    const view = render(<App />);
+    await userEvent.click(screen.getByRole('button', { name: '会员方案' }));
+    expect(screen.getByRole('heading', { name: '选择适合你的下载方案' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '登录后开通 VIP' }));
+    expect(screen.getByTestId('auth-scene')).toBeInTheDocument();
+    mockAuth.status = 'authed';
+    await act(async () => view.rerender(<App />));
+    expect(screen.getByText(/已登录。请查看价格与计费说明/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '选择适合你的下载方案' })).toBeInTheDocument();
+    expect(fetch.mock.calls.some(([path]) => path === '/api/billing/checkout')).toBe(false);
+  });
+
+  it('免费账号解析选择可用720p，高清可见但不可点击', async () => {
+    membershipAccount.mockResolvedValue({ plan: 'free', status: 'free', features: { max_height: 720, subtitles: false, translation: false, summary: false } });
+    parseVideo.mockResolvedValue({ title: '免费版视频', formats: [{ format_id: 'hd', label: '1080p', height: 1080 }, { format_id: 'sd', label: '720p', height: 720 }] });
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/free');
+    await userEvent.click(screen.getByRole('button', { name: '解析' }));
+    const hd = await screen.findByRole('button', { name: '1080p MP4 · 含音频 · VIP 专享' });
+    expect(hd).toBeDisabled(); expect(screen.getByRole('button', { name: '720p MP4 · 含音频' })).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(screen.getByRole('button', { name: 'AI 总结' }));
+    expect(screen.getByRole('heading', { name: '选择适合你的下载方案' })).toBeInTheDocument();
+    expect(summarizeVideo).not.toHaveBeenCalled();
   });
 
   it('解析未发现字幕时仍可显式获取内容并生成总结', async () => {
@@ -132,7 +168,7 @@ describe('App 功能闭环', () => {
     render(<App />);
     await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/back');
     await userEvent.click(screen.getByRole('button', { name: '解析' }));
-    const signal = fetch.mock.calls[0][1].signal;
+    const signal = fetch.mock.calls.find(([path]) => path === '/api/parse')[1].signal;
     await userEvent.click(screen.getByRole('button', { name: '返回输入' }));
     expect(signal.aborted).toBe(true);
     expect(screen.getByLabelText('视频链接')).toHaveValue('https://example.com/back');
@@ -355,10 +391,11 @@ describe('App 功能闭环', () => {
     expect(screen.queryByLabelText('邮箱')).toBeNull();
     await userEvent.click(screen.getByRole('button', { name: '返回首页' }));
     mockAuth.status = 'authed';
-    view.rerender(<App />);
+    await act(async () => view.rerender(<App />));
     expect(screen.getByLabelText('视频链接')).toHaveValue('https://example.com/restoring');
     expect(within(screen.getByTestId('entry-scene')).queryByRole('status')).toBeNull();
-    expect(fetch).not.toHaveBeenCalled();
+    expect(parseVideo).not.toHaveBeenCalled();
+    expect(startDownload).not.toHaveBeenCalled();
   });
 
   it('认证恢复失败回到访客态时保留链接，提示同步为顶部登录且不发业务请求', async () => {
@@ -373,7 +410,8 @@ describe('App 功能闭环', () => {
     expect(screen.getByRole('status')).toHaveTextContent('请先点击顶部登录按钮登录后再解析');
     expect(screen.getByRole('status')).not.toHaveTextContent('正在验证');
     expect(screen.queryByTestId('auth-scene')).toBeNull();
-    expect(fetch).not.toHaveBeenCalled();
+    expect(parseVideo).not.toHaveBeenCalled();
+    expect(startDownload).not.toHaveBeenCalled();
   });
 
   it.each(['登录', '注册'])('%s成功返回首页保留访客草稿，显式解析才发请求', async (mode) => {
@@ -394,7 +432,8 @@ describe('App 功能闭环', () => {
     expect(screen.queryByTestId('auth-scene')).toBeNull();
     expect(screen.getByLabelText('视频链接')).toHaveValue('https://example.com/after-login');
     expect(screen.getByLabelText('视频链接')).toHaveFocus();
-    expect(fetch).not.toHaveBeenCalled();
+    expect(parseVideo).not.toHaveBeenCalled();
+    expect(startDownload).not.toHaveBeenCalled();
     await userEvent.click(screen.getByRole('button', { name: '解析' }));
     await screen.findByTestId('selecting-scene');
     expect(parseVideo).toHaveBeenCalledWith('https://example.com/after-login');
@@ -475,7 +514,7 @@ describe('App 功能闭环', () => {
     const view = render(<App />);
     await userEvent.type(screen.getByLabelText('视频链接'), 'https://example.com/old');
     await userEvent.click(screen.getByRole('button', { name: '解析' }));
-    const signal = fetch.mock.calls[0][1].signal;
+    const signal = fetch.mock.calls.find(([path]) => path === '/api/parse')[1].signal;
     mockAuth.user = { id: 'u2', email: 'new@e.com' };
     view.rerender(<App />);
     await act(async () => resolveParse(parseFixture));
@@ -598,6 +637,84 @@ describe('App 功能闭环', () => {
     expect(document.querySelector('.expression-menu')).toBeNull();
     expect(screen.queryByRole('button', { name: '短发', exact: true })).toBeNull();
     expect(screen.queryByRole('button', { name: '变大', exact: true })).toBeNull();
+  });
+
+  it('角色等待显示明确提示，就绪后移除且不阻塞业务输入', async () => {
+    mockVisual.webgl = true;
+    let resolve;
+    createMascot.mockImplementation(() => new Promise((done) => { resolve = done; }));
+    const view = render(<App />);
+    expect(screen.getByTestId('mascot-load-status')).toHaveTextContent('角色正在加载，首次打开可能需要几分钟；其他功能可正常使用。');
+    expect(screen.getByLabelText('视频链接')).toBeEnabled();
+    await act(async () => resolve(visualFixture()));
+    expect(screen.queryByTestId('mascot-load-status')).toBeNull(); view.unmount();
+  });
+
+  it.each(['reject', 'no-visual'])('角色%s时明确提示刷新重试', async (failure) => {
+    mockVisual.webgl = true;
+    if (failure === 'reject') createMascot.mockRejectedValue(new Error('load failed'));
+    else mockVisual.visual = false;
+    render(<App />);
+    await waitFor(() => expect(screen.getByTestId('mascot-load-status')).toHaveTextContent('角色加载失败。请刷新页面重试；其他功能可正常使用。'));
+    expect(screen.getByLabelText('视频链接')).toBeEnabled();
+  });
+
+  it.each(['guest', 'mobile', 'no-webgl'])('角色加载提示不向%s显示', async (kind) => {
+    mockVisual.webgl = kind !== 'no-webgl';
+    if (kind === 'guest') mockAuth.status = 'gate';
+    if (kind === 'mobile') phoneViewport(390);
+    render(<App />); await act(async () => {});
+    expect(screen.queryByTestId('mascot-load-status')).toBeNull(); expect(createMascot).not.toHaveBeenCalled();
+  });
+
+  it('角色等待卸载后迟到失败不挂回提示', async () => {
+    mockVisual.webgl = true; let reject;
+    createMascot.mockImplementation(() => new Promise((_resolve, fail) => { reject = fail; }));
+    const view = render(<App />); expect(screen.getByTestId('mascot-load-status')).toBeInTheDocument();
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    view.unmount(); expect(signal.aborted).toBe(true);
+    await act(async () => reject(new Error('late failure')));
+    expect(screen.queryByTestId('mascot-load-status')).toBeNull();
+  });
+
+  it('真实样式加载预算覆盖实际185秒传输后仍可就绪，不阻塞业务输入', async () => {
+    vi.useFakeTimers(); installMascotLoadTokens(); mockVisual.webgl = true;
+    let resolve;
+    createMascot.mockImplementation(() => new Promise((done) => { resolve = done; }));
+    const model = visualFixture(); const view = render(<App />);
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    await act(async () => vi.advanceTimersByTime(185029));
+    expect(signal.aborted).toBe(false);
+    expect(screen.getByLabelText('视频链接')).toBeEnabled();
+    await act(async () => resolve(model));
+    expect(document.querySelector('[data-mascot-interaction]')).not.toHaveAttribute('hidden');
+    expect(model.destroy).not.toHaveBeenCalled();
+    view.unmount(); expect(signal.aborted).toBe(true); expect(model.destroy).toHaveBeenCalledOnce();
+  });
+
+  it('真实样式加载预算等待期间卸载立即取消并释放晚到模型', async () => {
+    vi.useFakeTimers(); installMascotLoadTokens(); mockVisual.webgl = true;
+    let resolve;
+    createMascot.mockImplementation(() => new Promise((done) => { resolve = done; }));
+    const model = visualFixture(); const view = render(<App />);
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    await act(async () => vi.advanceTimersByTime(9000));
+    expect(signal.aborted).toBe(false);
+    view.unmount(); expect(signal.aborted).toBe(true);
+    await act(async () => resolve(model)); expect(model.destroy).toHaveBeenCalledOnce();
+  });
+
+  it('真实样式加载预算到期取消，未无限等待且晚到实例仍被释放', async () => {
+    vi.useFakeTimers(); installMascotLoadTokens(); mockVisual.webgl = true;
+    let resolve;
+    createMascot.mockImplementation(() => new Promise((done) => { resolve = done; }));
+    const model = visualFixture(); const view = render(<App />);
+    const signal = createMascot.mock.calls.at(-1)[2].signal;
+    await act(async () => vi.advanceTimersByTime(299999)); expect(signal.aborted).toBe(false);
+    await act(async () => vi.advanceTimersByTime(1)); expect(signal.aborted).toBe(true);
+    expect(screen.getByTestId('mascot-load-status')).toHaveTextContent('角色加载超时。请刷新页面重试；其他功能可正常使用。');
+    await act(async () => resolve(model)); expect(model.destroy).toHaveBeenCalledOnce();
+    view.unmount();
   });
 
   it('慢模型不挡输入，超时取消且晚到结果只释放一次', async () => {

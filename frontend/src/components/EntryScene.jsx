@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { unlock, playSfx } from '../audio/audioManager.js';
 import VideoIcon from './ui/VideoIcon.jsx';
+import LandingFeatures from './ui/LandingFeatures.jsx';
 
 // 落地页文案/数据：数据驱动，加卡片/步骤/示例只改这里（工程约定 §3 不写死）
 const PARSE_POINTS = [
@@ -104,7 +105,7 @@ export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', onUr
       <div className="landing">
         <section className="landing-hero" aria-label="粘贴视频链接" data-ui-follow>
           <div className="landing-hero__content">
-            <h1 className="landing-hero__title" data-follow-plane><span className="landing-hero__title-line">把视频，</span><span className="landing-hero__title-line">留在身边。</span></h1>
+            <h1 className="landing-hero__title" data-follow-plane><span className="landing-hero__title-line">把视频，</span><span className="landing-hero__title-line">留在身边</span></h1>
             <form className="landing-form" data-follow-exclude="parse" onSubmit={submit}>
               <input
                 ref={inputRef}
@@ -131,6 +132,7 @@ export default function EntryScene({ onSubmit, mascotSlot, initialUrl = '', onUr
               ))}
             </div>
           </div>
+          <LandingFeatures />
           {mascotSlot}
         </section>
 

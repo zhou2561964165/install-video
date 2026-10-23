@@ -11,6 +11,9 @@ from .routes.download import router as download_router
 from .routes.parse import router as parse_router
 from .routes.subtitle import router as subtitle_router
 from .routes.summary import router as summary_router
+from .routes.transcribe import router as transcribe_router
+from .routes.mindmap import router as mindmap_router
+from .routes.billing import router as billing_router
 
 app = FastAPI(title="万能视频下载")
 
@@ -23,7 +26,12 @@ _window: dict[str, list[float]] = defaultdict(list)
 
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
-    if request.url.path.startswith("/api/"):
+    path = request.scope["path"]
+    root_path = request.scope.get("root_path", "").rstrip("/")
+    # ASGI servers may include the mount prefix in path. Strip complete segments only.
+    if root_path and (path == root_path or path.startswith(root_path + "/")):
+        path = path[len(root_path):] or "/"
+    if path.startswith("/api/") and path != "/api/billing/webhook":
         now = time.monotonic()
         key = request.client.host if request.client else "unknown"
         window = _settings_rate_limit
@@ -39,3 +47,6 @@ app.include_router(download_router)
 app.include_router(auth_router)
 app.include_router(subtitle_router)
 app.include_router(summary_router)
+app.include_router(transcribe_router)
+app.include_router(mindmap_router)
+app.include_router(billing_router)

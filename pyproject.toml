@@ -13,6 +13,15 @@ dependencies = [
     "pyjwt",
     "langchain-core>=1,<2",
     "langsmith>=0.3,<1",
+    "cachetools>=7,<8",
+    "pysubs2>=1.9,<2",
+    "stripe>=14,<15",
+]
+
+[project.optional-dependencies]
+asr = [
+    "av>=11,<19",
+    "faster-whisper>=1.2,<2",
 ]
 
 [dependency-groups]

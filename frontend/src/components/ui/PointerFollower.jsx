@@ -15,9 +15,9 @@ export default function PointerFollower({ rootRef, enabled = true }) {
     const pointer = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: ' + minWidth + ')');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const forcedColors = window.matchMedia('(forced-colors: active)');
-    // Only these product regions suppress the circle. Normal links, buttons and
-    // content outside the central column remain part of the visible cursor area.
-    const controls = '.site-header, [data-follow-exclude="parse"]';
+    // Product panels suppress the full circle footprint. Unmarked landing
+    // controls and whitespace keep the existing viewport-wide follower.
+    const controls = '.site-header, [data-follow-exclude="parse"], [data-follow-exclude="panel"]';
     const inactive = (element) => element?.closest?.('[inert], [role="dialog"][aria-hidden="true"]');
     let targets = [], exclusions = [], boundaryElements = [];
     let active = null, lastPointer = null, disposed = false, avoiding = false;
@@ -47,7 +47,7 @@ export default function PointerFollower({ rootRef, enabled = true }) {
       const control = event.target?.closest?.(controls);
       const ordinaryControl = control && control.dataset.followExclude !== 'mascot';
       avoiding = Boolean(ordinaryControl && !inactive(control)) || exclusions.some(({ rect, mascot, element }) => {
-        if (!mascot) return distance(x, y, rect) <= gap;
+        if (!mascot) return distance(x, y, rect) <= gap + (element.dataset.followExclude === 'panel' ? radius : 0);
         if (distance(x, y, rect) > radius) return false;
         const silhouette = getMascotSilhouette(element);
         return silhouette ? silhouette.overlapsCircle(x, y, radius) : distance(x, y, rect) <= radius;

@@ -1,0 +1,10 @@
+{
+  "lead_seconds": 1800,
+  "failure_retry_seconds": 900,
+  "max_failure_retries": 1,
+  "max_daily_navigations": 8,
+  "max_daily_metadata": 8,
+  "max_daily_api": 8,
+  "browser_timeout_seconds": 35,
+  "minimum_available_mib": 1536
+}

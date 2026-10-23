@@ -40,7 +40,7 @@ export default function AuthScene({ loading, onLogin, onRegister, onBack }) {
         <section className="auth-intro" aria-label="产品介绍">
           <p className="auth-intro__title" data-follow-plane>让每一段视频，都有去处。</p>
         </section>
-        <div className="auth-card" aria-busy={loading || busy || undefined}>
+        <div className="auth-card" data-follow-exclude="panel" aria-busy={loading || busy || undefined}>
           <button type="button" className="auth-back" onClick={onBack} disabled={busy}>返回首页</button>
           {loading ? (
             <>

@@ -54,6 +54,9 @@ def test_full_source_goes_once_to_independent_pro_text_high_without_editing():
     assert payload["text"] == {"format": {"type": "text"}}
     assert payload["max_output_tokens"] == 16384
     assert payload["input"][0]["content"].endswith(source)
+    prompt = payload["input"][0]["content"]
+    assert "# 一级标题" in prompt and "## 二级标题" in prompt and "### 三级标题" in prompt
+    assert "最后单设 ## 总结" in prompt and "不要逐条复述前文" in prompt
     assert "en" in payload["instructions"] + payload["input"][0]["content"]
     assert result.summary == markdown
     assert result.key_points == []

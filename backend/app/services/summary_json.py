@@ -48,10 +48,12 @@ def _repair(text: str, error: json.JSONDecodeError) -> Any:
         candidate = from_json(prefix, allow_partial=True)
     except ValueError:
         raise ValueError("Invalid summary JSON") from None
-    if (not isinstance(candidate, dict) or set(candidate) != {"summary", "key_points"}
+    if (not isinstance(candidate, dict)
+            or not {"summary", "key_points"} <= set(candidate) <= {"summary", "key_points", "title", "conclusion"}
             or not isinstance(candidate["summary"], str)
             or not isinstance(candidate["key_points"], list)
-            or any(not isinstance(point, str) for point in candidate["key_points"])):
+            or any(not isinstance(point, str) for point in candidate["key_points"])
+            or any(not isinstance(candidate[key], str) for key in ("title", "conclusion") if key in candidate)):
         raise ValueError("Invalid summary JSON")
     restored_tokens, restored_skeleton = _tokens(json.dumps(candidate, ensure_ascii=True))
     suffix = restored_skeleton[len(skeleton):]

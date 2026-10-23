@@ -3,6 +3,7 @@ import { reduce, initialState, SCENE } from './state/sceneMachine.js';
 import { parseVideo } from './api.js';
 import { useDownload } from './hooks/useDownload.js';
 import { useAuth } from './hooks/useAuth.js';
+import { useMembership } from './hooks/useMembership.js';
 import { useVideoInsights } from './hooks/useVideoInsights.js';
 import { useMascotHitArea } from './hooks/useMascotHitArea.js';
 import { normalizeParse } from './lib/videoAdapter.js';
@@ -12,6 +13,7 @@ import { createMascot } from './pixi/mascot.js';
 import { DEFAULT_MODEL_ID } from './pixi/mascotConfig.js';
 import EntryScene from './components/EntryScene.jsx';
 import AuthScene from './components/AuthScene.jsx';
+import MembershipScene from './components/MembershipScene.jsx';
 import AuthBar from './components/ui/AuthBar.jsx';
 import ParsingScene from './components/ParsingScene.jsx';
 import SelectingScene from './components/SelectingScene.jsx';
@@ -28,6 +30,11 @@ const THEMES = [
   { v: 'dark', label: '深色' },
   { v: 'auto', label: '自动' },
 ];
+
+function readPaymentReturn() {
+  const value = new URLSearchParams(window.location.search).get('membership');
+  return ['success', 'cancel', 'return'].includes(value) ? value : null;
+}
 
 function mascotToken(name, fallback, time = false) {
   const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -69,6 +76,7 @@ export default function App() {
   const uiRef = useRef(null);
   const [mascotAvailable, setMascotAvailable] = useState(false);
   const [mascotVisual, setMascotVisual] = useState(false);
+  const [mascotLoadState, setMascotLoadState] = useState('idle');
   const mascotEligible = useMascotEligible();
   useMascotHitArea({ rootRef: uiRef, targetRef: mascotInteractionRef, enabled: mascotVisual && mascotEligible });
   const [webgl] = useState(() => webglSupported());
@@ -79,6 +87,9 @@ export default function App() {
   const [focusInput, setFocusInput] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authBlocked, setAuthBlocked] = useState(false);
+  const [paymentReturn] = useState(readPaymentReturn);
+  const [membershipOpen, setMembershipOpen] = useState(() => Boolean(readPaymentReturn()));
+  const [membershipIntent, setMembershipIntent] = useState(false);
 
   // 首页向访客开放；只有显式点击顶部登录才显示账号页，业务请求仍需认证。
   // 较重的 PIXI / Live2D 视觉层继续仅在登录后启动。
@@ -87,6 +98,9 @@ export default function App() {
     ? (status === 'loading' ? '正在验证登录状态，请稍后再解析' : '请先点击顶部登录按钮登录后再解析')
     : '';
   const sessionKey = status === 'authed' ? user?.id : null;
+  const membership = useMembership(sessionKey, membershipOpen && !authOpen);
+  const openMembership = useCallback(() => { setMembershipOpen(true); setAuthOpen(false); setFocusInput(false); window.scrollTo?.(0, 0); }, []);
+  const closeMembership = useCallback(() => { setMembershipOpen(false); setMembershipIntent(false); setFocusInput(true); }, []);
   const parseRequest = useRef(null);
   const cancelParse = useCallback(() => {
     parseRequest.current?.abort();
@@ -124,7 +138,8 @@ export default function App() {
       const payload = normalizeParse(await parseVideo(url, controller.signal));
       if (controller.signal.aborted || parseRequest.current !== controller) return;
       dispatch({ type: 'PARSE_SUCCESS', payload });
-      const firstFormat = payload.formats.find((format) => format?.format_id);
+      const maxHeight = membership.account?.features?.max_height;
+      const firstFormat = membership.account && payload.formats.find((format) => format?.format_id && (maxHeight == null || !(format.height > maxHeight)));
       if (firstFormat) dispatch({ type: 'SELECT_FORMAT', format: firstFormat });
     } catch (e) {
       if (controller.signal.aborted || parseRequest.current !== controller) return;
@@ -132,7 +147,7 @@ export default function App() {
     } finally {
       if (parseRequest.current === controller) parseRequest.current = null;
     }
-  }, [cancelParse, status]);
+  }, [cancelParse, status, membership.account]);
 
   // 下载编排（发起 + 服务端轮询）下沉到 useDownload，App 只保留 dispatch 与场景渲染
   const { startDownload: handleDownload, save, saveBusy, saveError, cancel } = useDownload(state, dispatch, sessionKey);
@@ -144,12 +159,14 @@ export default function App() {
     setFocusInput(true);
   }, [cancelParse, cancel]);
   const handleLogout = useCallback(() => {
+    membership.cancelAction();
     handleReset();
     setInputDraft('');
     setAuthOpen(false);
+    setMembershipIntent(false);
     logout();
-  }, [handleReset, logout]);
-  const insights = useVideoInsights(status === 'authed' ? state.url : '');
+  }, [handleReset, logout, membership.cancelAction]);
+  const insights = useVideoInsights(status === 'authed' ? state.url : '', sessionKey);
   const previousSession = useRef(sessionKey);
   useLayoutEffect(() => {
     const previous = previousSession.current;
@@ -161,6 +178,7 @@ export default function App() {
     if (previous != null) {
       setInputDraft('');
       setFocusInput(false);
+      setMembershipIntent(false);
     } else if (sessionKey != null) setFocusInput(true);
   }, [sessionKey]);
   const handleAuthBack = useCallback(() => {
@@ -182,6 +200,7 @@ export default function App() {
   useEffect(() => {
     setMascotAvailable(false);
     setMascotVisual(false);
+    setMascotLoadState('idle');
     setMenuOpen(false);
     if (!webgl || status !== 'authed') {
       return;
@@ -201,7 +220,12 @@ export default function App() {
     let timeout;
     // Phone and small-screen gates run before createMascot, preventing model and fallback requests.
     if (mascotEligible) {
-      timeout = window.setTimeout(() => controller.abort(), mascotToken('--mascot-load-timeout', 8000, true));
+      setMascotLoadState('loading');
+      timeout = window.setTimeout(() => {
+        if (stale) return;
+        setMascotLoadState('timeout');
+        controller.abort();
+      }, mascotToken('--mascot-load-timeout', 8000, true));
       createMascot(app, DEFAULT_MODEL_ID, {
         placementMode: 'free', signal: controller.signal,
         onTap: () => { if (mascotRef.current?.isAvailable()) setMenuOpen(true); }, interactionTarget: mascotInteractionRef.current,
@@ -211,7 +235,9 @@ export default function App() {
         ownedMascot = m;
         mascotRef.current = m;
         setMascotAvailable(m.isAvailable());
-        setMascotVisual(m.hasVisual?.() ?? m.isAvailable());
+        const visual = m.hasVisual?.() ?? m.isAvailable();
+        setMascotVisual(visual);
+        setMascotLoadState(visual ? 'ready' : 'failed');
         m.startRandomProps();
         m.setStageExpression(sceneRef.current);
       }).catch(() => {
@@ -219,6 +245,7 @@ export default function App() {
         if (stale) return;
         setMascotAvailable(false);
         setMascotVisual(false);
+        setMascotLoadState(controller.signal.aborted ? 'timeout' : 'failed');
       });
     }
     return () => {
@@ -276,7 +303,7 @@ export default function App() {
     case SCENE.SELECTING: scene = null; break;
     case SCENE.DOWNLOADING: scene = <DownloadingScene job={state.job} mode={state.download?.mode} />; break;
     case SCENE.DONE: scene = <DoneScene job={state.job} onSave={save} saveBusy={saveBusy} saveError={saveError} onReset={handleReset} />; break;
-    case SCENE.ERROR: scene = <ErrorScene error={state.error} onReset={handleReset} />; break;
+    case SCENE.ERROR: scene = <ErrorScene error={state.error} onReset={handleReset} onUpgrade={openMembership} />; break;
     case SCENE.ENTRY:
     default: scene = <EntryScene onSubmit={handleSubmit} initialUrl={inputDraft} onUrlChange={setInputDraft} focusInput={focusInput} notice={authNotice} />;
   }
@@ -287,6 +314,7 @@ export default function App() {
     scene = <SelectingScene parseResult={state.parseResult} selectedFormat={state.selectedFormat}
       forceServer={state.forceServer} onSelect={(format, forceServer) => dispatch({ type: 'SELECT_FORMAT', format, forceServer })}
       onDownload={handleDownload} insights={insights} downloadContent={downloadContent} sourceUrl={state.url}
+      membership={membership.account} membershipLoading={membership.loading} onMembershipRefresh={membership.refresh} onUpgrade={openMembership}
       locked={state.scene !== SCENE.SELECTING} />;
   }
 
@@ -297,13 +325,15 @@ export default function App() {
           <span className="site-brand__mark" aria-hidden="true"><VideoIcon name="download" /></span>
           <span>万能视频下载</span>
         </a>
-        {!showAuth && state.scene === SCENE.ENTRY && (
+        {!showAuth && !membershipOpen && state.scene === SCENE.ENTRY && (
           <nav className="site-nav" aria-label="页面导航">
             <a href="#features">功能</a>
             <a href="#how-it-works">如何使用</a>
+            <a href="#capabilities">功能一览</a>
           </nav>
         )}
         <div className="site-header__utilities">
+          <button type="button" className="site-membership" aria-pressed={membershipOpen && !showAuth} onClick={openMembership}>会员方案</button>
           {status === 'authed' && <AuthBar user={user} quota={quota} onLogout={handleLogout} />}
           {status !== 'authed' && <button type="button" className="site-login" aria-expanded={showAuth}
             onClick={() => { setAuthOpen(true); setFocusInput(false); }}>登录</button>}
@@ -317,17 +347,26 @@ export default function App() {
       </header>
       <div ref={stageRef} className={webgl ? 'stage stage--floating' : 'stage css-fallback'}>{mascotInteraction}</div>
       <div id="top" ref={uiRef} className="ui">
+        {status === 'authed' && mascotEligible && webgl && ['loading', 'failed', 'timeout'].includes(mascotLoadState) && (
+          <p className="mascot-load-status" data-testid="mascot-load-status" role="status" aria-live="polite">
+            {mascotLoadState === 'loading' ? '角色正在加载，首次打开可能需要几分钟；其他功能可正常使用。'
+              : `角色加载${mascotLoadState === 'timeout' ? '超时' : '失败'}。请刷新页面重试；其他功能可正常使用。`}
+          </p>
+        )}
         {showAuth ? (
           <AuthScene loading={status === 'loading'} onLogin={login} onRegister={register} onBack={handleAuthBack} />
+        ) : membershipOpen ? (
+          <MembershipScene membership={membership} authed={status === 'authed'} authLoading={status === 'loading'} paymentReturn={paymentReturn} loginIntent={membershipIntent}
+            onLogin={() => { setMembershipIntent(true); setAuthOpen(true); }} onBack={closeMembership} />
         ) : (
           <>
             {state.scene === SCENE.ENTRY ? scene : <main className="video-workflow">
               <div className="video-workflow__heading" data-ui-follow>
-                <h1 data-follow-plane>从链接，到你的收藏。</h1>
+                <h1 data-follow-plane data-follow-exclude="panel">从链接，到你的收藏。</h1>
               </div>
               <div className="video-workflow__toolbar">
-                <button type="button" className="video-back" onClick={handleReset}><span aria-hidden="true">←</span> 返回输入</button>
-                <p className="video-workflow__url" title={state.url}>{state.url}</p>
+                <button type="button" className="video-back" data-follow-exclude="panel" onClick={handleReset}><span aria-hidden="true">←</span> 返回输入</button>
+                <p className="video-workflow__url" data-follow-exclude="panel" title={state.url}>{state.url}</p>
               </div>
               {scene}
             </main>}

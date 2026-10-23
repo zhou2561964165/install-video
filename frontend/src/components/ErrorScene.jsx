@@ -17,17 +17,18 @@ const ERR_CLASS = {
   quota: 'err-quota',
 };
 
-export default function ErrorScene({ error, onReset }) {
+export default function ErrorScene({ error, onReset, onUpgrade }) {
   const cfg = ERROR_SCENES[error?.error_type] || ERROR_SCENES.network;
   useEffect(() => { playSfx('error'); }, []);
   return (
     <div data-testid="error-scene" className={`scene error-scene ${ERR_CLASS[error?.error_type] || ''}`}>
       <Bubble className="error-bubble">
         <span className="error-emoji" aria-hidden>{cfg.emoji}</span>
-        <h2>{cfg.title}</h2>
+        <h2>{error?.error_type === 'membership_required' ? '此功能需要 VIP' : cfg.title}</h2>
         <p>{error?.error || cfg.hint}</p>
       </Bubble>
       <button onClick={onReset}>重试</button>
+      {error?.error_type === 'membership_required' && onUpgrade && <button type="button" onClick={onUpgrade}>查看 VIP 方案</button>}
     </div>
   );
 }

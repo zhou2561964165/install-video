@@ -1,8 +1,11 @@
-// 模型注册表：新增模型 = 放一个模型文件夹到 public/live2d/<id>/ 并在这里加一条，
+import { appPath } from '../lib/appBase.js';
+
+// 模型注册表：新增模型 = 将模型文件放到 public/<assetPath>/ 并在这里加一条，
 // 切换 UI 与渲染层都会自动感知，无需改渲染代码。
-//   id          —— 唯一标识，也是 public/live2d/<id>/ 的目录名
+//   id          —— 稳定唯一标识，升级资源目录时保持不变
+//   assetPath   —— 带版本的资源目录；入口与其相对资源一起换址，避免旧错误响应缓存
 //   name        —— 切换 UI 里显示的名称
-//   url         —— 模型入口（.model3.json）
+//   url         —— 相对 assetPath 的模型入口（.model3.json），导出时统一加应用前缀
 //   heightRatio —— free模式中的视口高度比例；显式embedded兼容使用区域contain。
 //                 0.49 ≈ 白自然高 1680 × 0.28（470px）÷ 27 寸（2560×1440 @150%）全屏高 960px。
 //   x/y         —— 相对屏幕宽高的占比（0~1），决定角色摆放位置（渲染与兜底图共用，勿写死）
@@ -12,17 +15,22 @@ export const MODELS = [
   {
     id: 'bai',
     name: '白',
-    url: '/live2d/bai/白.model3.json',
+    assetPath: 'live2d/bai-v1',
+    url: '白.model3.json',
     textureSize: 16384,
     heightRatio: 0.49,
     x: 0.82,
     y: 0.62,
     // 窄屏采用更小的视口高度比例，避免遮挡主要操作。
     mobile: { maxWidth: 720, heightRatio: 0.2, x: 0.5, y: 0.5 },
-    fallback: { url: '/live2d/bai/白.16384/texture_00.png' },
+    fallback: { url: '白.16384/texture_00.png' },
     hit: { width: 1400, height: 2000 },
   },
-];
+].map((model) => ({
+  ...model,
+  url: appPath(`${model.assetPath}/${model.url}`),
+  ...(model.fallback && { fallback: { ...model.fallback, url: appPath(`${model.assetPath}/${model.fallback.url}`) } }),
+}));
 
 // 默认模型 id：切换状态、兜底、初始加载统一从这里取，避免在组件内写死 'bai'
 export const DEFAULT_MODEL_ID = MODELS[0].id;

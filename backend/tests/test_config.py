@@ -44,6 +44,43 @@ def test_settings_from_env(monkeypatch):
 
 
 @pytest.mark.parametrize(
+    ("explicit_origin", "frontend_origin", "expected"),
+    [
+        (None, "http://localhost:5173", "http://localhost:5173"),
+        ("https://billing.example.test", "http://localhost:5173", "https://billing.example.test"),
+        ("   ", " http://localhost:5173 ", "http://localhost:5173"),
+        (None, None, ""),
+    ],
+)
+def test_stripe_return_origin_uses_frontend_url_fallback(monkeypatch, explicit_origin, frontend_origin, expected):
+    for key, value in (("STRIPE_PUBLIC_ORIGIN", explicit_origin), ("FRONTEND_URL", frontend_origin)):
+        if value is None:
+            monkeypatch.delenv(key, raising=False)
+        else:
+            monkeypatch.setenv(key, value)
+    assert Settings.from_env().stripe_public_origin == expected
+
+
+@pytest.mark.parametrize(
+    ("primary", "legacy", "expected"),
+    [(None, "price_test_one_time", "price_test_one_time"),
+     ("price_primary", "price_legacy", "price_primary"),
+     ("  ", " price_legacy ", "price_legacy"),
+     (None, None, "")],
+)
+def test_stripe_price_legacy_name_does_not_enable_subscriptions(monkeypatch, primary, legacy, expected):
+    for key, value in (("STRIPE_PRICE_ID", primary), ("STRIPE_PRICE_ID_MONTHLY", legacy)):
+        if value is None:
+            monkeypatch.delenv(key, raising=False)
+        else:
+            monkeypatch.setenv(key, value)
+    monkeypatch.setenv("STRIPE_BILLING_MODE", "payment")
+    settings = Settings.from_env()
+    assert settings.stripe_price_id == expected
+    assert settings.stripe_billing_mode == "payment"
+
+
+@pytest.mark.parametrize(
     ("settings_values", "message"),
     [
         ({"network_retries": -1}, "network_retries must be >= 0"),

@@ -4,15 +4,17 @@ from ..config import settings
 from ..models import User
 from ..schemas import SummaryRequest, SummaryResponse
 from ..services.auth import get_current_user
+from ..services.membership import require_vip
 from ..services.llm_service import LLMServiceError, summarize_long_text, summarize_text
-from .insight_common import load_subtitle
+from ..services.request_cache import reuse
+from .insight_common import load_cached_subtitle
 
 router = APIRouter()
 
 
 @router.post("/api/summary", response_model=SummaryResponse)
-def summary(req: SummaryRequest, _user: User = Depends(get_current_user)) -> SummaryResponse:
-    doc = load_subtitle(req.url, req.subtitle_language)
+def summary(req: SummaryRequest, _user: User = Depends(require_vip)) -> SummaryResponse:
+    doc = load_cached_subtitle(_user.id, req.url, req.subtitle_language)
     if len(doc.text) > settings.summary_max_source_chars:
         raise HTTPException(status_code=422, detail={
             "error_type": "summary_unsupported_length",
@@ -24,18 +26,17 @@ def summary(req: SummaryRequest, _user: User = Depends(get_current_user)) -> Sum
             "error_type": "summary_unsupported_length",
             "error": "字幕超过当前长文总结长度上限，仍可查看字幕或下载视频。",
         })
-    try:
-        generate = summarize_long_text if is_long else summarize_text
-        result = generate(doc.text, title=doc.title, output_language=req.output_language)
-    except LLMServiceError as exc:
-        status = 503 if exc.error_type in {"llm_unconfigured", "llm_busy"} else 502
-        raise HTTPException(status_code=status, detail={"error_type": exc.error_type, "error": str(exc)}) from exc
-    return SummaryResponse(
-        title=doc.title,
-        source_language=doc.language,
-        summary=result.summary,
-        key_points=result.key_points,
-        provider=result.provider,
-        model=result.model,
-        format="markdown" if is_long else "structured",
-    )
+    def produce():
+        try:
+            generate = summarize_long_text if is_long else summarize_text
+            result = generate(doc.text, title=doc.title, output_language=req.output_language)
+        except LLMServiceError as exc:
+            status = 503 if exc.error_type in {"llm_unconfigured", "llm_busy"} else 502
+            raise HTTPException(status_code=status, detail={"error_type": exc.error_type, "error": str(exc)}) from exc
+        return SummaryResponse(
+            title=result.title or doc.title, source_language=doc.language, summary=result.summary,
+            key_points=result.key_points, provider=result.provider, model=result.model,
+            conclusion=result.conclusion,
+            format="markdown" if is_long else "structured",
+        )
+    return reuse('summary', _user.id, (req.model_dump(), doc), produce)

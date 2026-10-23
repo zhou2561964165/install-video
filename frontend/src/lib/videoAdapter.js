@@ -36,6 +36,7 @@ export function normalizeParse(raw) {
     viewCountLabel: formatViewCount(r.view_count),
     formats: (r.formats || []).map((f) => ({
       ...f,
+      ...(f.height === 2160 && !/4k/i.test(f.label || '') ? { label: `4K · ${f.label || '2160p'}` } : {}),
       metaLine: formatMetaLine(f),
     })),
   };

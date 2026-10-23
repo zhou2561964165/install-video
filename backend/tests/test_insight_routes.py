@@ -2,6 +2,7 @@ from collections import defaultdict
 from uuid import uuid4
 
 import pytest
+pytestmark = pytest.mark.usefixtures("vip_entitlements")
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -77,6 +78,22 @@ def test_summary_route(monkeypatch):
     assert r.json()["summary"] == "摘要"
     assert r.json()["key_points"] == ["一", "二", "三"]
     assert r.json()["format"] == "structured"
+    assert r.json()["conclusion"] == ""
+
+
+def test_summary_route_delivers_generated_title_and_closing_synthesis(monkeypatch):
+    monkeypatch.setattr("app.routes.insight_common.fetch_subtitle_document", lambda url, language: _doc())
+    points = ["## 条件与结果\n\n保留必要前提。\n\n### 一个阶段\n\n说明。"]
+    monkeypatch.setattr(
+        "app.routes.summary.summarize_text",
+        lambda *args, **kwargs: LLMSummaryResult("高层概览", points, "mock", "mock-model",
+            title="条件如何影响结果", conclusion="归纳主题间的关系，同时保留条件。"),
+    )
+    response = client.post("/api/summary", json={"url": "https://example.com/v"}, headers=_auth_headers())
+    assert response.status_code == 200
+    assert response.json()["title"] == "条件如何影响结果"
+    assert response.json()["conclusion"] == "归纳主题间的关系，同时保留条件。"
+    assert response.json()["key_points"] == points
 
 
 @pytest.mark.parametrize("source_chars", [500, 2200, 20_000])
@@ -138,7 +155,7 @@ def test_long_route_preserves_markdown_and_metadata_and_skips_old_pipeline(monke
     r = client.post("/api/summary", json={"url": "https://example.com/v", "output_language": "en"}, headers=_auth_headers())
     assert r.status_code == 200
     assert r.json() == {"title": doc.title, "source_language": "en", "summary": markdown,
-        "key_points": [], "provider": "openai-compatible", "model": "deepseek-v4-pro", "format": "markdown"}
+        "key_points": [], "provider": "openai-compatible", "model": "deepseek-v4-pro", "format": "markdown", "conclusion": ""}
     assert calls == [(doc.text, doc.title, "en")]
 
 

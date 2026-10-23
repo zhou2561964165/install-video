@@ -1,0 +1,43 @@
+[Unit]
+Description=Refresh this project's Bilibili session near expiry
+After=network-online.target install-video-demo.service
+ConditionPathExists=/etc/install-video/bili-refresh-policy.json
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+UMask=0077
+WorkingDirectory=/opt/install-video/current/backend
+ExecStart=/opt/install-video/current/.venv/bin/python -B /opt/install-video/current/deployment/schedule_bili_session_refresh.py --run
+Environment=PYTHONDONTWRITEBYTECODE=1
+UnsetEnvironment=HTTP_PROXY HTTPS_PROXY ALL_PROXY http_proxy https_proxy all_proxy
+Environment=NO_PROXY=*
+Environment=no_proxy=*
+TimeoutStartSec=180
+TimeoutStopSec=10
+KillSignal=SIGTERM
+KillMode=control-group
+Restart=no
+CPUQuota=100%
+MemoryMax=256M
+MemorySwapMax=0
+Nice=10
+IOWeight=20
+LimitCORE=0
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+LockPersonality=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/etc/install-video /opt/install-video/deployment-state /var/lib/install-video/bili-refresh /etc/systemd/system/install-video-bili-session-refresh.timer.d
+ReadOnlyPaths=/etc/install-video/demo.env
+StandardOutput=journal
+StandardError=null
+SyslogIdentifier=install-video-bili-session-refresh

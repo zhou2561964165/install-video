@@ -3,6 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render } from '@testing-library/react';
 import PointerFollower from './PointerFollower.jsx';
 import * as silhouettes from '../../pixi/mascotSilhouette.js';
+import AuthScene from '../AuthScene.jsx';
+import SelectingScene from '../SelectingScene.jsx';
+import ParsingScene from '../ParsingScene.jsx';
 
 let external;
 beforeEach(() => {
@@ -40,6 +43,38 @@ const move = (x, y, buttons = 0) => {
 };
 
 describe('镜片避让', () => {
+  it.each(['login', 'register', 'loading', 'video', 'content', 'parsing'])('实际%s面板整圈接触隐藏，离开面板空白恢复', async (kind) => {
+    const rootRef = { current: null };
+    const auth = ['login', 'register', 'loading'].includes(kind);
+    const scene = auth ? <AuthScene loading={kind === 'loading'} onLogin={vi.fn()} onRegister={vi.fn()} />
+      : kind === 'parsing' ? <ParsingScene />
+        : <SelectingScene parseResult={{ title: '测试视频', formats: [], subtitles: [] }} selectedFormat={null} onSelect={vi.fn()} onDownload={vi.fn()}
+          insights={{ loading: null, active: null, subtitle: null, translation: null, summary: null }} />;
+    const view = render(<><div ref={el => { rootRef.current = el; }}>{scene}</div><PointerFollower rootRef={rootRef} /></>);
+    if (kind === 'register') fireEvent.click(view.getByRole('button', { name: '注册', exact: true }));
+    const panel = view.container.querySelector(auth ? '.auth-card' : kind === 'content' ? '.video-insights' : kind === 'parsing' ? '[data-testid="parsing-scene"]' : '.format-card');
+    expect(panel).toHaveAttribute('data-follow-exclude', 'panel');
+    const lens = view.container.querySelector('.cursor-lens');
+    rect(lens, { left: 0, top: 0, width: 190, height: 190 });
+    rect(panel, { left: 400, top: 300, width: 400, height: 400 });
+    fireEvent(window, new Event('resize'));
+    move(200, 500); expect(lens.dataset.active).toBe('true');
+    move(300, 500); expect(lens.dataset.active).toBe('false'); // radius95 + enter gap8
+    move(600, 500); expect(lens.dataset.active).toBe('false');
+    move(288, 500); expect(lens.dataset.active).toBe('true');
+    await act(async () => { panel.hidden = true; });
+    move(600, 500); expect(lens.dataset.active).toBe('true');
+  });
+  it('面板动态出现后静止指针立即避让，移除后恢复', async () => {
+    const { lens, plane } = mount();
+    move(400, 500); expect(lens.dataset.active).toBe('true');
+    const panel = document.createElement('article'); panel.dataset.followExclude = 'panel';
+    rect(panel, { left: 400, top: 400, width: 300, height: 250 });
+    await act(async () => { plane.append(panel); });
+    expect(lens.dataset.active).toBe('false');
+    await act(async () => { panel.remove(); });
+    expect(lens.dataset.active).toBe('true');
+  });
   it('模型在舞台内动态挂载或移除后自动更新避让，不等待第二次resize', async () => {
     const { lens, view } = mount();
     move(755, 500); expect(lens.dataset.active).toBe('true');
@@ -50,7 +85,7 @@ describe('镜片避让', () => {
     await act(async () => model.remove());
     expect(lens.dataset.active).toBe('true');
   });
-  it('左右内容区外与普通按钮、链接、菜单上仍显示，只顶部和解析组件避让', () => {
+  it('未标记的普通按钮、链接、菜单和两侧保留显示，顶部与解析表单仍避让', () => {
     const { lens, plane, button } = mount();
     move(1250, 500); expect(lens.dataset.active).toBe('true');
     expect(plane).toHaveAttribute('data-follow-active', 'true');

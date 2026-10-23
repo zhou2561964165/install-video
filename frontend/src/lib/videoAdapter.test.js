@@ -2,6 +2,18 @@ import { describe, it, expect } from 'vitest';
 import { formatDuration, formatViewCount, formatMetaLine, normalizeParse } from './videoAdapter.js';
 
 describe('videoAdapter', () => {
+  it('来源提供2160p时显示4K，保留真实格式ID与下载参数', () => {
+    const selector = 'bestvideo[height<=2160]+bestaudio/best[height<=2160]';
+    const out = normalizeParse({ formats: [
+      { format_id: selector, label: '2160p 最佳 (视频+音频合并)', height: 2160, direct: false },
+      { format_id: '1080', label: '1080p MP4', height: 1080 },
+    ] });
+    expect(out.formats[0].label).toBe('4K · 2160p 最佳 (视频+音频合并)');
+    expect(out.formats[0].format_id).toBe(selector);
+    expect(out.formats[0].direct).toBe(false);
+    expect(out.formats[1].label).toBe('1080p MP4');
+    expect(normalizeParse({ formats: [{ height: 2160, label: '4K 2160p' }] }).formats[0].label).toBe('4K 2160p');
+  });
   it('formatDuration 秒 → m:ss / h:mm:ss', () => {
     expect(formatDuration(59)).toBe('0:59');
     expect(formatDuration(125)).toBe('2:05');

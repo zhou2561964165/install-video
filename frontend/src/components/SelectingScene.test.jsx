@@ -20,6 +20,19 @@ const parseResult = normalizeParse({
 });
 
 describe('SelectingScene 解析展示对齐参考站', () => {
+  it('免费格式仍可查看，但超出720p禁用并就地提供升级入口', async () => {
+    const onUpgrade = vi.fn();
+    render(<SelectingScene parseResult={normalizeParse({ formats: [{ format_id: 'sd', label: '720p', height: 720 }, { format_id: 'hd', label: '1080p', height: 1080 }] })} selectedFormat={{ height: 1080 }} onSelect={vi.fn()} onDownload={vi.fn()} membership={{ plan: 'free', features: { max_height: 720 } }} onUpgrade={onUpgrade} />);
+    expect(screen.getByRole('button', { name: '720p MP4 · 含音频' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: '1080p MP4 · 含音频 · VIP 专享' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '下载', exact: true })).toBeDisabled();
+    await userEvent.click(screen.getByRole('button', { name: '查看 VIP 方案' })); expect(onUpgrade).toHaveBeenCalledOnce();
+  });
+  it('会员读取失败时不猜测权限，可手动刷新', async () => {
+    const refresh = vi.fn(); render(<SelectingScene parseResult={parseResult} selectedFormat={parseResult.formats[0]} onSelect={vi.fn()} onDownload={vi.fn()} onUpgrade={vi.fn()} onMembershipRefresh={refresh} />);
+    expect(screen.getByRole('button', { name: '下载', exact: true })).toBeDisabled();
+    await userEvent.click(screen.getByRole('button', { name: '刷新会员状态' })); expect(refresh).toHaveBeenCalledOnce();
+  });
   it('标题命名选项说明直链的文件名限制，取消后仍可显式走直链', async () => {
     const onSelect = vi.fn();
     const format = parseResult.formats[0];

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from .models import JobStatus
 
@@ -99,12 +99,33 @@ class SubtitleRequest(BaseModel):
     language: Optional[str] = Field(default=None, max_length=32)
 
 
+class SubtitleSegmentResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    start: float = Field(ge=0, allow_inf_nan=False)
+    end: float = Field(ge=0, allow_inf_nan=False)
+    text: str
+
+
 class SubtitleResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     title: str
     language: str
     is_auto: bool
     available_languages: list[str]
     text: str
+    segments: list[SubtitleSegmentResponse] = Field(default_factory=list)
+
+
+class SubtitleExportRequest(SubtitleRequest):
+    format: Literal["srt", "vtt"]
+
+
+class SubtitleExportResponse(BaseModel):
+    filename: str
+    format: Literal["srt", "vtt"]
+    content: str
 
 
 class SubtitleTranslateRequest(BaseModel):
@@ -133,6 +154,7 @@ class SummaryResponse(BaseModel):
     source_language: str
     summary: str
     key_points: list[str]
+    conclusion: str = ""
     provider: str
     model: str
     format: Literal["structured", "markdown"] = "structured"

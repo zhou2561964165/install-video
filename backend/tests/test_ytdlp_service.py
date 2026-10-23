@@ -137,7 +137,7 @@ def test_ydlp_calls_use_configured_finite_retries_and_exponential_backoff(
 
     options = captured["opts"]
     assert options["retries"] == 4
-    assert options["extractor_retries"] == 4
+    assert options["extractor_retries"] == (settings.parse_extractor_retries if operation == "extract_info" else 4)
     sleep_functions = options["retry_sleep_functions"]
     assert sleep_functions["http"](0) == 0.25
     assert sleep_functions["http"](1) == 0.5
