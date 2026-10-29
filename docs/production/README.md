@@ -5,6 +5,7 @@
 ## 配置与前置条件
 
 - 用 Alembic 升级到源码唯一 head `t1_0015`，为迁移身份和各运行职责分配独立数据库角色；运行身份不使用数据库超级用户或迁移凭据。
+- 计费角色处理通知时需要对 `app.billingevent` 行锁；除SELECT/INSERT外须具备窄范围 `UPDATE(id)`。部署者可为自己的计费角色执行 `GRANT UPDATE (id) ON TABLE app.billingevent TO billing_runtime_role;`（替换角色名），随后用该实际LOGIN在事务内执行零行`SELECT id FROM app.billingevent LIMIT 0 FOR UPDATE`并回滚。无须授表级UPDATE或outcome列UPDATE；id列授权仍允许修改主键，应按真实权限评估。
 - API 仅在 `PG_BUSINESS_ENABLED=true`、迁移版本、媒体目录、持久化计费配置及 `SOURCE_BROKER_SOCKET` 检查通过后启动。`BILLING_INBOX_MODE=durable`；支付环境必须显式区分测试/正式模式，并固定账户命名空间。
 - `MEDIA_ROOT` 使用绝对路径；媒体发布、目录遍历、磁盘空间、清理权限和挂载选项必须由真实运行身份核对。
 - broker 使用本机受限 UNIX socket。Linux 来源子进程须通过独立 UID、网络命名空间、受限出口代理及防火墙预检；不向子进程传入数据库、LLM 或支付凭据。
@@ -26,6 +27,8 @@
 ## 管理端与首个管理员
 
 管理前端使用独立 HttpOnly 会话和内存 CSRF。接口契约见 [admin-api-v1.openapi.yaml](admin-api-v1.openapi.yaml)，构建参数见 [管理端说明](../../admin/README.md)。子路径示例 `/demo/admin/` 使用 `ADMIN_PUBLIC_PATH=/demo/admin/`、`ADMIN_API_BASE=/demo/api/admin/v1`，hash 路由 base 保持 `/`。反向代理需同时配置准确的 Cookie Path 和 Origin，并对管理 HTML 禁用缓存。
+
+支付的 `STRIPE_PUBLIC_ORIGIN` 使用站点origin，不含子路径。子路径部署还须将根路径的三种`membership=success/cancel/return`回跳精确重定向到项目子路径，保留普通根入口。云端Webhook配置独立的端点签名密钥，不能复用本机CLI监听密钥。测试模式的未付款Checkout过期通知可验证真实通知入库/消费；它不等同于付款成功、退款或会员开通验收。
 
 由账号本人先注册，再由运维在服务器查明该账号 ID，使用独立受限的运维环境运行：
 
