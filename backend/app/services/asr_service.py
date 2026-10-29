@@ -9,6 +9,8 @@ from pathlib import Path
 
 from ..config import settings
 from .asr_errors import ASRError
+from .outbound_httpx import ControlledHttpError
+from .outbound_policy import OutboundError
 from . import ytdlp_service
 
 _admission_lock = threading.Lock()
@@ -115,6 +117,8 @@ def transcribe_video(url: str, language: str | None = None) -> Transcription:
                 raise ASRError('transcription_empty', '未识别到可用语音')
             return Transcription(title, info.language, '\n'.join(s['text'] for s in output),
                                  output, 'faster-whisper', settings.asr_model)
+    except (OutboundError, ControlledHttpError):
+        raise
     except ASRError:
         raise
     except Exception:

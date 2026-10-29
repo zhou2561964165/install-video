@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from ..models import User
+from ..config import settings
 from ..schemas import FormatOption, ParseRequest, ParseResponse
 from ..services.auth import get_current_user
+from ..services.outbound_httpx import ControlledHttpError
+from ..services.outbound_policy import OutboundError
 from ..services.ytdlp_service import (
     classify_error, is_valid_url, parse_video, public_error_message,
 )
@@ -15,7 +18,13 @@ def parse(req: ParseRequest, _user: User = Depends(get_current_user)) -> ParseRe
     if not is_valid_url(req.url):
         raise HTTPException(status_code=400, detail={"error_type": "invalid_url", "error": "无效链接"})
     try:
-        meta, options = parse_video(req.url)
+        if settings.pg_business_enabled:
+            from ..services.source_broker import parse_video as isolated_parse
+            meta, options = isolated_parse(settings.source_broker_socket, req.url)
+        else:
+            meta, options = parse_video(req.url)
+    except (OutboundError, ControlledHttpError) as exc:
+        raise HTTPException(exc.status_code, detail=exc.public_detail()) from None
     except Exception as exc:  # noqa: BLE001
         error_type = classify_error(exc)
         message = public_error_message(exc)

@@ -3,32 +3,31 @@ from __future__ import annotations
 
 import json
 import re
+from contextlib import nullcontext
 from urllib.parse import parse_qs, urlparse, urlunparse
 
 import httpx
 
 from ..config import settings
 from . import network_retry
-from .bilibili_session import cookie_jar_for_url, is_bilibili_url
+from .bilibili_session import apply_session_cookies, cookie_jar_for_url, is_bilibili_url
+from .outbound_policy import OutboundPurpose
+from .source_network import current_source_network
 
 
 class InvalidVideoPartError(ValueError):
     """Explicit user part selection must never default to a different video."""
 
 
-def apply_session_cookies(request: httpx.Request, cookies) -> None:
-    """Reapply the original jar policy to one request, after HTTPX builds it."""
-    for name in ("Cookie", "Cookie2", "Authorization", "Proxy-Authorization"):
-        request.headers.pop(name, None)
-    if is_bilibili_url(str(request.url)):
-        # HTTPX build_request copies CookieJar into a default-policy jar. Using
-        # the original jar here preserves its strict host-only/domain rules.
-        httpx.Cookies(cookies).set_cookie_header(request)
-
-
-def _metadata(client: httpx.Client, endpoint: str, params: dict) -> dict:
+def _metadata(client: httpx.Client | None, endpoint: str, params: dict, *, cookies=None, headers=None) -> dict:
+    network = current_source_network()
     def get():
-        with client.stream("GET", endpoint, params=params) as response:
+        context = (network.stream(str(httpx.URL(endpoint, params=params)), purpose=OutboundPurpose.METADATA,
+            headers=headers, cookies=cookies, follow_redirects=False,
+            max_bytes=settings.subtitle_max_bytes, phase_seconds=settings.subtitle_timeout_seconds,
+            io_timeout=settings.subtitle_timeout_seconds) if network is not None
+            else client.stream("GET", endpoint, params=params))
+        with context as response:
             response.raise_for_status()
             body = bytearray()
             for chunk in response.iter_bytes():
@@ -44,7 +43,8 @@ def _metadata(client: httpx.Client, endpoint: str, params: dict) -> dict:
         if not isinstance(data, dict):
             raise ValueError("字幕来源元数据结构无效")
         return data
-    return network_retry.retry_get(get, max_retries=settings.network_retries, backoff_seconds=settings.network_retry_backoff_seconds)
+    return get() if network is not None else network_retry.retry_get(
+        get, max_retries=settings.network_retries, backoff_seconds=settings.network_retry_backoff_seconds)
 
 
 def _caption_url(value: str) -> str:
@@ -82,10 +82,12 @@ def bilibili_tracks(url: str) -> dict:
     # HTTPX applies the jar's domain/path/secure rules; never serialize these
     # credentials into track headers returned to other layers or CDN requests.
     cookies = cookie_jar_for_url(url)
-    with httpx.Client(timeout=settings.subtitle_timeout_seconds, headers=headers,
+    network = current_source_network()
+    context = nullcontext(None) if network is not None else httpx.Client(timeout=settings.subtitle_timeout_seconds, headers=headers,
                       cookies=cookies, follow_redirects=False,
-                      event_hooks={"request": [lambda request: apply_session_cookies(request, cookies)]}) as client:
-        view = _metadata(client, "https://api.bilibili.com/x/web-interface/view", {"bvid": bvid})
+                      event_hooks={"request": [lambda request: apply_session_cookies(request, cookies)]})
+    with context as client:
+        view = _metadata(client, "https://api.bilibili.com/x/web-interface/view", {"bvid": bvid}, cookies=cookies, headers=headers)
         if view.get("bvid") != bvid or type(view.get("aid")) is not int or view["aid"] <= 0 or not isinstance(view.get("title"), str):
             raise ValueError("视频元数据关联无效")
         pages = view.get("pages")
@@ -99,7 +101,7 @@ def bilibili_tracks(url: str) -> dict:
             raise InvalidVideoPartError("视频分P不存在")
         if len(selected) != 1:
             raise ValueError("视频分P关联无效")
-        player = _metadata(client, "https://api.bilibili.com/x/v2/dm/view", {"aid": view["aid"], "oid": selected[0]["cid"], "type": 1})
+        player = _metadata(client, "https://api.bilibili.com/x/v2/dm/view", {"aid": view["aid"], "oid": selected[0]["cid"], "type": 1}, cookies=cookies, headers=headers)
     if player.get("need_login_subtitle"):
         return {"tracks": []}
     subtitles = player.get("subtitle", {})

@@ -14,6 +14,7 @@ import { DEFAULT_MODEL_ID } from './pixi/mascotConfig.js';
 import EntryScene from './components/EntryScene.jsx';
 import AuthScene from './components/AuthScene.jsx';
 import MembershipScene from './components/MembershipScene.jsx';
+import SupportScene from './components/SupportScene.jsx';
 import AuthBar from './components/ui/AuthBar.jsx';
 import ParsingScene from './components/ParsingScene.jsx';
 import SelectingScene from './components/SelectingScene.jsx';
@@ -90,6 +91,7 @@ export default function App() {
   const [paymentReturn] = useState(readPaymentReturn);
   const [membershipOpen, setMembershipOpen] = useState(() => Boolean(readPaymentReturn()));
   const [membershipIntent, setMembershipIntent] = useState(false);
+  const [supportOpen, setSupportOpen] = useState(false);
 
   // 首页向访客开放；只有显式点击顶部登录才显示账号页，业务请求仍需认证。
   // 较重的 PIXI / Live2D 视觉层继续仅在登录后启动。
@@ -99,8 +101,8 @@ export default function App() {
     : '';
   const sessionKey = status === 'authed' ? user?.id : null;
   const membership = useMembership(sessionKey, membershipOpen && !authOpen);
-  const openMembership = useCallback(() => { setMembershipOpen(true); setAuthOpen(false); setFocusInput(false); window.scrollTo?.(0, 0); }, []);
-  const closeMembership = useCallback(() => { setMembershipOpen(false); setMembershipIntent(false); setFocusInput(true); }, []);
+  const openMembership = useCallback(() => { setMembershipOpen(true); setSupportOpen(false); setAuthOpen(false); setFocusInput(false); window.scrollTo?.(0, 0); }, []);
+  const closeMembership = useCallback(() => { setMembershipOpen(false); setSupportOpen(false); setMembershipIntent(false); setFocusInput(true); }, []);
   const parseRequest = useRef(null);
   const cancelParse = useCallback(() => {
     parseRequest.current?.abort();
@@ -315,7 +317,7 @@ export default function App() {
       forceServer={state.forceServer} onSelect={(format, forceServer) => dispatch({ type: 'SELECT_FORMAT', format, forceServer })}
       onDownload={handleDownload} insights={insights} downloadContent={downloadContent} sourceUrl={state.url}
       membership={membership.account} membershipLoading={membership.loading} onMembershipRefresh={membership.refresh} onUpgrade={openMembership}
-      locked={state.scene !== SCENE.SELECTING} />;
+      onReparse={() => handleSubmit(state.url)} locked={state.scene !== SCENE.SELECTING} />;
   }
 
   return (
@@ -355,9 +357,14 @@ export default function App() {
         )}
         {showAuth ? (
           <AuthScene loading={status === 'loading'} onLogin={login} onRegister={register} onBack={handleAuthBack} />
+        ) : membershipOpen && supportOpen ? (
+          // Keyed by account: switching users never shows the previous user's tickets.
+          <SupportScene key={sessionKey ?? 'guest'} authed={status === 'authed'} onLogin={() => setAuthOpen(true)}
+            onBack={() => { setSupportOpen(false); window.scrollTo?.(0, 0); }} />
         ) : membershipOpen ? (
           <MembershipScene membership={membership} authed={status === 'authed'} authLoading={status === 'loading'} paymentReturn={paymentReturn} loginIntent={membershipIntent}
-            onLogin={() => { setMembershipIntent(true); setAuthOpen(true); }} onBack={closeMembership} />
+            onLogin={() => { setMembershipIntent(true); setAuthOpen(true); }} onBack={closeMembership}
+            onSupport={() => { setSupportOpen(true); window.scrollTo?.(0, 0); }} />
         ) : (
           <>
             {state.scene === SCENE.ENTRY ? scene : <main className="video-workflow">

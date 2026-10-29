@@ -96,6 +96,19 @@ export function getMembership(signal) {
   return request('/membership', { signal });
 }
 
+// Customer support: the server derives the user and priority; only these three fields are sent.
+export function getSupportMeta(signal) {
+  return request('/support/meta', { signal });
+}
+
+export function listSupportTickets(signal) {
+  return request('/support/tickets', { signal });
+}
+
+export function submitSupportTicket({ category, note = null, checkout_id = null }, signal) {
+  return request('/support/tickets', { signal, method: 'POST', body: JSON.stringify({ category, note, checkout_id }) });
+}
+
 export function createCheckout(signal) {
   return request('/billing/checkout', { method: 'POST', signal });
 }

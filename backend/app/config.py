@@ -14,11 +14,42 @@ class Settings:
     ffmpeg_path: str = "ffmpeg"
     max_concurrent_downloads: int = 3
     temp_dir: Path = field(default_factory=lambda: _BACKEND_DIR / "tmp")
+    # C4: controlled media root for durable (PostgreSQL) downloads; same root as the worker's
+    # --media-root. No guessed default: unset means PG file reads answer 503.
+    media_root: Path | None = None
+    # F gate: explicit operator opt-in; API metadata lives in the isolated source broker.
+    pg_business_enabled: bool = False
+    pg_cutover_read_only: bool = False
+    source_broker_socket: str = ''
+    # C5a cleaner: how long a claimed deletion is owned before another cleaner may take it over,
+    # and the pause between rounds when the last round did not fill its batch.
+    cleanup_claim_seconds: int = 300
+    cleaner_round_pause_seconds: int = 30
+    # C5b: durable Job metadata is deleted this many days after creation (A contract §7: 30 days).
+    job_metadata_retention_days: int = 30
+    # C5b-2: pause between full orphan scans of the media root (heavier than a cleaner round).
+    orphan_scan_interval_seconds: int = 3600
+    orphan_scan_limit: int = 10000  # entries per scan round; the scan resumes from a cursor
     max_file_size: int = 2 * 1024 * 1024 * 1024  # 2 GB
+    # External gate G3/G4: the download worker starts its children as this firewalled user and
+    # hands them this controlled proxy (http://127.0.0.1:<port>). Both or neither; unset keeps
+    # the 'ytdlp' executor unavailable.
+    download_child_user: str = ""
+    # Customer support tickets: open tickets per user, submissions per user per hour.
+    support_max_open_tickets: int = 5
+    support_submit_per_hour: int = 10
+    source_egress_proxy: str = ""
     # Opt-in free-space reserve; a filesystem quota remains the hard disk boundary.
     download_min_free_bytes: int = 0
     ttl_seconds: int = 3600
     db_url: str = field(default_factory=lambda: f"sqlite:///{(_BACKEND_DIR / 'jobs.db').as_posix()}")
+    db_pool_size: int = 5
+    db_pool_max_overflow: int = 0
+    db_pool_timeout_seconds: int = 5
+    db_connect_timeout_seconds: int = 5
+    db_lock_timeout_ms: int = 2000
+    db_statement_timeout_ms: int = 10000
+    db_idle_transaction_timeout_ms: int = 15000
     rate_limit_requests: int = 30
     rate_limit_window_seconds: int = 60
     network_retries: int = 2
@@ -44,6 +75,11 @@ class Settings:
     stripe_public_origin: str = ""
     stripe_vip_duration_days: int = 30
     stripe_timeout_seconds: int = 15
+    # Explicit operator references; never infer account or live/test from a secret.
+    stripe_provider_account_scope: str = ""
+    stripe_livemode: bool | None = None
+    billing_inbox_mode: str = "legacy_sync"
+    billing_inbox_lease_seconds: int = 60
     membership_free_max_height: int = 720
     membership_unlimited_downloads: bool = True
     # v3 字幕 + LLM（OpenAI-compatible；留空表示未配置，仅字幕读取可用）
@@ -75,6 +111,8 @@ class Settings:
     download_idempotency_ttl_seconds: int = 86400
     download_idempotency_direct_ttl_seconds: int = 300
     download_idempotency_max_entries: int = 10000
+    download_admission_global_limit: int = 32
+    download_admission_user_limit: int = 2
     # Public summary availability; independent of experimental pipeline capacity.
     summary_max_source_chars: int = 60_000
     summary_long_threshold_chars: int = 20_000
@@ -119,6 +157,37 @@ class Settings:
     llm_summary_quality_contract: str = "compat"
 
     def __post_init__(self) -> None:
+        if type(self.pg_business_enabled) is not bool or type(self.pg_cutover_read_only) is not bool:
+            raise ValueError('PostgreSQL cutover flags must be boolean')
+        if (type(self.source_broker_socket) is not str or len(self.source_broker_socket) > 255
+                or any(ord(c) < 32 for c in self.source_broker_socket)
+                or (self.source_broker_socket and not Path(self.source_broker_socket).is_absolute())):
+            raise ValueError('source_broker_socket must be an absolute local path')
+        if self.media_root is not None and (not isinstance(self.media_root, Path) or not self.media_root.is_absolute()):
+            raise ValueError('media_root must be an absolute path or unset')
+        if (type(self.stripe_provider_account_scope) is not str
+                or (self.stripe_provider_account_scope and
+                    (re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}', self.stripe_provider_account_scope) is None
+                     or self.stripe_provider_account_scope == 'legacy_unknown'))):
+            raise ValueError('stripe_provider_account_scope must be an operator identifier')
+        if self.stripe_livemode is not None and type(self.stripe_livemode) is not bool:
+            raise ValueError('stripe_livemode must be explicitly boolean or absent')
+        if self.billing_inbox_mode not in {'legacy_sync', 'durable'}:
+            raise ValueError('billing_inbox_mode must be legacy_sync or durable')
+        if type(self.billing_inbox_lease_seconds) is not int or not 10 <= self.billing_inbox_lease_seconds <= 300:
+            raise ValueError('billing_inbox_lease_seconds must be between 10 and 300')
+        for name, minimum, maximum in (
+            ('db_pool_size', 1, 100), ('db_pool_max_overflow', 0, 100),
+            ('db_pool_timeout_seconds', 1, 300), ('db_connect_timeout_seconds', 1, 60),
+            ('db_lock_timeout_ms', 1, 300000), ('db_statement_timeout_ms', 1, 3600000),
+            ('db_idle_transaction_timeout_ms', 1, 3600000),
+            ('cleanup_claim_seconds', 60, 3600), ('cleaner_round_pause_seconds', 1, 3600),
+            ('job_metadata_retention_days', 30, 3650), ('orphan_scan_interval_seconds', 60, 86400),
+            ('orphan_scan_limit', 100, 10000),
+        ):
+            value = getattr(self, name)
+            if type(value) is not int or not minimum <= value <= maximum:
+                raise ValueError(f'{name} must be an integer between {minimum} and {maximum}')
         if type(self.bilibili_api_enabled) is not bool:
             raise ValueError('bilibili_api_enabled must be boolean')
         if (type(self.bilibili_api_download_timeout_seconds) is not int
@@ -164,6 +233,8 @@ class Settings:
             ('download_idempotency_ttl_seconds', 604800, 1),
             ('download_idempotency_direct_ttl_seconds', 3600, 1),
             ('download_idempotency_max_entries', 100000, 1),
+            ('download_admission_global_limit', 100000, 1),
+            ('download_admission_user_limit', 10000, 1),
         ):
             value = getattr(self, name)
             if type(value) is not int or not minimum <= value <= maximum:
@@ -262,14 +333,48 @@ class Settings:
         def _str(name: str, default: str) -> str:
             return os.environ.get(name) or default
 
+        def _explicit_stripe_mode() -> bool | None:
+            value = os.environ.get('STRIPE_LIVEMODE')
+            if value is None:
+                return None
+            if value not in {'true', 'false'}:
+                raise ValueError('STRIPE_LIVEMODE must be true or false')
+            return value == 'true'
+
+        def _cutover_bool(name: str) -> bool:
+            value = os.environ.get(name, 'false')
+            if value not in {'true', 'false'}:
+                raise ValueError(f'{name} must be true or false')
+            return value == 'true'
+
         return cls(
             ffmpeg_path=_str("FFMPEG_PATH", "ffmpeg"),
             max_concurrent_downloads=_int("MAX_CONCURRENT", 3),
             temp_dir=Path(_str("TEMP_DIR", str(_BACKEND_DIR / "tmp"))),
+            media_root=Path(os.environ['MEDIA_ROOT']) if os.environ.get('MEDIA_ROOT') else None,
+            pg_business_enabled=_cutover_bool('PG_BUSINESS_ENABLED'),
+            pg_cutover_read_only=_cutover_bool('PG_CUTOVER_READ_ONLY'),
+            source_broker_socket=_str('SOURCE_BROKER_SOCKET', ''),
             max_file_size=_int("MAX_FILE_SIZE", 2 * 1024**3),
+            download_child_user=_str("DOWNLOAD_CHILD_USER", ""),
+            support_max_open_tickets=_int("SUPPORT_MAX_OPEN_TICKETS", 5),
+            support_submit_per_hour=_int("SUPPORT_SUBMIT_PER_HOUR", 10),
+            source_egress_proxy=_str("SOURCE_EGRESS_PROXY", ""),
             download_min_free_bytes=_int("DOWNLOAD_MIN_FREE_BYTES", 0),
             ttl_seconds=_int("TTL_SECONDS", 3600),
             db_url=_str("DB_URL", f"sqlite:///{(_BACKEND_DIR / 'jobs.db').as_posix()}"),
+            db_pool_size=_int('DB_POOL_SIZE', 5),
+            db_pool_max_overflow=_int('DB_POOL_MAX_OVERFLOW', 0),
+            db_pool_timeout_seconds=_int('DB_POOL_TIMEOUT_SECONDS', 5),
+            db_connect_timeout_seconds=_int('DB_CONNECT_TIMEOUT_SECONDS', 5),
+            db_lock_timeout_ms=_int('DB_LOCK_TIMEOUT_MS', 2000),
+            cleanup_claim_seconds=_int('CLEANUP_CLAIM_SECONDS', 300),
+            cleaner_round_pause_seconds=_int('CLEANER_ROUND_PAUSE_SECONDS', 30),
+            job_metadata_retention_days=_int('JOB_METADATA_RETENTION_DAYS', 30),
+            orphan_scan_interval_seconds=_int('ORPHAN_SCAN_INTERVAL_SECONDS', 3600),
+            orphan_scan_limit=_int('ORPHAN_SCAN_LIMIT', 10000),
+            db_statement_timeout_ms=_int('DB_STATEMENT_TIMEOUT_MS', 10000),
+            db_idle_transaction_timeout_ms=_int('DB_IDLE_TRANSACTION_TIMEOUT_MS', 15000),
             rate_limit_requests=_int("RATE_LIMIT", 30),
             rate_limit_window_seconds=_int("RATE_LIMIT_WINDOW", 60),
             network_retries=_int("NETWORK_RETRIES", 2),
@@ -291,6 +396,10 @@ class Settings:
             stripe_public_origin=_str("STRIPE_PUBLIC_ORIGIN", "").strip() or _str("FRONTEND_URL", "").strip(),
             stripe_vip_duration_days=_int("STRIPE_VIP_DURATION_DAYS", 30),
             stripe_timeout_seconds=_int("STRIPE_TIMEOUT_SECONDS", 15),
+            stripe_provider_account_scope=_str("STRIPE_PROVIDER_ACCOUNT_SCOPE", ""),
+            stripe_livemode=_explicit_stripe_mode(),
+            billing_inbox_mode=_str("BILLING_INBOX_MODE", "legacy_sync"),
+            billing_inbox_lease_seconds=_int("BILLING_INBOX_LEASE_SECONDS", 60),
             membership_free_max_height=_int("MEMBERSHIP_FREE_MAX_HEIGHT", 720),
             membership_unlimited_downloads=_str("MEMBERSHIP_UNLIMITED_DOWNLOADS", "true").lower() in {"1", "true", "yes"},
             subtitle_max_bytes=_int("SUBTITLE_MAX_BYTES", 5 * 1024 * 1024),
@@ -320,6 +429,8 @@ class Settings:
             download_idempotency_ttl_seconds=_int('DOWNLOAD_IDEMPOTENCY_TTL_SECONDS', 86400),
             download_idempotency_direct_ttl_seconds=_int('DOWNLOAD_IDEMPOTENCY_DIRECT_TTL_SECONDS', 300),
             download_idempotency_max_entries=_int('DOWNLOAD_IDEMPOTENCY_MAX_ENTRIES', 10000),
+            download_admission_global_limit=_int('DOWNLOAD_ADMISSION_GLOBAL_LIMIT', 32),
+            download_admission_user_limit=_int('DOWNLOAD_ADMISSION_USER_LIMIT', 2),
             summary_max_source_chars=_int("SUMMARY_MAX_SOURCE_CHARS", 60_000),
             summary_long_threshold_chars=_int("SUMMARY_LONG_THRESHOLD_CHARS", 20_000),
             llm_long_summary_model=_str("LLM_LONG_SUMMARY_MODEL", "deepseek-v4-pro"),

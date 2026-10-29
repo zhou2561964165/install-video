@@ -15,8 +15,13 @@ describe('MembershipScene', () => {
     render(<MembershipScene membership={fixture()} authed onBack={() => {}} />);
     expect(screen.getAllByText('不限下载次数')).toHaveLength(2);
     expect(screen.getByText('价格待定')).toBeInTheDocument(); expect(screen.queryByText(/9\.9/)).toBeNull();
-    expect(screen.getByText('即将支持')).toBeInTheDocument(); expect(screen.getByText('筹备中')).toBeInTheDocument();
+    expect(screen.getByText('即将支持')).toBeInTheDocument(); expect(screen.queryByText('筹备中')).toBeNull();
     expect(screen.getByRole('button', { name: '暂未开放支付' })).toBeDisabled();
+  });
+  it('opens customer support from the membership page', async () => {
+    const support = vi.fn(); render(<MembershipScene membership={fixture()} authed onSupport={support} onBack={() => {}} />);
+    expect(screen.getByText('优先客服支持')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '联系客服' })); expect(support).toHaveBeenCalledOnce();
   });
   it('preserves explicit login intent for a guest', async () => {
     const login = vi.fn(); render(<MembershipScene membership={fixture({ plans: { checkout_available: true, price_label: '$5 / 月', billing_mode: 'subscription' } })} onLogin={login} onBack={() => {}} />);

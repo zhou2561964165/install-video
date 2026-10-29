@@ -1,4 +1,6 @@
 # Keep frozen acceptance bytes and their recorded SHA-256 stable across checkouts.
+# Admin code generation pins the exact OpenAPI bytes, including CRLF.
+docs/production/admin-api-v1.openapi.yaml -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/acceptance-reports/2026-10-04-natural-subtitle-quality/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/acceptance-reports/2026-10-04-public-mobile-gpu/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 

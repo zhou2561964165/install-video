@@ -4,6 +4,7 @@ import App from './App.jsx';
 import './styles/global.css';
 import './styles/reference.css';
 import './styles/membership.css';
+import './styles/support.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

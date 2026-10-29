@@ -20,6 +20,15 @@ const parseResult = normalizeParse({
 });
 
 describe('SelectingScene 解析展示对齐参考站', () => {
+  it('没有可下载格式时说明原因并提供重新解析', async () => {
+    const onReparse = vi.fn();
+    render(<SelectingScene parseResult={normalizeParse({ title: '直播回放', formats: [] })} selectedFormat={null} onSelect={vi.fn()} onDownload={vi.fn()} onReparse={onReparse} />);
+    expect(screen.getByRole('status')).toHaveTextContent('没有找到可下载的格式');
+    expect(screen.getByRole('button', { name: '下载', exact: true })).toBeDisabled();
+    expect(screen.queryByRole('checkbox', { name: '按视频标题命名' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: '重新解析' }));
+    expect(onReparse).toHaveBeenCalledOnce();
+  });
   it('免费格式仍可查看，但超出720p禁用并就地提供升级入口', async () => {
     const onUpgrade = vi.fn();
     render(<SelectingScene parseResult={normalizeParse({ formats: [{ format_id: 'sd', label: '720p', height: 720 }, { format_id: 'hd', label: '1080p', height: 1080 }] })} selectedFormat={{ height: 1080 }} onSelect={vi.fn()} onDownload={vi.fn()} membership={{ plan: 'free', features: { max_height: 720 } }} onUpgrade={onUpgrade} />);

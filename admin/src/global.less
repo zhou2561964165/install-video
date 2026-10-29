@@ -1,0 +1,64 @@
+:root {
+  --space-0: 0;
+  --space-6: 1.5rem;
+  --space-10: 2.5rem;
+  --spacing-content: var(--space-6);
+  --spacing-wide: var(--space-10);
+  --login-padding: var(--spacing-wide) var(--spacing-content);
+  --loading-padding: var(--spacing-content) var(--spacing-wide);
+  --space-2: .5rem;
+  --size-login: 28rem;
+  --layer-status: 900;
+  --login-width: var(--size-login);
+  --size-full: 100%;
+  --width-fluid: var(--size-full);
+  --width-minimum: var(--space-0);
+  --login-form-width: var(--width-fluid);
+  --login-form-min-width: var(--width-minimum);
+  --header-gap: var(--space-2);
+  --status-layer: var(--layer-status);
+  --spacing-page-edge: var(--space-0);
+  --page-margin: var(--spacing-page-edge);
+  --header-menu-width: calc(100vw - var(--spacing-content));
+  --duration-minimal: 0.01ms;
+  --duration-zero: 0ms;
+  --motion-reduced-duration: var(--duration-minimal);
+  --motion-reduced-delay: var(--duration-zero);
+  --admin-motion-duration: var(--motion-reduced-duration);
+  --admin-motion-delay: var(--motion-reduced-delay);
+}
+body { margin:var(--page-margin); }
+.admin-login { padding: var(--login-padding); }
+.admin-login .ant-pro-form-login-container { max-width: var(--login-width); margin-inline:auto; }
+.admin-login .ant-pro-form-login-main {
+  width: var(--login-form-width);
+  max-width: var(--login-form-width);
+  min-width: var(--login-form-min-width);
+}
+.admin-header { gap:var(--header-gap); }
+.admin-header-session-detail { white-space:normal; overflow-wrap:anywhere; }
+.admin-mock-banner { position:sticky; top:0; z-index:var(--status-layer); }
+body:has(.admin-mock-banner) .ant-drawer { top:var(--admin-mock-banner-height,0px); }
+body:has(.admin-mock-banner) .ant-pro-sider-fixed {
+  inset-block-start:var(--admin-mock-banner-height,0px);
+  height:calc(100% - var(--admin-mock-banner-height,0px));
+}
+.admin-numeric { font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+.admin-loading { padding: var(--loading-padding); }
+/* ADMIN-UI-01: on phones the page title keeps its full text and the subtitle wraps onto its own line
+   (PageHeader truncates both on one row by default). 576px = antd sm breakpoint. */
+@media (max-width: 576px) {
+  .ant-page-header .ant-page-header-heading-left { flex-wrap: wrap; }
+  .ant-page-header .ant-page-header-heading-title { flex-shrink: 0; overflow: visible; white-space: normal; }
+  .ant-page-header .ant-page-header-heading-sub-title { flex-basis: 100%; overflow: visible; white-space: normal; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* rc-motion closes dialogs on end events; keep names while reducing motion. */
+  *, *::before, *::after {
+    animation-duration: var(--admin-motion-duration) !important;
+    animation-delay: var(--admin-motion-delay) !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: var(--admin-motion-duration) !important;
+    transition-delay: var(--admin-motion-delay) !important;
+  }
+}

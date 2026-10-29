@@ -14,6 +14,7 @@ from .routes.summary import router as summary_router
 from .routes.transcribe import router as transcribe_router
 from .routes.mindmap import router as mindmap_router
 from .routes.billing import router as billing_router
+from .routes.support import router as support_router
 
 app = FastAPI(title="万能视频下载")
 
@@ -31,6 +32,10 @@ async def rate_limit_middleware(request: Request, call_next):
     # ASGI servers may include the mount prefix in path. Strip complete segments only.
     if root_path and (path == root_path or path.startswith(root_path + "/")):
         path = path[len(root_path):] or "/"
+    if (settings.pg_cutover_read_only and path.startswith('/api/')
+            and path not in {'/api/health', '/api/membership/plans'}):
+        return JSONResponse(status_code=503, headers={'Retry-After': '60'},
+            content={'detail': {'error_type': 'maintenance', 'error': '系统维护中，请稍后重试'}})
     if path.startswith("/api/") and path != "/api/billing/webhook":
         now = time.monotonic()
         key = request.client.host if request.client else "unknown"
@@ -50,3 +55,9 @@ app.include_router(summary_router)
 app.include_router(transcribe_router)
 app.include_router(mindmap_router)
 app.include_router(billing_router)
+app.include_router(support_router)
+
+
+@app.get('/api/health')
+def health():
+    return {'status': 'ready', 'read_only': settings.pg_cutover_read_only}

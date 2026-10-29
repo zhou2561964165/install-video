@@ -154,6 +154,9 @@ a { color: inherit; }
 .auth-password__toggle { font-size: var(--font-xs); }
 .auth-form button[type='submit'] { min-height: 52px; margin-top: var(--space-1); }
 .auth-error { color: var(--danger); font-size: var(--font-sm); }
+.auth-field-error { margin-top: var(--space-1); color: var(--danger); font-size: var(--font-sm); }
+.format-empty { display: grid; gap: var(--space-3); padding: var(--space-4); border: 1px dashed var(--border-strong); border-radius: var(--radius-md); color: var(--text-secondary); pointer-events: auto; }
+.format-empty button { justify-self: start; min-height: var(--control-touch-size); }
 
 /* 首屏：大留白、圆润展示字和宽输入胶囊。 */
 .landing { width: min(calc(100% - var(--page-gutter) * 2), var(--page-width)); margin: 0 auto; padding: 0; }

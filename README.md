@@ -14,13 +14,16 @@
 | 文本整理 | 根据平台字幕生成翻译、分层总结和导图，支持复制与导出 |
 | 账号与会员 | JWT 登录、任务与文件归属校验、会员权限及可选 Stripe 支付 |
 | 请求复用 | 下载幂等回执、进行中去重和按账号隔离的有界结果缓存 |
+| 客服工单 | 登录用户提交与查看工单，独立管理后台查看和回复 |
+| 生产任务执行 | PostgreSQL 持久化协调、独立下载/计费/清理进程、受控来源解析 |
 
 平台字幕与本地转写是独立来源。当前翻译、总结和导图读取平台字幕，本地转写结果尚未接入这三项功能。系统以单链接操作为主，暂未提供批量下载、下载历史页面或 WebSocket 推送。
 
 ## 技术栈
 
 - 前端：React 18、JavaScript / JSX、Vite、CSS；可选 PIXI / Live2D 装饰层。
-- 后端：Python、FastAPI、Pydantic、SQLModel / SQLAlchemy、SQLite。
+- 后端：Python、FastAPI、Pydantic、SQLModel / SQLAlchemy；本地 SQLite，生产 PostgreSQL 18。
+- 独立管理端：TypeScript、Ant Design Pro、Umi Max，使用独立会话与权限接口。
 - 媒体：yt-dlp、FFmpeg / ffprobe。
 - 本地语音识别：faster-whisper、CTranslate2，可选安装。
 - 内容生成：服务端配置的兼容模型接口。
@@ -133,12 +136,14 @@ npm run build
 
 产物位于 `frontend/dist/`。生产服务器提供静态文件，并将同源 `/api` 转发到后端。`npm run preview` 只预览静态产物，不能代替完整后端部署。子路径构建可使用 `npm run build -- --base=/demo/`，服务器需配置匹配的静态路径和 API 转发。
 
-- 后台执行池、缓存和并发槽属于进程内资源，当前按单实例运行方式部署；任务记录持久化不表示重启后自动恢复下载队列。
+- 默认本地 SQLite 模式仍使用进程内下载。PostgreSQL 生产模式使用持久化协调器、租约和独立 worker；需要先完成迁移、运行角色授权、来源隔离与存储检查，不能只替换数据库地址。
 - 为媒体目录设置空间与清理策略，限制资源使用，并通过 HTTPS 提供公开访问。
-- 通用 URL 校验主要检查协议和地址格式。公网部署还需限制私网及云元数据访问，并检查 DNS 和重定向目标，现有校验不构成完整 SSRF 防护。
+- PostgreSQL 生产模式的来源请求经独立 broker 和隔离下载身份；部署必须提供对应网络命名空间、防火墙与代理约束。默认本地模式不构成完整的公网 SSRF 防护边界。
 - B 站等来源可能要求有效会话或触发平台校验；格式和可用性取决于来源及网络条件。
 - `tools/`、`deployment/` 含可选 Linux 会话维护脚本和模板，需按自己的目录、服务名及浏览器环境配置，不随本地启动自动运行。
 - 仓库保留装饰层源码和 Cubism Core 运行库，Live2D 模型包与语音模型权重不随仓库发布；缺少装饰模型不影响核心功能。
+
+管理端独立构建和接口契约见 [admin/README.md](admin/README.md)。生产配置、切换边界与首个管理员操作见 [生产说明](docs/production/README.md)。
 
 ## 目录结构
 
@@ -150,6 +155,8 @@ backend/
 frontend/
   src/          页面、组件、业务 Hook、状态与样式
   public/       公共静态资源
+admin/          独立管理端、开发 mock 与生产构建检查
+docs/production/ 管理 API 契约与生产配置说明
 tools/          可选维护脚本及独立工具
 deployment/     可选部署与会话维护模板
 pyproject.toml  Python 依赖与可选组件

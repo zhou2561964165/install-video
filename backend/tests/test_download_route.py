@@ -131,3 +131,25 @@ def test_get_file_streams_content(monkeypatch, tmp_path):
     assert r.content == b"VIDEO_BYTES"
     assert r.headers["content-type"] == "application/octet-stream"
     assert r.headers["content-disposition"] == 'attachment; filename="v.mp4"'
+
+
+# C6b: an imported legacy Job that was mid-download is presented as needing a new request.
+@pytest.mark.parametrize('stored, shown, error_type', [
+    (JobStatus.downloading, 'error', 'legacy_recovery_required'),
+    (JobStatus.merging, 'error', 'legacy_recovery_required'),
+    (JobStatus.queued, 'queued', None),
+])
+def test_legacy_hold_job_public_status(stored, shown, error_type):
+    init_db()
+    headers = _auth_headers()
+    with Session(engine) as s:
+        job = Job(url="https://example.com/v", status=stored, progress=40.0, internal_state='legacy_hold',
+                  user_id=decode_token(headers["Authorization"].split()[1]))
+        s.add(job)
+        s.commit()
+        job_id = job.id
+    body = client.get(f"/api/job/{job_id}", headers=headers).json()
+    assert (body["status"], body["error_type"]) == (shown, error_type)
+    assert body["progress"] == (0.0 if error_type else 40.0)
+    if error_type:
+        assert body["error"] and 'legacy_hold' not in body["error"]

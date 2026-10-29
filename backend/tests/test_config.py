@@ -212,3 +212,38 @@ def test_grounded_organization_limits_load_from_environment(monkeypatch):
 def test_grounded_organization_rejects_invalid_configuration(changes):
     with pytest.raises(ValueError, match="llm_summary_facts"):
         Settings(**changes)
+
+
+def test_media_root_is_explicit_and_absolute(monkeypatch, tmp_path):
+    # C4: durable downloads read only from an explicitly configured, absolute media root.
+    from app.config import Settings
+    monkeypatch.delenv('MEDIA_ROOT', raising=False)
+    assert Settings.from_env().media_root is None
+    monkeypatch.setenv('MEDIA_ROOT', str(tmp_path))
+    assert Settings.from_env().media_root == tmp_path
+    monkeypatch.setenv('MEDIA_ROOT', 'relative/media')
+    with pytest.raises(ValueError):
+        Settings.from_env()
+
+
+def test_cleaner_timings_are_configurable_and_bounded(monkeypatch):
+    from app.config import Settings
+    monkeypatch.setenv('CLEANUP_CLAIM_SECONDS', '120')
+    monkeypatch.setenv('CLEANER_ROUND_PAUSE_SECONDS', '5')
+    settings = Settings.from_env()
+    assert (settings.cleanup_claim_seconds, settings.cleaner_round_pause_seconds) == (120, 5)
+    monkeypatch.setenv('CLEANUP_CLAIM_SECONDS', '10')  # shorter than any sane deletion
+    with pytest.raises(ValueError):
+        Settings.from_env()
+
+
+def test_orphan_scan_settings_are_configurable_and_bounded(monkeypatch):
+    from app.config import Settings
+    assert (Settings().orphan_scan_interval_seconds, Settings().orphan_scan_limit) == (3600, 10000)
+    monkeypatch.setenv('ORPHAN_SCAN_INTERVAL_SECONDS', '600')
+    monkeypatch.setenv('ORPHAN_SCAN_LIMIT', '500')
+    settings = Settings.from_env()
+    assert (settings.orphan_scan_interval_seconds, settings.orphan_scan_limit) == (600, 500)
+    monkeypatch.setenv('ORPHAN_SCAN_LIMIT', '20000')  # above the scan bound of artifact_store
+    with pytest.raises(ValueError, match='orphan_scan_limit'):
+        Settings.from_env()

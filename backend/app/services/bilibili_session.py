@@ -1,4 +1,4 @@
-"""Read an operator-provided Netscape jar into memory, without credential copies.
+"""Read an operator Netscape jar into memory; child snapshots use only private stdin.
 
 This module deliberately has no yt-dlp dependency. Callers retain cookie domain,
 path and secure policy; no caller should construct a global Cookie header.
@@ -8,12 +8,19 @@ import os
 import re
 import stat
 import time
+from contextlib import contextmanager
+from contextvars import ContextVar
 from http.cookiejar import CookieJar, DefaultCookiePolicy, MozillaCookieJar
 from urllib.parse import urlsplit
+
+import httpx
 
 from ..config import settings
 
 _MAX_BYTES = 1024 * 1024
+MAX_SNAPSHOT_BYTES = 16 * 1024
+_NO_SNAPSHOT = object()
+_snapshot = ContextVar('bilibili_cookie_snapshot', default=_NO_SNAPSHOT)
 _FILE_ERROR = 'B站访问凭据不可用，请管理员更新安全的Cookie文件后重试。'
 _EXPIRED_ERROR = 'B站访问凭据已过期，请管理员更新Cookie文件后重试。'
 
@@ -38,7 +45,20 @@ def is_bilibili_url(url: str) -> bool:
         return False
 
 
+def apply_session_cookies(request: httpx.Request, cookies) -> None:
+    """Reapply the original jar policy to one request, after HTTPX builds it."""
+    for name in ("Cookie", "Cookie2", "Authorization", "Proxy-Authorization"):
+        request.headers.pop(name, None)
+    if is_bilibili_url(str(request.url)):
+        # HTTPX build_request copies CookieJar into a default-policy jar. Using
+        # the original jar here preserves its strict host-only/domain rules.
+        httpx.Cookies(cookies).set_cookie_header(request)
+
+
 def session_enabled(url: str) -> bool:
+    snapshot = _snapshot.get()
+    if snapshot is not _NO_SNAPSHOT:
+        return is_bilibili_url(url) and snapshot is not None
     return is_bilibili_url(url) and bool(settings.bilibili_cookie_file)
 
 
@@ -72,11 +92,17 @@ def _read_file(path: str) -> str:
 
 
 def cookie_jar_for_url(url: str) -> CookieJar:
+    snapshot = _snapshot.get()
+    if snapshot is not _NO_SNAPSHOT:
+        return _jar_from_text(snapshot) if snapshot is not None and is_bilibili_url(url) else CookieJar()
+    if not session_enabled(url):
+        return CookieJar()
+    return _jar_from_text(_read_file(settings.bilibili_cookie_file))
+
+
+def _jar_from_text(text: str) -> CookieJar:
     policy = DefaultCookiePolicy(strict_ns_domain=DefaultCookiePolicy.DomainStrictNonDomain)
     result = CookieJar(policy=policy)
-    if not session_enabled(url):
-        return result
-    text = _read_file(settings.bilibili_cookie_file)
     # MozillaCookieJar prints malformed original rows on some parser failures.
     # Validate before using its mature parser, supplying only canonical rows.
     lines = text.splitlines()
@@ -116,3 +142,38 @@ def cookie_jar_for_url(url: str) -> CookieJar:
     if not list(result):
         raise SessionError(_FILE_ERROR)
     return result
+
+
+def cookie_snapshot_for_url(url: str) -> str | None:
+    """Parent-only safe file reader; a bounded private stdin snapshot, never a filename."""
+    if not session_enabled(url):
+        return None
+    jar = cookie_jar_for_url(url)
+    lines = ['# Netscape HTTP Cookie File']
+    for cookie in jar:
+        lines.append('\t'.join((cookie.domain, 'TRUE' if cookie.domain_initial_dot else 'FALSE',
+            cookie.path, 'TRUE' if cookie.secure else 'FALSE', str(cookie.expires or ''),
+            cookie.name, cookie.value)))
+    text = '\n'.join(lines) + '\n'
+    if len(text.encode('utf8')) > MAX_SNAPSHOT_BYTES:
+        raise SessionError(_FILE_ERROR)
+    return text
+
+
+@contextmanager
+def cookie_snapshot_scope(snapshot: str | None):
+    """Child-private scope: None is explicitly anonymous and never opens a cookie file."""
+    if snapshot is not None:
+        valid = False
+        try:
+            valid = type(snapshot) is str and len(snapshot.encode('utf8')) <= MAX_SNAPSHOT_BYTES
+        except UnicodeError:
+            pass
+        if not valid:
+            raise SessionError(_FILE_ERROR)
+        _jar_from_text(snapshot)  # same strict parser as the operator file, with safe errors
+    token = _snapshot.set(snapshot)
+    try:
+        yield
+    finally:
+        _snapshot.reset(token)

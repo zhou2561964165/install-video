@@ -5,7 +5,7 @@ import VideoIcon from './ui/VideoIcon.jsx';
 
 // 解析结果展示：按参考站信息结构对齐（封面时长角标 → 标题 → up主/平台/播放量 → 简介 → 格式两行），
 // 白蓝局部 token 与参考双栏布局。字段来自 normalizeParse 的派生值。
-export default function SelectingScene({ parseResult, selectedFormat, forceServer, onSelect, onDownload, insights, downloadContent, locked = false, sourceUrl, membership, membershipLoading = false, onMembershipRefresh, onUpgrade }) {
+export default function SelectingScene({ parseResult, selectedFormat, forceServer, onSelect, onDownload, insights, downloadContent, locked = false, sourceUrl, membership, membershipLoading = false, onMembershipRefresh, onUpgrade, onReparse }) {
   const insightsRef = useRef(null);
   const {
     title, thumbnail, durationLabel, uploader, platform, viewCountLabel, description, formats,
@@ -14,6 +14,7 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
   const maxHeight = membership?.features?.max_height;
   const restricted = (format) => membership && maxHeight != null && format?.height > maxHeight;
   const needsUpgrade = formats.some(restricted);
+  const noFormats = formats.length === 0;
   return (
     <div data-testid="selecting-scene" className="selecting-scene video-workspace">
       <div className="format-card" data-follow-exclude="panel">
@@ -35,6 +36,10 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
         </div>
         <div className="video-card__download">
         <h3 className="video-card__section-title"><VideoIcon name="settings" />选择清晰度和格式</h3>
+        {noFormats && <div className="format-empty" role="status">
+          <p>没有找到可下载的格式。可能是直播、需要登录或来源限制了下载，可稍后重新解析，或换一个链接。</p>
+          {onReparse && <button type="button" disabled={locked} onClick={onReparse}>重新解析</button>}
+        </div>}
         <div className="format-list">
           {formats.map((f) => (
             <button
@@ -51,11 +56,11 @@ export default function SelectingScene({ parseResult, selectedFormat, forceServe
         </div>
         {needsUpgrade && <p className="membership-inline">免费版最高支持 {maxHeight}p，高清格式需 VIP。<button type="button" onClick={onUpgrade}>查看 VIP 方案</button></p>}
         {!membershipKnown && <p className="membership-inline" role="status">{membershipLoading ? '正在确认可用清晰度…' : '会员状态暂不可用，请刷新后选择格式。'}{!membershipLoading && onMembershipRefresh && <button type="button" onClick={onMembershipRefresh}>刷新会员状态</button>}</p>}
-        <label className="badge-switch">
+        {!noFormats && <><label className="badge-switch">
           <input type="checkbox" checked={forceServer} disabled={locked} aria-describedby="download-naming-help" onChange={(e) => { playSfx('select'); onSelect(selectedFormat, e.target.checked); }} />
           按视频标题命名
         </label>
-        <p id="download-naming-help" className="download-naming-help">关闭后使用来源直链，文件名由来源站决定。</p>
+        <p id="download-naming-help" className="download-naming-help">关闭后使用来源直链，文件名由来源站决定。</p></>}
         {downloadContent || <button className="video-download-button" onClick={onDownload} disabled={!selectedFormat || !membershipKnown || restricted(selectedFormat)}><VideoIcon name="download" />下载</button>}
         {insights && <button type="button" className="video-summary-button" disabled={Boolean(insights.loading)} onClick={() => insightsRef.current?.summarizeCurrent()}><VideoIcon name="summary" />AI 总结</button>}
         {selectedFormat && <p className="video-card__selection">已选择：{selectedFormat.label}</p>}

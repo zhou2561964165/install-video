@@ -11,7 +11,7 @@ function expiryLabel(value) {
   return Number.isNaN(date.getTime()) ? null : date.toLocaleString('zh-CN');
 }
 
-export default function MembershipScene({ membership, authed, authLoading, onLogin, onBack, paymentReturn, loginIntent }) {
+export default function MembershipScene({ membership, authed, authLoading, onLogin, onBack, onSupport, paymentReturn, loginIntent }) {
   const { plans, plansError, account, loading, error, busy, refresh, cancelAction, checkout, portal } = membership;
   const vip = authed && account?.plan === 'vip';
   const freeMaxHeight = Number.isInteger(plans?.free_max_height) && plans.free_max_height > 0 && plans.free_max_height <= 720 ? plans.free_max_height : 720;
@@ -52,11 +52,13 @@ export default function MembershipScene({ membership, authed, authLoading, onLog
         <div className="membership-price-group"><p className="membership-price">{plans?.price_label || '价格待定'}</p><p className="membership-billing">{plans?.renewal_label || '价格与计费周期确认后开放支付'}</p></div>
         <ul>{VIP_FEATURES.map((feature) => <li key={feature}><VideoIcon name="check" /><span>{feature}</span></li>)}
           <li className="membership-feature--pending"><VideoIcon name="check" /><span>批量下载 <small>即将支持</small></span></li>
-          <li className="membership-feature--pending"><VideoIcon name="check" /><span>优先客服支持 <small>筹备中</small></span></li>
+          <li><VideoIcon name="check" /><span>优先客服支持</span></li>
         </ul>
         <button type="button" className="membership-card__cta" onClick={authed ? checkout : onLogin} disabled={authLoading || Boolean(busy) || !plans?.checkout_available || (authed && (loading || vip || !available || !account))}>{busy === 'checkout' ? '正在前往 Stripe…' : checkoutLabel}</button>
       </section>
     </div>
+    <section className="membership-support" aria-label="客服支持" data-follow-exclude="panel"><p>付款后会员没有到账、下载或登录遇到问题？提交工单，我们会尽快回复；VIP 会员的工单优先处理。</p>
+      <button type="button" onClick={onSupport}>联系客服</button></section>
     <footer className="membership-footnote" data-follow-exclude="panel"><p>不限下载次数；仍受来源可用性、合理使用、并发与服务器资源限制。画质以视频来源实际提供的格式为准。</p><p>支付由 Stripe 托管处理，本站不收集银行卡信息。{plans?.billing_mode === 'subscription' ? '当前方案自动续费，可在账单管理中取消后续续费。' : plans?.billing_mode === 'payment' ? '当前方案为一次性支付，到期后不自动续费。' : '支付尚未配置，暂不收款。'}</p></footer>
     {busy && <button type="button" className="membership-cancel" onClick={cancelAction}>取消跳转</button>}
   </main>;

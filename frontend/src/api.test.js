@@ -4,6 +4,7 @@ import {
   getSubtitle, translateSubtitle, summarizeVideo, setAuthToken, clearAuthToken, getFile,
   exportSubtitle, getTranscriptionCapabilities, transcribeVideo, exportTranscription, generateMindmap,
   getMembershipPlans, getMembership, createCheckout, createBillingPortal,
+  getSupportMeta, submitSupportTicket, listSupportTickets,
 } from './api.js';
 
 afterEach(() => { vi.restoreAllMocks(); clearAuthToken(); });
@@ -16,6 +17,15 @@ describe('api', () => {
     expect(fetch.mock.calls.map(([path]) => path)).toEqual(['/api/membership/plans', '/api/membership', '/api/billing/checkout', '/api/billing/portal']);
     for (const [, options] of fetch.mock.calls) { expect(options.headers.Authorization).toBe('Bearer billing-owner'); expect(options.signal).toBe(signal); expect(options.body).toBeUndefined(); }
     expect(fetch.mock.calls.slice(2).every(([, options]) => options.method === 'POST')).toBe(true);
+  });
+  it('support calls carry the account bearer and send only category, note and checkout', async () => {
+    setAuthToken('support-owner'); vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
+    await getSupportMeta(); await listSupportTickets();
+    await submitSupportTicket({ category: 'other', note: '你好', checkout_id: null, user_id: 'spoofed' });
+    expect(fetch.mock.calls.map(([path]) => path)).toEqual(['/api/support/meta', '/api/support/tickets', '/api/support/tickets']);
+    expect(fetch.mock.calls[2][1].method).toBe('POST');
+    expect(JSON.parse(fetch.mock.calls[2][1].body)).toEqual({ category: 'other', note: '你好', checkout_id: null });
+    for (const [, options] of fetch.mock.calls) expect(options.headers.Authorization).toBe('Bearer support-owner');
   });
   it.each([['zh-TW', 'zh'], ['EN_us', 'en'], ['auto', null], [undefined, null]])('normalizes ASR language %s consistently for generate and cached export', async (input, language) => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));

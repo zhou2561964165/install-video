@@ -2,13 +2,23 @@ import math
 import os
 import re
 import time
+import io
+import sys
+import stat
+import shutil
+import subprocess
 from contextlib import contextmanager
+from dataclasses import dataclass, field
 from http.cookiejar import DefaultCookiePolicy
 from pathlib import Path
+from typing import Iterator
 from urllib.parse import urlparse
 from urllib.request import BaseHandler
 
 import yt_dlp
+from yt_dlp import globals as _ytdlp_globals
+from yt_dlp.networking.common import Request, RequestDirector, RequestHandler, Response
+from yt_dlp.networking.exceptions import HTTPError, RequestError
 from yt_dlp.downloader import get_suitable_downloader
 from yt_dlp.downloader.http import HttpFD
 from yt_dlp.networking._urllib import UrllibRH, RedirectHandler
@@ -16,7 +26,7 @@ import httpx
 from yt_dlp.extractor.bilibili import BiliBiliIE
 from yt_dlp.utils import (
     MEDIA_EXTENSIONS, DownloadError, ExtractorError, GeoRestrictedError, UnsupportedError,
-    ext2mimetype, mimetype2ext, url_or_none,
+    determine_protocol, ext2mimetype, mimetype2ext, url_or_none,
 )
 
 from ..config import settings
@@ -24,6 +34,10 @@ from .subtitle_sources import InvalidVideoPartError, resolve_public_subtitles
 from .asr_errors import ASRError
 from .bilibili_session import SessionError, cookie_jar_for_url, is_bilibili_url, session_enabled
 from .bilibili_api_source import BilibiliApiError, extract_api_video, safe_media_url, video_identity
+from .outbound_httpx import ControlledResponse, ControlledHttpError, ControlledHttpStatusError, ControlledHttpBusyError
+from .outbound_policy import OutboundError, OutboundPurpose, OutboundUnavailableError, validate_url
+from .source_network import (SourceNetworkContext, current_source_network, make_runtime_source_network,
+                             source_headers, source_network_scope)
 
 ERROR_INVALID_URL = "invalid_url"
 ERROR_UNSUPPORTED = "unsupported_site"
@@ -260,6 +274,17 @@ class _BilibiliSourceError(RuntimeError):
         }.get(category, 'B站视频访问失败，请稍后重试或联系管理员更新访问凭据。'))
 
 
+def safe_bilibili_error_category(error: Exception) -> str | None:
+    """Stable broker classification without inspecting/logging any exception text."""
+    if isinstance(error, SessionError):
+        return ERROR_NETWORK
+    if not isinstance(error, (_BilibiliSourceError, BilibiliApiError)):
+        return None
+    allowed = {ERROR_INVALID_URL, ERROR_UNSUPPORTED, ERROR_AGE, ERROR_GEO, ERROR_DRM,
+               ERROR_LOGIN, ERROR_FFMPEG, ERROR_NETWORK, ERROR_QUOTA, ERROR_VERIFICATION}
+    return error.category if error.category in allowed else ERROR_NETWORK
+
+
 def requires_server_download(url: str) -> bool:
     return _api_mode(url) or session_enabled(url)
 
@@ -271,8 +296,63 @@ def public_error_message(exc: Exception) -> str:
     return str(exc)
 
 
+def _bilibili_family(url: str) -> bool:
+    """Host-only check, independent of settings; malformed official URLs also match."""
+    try:
+        host = (urlparse(url).hostname or '').lower()
+    except ValueError:
+        return False
+    return any(host == root or host.endswith('.' + root) for root in ('bilibili.com', 'b23.tv'))
+
+
+def _unwired_under_context() -> None:
+    """Paths not yet wired to an explicit source context fail closed before any I/O."""
+    if current_source_network() is not None:
+        raise OutboundUnavailableError() from None
+
+
+@contextmanager
+def _guarded_metadata_source(url: str, network: SourceNetworkContext, *, limits=None):
+    """Explicit-ctx metadata factory: one guarded anonymous-GET yt-dlp instance.
+
+    Bilibili/session/API paths are refused before any Cookie helper or legacy
+    construction. Only the real default extractors are added to this instance;
+    caller opts are never merged into the fixed guarded params. limits (U5b) is
+    only ever a download's own _YtdlpReadLimits; metadata callers keep the default.
+    """
+    validate_url(url, OutboundPurpose.METADATA, network.policy)
+    if _api_mode(url) or _bilibili_family(url) or is_bilibili_url(url):
+        raise OutboundUnavailableError() from None
+    ydl = _GuardedMetadataYoutubeDL(network, purpose=OutboundPurpose.METADATA,
+                                    limits=_METADATA_LIMITS if limits is None else limits)
+    state = ydl._u4_state
+    pending = False
+    try:
+        state.call(ydl.add_default_info_extractors, request_error=False)
+        state.call(lambda: _restrict_extractors(ydl), request_error=False)
+        yield ydl
+        state.check(request_error=False)
+    except BaseException:
+        pending = True
+        raise
+    finally:
+        try:
+            ydl.close()
+        except Exception:
+            # A caller/source error already in flight is never replaced by close failure.
+            if not pending:
+                state.remember_terminal(OutboundUnavailableError())
+        if not pending:
+            state.check(request_error=False)
+
+
 @contextmanager
 def _source_youtube_dl(url: str, opts: dict):
+    network = current_source_network()
+    if network is not None:
+        with _guarded_metadata_source(url, network) as ydl:
+            yield ydl
+        return
     api_mode = _api_mode(url)
     if not api_mode and not session_enabled(url):
         with _youtube_dl(opts) as ydl:
@@ -330,6 +410,9 @@ def _source_youtube_dl(url: str, opts: dict):
 
             ydl.process_info = native_process_info
             yield ydl
+    except (OutboundError, ControlledHttpError):
+        # Safety errors keep their own type; never re-categorize them as Bilibili failures.
+        raise
     except (SessionError, ASRError, DownloadQuotaError):
         raise
     except BilibiliApiError as error:
@@ -375,6 +458,8 @@ def is_valid_url(url: str) -> bool:
 
 
 def extract_info(url: str) -> dict:
+    if current_source_network() is not None and _bilibili_family(url):
+        return _controlled_bilibili_projection(url)
     opts = {
         **_network_retry_options(),
         # Per socket operation, not an overall extraction wall-clock deadline.
@@ -403,10 +488,13 @@ def extract_subtitle_tracks(url: str, *, use_public_sources: bool = True) -> dic
             fallback = resolve_public_subtitles(url)
             if fallback["tracks"]:
                 return {**fallback, "_source": "public"}
-        except (InvalidVideoPartError, SessionError):
+        except (OutboundError, ControlledHttpError, InvalidVideoPartError, SessionError):
             raise
         except (httpx.HTTPError, ValueError) as error:
             fallback_error = error
+    # Public sources above already use the controlled channel under a context;
+    # the yt-dlp caption path below is not wired yet, so it fails closed there.
+    _unwired_under_context()
     info = extract_info(url)
     tracks: list[dict] = []
     is_bilibili = urlparse(url).hostname in {"bilibili.com", "www.bilibili.com"}
@@ -589,10 +677,13 @@ def parse_video(url: str) -> tuple[dict, list[dict]]:
         for language, tracks in (info.get(source) or {}).items()
         if any(_is_caption(language, item) for item in tracks or [])
     ))
-    if not languages and not info.get('_bilibili_api'):
+    if not languages and not info.get('_bilibili_api') and current_source_network() is None:
         # Caption metadata is an optional enhancement, and must not break video parsing/download.
+        # Under an explicit source context it is not wired yet, so it is skipped, not attempted.
         try:
             languages = list(dict.fromkeys(t["language"] for t in resolve_public_subtitles(url)["tracks"]))
+        except (OutboundError, ControlledHttpError):
+            raise
         except (httpx.HTTPError, ValueError):
             pass
     meta = {
@@ -619,6 +710,11 @@ def restrict_format(url: str, format_id: str, max_height: int) -> str:
     """
     info = extract_info(url)
     choices = build_format_options(info)
+    return restrict_format_options(choices, format_id, max_height)
+
+
+def restrict_format_options(choices: list[dict], format_id: str, max_height: int) -> str:
+    """Pure entitlement binding, reusing the broker's single metadata response."""
     choice = next((item for item in choices if item["format_id"] == format_id), None)
     if not choice or not isinstance(choice.get("height"), int) or choice["height"] > max_height:
         raise ValueError("Resolution requires VIP or cannot be verified")
@@ -634,6 +730,8 @@ def restrict_format(url: str, format_id: str, max_height: int) -> str:
 
 
 def get_direct_url(url: str, format_id: str) -> tuple[str | None, dict]:
+    # Before the server-download early return: a ctx must not trigger (None, {}) fallback.
+    _unwired_under_context()
     if requires_server_download(url):
         return None, {}
     bounded = re.fullmatch(r"([A-Za-z0-9_.-]+)\[height<=([0-9]+)\]", format_id)
@@ -661,6 +759,7 @@ def get_direct_url(url: str, format_id: str) -> tuple[str | None, dict]:
 
 def fetch_transcription_audio(url: str, directory: Path) -> tuple[Path, str]:
     """Acquire one bounded audio-only source; caller owns the temporary directory."""
+    _unwired_under_context()
     if not is_valid_url(url):
         raise ASRError('invalid_url', '无效链接')
     started = time.monotonic()
@@ -712,6 +811,8 @@ def fetch_transcription_audio(url: str, directory: Path) -> tuple[Path, str]:
                         raise ASRError('transcription_too_large', '音频文件超过大小限制')
                     return path, str(info.get('title') or '视频内容')
             raise ASRError('transcription_failed', '未获取到可用音频文件')
+    except (OutboundError, ControlledHttpError):
+        raise
     except ASRError:
         raise
     except (SessionError, _BilibiliSourceError) as error:
@@ -721,6 +822,7 @@ def fetch_transcription_audio(url: str, directory: Path) -> tuple[Path, str]:
 
 
 def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
+    _unwired_under_context()
     # Keep separate audio/video transfers in one byte budget. This is a transfer
     # guard, not a disk quota: ffmpeg can temporarily retain inputs and output.
     stream_sizes: dict[str, int | float] = {}
@@ -886,3 +988,1176 @@ def download(url: str, format_id: str, outtmpl: str, progress_hook) -> str:
             if selected:
                 return selected
         raise FileNotFoundError("下载产物缺失")
+
+
+# Explicit U4 objects only. No application factory constructs these classes.
+@dataclass(frozen=True)
+class _YtdlpReadLimits:
+    max_bytes: int
+    phase_seconds: float
+    io_timeout: float
+    identity_only: bool = False
+
+    def __post_init__(self):
+        valid = type(self.max_bytes) is int and self.max_bytes > 0 and type(self.identity_only) is bool
+        try:
+            valid = valid and all(type(value) in (int, float) and math.isfinite(value) and value > 0
+                                  for value in (self.phase_seconds, self.io_timeout))
+        except (OverflowError, ValueError):
+            valid = False
+        if not valid:
+            raise ValueError('Invalid controlled yt-dlp limits') from None
+
+
+class _GuardedRequestError(RequestError):
+    """Terminal request sentinel; deliberately not HTTPError/TransportError."""
+
+    def __init__(self, code: str):
+        safe_codes = frozenset({
+            'invalid_url', 'outbound_blocked', 'outbound_unavailable', 'source_timeout',
+            'source_too_large', 'subtitle_too_large', 'source_budget_exhausted',
+            'source_http_error', 'source_busy',
+        })
+        self.code = code if code in safe_codes else 'outbound_unavailable'
+        super().__init__('Controlled source request stopped: ' + self.code)
+
+
+class _YtdlpGuardState:
+    """Only a fixed descriptor survives; never keep an upstream exception."""
+
+    def __init__(self, network: SourceNetworkContext):
+        if type(network) is not SourceNetworkContext:
+            raise OutboundUnavailableError() from None
+        self.network = network
+        self._failure = None
+
+    def remember_terminal(self, error: OutboundError | ControlledHttpError) -> None:
+        if self._failure is not None:
+            return
+        descriptor = ('outbound', 'outbound_unavailable', 'unavailable')
+        if isinstance(error, OutboundError):
+            try:
+                approved = OutboundError(error.code, error.reason)
+                descriptor = ('outbound', approved.code, approved.reason)
+            except (ValueError, AttributeError, TypeError):
+                pass
+        elif type(error) is ControlledHttpStatusError:
+            if type(error.source_status) is int and 400 <= error.source_status <= 999:
+                descriptor = ('status', error.source_status)
+        elif type(error) is ControlledHttpBusyError:
+            descriptor = ('busy',)
+        self._failure = descriptor
+
+    def _error(self):
+        kind, *data = self._failure
+        if kind == 'status':
+            return ControlledHttpStatusError(data[0])
+        if kind == 'busy':
+            return ControlledHttpBusyError()
+        return OutboundError(*data)
+
+    def check(self, *, request_error: bool = False) -> None:
+        if self._failure is None:
+            try:
+                self.network.check_owner()
+                self.network.budget.remaining_seconds()
+            except (OutboundError, ControlledHttpError) as error:
+                self.remember_terminal(error)
+            except Exception:
+                self.remember_terminal(OutboundUnavailableError())
+        if self._failure is not None:
+            error = self._error()
+            if request_error:
+                error = _GuardedRequestError(error.code)
+            # May be called by a consumer inside its own except(raw) suite.
+            try:
+                raise error from None
+            except (OutboundError, ControlledHttpError, _GuardedRequestError):
+                error.__context__ = error.__cause__ = None
+                raise
+
+    def call(self, action, *, request_error=True):
+        self.check(request_error=request_error)
+        ordinary_http = None
+        result = None
+        try:
+            result = action()
+        except HTTPError as error:
+            ordinary_http = error
+        except _GuardedRequestError:
+            if self._failure is None:
+                self.remember_terminal(OutboundUnavailableError())
+        except (OutboundError, ControlledHttpError) as error:
+            self.remember_terminal(error)
+        except Exception:
+            self.remember_terminal(OutboundUnavailableError())
+        self.check(request_error=request_error)
+        if ordinary_http is not None:
+            raise ordinary_http from None
+        return result
+
+
+class _ControlledYtdlpResponse(Response):
+    """Decoded, bounded file-like view owning one live context exchange."""
+
+    _BUFFER_LIMIT = 64 * 1024
+
+    def __init__(self, response: ControlledResponse, exchange, state: _YtdlpGuardState):
+        self._response, self._exchange, self._state = response, exchange, state
+        self._iterator, self._buffer = None, b''
+        self._eof = self._released = False
+        self._on_close = None
+        super().__init__(io.BytesIO(), response.effective_url, {}, status=response.status_code)
+        encoded = response.headers.get('content-encoding', 'identity').strip().lower() != 'identity'
+        for name, value in response.header_items():
+            if encoded and name.lower() in ('content-encoding', 'content-length'):
+                continue
+            self.headers.add_header(name, value)
+
+    def _check(self):
+        self._state.check(request_error=True)
+        self._state.call(self._response.check_deadline)
+
+    def _release(self):
+        if self._released:
+            return
+        self._released = True
+        if self._iterator is not None:
+            try:
+                self._iterator.close()
+            except Exception:
+                pass
+        exchange, self._exchange = self._exchange, None
+        try:
+            exchange.__exit__(None, None, None)
+        except Exception:
+            pass
+
+    def readable(self):
+        return not self.closed
+
+    def read(self, amt=None):
+        def action():
+            self._check()
+            if amt is not None and (type(amt) is not int or amt < -1):
+                raise OutboundUnavailableError() from None
+            if self.closed:
+                raise OutboundUnavailableError() from None
+            if amt == 0:
+                return b''
+            wanted = None if amt is None or amt == -1 else amt
+            parts, size = [], 0
+            while wanted is None or size < wanted:
+                self._check()
+                if self._buffer:
+                    count = len(self._buffer) if wanted is None else min(len(self._buffer), wanted - size)
+                    parts.append(self._buffer[:count])
+                    self._buffer = self._buffer[count:]
+                    size += count
+                    continue
+                if self._eof:
+                    break
+                if self._iterator is None:
+                    self._iterator = iter(self._response.iter_bytes())
+                chunk = self._state.call(lambda: next(self._iterator, None))
+                self._check()
+                if chunk is None:
+                    self._eof = True
+                    self._release()
+                    break
+                if type(chunk) is not bytes or len(chunk) > self._BUFFER_LIMIT:
+                    raise OutboundUnavailableError() from None
+                self._buffer = chunk
+            self._check()
+            return b''.join(parts)
+        try:
+            return self._state.call(action)
+        except _GuardedRequestError:
+            self.close()
+            raise
+
+    def close(self):
+        if self.closed:
+            return
+        self._buffer = b''
+        self._release()
+        callback, self._on_close = self._on_close, None
+        if callback is not None:
+            callback(self)
+        super().close()
+
+
+class _ControlledSourceRH(RequestHandler):
+    _SUPPORTED_URL_SCHEMES = ('http', 'https')
+    _SUPPORTED_PROXY_SCHEMES = ()
+    _SUPPORTED_FEATURES = ()
+
+    def __init__(self, *, network: SourceNetworkContext, state: _YtdlpGuardState,
+                 purpose: OutboundPurpose, limits: _YtdlpReadLimits):
+        super().__init__(logger=_PrivateBilibiliLogger(), headers={}, proxies={})
+        self._network, self._state = network, state
+        self._purpose, self._limits = purpose, limits
+        self._responses = set()
+        self._closed = False
+
+    def _validate(self, request):
+        def validate():
+            if (self._closed or not isinstance(request, Request)
+                    or request.method not in ('GET', 'HEAD') or request.data is not None or request.proxies):
+                raise OutboundUnavailableError() from None
+            validate_url(request.url, self._purpose, self._network.policy, initial=False)
+            if set(request.extensions) - {'timeout'}:
+                raise OutboundUnavailableError() from None
+            if 'timeout' in request.extensions:
+                value = request.extensions['timeout']
+                if type(value) not in (int, float) or not math.isfinite(value) or value <= 0:
+                    raise OutboundUnavailableError() from None
+        self._state.call(validate)
+
+    def _send(self, request):
+        self._validate(request)
+        opened = None
+        def open_response():
+            nonlocal opened
+            timeout = min(self._limits.io_timeout, request.extensions.get('timeout', self._limits.io_timeout))
+            exchange = self._network.exchange(request.method, request.url, purpose=self._purpose,
+                headers=source_headers(dict(request.headers)), max_bytes=self._limits.max_bytes,
+                phase_seconds=self._limits.phase_seconds, io_timeout=timeout,
+                identity_only=self._limits.identity_only)
+            response = exchange.__enter__()
+            try:
+                bridge = _ControlledYtdlpResponse(response, exchange, self._state)
+            except Exception:
+                exchange.__exit__(None, None, None)
+                raise
+            bridge._on_close = self._responses.discard
+            self._responses.add(bridge)
+            opened = bridge
+            bridge._check()
+            return bridge
+        try:
+            result = self._state.call(open_response)
+        except _GuardedRequestError:
+            # Ownership was established before the successful-result checks.
+            # The caller never received this stream, so release it immediately.
+            if opened is not None:
+                opened.close()
+            raise
+        if result.status >= 400:
+            raise HTTPError(result)
+        return result
+
+    def close(self):
+        if self._closed:
+            return
+        self._closed = True
+        for response in tuple(self._responses):
+            response.close()
+
+
+def _validate_derived_info(info: dict, state: _YtdlpGuardState) -> dict:
+    """Pure, bounded copy of a deliberately narrow single-file fixture graph."""
+    def validate():
+        seen, nodes, text_bytes = set(), 0, 0
+
+        def scan(value, depth=1):
+            nonlocal nodes, text_bytes
+            nodes += 1
+            if depth > 8 or nodes > 256:
+                raise OutboundUnavailableError() from None
+            if type(value) is str:
+                if len(value) > 8192:
+                    raise OutboundUnavailableError() from None
+                size = len(value.encode('utf-8'))
+                text_bytes += size
+                if size > 8192 or text_bytes > 65536:
+                    raise OutboundUnavailableError() from None
+                return
+            if type(value) not in (dict, list) or id(value) in seen:
+                raise OutboundUnavailableError() from None
+            seen.add(id(value))
+            if type(value) is dict:
+                for key, item in value.items():
+                    if type(key) is not str:
+                        raise OutboundUnavailableError() from None
+                    scan(key, depth + 1)
+                    scan(item, depth + 1)
+            else:
+                for item in value:
+                    scan(item, depth + 1)
+
+        scan(info)
+        if type(info) is not dict:
+            raise OutboundUnavailableError() from None
+        policy = state.network.policy
+
+        def headers(value):
+            if type(value) is not dict or len(value) > 32:
+                raise OutboundUnavailableError() from None
+            names, size, clean = set(), 0, {}
+            for name, text in value.items():
+                if type(name) is not str or type(text) is not str:
+                    raise OutboundUnavailableError() from None
+                lower = name.lower()
+                size += len(name.encode('utf-8')) + len(text.encode('utf-8'))
+                if (not re.fullmatch(r"[!#$%&'*+.^_`|~0-9A-Za-z-]+", name)
+                        or lower in names or size > 16384
+                        or any(ord(char) < 32 or ord(char) == 127 for char in text)):
+                    raise OutboundUnavailableError() from None
+                names.add(lower)
+                if lower in ('cookie', 'authorization', 'proxy-authorization'):
+                    continue
+                if not source_headers({name: text}):
+                    raise OutboundUnavailableError() from None
+                if lower == 'referer':
+                    validate_url(text, OutboundPurpose.METADATA, policy, initial=False)
+                clean[name] = text
+            return clean
+
+        scalars = {'id', 'title', 'ext', 'format_id'}
+        extras = {'original_url', 'webpage_url', 'webpage_url_basename', 'webpage_url_domain',
+                  'extractor', 'extractor_key'}
+
+        def leaf(value, purpose, *, root=False, subtitle=False):
+            allowed = {'url', 'protocol', 'http_headers'} | scalars
+            if root:
+                allowed |= extras | {'formats', 'subtitles', 'automatic_captions'}
+            if subtitle:
+                allowed.add('name')
+            if type(value) is not dict or set(value) - allowed or 'url' not in value:
+                raise OutboundUnavailableError() from None
+            target = validate_url(value['url'], purpose, policy, initial=False)
+            if ((root and 'protocol' not in value) or ('protocol' in value and (
+                    value['protocol'] not in ('http', 'https') or value['protocol'] != target.scheme
+                    or not value['url'].startswith(value['protocol'] + '://')))):
+                raise OutboundUnavailableError() from None
+            clean = {'url': value['url']}
+            if 'protocol' in value:
+                clean['protocol'] = value['protocol']
+            for key in scalars | ({'name'} if subtitle else set()):
+                if key in value:
+                    if type(value[key]) is not str:
+                        raise OutboundUnavailableError() from None
+                    clean[key] = value[key]
+            if 'http_headers' in value:
+                clean['http_headers'] = headers(value['http_headers'])
+            if root:
+                for key in extras & value.keys():
+                    if type(value[key]) is not str:
+                        raise OutboundUnavailableError() from None
+                    if key in ('original_url', 'webpage_url'):
+                        validate_url(value[key], OutboundPurpose.METADATA, policy, initial=False)
+            return clean
+
+        clean = leaf(info, OutboundPurpose.MEDIA, root=True)
+        if 'formats' in info:
+            if type(info['formats']) is not list:
+                raise OutboundUnavailableError() from None
+            for value in info['formats']:
+                leaf(value, OutboundPurpose.MEDIA)
+        for key in ('subtitles', 'automatic_captions'):
+            if key not in info:
+                continue
+            if type(info[key]) is not dict:
+                raise OutboundUnavailableError() from None
+            for values in info[key].values():
+                if type(values) is not list:
+                    raise OutboundUnavailableError() from None
+                for value in values:
+                    leaf(value, OutboundPurpose.SUBTITLE, subtitle=True)
+        return clean
+    return state.call(validate, request_error=False)
+
+
+class _GuardedYoutubeDL(yt_dlp.YoutubeDL):
+    """Explicit metadata-only fixture seam, not the production source factory.
+
+    The official plugin opt-out must be set before the process's first import.
+    This check cannot undo earlier plugin execution or isolate hostile Python.
+    """
+
+    def __init__(self, network: SourceNetworkContext, *, purpose: OutboundPurpose,
+                 limits: _YtdlpReadLimits):
+        self._u4_closed = False
+        polluted = any(name == root or name.startswith(root + '.')
+                       for name in sys.modules for root in ('yt_dlp_plugins', 'ytdlp_plugins'))
+        if (os.environ.get('YTDLP_NO_PLUGINS') != '1' or polluted
+                or _ytdlp_globals.plugin_ies.value or _ytdlp_globals.plugin_pps.value
+                or _ytdlp_globals.plugin_ies_overrides.value
+                or not isinstance(purpose, OutboundPurpose) or purpose is OutboundPurpose.PROVIDER
+                or type(limits) is not _YtdlpReadLimits):
+            raise OutboundUnavailableError() from None
+        self._u4_state = _YtdlpGuardState(network)
+        self._u4_state.check()
+        self._u4_purpose = purpose
+        self._u5_limits = limits
+        self._u5_attempted = self._u5_downloading = False
+        self._u5_http_status = None
+        self._u5b_metadata_status = None  # U5b: last HTTP status seen while extracting (I4)
+        params = dict(quiet=True, no_warnings=True, noprogress=True, logger=_PrivateBilibiliLogger(),
+            cachedir=False, cookiefile=None, cookiesfrombrowser=None, js_runtimes={}, remote_components=[],
+            retries=0, extractor_retries=0, fragment_retries=0, skip_download=True, noplaylist=True,
+            geo_bypass=False, color='never')
+        self._u4_state.call(lambda: super(_GuardedYoutubeDL, self).__init__(params, auto_init=False),
+                            request_error=False)
+        director = RequestDirector(logger=_PrivateBilibiliLogger())
+        director.add_handler(_ControlledSourceRH(network=network, state=self._u4_state,
+            purpose=purpose, limits=limits))
+        self._request_director = director
+
+    def urlopen(self, req):
+        opened = None
+        def open_request():
+            nonlocal opened
+            if self._u4_closed:
+                raise OutboundUnavailableError() from None
+            if isinstance(req, str):
+                url = req
+            elif isinstance(req, Request):
+                url = req.url
+            elif hasattr(req, 'get_full_url') and type(req).__module__ == 'urllib.request':
+                url = req.get_full_url()
+            else:
+                raise OutboundUnavailableError() from None
+            validate_url(url, self._u4_purpose, self._u4_state.network.policy, initial=False)
+            ordinary_http = None
+            try:
+                opened = super(_GuardedYoutubeDL, self).urlopen(req)
+            except HTTPError as error:
+                opened, ordinary_http = error.response, error
+                if self._u5_downloading:
+                    # HttpFD handles 416 with one further GET; a recovered 416
+                    # must not reclassify a subsequent unknown file failure.
+                    self._u5_http_status = error.status if error.status != 416 else None
+                else:
+                    self._u5b_metadata_status = error.status
+            # The scope is tighter than the operation and can also expire in
+            # the outer window, after the director returned or raised HTTPError.
+            opened._check()
+            if ordinary_http is not None:
+                raise ordinary_http from None
+            return opened
+        try:
+            return self._u4_state.call(open_request)
+        except _GuardedRequestError:
+            if opened is not None:
+                opened.close()
+            self._stop_owned_responses()
+            raise
+
+    def _u5b_enter_download(self, limits: '_YtdlpReadLimits') -> None:
+        """U5b: extraction is over. Close its leftover responses (a Generic direct-media probe is
+        left unread) and apply the download's own limits for the HttpFD phase only."""
+        if (self._u5_attempted or self._u5_downloading or self._u4_closed
+                or type(limits) is not _YtdlpReadLimits or limits.identity_only is not True):
+            raise OutboundUnavailableError() from None
+        for handler in self._request_director.handlers.values():
+            for response in tuple(handler._responses):
+                response.close()
+            handler._limits = limits
+        self._u5_limits = limits
+
+    def _stop_owned_responses(self):
+        director = self.__dict__.get('_request_director')
+        if director is not None:
+            for handler in director.handlers.values():
+                handler.close()
+
+    def extract_info(self, url, download=False, ie_key=None, extra_info=None,
+                     process=False, force_generic_extractor=False):
+        def extract():
+            if download is not False or process is not False or self._u4_closed:
+                raise OutboundUnavailableError() from None
+            validate_url(url, self._u4_purpose, self._u4_state.network.policy)
+            return super(_GuardedYoutubeDL, self).extract_info(url, download=False, ie_key=ie_key,
+                extra_info=extra_info, process=False, force_generic_extractor=force_generic_extractor)
+        try:
+            return self._u4_state.call(extract, request_error=False)
+        except (OutboundError, ControlledHttpError):
+            self._stop_owned_responses()
+            raise
+
+    def process_info(self, info_dict):
+        self._u4_state.remember_terminal(OutboundUnavailableError())
+        self._stop_owned_responses()
+        self._u4_state.check()
+
+    @contextmanager
+    def _download_http_file(self, info: dict, *, target_dir: Path) -> Iterator[Path]:
+        """One native HttpFD attempt in a trusted caller-owned empty directory.
+
+        Instance-local observers record actual opened handles and inode identity.
+        They cannot establish ownership when an upstream open fails before return;
+        such unknown files are preserved. This is not hostile-writer isolation.
+        """
+        state = self._u4_state
+        files, streams, ancestors = {}, [], []
+        final = partial = None
+
+        def identity(path, *, directory=False):
+            saved = path.lstat()
+            if (stat.S_ISLNK(saved.st_mode) or getattr(saved, 'st_file_attributes', 0) & 1024
+                    or not (stat.S_ISDIR(saved.st_mode) if directory else stat.S_ISREG(saved.st_mode))
+                    or not saved.st_ino):
+                raise OutboundUnavailableError() from None
+            return saved.st_dev, saved.st_ino
+
+        def check_directory():
+            for path, expected in ancestors:
+                if identity(path, directory=True) != expected:
+                    raise OutboundUnavailableError() from None
+
+        def stop_responses():
+            failed = False
+            director = self.__dict__.get('_request_director')
+            if director is not None:
+                for handler in director.handlers.values():
+                    # One failed close must not skip other responses (e.g. the
+                    # 416 bridge followed by HttpFD's second GET response).
+                    for response in tuple(handler._responses):
+                        try:
+                            response.close()
+                        except Exception:
+                            failed = True
+                    try:
+                        handler.close()
+                    except Exception:
+                        failed = True
+            return failed
+
+        def download():
+            nonlocal final, partial
+            attempted, self._u5_attempted = self._u5_attempted, True
+            if attempted or self._u4_closed or self._u5_limits.identity_only is not True:
+                raise OutboundUnavailableError() from None
+            clean = _validate_derived_info(info, state)
+            if (not isinstance(target_dir, Path) or not target_dir.is_absolute()
+                    or target_dir != target_dir.resolve(strict=True)):
+                raise OutboundUnavailableError() from None
+            for path in (target_dir, *target_dir.parents):
+                ancestors.append((path, identity(path, directory=True)))
+            if any(target_dir.iterdir()):
+                raise OutboundUnavailableError() from None
+            final, partial = target_dir / 'media.bin', target_dir / 'media.bin.part'
+            params = dict(quiet=True, no_warnings=True, noprogress=True,
+                retries=0, fragment_retries=0, file_access_retries=0, continuedl=False,
+                nopart=False, overwrites=False, http_chunk_size=0, buffersize=65536,
+                noresizebuffer=True, test=False, updatetime=False, xattr_set_filesize=False,
+                external_downloader='native', concurrent_fragment_downloads=1)
+            if get_suitable_downloader(dict(clean), params) is not HttpFD:
+                raise OutboundUnavailableError() from None
+            fd = HttpFD(self, params)
+            real_open, real_rename = fd.sanitize_open, fd.try_rename
+
+            def observe_open(filename, mode):
+                check_directory()
+                if filename != str(partial) or mode != 'wb' or partial.exists() or final.exists():
+                    raise OutboundUnavailableError() from None
+                stream, name = real_open(filename, mode)
+                # Keep the handle before any recognition that itself may fail.
+                streams.append(stream)
+                opened = os.fstat(stream.fileno())
+                if (name != str(partial) or not stat.S_ISREG(opened.st_mode)
+                        or identity(partial) != (opened.st_dev, opened.st_ino)):
+                    raise OutboundUnavailableError() from None
+                files[partial] = (opened.st_dev, opened.st_ino)
+                return stream, name
+
+            def observe_rename(old, new):
+                check_directory()
+                if (old != str(partial) or new != str(final) or final.exists()
+                        or partial not in files or identity(partial) != files[partial]):
+                    raise OutboundUnavailableError() from None
+                # Record the same inode at both possible names before rename.
+                # If an upstream wrapper renames and then raises, cleanup still
+                # verifies identity instead of guessing from a filename.
+                files[final] = files[partial]
+                result = real_rename(old, new)
+                if identity(final) != files[final]:
+                    raise OutboundUnavailableError() from None
+                return result
+
+            fd.sanitize_open, fd.try_rename = observe_open, observe_rename
+            self._u5_downloading = True
+            ordinary_status = None
+            result = None
+            try:
+                result = fd.download(str(final), clean, subtitle=False)
+            except HTTPError as error:
+                ordinary_status = error.status
+            except (OutboundError, ControlledHttpError, _GuardedRequestError):
+                raise
+            except Exception:
+                ordinary_status = self._u5_http_status
+                if ordinary_status is None:
+                    state.remember_terminal(OutboundUnavailableError())
+            finally:
+                self._u5_downloading = False
+            # Rebuild only after leaving the upstream except suite.
+            state.check(request_error=False)
+            if ordinary_status is not None:
+                raise ControlledHttpStatusError(ordinary_status) from None
+            if not (type(result) is tuple and len(result) == 2
+                    and result[0] is True and result[1] is True):
+                if self._u5_http_status is not None:
+                    raise ControlledHttpStatusError(self._u5_http_status) from None
+                raise OutboundUnavailableError() from None
+            # HttpFD may stop exactly at Content-Length without reading EOF.
+            # The original response phase must still be healthy at acceptance.
+            for handler in self._request_director.handlers.values():
+                for response in tuple(handler._responses):
+                    response._check()
+            check_directory()
+            if (final not in files or identity(final) != files[final]
+                    or not 0 < final.lstat().st_size <= self._u5_limits.max_bytes):
+                raise OutboundUnavailableError() from None
+            return final
+
+        try:
+            try:
+                path = state.call(download, request_error=False)
+            finally:
+                pending = sys.exc_info()[0] is not None
+                if stop_responses() and not pending:
+                    state.remember_terminal(OutboundUnavailableError())
+                    state.check(request_error=False)
+            # Caller exceptions are outside the source error conversion boundary.
+            yield path
+        finally:
+            pending = sys.exc_info()[0] is not None
+            failed = False
+            for stream in streams:
+                try:
+                    stream.close()
+                except Exception:
+                    failed = True
+            if stop_responses():
+                failed = True
+            for path, expected in files.items():
+                try:
+                    check_directory()
+                    try:
+                        actual = identity(path)
+                    except FileNotFoundError:
+                        continue
+                    if actual != expected:
+                        failed = True
+                        continue
+                    path.unlink()
+                except Exception:
+                    failed = True
+            if failed and not pending:
+                state.remember_terminal(OutboundUnavailableError())
+                state.check(request_error=False)
+
+    def dl(self, name, info, subtitle=False, test=False):
+        self._u4_state.remember_terminal(OutboundUnavailableError())
+        self._stop_owned_responses()
+        self._u4_state.check()
+
+    def close(self):
+        if getattr(self, '_u4_closed', True):
+            return
+        self._u4_closed = True
+        if '_request_director' in self.__dict__:
+            self._request_director.close()
+            del self._request_director
+
+
+# B5 W1: explicit-ctx metadata limits (only tighten the context's own budget/group).
+# Only extractors proven on the guarded anonymous-GET path may join the instance;
+# others can start PhantomJS outside the director or add request handlers.
+_METADATA_EXTRACTORS = frozenset({'Generic'})
+_MANIFEST_SUFFIXES = ('.m3u8', '.m3u', '.f4m', '.mpd', '.ism', '.ism/manifest', '.isml/manifest')
+_METADATA_LIMITS = _YtdlpReadLimits(max_bytes=1024 * 1024, phase_seconds=16, io_timeout=8, identity_only=True)
+_SOURCE_TEXT_KEYS = ('id', 'title', 'description', 'uploader', 'channel', 'extractor', 'extractor_key',
+                     'upload_date', 'ext', 'format_id', 'vcodec', 'acodec')
+_SOURCE_NUMBER_KEYS = ('duration', 'view_count', 'timestamp', 'height', 'width', 'filesize', 'filesize_approx')
+_FORMAT_TEXT_KEYS = ('format_id', 'ext', 'vcodec', 'acodec', 'format_note')
+_FORMAT_NUMBER_KEYS = ('height', 'width', 'filesize', 'filesize_approx')
+_SUBTITLE_TEXT_KEYS = ('ext', 'name')
+_SOURCE_ROOT_KEYS = frozenset((*_SOURCE_TEXT_KEYS, *_SOURCE_NUMBER_KEYS, 'url', 'protocol', 'http_headers',
+    'formats', 'subtitles', 'automatic_captions', 'thumbnail', 'original_url', 'webpage_url',
+    'webpage_url_basename', 'webpage_url_domain', 'direct', 'hls_aes', '_type', 'is_live', 'live_status'))
+
+
+def _validate_source_metadata(info: dict, state: _YtdlpGuardState) -> dict:
+    """Bounded, pure projection of extractor metadata into a new independent dict.
+
+    Separate from U5a's single-file validator. Every derived URL is checked
+    against the context policy for its purpose; nothing here sends a request.
+    Unknown keys, playlists, live, manifests/fragments and execution controls
+    are refused rather than dropped.
+    """
+    def unavailable():
+        raise OutboundUnavailableError() from None
+
+    def validate():
+        seen, nodes, text_bytes = set(), 0, 0
+
+        def scan(value, depth=1):
+            nonlocal nodes, text_bytes
+            nodes += 1
+            if depth > 8 or nodes > 256:
+                unavailable()
+            kind = type(value)
+            if kind is str:
+                if len(value) > 8192:
+                    unavailable()
+                size = len(value.encode('utf-8'))
+                text_bytes += size
+                if size > 8192 or text_bytes > 65536:
+                    unavailable()
+            elif kind is float:
+                if not math.isfinite(value):
+                    unavailable()
+            elif kind in (int, bool) or value is None:
+                return
+            elif kind in (dict, list):
+                if id(value) in seen:
+                    unavailable()
+                seen.add(id(value))
+                if kind is dict:
+                    for key, item in value.items():
+                        if type(key) is not str:
+                            unavailable()
+                        scan(key, depth + 1)
+                        scan(item, depth + 1)
+                else:
+                    for item in value:
+                        scan(item, depth + 1)
+            else:
+                unavailable()
+
+        scan(info)
+        if type(info) is not dict or set(info) - _SOURCE_ROOT_KEYS:
+            unavailable()
+        policy = state.network.policy
+
+        def text(value):
+            if value is not None and type(value) is not str:
+                unavailable()
+            return value
+
+        def number(value):
+            if value is not None and (type(value) not in (int, float) or not math.isfinite(value) or value < 0):
+                unavailable()
+            return value
+
+        def headers(value):
+            if type(value) is not dict or len(value) > 32:
+                unavailable()
+            names, size, clean = set(), 0, {}
+            for name, item in value.items():
+                if type(name) is not str or type(item) is not str:
+                    unavailable()
+                lower = name.lower()
+                size += len(name.encode('utf-8')) + len(item.encode('utf-8'))
+                if (not re.fullmatch(r"[!#$%&'*+.^_`|~0-9A-Za-z-]+", name) or lower in names or size > 16384
+                        or any(ord(char) < 32 or ord(char) == 127 for char in item)):
+                    unavailable()
+                names.add(lower)
+                if lower in ('cookie', 'authorization', 'proxy-authorization'):
+                    continue
+                if not source_headers({name: item}):
+                    unavailable()
+                if lower == 'referer':
+                    validate_url(item, OutboundPurpose.METADATA, policy, initial=False)
+                clean[name] = item
+            return clean
+
+        def url_leaf(value, purpose, text_keys=(), number_keys=()):
+            allowed = {'url', 'protocol', 'http_headers', *text_keys, *number_keys}
+            if type(value) is not dict or set(value) - allowed or type(value.get('url')) is not str:
+                unavailable()
+            target = validate_url(value['url'], purpose, policy, initial=False)
+            # Derive like yt-dlp would, so an unlabeled manifest is never treated as a plain file.
+            derived = determine_protocol({'url': value['url']})
+            protocol = value.get('protocol', derived)
+            if (target.scheme not in ('http', 'https') or protocol != target.scheme or derived != target.scheme
+                    or not value['url'].startswith(protocol + '://')
+                    or urlparse(value['url']).path.lower().endswith(_MANIFEST_SUFFIXES)):
+                unavailable()
+            clean = {'url': value['url'], 'protocol': protocol}
+            for key in text_keys:
+                if key in value:
+                    clean[key] = text(value[key])
+            for key in number_keys:
+                if key in value:
+                    clean[key] = number(value[key])
+            if value.get('http_headers') is not None:
+                clean['http_headers'] = headers(value['http_headers'])
+            return clean
+
+        # Locked yt-dlp conventions that may be present; validated, then dropped.
+        if info.get('_type', 'video') != 'video' or info.get('is_live', False) is not False:
+            unavailable()
+        if info.get('live_status') not in (None, 'not_live'):
+            unavailable()
+        if ('direct' in info and type(info['direct']) is not bool) or info.get('hls_aes') is not None:
+            unavailable()
+        for key in ('webpage_url_basename', 'webpage_url_domain'):
+            text(info.get(key))
+        clean = {}
+        for key in _SOURCE_TEXT_KEYS:
+            if key in info:
+                clean[key] = text(info[key])
+        for key in _SOURCE_NUMBER_KEYS:
+            if key in info:
+                clean[key] = number(info[key])
+        for key in ('thumbnail', 'original_url', 'webpage_url'):
+            if key in info:
+                if info[key] is not None:
+                    if type(info[key]) is not str:
+                        unavailable()
+                    validate_url(info[key], OutboundPurpose.METADATA, policy, initial=False)
+                clean[key] = info[key]
+        if 'url' in info:
+            clean.update(url_leaf({key: info[key] for key in ('url', 'protocol', 'http_headers') if key in info},
+                                  OutboundPurpose.MEDIA))
+        elif 'protocol' in info:
+            unavailable()
+        elif info.get('http_headers') is not None:
+            clean['http_headers'] = headers(info['http_headers'])
+        if 'formats' in info:
+            if info['formats'] is not None and type(info['formats']) is not list:
+                unavailable()
+            for item in info['formats'] or []:
+                # Unprocessed results never get yt-dlp's filled-in format_id; consumers index it.
+                if type(item) is not dict or type(item.get('format_id')) is not str or not item['format_id']:
+                    unavailable()
+            clean['formats'] = None if info['formats'] is None else [
+                url_leaf(item, OutboundPurpose.MEDIA, _FORMAT_TEXT_KEYS, _FORMAT_NUMBER_KEYS)
+                for item in info['formats']]
+        for key in ('subtitles', 'automatic_captions'):
+            if key not in info:
+                continue
+            tracks = info[key]
+            if tracks is None:
+                clean[key] = None
+                continue
+            if type(tracks) is not dict:
+                unavailable()
+            clean[key] = {}
+            for language, items in tracks.items():
+                if type(items) is not list:
+                    unavailable()
+                clean[key][language] = [url_leaf(item, OutboundPurpose.SUBTITLE, _SUBTITLE_TEXT_KEYS)
+                                        for item in items]
+        return clean
+    return state.call(validate, request_error=False)
+
+
+def _restrict_extractors(ydl) -> None:
+    for key in [key for key in ydl._ies if key not in _METADATA_EXTRACTORS]:
+        del ydl._ies[key]
+        ydl._ies_instances.pop(key, None)
+    if set(ydl._ies) != set(_METADATA_EXTRACTORS):
+        raise OutboundUnavailableError() from None
+
+
+class _GuardedMetadataYoutubeDL(_GuardedYoutubeDL):
+    """Explicit-ctx metadata instance: extract_info returns only the bounded projection."""
+
+    def get_info_extractor(self, ie_key):
+        # Extractors may look up other IEs by key; never instantiate one outside the allowlist.
+        if ie_key not in _METADATA_EXTRACTORS:
+            raise OutboundUnavailableError() from None
+        return super().get_info_extractor(ie_key)
+
+    def extract_info(self, url, download=False, ie_key=None, extra_info=None,
+                     process=False, force_generic_extractor=False):
+        result = super().extract_info(url, download=download, ie_key=ie_key, extra_info=extra_info,
+                                      process=process, force_generic_extractor=force_generic_extractor)
+        try:
+            return _validate_source_metadata(result, self._u4_state)
+        except (OutboundError, ControlledHttpError):
+            self._stop_owned_responses()
+            raise
+
+
+# U5b: one controlled single-file download for the C3 worker's 'ytdlp' executor.
+# Media containers a download may produce (seal_candidate's ext); anything else is unavailable.
+DOWNLOAD_EXTS = frozenset({'mp4', 'webm', 'mkv', 'mov', 'flv', 'm4a', 'mp3', 'ogg', 'opus', 'aac', 'wav'})
+_DOWNLOAD_PHASE_SECONDS = 1800.0  # never beyond the absolute 30-minute run window
+# The three format-id shapes the product stores (get_direct_url/download routes, restrict_format).
+_PLAIN_FORMAT = re.compile(r'[A-Za-z0-9_.-]{1,64}\Z')
+_ID_HEIGHT_FORMAT = re.compile(r'([A-Za-z0-9_.-]{1,64})\[height<=([0-9]{1,5})\]\Z')
+_BEST_HEIGHT_FORMAT = re.compile(r'bestvideo\[height<=([0-9]{1,5})\]\+bestaudio/best\[height<=([0-9]{1,5})\]\Z')
+_DOWNLOAD_HEADERS = frozenset({'user-agent', 'referer', 'accept', 'accept-language'})
+
+
+class DownloadFormatUnsupported(Exception):
+    """No single file matches the stored format id here (fixed, no text): never guess another."""
+
+
+def _parse_download_format(format_id) -> tuple[str | None, int | None]:
+    """(exact leaf id or None for the default choice, max height or None); unsupported raises."""
+    if type(format_id) is not str:
+        raise DownloadFormatUnsupported()
+    if format_id in ('', 'best'):
+        return None, None
+    match = _BEST_HEIGHT_FORMAT.match(format_id)
+    if match and match.group(1) == match.group(2):
+        return None, int(match.group(1))  # the merge half is never available here: best single file
+    match = _ID_HEIGHT_FORMAT.match(format_id)
+    if match:
+        return (None if match.group(1) == 'best' else match.group(1)), int(match.group(2))
+    if _PLAIN_FORMAT.match(format_id) and format_id != 'best':
+        return format_id, None
+    raise DownloadFormatUnsupported()
+
+
+@dataclass(frozen=True, slots=True)
+class DownloadedFile:
+    path: Path = field(repr=False)
+    ext: str
+
+
+def _select_download(projection: dict, format_id: str) -> dict:
+    """Pick one single-file leaf of the bounded projection; returns a new minimal U5a info dict.
+
+    Unprocessed formats are in extractor order (yt-dlp sorts only when processing), so no order
+    is assumed. An exact id must match one leaf; otherwise a lone leaf (direct media, also
+    audio- or video-only) is taken, else the best-ranked complete leaf by height, then size.
+    A height limit excludes leaves of unknown height (membership limits fail closed). Merges,
+    unknown containers and ambiguous ids raise DownloadFormatUnsupported; a Bilibili target is
+    OutboundUnavailableError (safety). Nothing is sent here.
+    """
+    exact, max_height = _parse_download_format(format_id)
+    leaves = list(projection.get('formats') or ([projection] if 'url' in projection else []))
+    if max_height is not None:
+        leaves = [item for item in leaves if type(item.get('height')) is int and item['height'] <= max_height]
+    if exact is not None:
+        matches = [item for item in leaves if item.get('format_id') == exact]
+        chosen = matches[0] if len(matches) == 1 else None
+    elif len(leaves) == 1:
+        chosen = leaves[0]
+    else:
+        complete = [(index, item) for index, item in enumerate(leaves)
+                    if item.get('vcodec') != 'none' and item.get('acodec') != 'none']
+
+        def rank(entry):
+            index, item = entry
+            size = item.get('filesize') or item.get('filesize_approx') or -1
+            return (item.get('height') if type(item.get('height')) is int else -1, size, index)
+        chosen = max(complete, key=rank)[1] if complete else None
+    # Safety first: a Bilibili target is refused whatever its container (never "no direct link").
+    if chosen is not None and (_bilibili_family(chosen['url']) or is_bilibili_url(chosen['url'])):
+        raise OutboundUnavailableError() from None
+    ext = None if chosen is None else (chosen.get('ext') or projection.get('ext'))
+    if chosen is None or type(ext) is not str or ext not in DOWNLOAD_EXTS:
+        raise DownloadFormatUnsupported()  # no matching single file: a business outcome, not a safety one
+    minimal = {'url': chosen['url'], 'protocol': chosen['protocol'], 'ext': ext}
+    if chosen.get('format_id') is not None:
+        minimal['format_id'] = chosen['format_id']
+    # Only plain request headers reach HttpFD (never Range/If-* that could yield partial content).
+    merged = {}
+    for source in (projection.get('http_headers') or {}, chosen.get('http_headers') or {}):
+        for name, value in source.items():
+            if name.lower() in _DOWNLOAD_HEADERS:
+                merged[name.lower()] = (name, value)  # one value per header name; the leaf wins
+    headers = dict(merged.values())
+    if headers:
+        minimal['http_headers'] = headers
+    for key in ('id', 'title'):
+        if type(projection.get(key)) is str:
+            minimal[key] = projection[key]
+    return minimal
+
+
+def _extract_projection(ydl, url: str) -> dict:
+    """Guarded extraction; an HTTP failure keeps its status class (a transient 503 stays retryable)."""
+    status = None
+    try:
+        return ydl.extract_info(url, download=False)
+    except OutboundError as error:
+        status = ydl._u5b_metadata_status
+        if error.code != 'outbound_unavailable' or status is None or not 400 <= status <= 999:
+            raise
+    # Raised outside the except suite so the safe error carries no context.
+    raise ControlledHttpStatusError(status) from None
+
+
+def resolve_direct(url: str, format_id: str, *, network: SourceNetworkContext) -> tuple[str, dict] | None:
+    """U6: the selected single file's URL and plain headers for a browser download, or None.
+
+    Metadata only (one guarded extraction, Generic extractor); the media itself is never
+    requested. None means no single file matches the stored format id (the caller may fall
+    back to a server download); every safety, policy, budget or HTTP failure is raised.
+    """
+    try:
+        _parse_download_format(format_id)
+    except DownloadFormatUnsupported:
+        return None
+    with _guarded_metadata_source(url, network) as ydl:
+        try:
+            selected = _select_download(_extract_projection(ydl, url), format_id)
+        except DownloadFormatUnsupported:
+            return None
+    return selected['url'], dict(selected.get('http_headers') or {})
+
+
+@contextmanager
+def download_attempt(url: str, format_id: str, *, scratch_dir: Path, max_bytes: int, deadline_seconds: float,
+                     network: SourceNetworkContext | None = None, progress_hook=None) -> Iterator[DownloadedFile]:
+    """Controlled Bilibili API/DASH, or guarded Generic metadata -> native HttpFD.
+
+    The file is scratch_dir/media.bin inside the with block; the caller links it elsewhere before
+    leaving (the U5a seam removes its own files on exit). Only yt-dlp's Generic extractor is
+    allowed: direct media and pages embedding it; a redirecting source page is unavailable
+    (Generic returns a url result). An unsupported stored format id raises
+    DownloadFormatUnsupported before any I/O. Without an explicit network the current scope
+    is used, else the runtime factory, which stays closed (OutboundUnavailableError) until the
+    environmental gate is verified. Errors are the fixed U4/U5a safe types; no fallback or retry.
+    Bilibili instead uses two fixed official API GETs, two bounded HTTPS CDN
+    files and a local-only ffmpeg merger; its stored selector still binds height.
+    """
+    _parse_download_format(format_id)  # an unsupported stored id fails before any I/O
+    if type(deadline_seconds) not in (int, float) or not math.isfinite(deadline_seconds) or deadline_seconds <= 0:
+        raise ValueError('Invalid download deadline') from None
+    limits = _YtdlpReadLimits(max_bytes=max_bytes, phase_seconds=min(deadline_seconds, _DOWNLOAD_PHASE_SECONDS),
+                              io_timeout=_METADATA_LIMITS.io_timeout, identity_only=True)
+    if network is None:
+        network = current_source_network() or make_runtime_source_network()
+    if _bilibili_family(url):
+        with _download_bilibili_attempt(url, format_id, scratch_dir=scratch_dir,
+                max_bytes=max_bytes, deadline_seconds=deadline_seconds, network=network,
+                progress_hook=progress_hook) as downloaded:
+            yield downloaded
+        return
+    # Extraction keeps the tight metadata limits; only the HttpFD phase gets the attempt's limits.
+    with _guarded_metadata_source(url, network) as ydl:
+        selected = _select_download(_extract_projection(ydl, url), format_id)
+        ydl._u5b_enter_download(limits)
+        with ydl._download_http_file(selected, target_dir=scratch_dir) as path:
+            yield DownloadedFile(path, selected['ext'])
+
+
+def _controlled_bilibili_projection(url: str, *, deadline=None) -> dict:
+    """Only the fixed official API adapter; no YoutubeDL/extractor construction or fallback."""
+    try:
+        info = extract_api_video(url, deadline=deadline)
+    except BilibiliApiError as error:
+        raise _BilibiliSourceError(error.category) from None
+    play = info.pop('play_info', None)
+    if not isinstance(play, dict) or not isinstance(play.get('dash'), dict):
+        # Progressive advertising does not establish a verified stream height.
+        # The controlled adapter accepts DASH only and never guesses entitlement.
+        raise _BilibiliSourceError(ERROR_UNSUPPORTED) from None
+    formats = []
+    for kind in ('video', 'audio'):
+        # The ordinary AAC track is sufficient for the local MP4 merger. Optional
+        # Dolby/FLAC tracks do not trigger probes or any alternate network path.
+        for stream in play['dash'][kind]:
+            codec = stream.get('codecs', '')
+            formats.append({'format_id': str(stream.get('id', '')), 'url': stream['baseUrl'],
+                'protocol': 'https', 'ext': 'mp4' if kind == 'video' else 'm4a',
+                'height': stream.get('height') if kind == 'video' else None,
+                'width': stream.get('width') if kind == 'video' else None,
+                'vcodec': codec if kind == 'video' else 'none',
+                'acodec': codec if kind == 'audio' else 'none',
+                'tbr': stream.get('bandwidth') if type(stream.get('bandwidth')) is int else 0})
+    info.update(formats=formats, extractor='BiliBili', extractor_key='BiliBili')
+    return info
+
+
+def _merge_bilibili_files(video: Path, audio: Path, output: Path, *, max_bytes: int, deadline: float):
+    """Fixed local files, demuxers and protocols only; no provider data enters ffmpeg argv."""
+    ffmpeg = shutil.which('ffmpeg')
+    if ffmpeg is None:
+        raise OutboundUnavailableError() from None
+    command = [ffmpeg, '-nostdin', '-hide_banner', '-loglevel', 'error', '-n']
+    for path in (video, audio):
+        command += ['-protocol_whitelist', 'file', '-format_whitelist', 'mov',
+                    '-f', 'mov', '-enable_drefs', '0', '-use_absolute_path', '0', '-i', str(path.resolve())]
+    command += ['-map', '0:v:0', '-map', '1:a:0', '-c', 'copy', '-f', 'mp4',
+                '-fs', str(max_bytes + 1), str(output.resolve())]
+    child = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL, creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+    try:
+        while child.poll() is None:
+            if time.monotonic() >= deadline:
+                raise OutboundError('source_timeout', 'deadline') from None
+            if output.exists() and output.stat().st_size > max_bytes:
+                raise OutboundError('source_too_large', 'response_raw_bytes') from None
+            time.sleep(min(.05, max(.001, deadline - time.monotonic())))
+        if child.returncode != 0 or not output.is_file():
+            raise OutboundUnavailableError() from None
+        if output.stat().st_size > max_bytes:
+            raise OutboundError('source_too_large', 'response_raw_bytes') from None
+        if time.monotonic() >= deadline:
+            raise OutboundError('source_timeout', 'deadline') from None
+    finally:
+        if child.poll() is None:
+            child.kill()
+        child.wait()
+
+
+@contextmanager
+def _download_bilibili_attempt(url, format_id, *, scratch_dir, max_bytes, deadline_seconds, network,
+                               progress_hook):
+    deadline = time.monotonic() + deadline_seconds
+    try:
+        directory = scratch_dir.lstat()
+    except OSError:
+        raise OutboundUnavailableError() from None
+    if not stat.S_ISDIR(directory.st_mode) or scratch_dir.is_symlink():
+        raise OutboundUnavailableError() from None
+    exact, height = _parse_download_format(format_id)
+    video, audio, output = (scratch_dir / name for name in ('video.bin', 'audio.bin', 'media.bin'))
+    owned = []
+    total = 0
+    try:
+        with source_network_scope(network):
+            try:
+                info = _controlled_bilibili_projection(url, deadline=deadline)
+            except _BilibiliSourceError:
+                raise OutboundUnavailableError() from None
+        videos = [f for f in info['formats'] if f['vcodec'] != 'none'
+                  and (height is None or type(f['height']) is int and f['height'] <= height)
+                  and (exact is None or f['format_id'] == exact)]
+        audios = [f for f in info['formats'] if f['acodec'].lower().startswith('mp4a')]
+        if not videos or not audios:
+            raise DownloadFormatUnsupported()
+        streams = (max(videos, key=lambda f: (f['height'], f['vcodec'].startswith('avc'), f['tbr'])),
+                   max(audios, key=lambda f: f['tbr']))
+        for stream, path in zip(streams, (video, audio)):
+            target = stream['url']
+            if safe_media_url(target) != target:
+                raise OutboundUnavailableError() from None
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise OutboundError('source_timeout', 'deadline') from None
+            if total >= max_bytes:
+                raise OutboundError('source_too_large', 'raw_bytes') from None
+            with path.open('xb') as handle:
+                owned.append(path)
+                with network.stream(target, purpose=OutboundPurpose.MEDIA,
+                        headers={'Referer': info['http_headers']['Referer'], 'User-Agent': 'Mozilla/5.0'},
+                        follow_redirects=False, max_bytes=max_bytes-total,
+                        phase_seconds=remaining, io_timeout=min(8, remaining), identity_only=True) as response:
+                    response.raise_for_status()
+                    if response.status_code != 200 or response.headers.get('Content-Encoding', '').lower().strip() not in {'', 'identity'}:
+                        raise OutboundUnavailableError() from None
+                    for chunk in response.iter_bytes():
+                        total += len(chunk)
+                        if progress_hook is not None:
+                            progress_hook(total)  # before disk write/cleanup, including failed attempts
+                        if total > max_bytes:
+                            raise OutboundError('source_too_large', 'raw_bytes') from None
+                        handle.write(chunk)
+                handle.flush()
+                os.fsync(handle.fileno())
+        if output.exists() or output.is_symlink():
+            raise OutboundUnavailableError() from None
+        owned.append(output)
+        _merge_bilibili_files(video, audio, output, max_bytes=max_bytes, deadline=deadline)
+        if not output.is_file() or output.stat().st_size > max_bytes:
+            raise OutboundError('source_too_large', 'raw_bytes') from None
+        yield DownloadedFile(output, 'mp4')
+    finally:
+        if progress_hook is not None:
+            progress_hook(total)
+        for path in reversed(owned):
+            path.unlink(missing_ok=True)

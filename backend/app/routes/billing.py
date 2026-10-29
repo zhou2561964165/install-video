@@ -48,5 +48,12 @@ async def webhook(request: Request, session: Session = Depends(get_session)):
         raise HTTPException(400, detail={"error_type": "billing_signature", "error": "支付通知签名无效"}) from None
     # The synchronous SDK runs off the event loop, bounded by its configured timeout.
     from starlette.concurrency import run_in_threadpool
+    if session.get_bind().dialect.name == 'postgresql' or settings.billing_inbox_mode != 'legacy_sync':
+        from ..services.billing_pg import BillingConfiguration
+        from ..services.billing_inbox import receive
+        cfg = BillingConfiguration.configured(settings, session.get_bind().dialect.name)
+        engine = session.get_bind()
+        session.rollback()
+        return await run_in_threadpool(receive, engine, event, bytes(payload), cfg)
     await run_in_threadpool(billing.apply_event, session, event)
     return {"received": True}

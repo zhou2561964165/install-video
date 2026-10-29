@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..'),dist=path.join(root,'dist');
+const walk=(dir)=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.isDirectory()?walk(path.join(dir,entry.name)):[path.join(dir,entry.name)]);
+const assets=walk(dist).filter(file=>/\.(js|html|css)$/.test(file));
+if(!assets.length)throw new Error('Production artifact is absent');
+const output=assets.map(file=>fs.readFileSync(file,'utf8')).join('\n');
+const markers=['LocalDemoOnly!26','operator@example.invalid','viewer@example.invalid','/__admin_mock/','usr_demo_','job_demo_','video.example.invalid','所有账号与记录均为合成'];
+for(const marker of markers)if(output.includes(marker))throw new Error(`Development marker in production: ${marker}`);
+const html=fs.readFileSync(path.join(dist,'index.html'),'utf8');
+const publicPath=process.env.ADMIN_PUBLIC_PATH||'/admin/';
+if(!html.includes(publicPath))throw new Error('Static public path is missing');
+const runtime=fs.readFileSync(path.join(root,'src/.umi-production/plugin-antd/runtime.tsx'),'utf8');
+if(!runtime.includes('<ConfigProvider {...antdConfig}>'))throw new Error('Official theme provider is absent');
+console.log(JSON.stringify({files:assets.length,productionMockMarkers:0,publicPath,officialThemeProvider:true,indexHtmlSha256:createHash('sha256').update(html).digest('hex'),checks:'passed'}));

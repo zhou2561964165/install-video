@@ -10,6 +10,10 @@ import httpx
 from ..config import settings
 from . import network_retry
 from .bilibili_subtitle_source import InvalidVideoPartError, bilibili_tracks
+from .bilibili_session import SessionError
+from .outbound_httpx import ControlledHttpError
+from .outbound_policy import OutboundError, OutboundPurpose, OutboundUnavailableError
+from .source_network import current_source_network
 
 _CAPTION_FORMATS = {"srt", "vtt", "json3", "ttml", "srv3"}
 _LANGUAGE_ALIASES = {
@@ -57,6 +61,20 @@ def _archive_tracks(url: str) -> dict:
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", identifier) or identifier in {".", ".."}:
         return {"tracks": []}
     metadata_url = f"https://archive.org/metadata/{quote(identifier, safe='')}"
+    network = current_source_network()
+    if network is not None:
+        with network.stream(metadata_url, purpose=OutboundPurpose.METADATA,
+                max_bytes=settings.subtitle_max_bytes, phase_seconds=settings.subtitle_timeout_seconds,
+                io_timeout=settings.subtitle_timeout_seconds) as response:
+            response.raise_for_status()
+            body = response.read()
+    else:
+        body = _archive_metadata(metadata_url)
+    data = json.loads(body)
+    return _archive_payload(data, identifier, parts)
+
+
+def _archive_metadata(metadata_url: str) -> bytes:
     with httpx.Client(timeout=settings.subtitle_timeout_seconds, follow_redirects=True) as client:
         def get_metadata() -> bytes:
             with client.stream("GET", metadata_url) as response:
@@ -73,7 +91,10 @@ def _archive_tracks(url: str) -> dict:
             max_retries=settings.network_retries,
             backoff_seconds=settings.network_retry_backoff_seconds,
         )
-    data = json.loads(body)
+    return body
+
+
+def _archive_payload(data, identifier: str, parts: list[str]) -> dict:
     if not isinstance(data, dict) or data.get("is_dark"):
         return {"tracks": []}
     metadata = data.get("metadata", {})
@@ -121,4 +142,17 @@ _ADAPTERS = {"archive.org": _archive_tracks, "www.archive.org": _archive_tracks,
 def resolve_public_subtitles(url: str) -> dict:
     parsed = urlparse(url)
     adapter = _ADAPTERS.get(parsed.hostname or "") if parsed.scheme in {"http", "https"} else None
-    return adapter(url) if adapter else {"tracks": []}
+    if current_source_network() is None:
+        return adapter(url) if adapter else {"tracks": []}
+    # Until the yt-dlp owner installs its guarded handler, an empty public
+    # result or legacy parsing/network error must not enter that fallback.
+    try:
+        result = adapter(url) if adapter else {"tracks": []}
+        if result.get('tracks'):
+            return result
+    except (OutboundError, ControlledHttpError, InvalidVideoPartError, SessionError):
+        raise
+    except (httpx.HTTPError, ValueError, TypeError):
+        pass
+    # Raise outside the except suite; raw source errors must not be retained.
+    raise OutboundUnavailableError() from None

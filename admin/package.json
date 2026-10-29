@@ -1,0 +1,52 @@
+{
+  "name": "install-video-admin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Isolated admin frontend derived from official Ant Design Pro 6.0.3",
+  "license": "MIT",
+  "scripts": {
+    "dev": "cross-env PORT=4174 ADMIN_MOCK=false max dev",
+    "dev:mock": "cross-env PORT=4174 ADMIN_MOCK=true max dev",
+    "setup": "max setup",
+    "build": "cross-env ADMIN_MOCK=false max build",
+    "tsc": "tsc --noEmit",
+    "preview": "max preview --port 4174",
+    "test:core": "vitest run",
+    "codegen": "node tools/codegen/generate.mjs"
+  },
+  "browserslist": [
+    "defaults"
+  ],
+  "dependencies": {
+    "@ant-design/icons": "^6.3.4",
+    "@ant-design/pro-components": "^3.1.14-2",
+    "antd": "^6.6.7",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@umijs/max": "^4.7.27",
+    "cross-env": "^10.1.0",
+    "typescript": "^7.0.2",
+    "vitest": "3.2.4"
+  },
+  "overrides": {
+    "@umijs/plugins": {
+      "@ant-design/pro-components": "$@ant-design/pro-components",
+      "axios": "^1.19.0"
+    },
+    "dva-immer": {
+      "immer": "^9.0.6"
+    },
+    "cosmiconfig": {
+      "js-yaml": "^4.3.1"
+    },
+    "postcss": "^8.5.23"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

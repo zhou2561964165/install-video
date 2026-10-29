@@ -1,0 +1,30 @@
+/** Run the installed Umi mock loader against the real application config, without a server. */
+const assert=require('node:assert/strict');
+const path=require('node:path');
+const {register}=require('@umijs/utils');
+register.register({implementor:require('@umijs/bundler-utils/compiled/esbuild')});
+process.env.NODE_ENV='development';process.env.ADMIN_MOCK='true';
+const root=path.resolve(__dirname,'../..');
+const config=require(path.join(root,'config/config.ts')).default;
+assert.notEqual(config.mock,false);
+assert.ok(config.antd.configProvider,'The runtime theme must have an official ConfigProvider');
+const {getMockData}=require('@umijs/preset-umi/dist/features/mock/getMockData.js');
+const data=getMockData({cwd:root,mockConfig:config.mock});
+assert.equal(Object.keys(data).length,5,'Exactly the three API dispatchers plus help/scenario');
+assert.deepEqual([...new Set(Object.values(data).map(value=>path.relative(root,value.file)))],['mock'+path.sep+'admin.ts']);
+const base=config.define.ADMIN_API_BASE;
+const call=(key,request)=>{
+ const result={headers:{}};
+ const response={setHeader:(name,value)=>{result.headers[name]=value;},status:code=>{result.status=code;return response;},json:body=>{result.body=body;},end:()=>{}};
+ data[key].handler(request,response);return result;
+};
+const anonymous=call(`GET ${base}/*`,{method:'GET',path:`${base}/auth/me`,headers:{},query:{}});
+assert.equal(anonymous.status,401);
+const help=call('GET /__admin_mock/help',{method:'GET',path:'/__admin_mock/help',headers:{},query:{}});
+assert.equal(help.status,200);assert.match(help.body.warning,/MOCK ONLY/);
+const login=call(`POST ${base}/*`,{method:'POST',path:`${base}/auth/login`,headers:{},query:{},body:{email:help.body.accounts[0].email,password:help.body.accounts[0].password}});
+assert.equal(login.status,200);assert.match(login.headers['Set-Cookie'],/HttpOnly/);
+const cookie=login.headers['Set-Cookie'].split(';')[0];
+const me=call(`GET ${base}/*`,{method:'GET',path:`${base}/auth/me`,headers:{cookie},query:{}});
+assert.equal(me.status,200);assert.ok(me.body.csrf_token);
+console.log(JSON.stringify({loader:'installed @umijs/preset-umi getMockData',routeCount:Object.keys(data).length,discoveredFiles:['mock/admin.ts'],configProviderEnabled:true,anonymous:anonymous.status,login:login.status,me:me.status,help:help.status,checks:'passed'}));

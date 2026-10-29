@@ -15,3 +15,4 @@ export const LANDING_FEATURES = [
   { name: '本地音频转写', value: '支持', detail: '显式识别视频音频，保留独立文本与时间轴。', supported: true },
   { name: '网页直接使用', value: '支持', detail: '用户无需安装客户端，手机与电脑均可访问。', supported: true },
 ];
+

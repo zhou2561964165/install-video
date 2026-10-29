@@ -84,6 +84,14 @@ def _write_lock(session):
 
 
 def checkout(session: Session, user: User) -> dict:
+    if session.get_bind().dialect.name == 'postgresql' or settings.billing_inbox_mode != 'legacy_sync':
+        from .billing_pg import BillingConfiguration, checkout as pg_checkout
+        cfg = BillingConfiguration.configured(settings, session.get_bind().dialect.name)
+        if not checkout_available():
+            raise unavailable()
+        uid, engine = user.id, session.get_bind()
+        session.rollback()
+        return pg_checkout(engine, uid, cfg, settings, client)
     if not checkout_available():
         raise unavailable()
     user_id = user.id
@@ -181,12 +189,18 @@ def portal(session: Session, user: User):
     row = session.get(Membership, user.id)
     if not portal_configured() or not row or not row.customer_id or not row.subscription_id:
         raise unavailable("当前没有可管理的订阅")
+    customer_id = row.customer_id
+    session.rollback()  # Provider I/O never holds a read transaction/connection.
+    failed = False
     try:
-        obj = client().v1.billing_portal.sessions.create({"customer": row.customer_id,
+        obj = client().v1.billing_portal.sessions.create({"customer": customer_id,
             "return_url": settings.stripe_public_origin.rstrip("/") + "/?membership=return"})
-        return {"url": obj["url"]}
+        result = {"url": obj["url"]}
     except Exception:
-        raise unavailable("会员管理暂不可用") from None
+        failed = True
+    if failed:
+        raise unavailable("会员管理暂不可用")
+    return result
 
 
 def _id(obj):
@@ -307,6 +321,9 @@ def _preload(session, event):
 
 
 def apply_event(session: Session, event: dict):
+    if session.get_bind().dialect.name != 'sqlite' or settings.billing_inbox_mode != 'legacy_sync':
+        # PG signed events may only be applied with a durable Inbox lease.
+        raise unavailable()
     event_id, kind = event["id"], event["type"]
     obj = event["data"]["object"]
     try:

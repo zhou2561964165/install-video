@@ -19,6 +19,9 @@ from . import network_retry
 from . import ytdlp_service
 from .bilibili_session import SessionError, cookie_jar_for_url, is_bilibili_url
 from .bilibili_subtitle_source import apply_session_cookies
+from .outbound_httpx import ControlledHttpError
+from .outbound_policy import OutboundError, OutboundPurpose, OutboundUnavailableError
+from .source_network import SourceNetworkContext, current_source_network, source_headers, source_network_scope
 from .subtitle_timing import SubtitleSegment, TimingError, parse_segments
 
 _FORMAT_PRIORITY = {"vtt": 0, "srt": 1, "json3": 2, "ttml": 3, "srv3": 4, "bilibili_json": 5}
@@ -190,29 +193,49 @@ def fetch_subtitle_document(
     language: str | None = None,
     *,
     client: httpx.Client | None = None,
+    network: SourceNetworkContext | None = None,
 ) -> SubtitleDocument:
+    with source_network_scope(network) as active:
+        if active is not None and client is not None:
+            raise OutboundUnavailableError() from None
+        return _fetch_subtitle_document(video_url, language, client=client)
+
+
+def _fetch_subtitle_document(video_url: str, language: str | None, *, client) -> SubtitleDocument:
     try:
         payload = ytdlp_service.extract_subtitle_tracks(video_url)
     except SessionError as exc:
         raise SubtitleServiceError("verification_required", ytdlp_service.public_error_message(exc)) from None
     try:
         return _document_from_tracks(payload, language, video_url=video_url, client=client)
+    except (OutboundError, ControlledHttpError):
+        raise
     except SubtitleServiceError as native_error:
         if native_error.error_type == "verification_required" or payload.get("_source") != "public":
             raise
-        # Native captions can expire or lack the requested language. Try the narrow
-        # generic entrypoint once, retaining the native error if it cannot help.
-        try:
-            generic = ytdlp_service.extract_subtitle_tracks(video_url, use_public_sources=False)
-            return _document_from_tracks(generic, language, video_url=video_url, client=client)
-        except SessionError as exc:
-            raise SubtitleServiceError("verification_required", ytdlp_service.public_error_message(exc)) from None
-        except SubtitleServiceError as exc:
-            if exc.error_type == "verification_required":
-                raise
-            raise native_error from None
-        except Exception:
-            raise native_error from None
+        if current_source_network() is None:
+            return _legacy_document_fallback(video_url, language, client, native_error)
+    # The generic yt-dlp handler is not guarded yet. Fail after leaving the
+    # exception suite so source/parser exception context is not retained.
+    raise OutboundUnavailableError() from None
+
+
+def _legacy_document_fallback(video_url, language, client, native_error):
+    # Native captions can expire or lack the requested language. Try the narrow
+    # generic entrypoint once, retaining the native error if it cannot help.
+    try:
+        generic = ytdlp_service.extract_subtitle_tracks(video_url, use_public_sources=False)
+        return _document_from_tracks(generic, language, video_url=video_url, client=client)
+    except (OutboundError, ControlledHttpError):
+        raise
+    except SessionError as exc:
+        raise SubtitleServiceError("verification_required", ytdlp_service.public_error_message(exc)) from None
+    except SubtitleServiceError as exc:
+        if exc.error_type == "verification_required":
+            raise
+        raise native_error from None
+    except Exception:
+        raise native_error from None
 
 
 def _document_from_tracks(
@@ -232,6 +255,28 @@ def _document_from_tracks(
         if len(raw.encode("utf-8")) > settings.subtitle_max_bytes:
             raise SubtitleServiceError("subtitle_too_large", "字幕文件超过大小限制")
         return _build_document(payload, selected, tracks, raw, selected_format["ext"])
+    network = current_source_network()
+    if network is not None:
+        headers = source_headers(selected_format['http_headers'])
+        bili_source = is_bilibili_url(video_url)
+        if bili_source:
+            headers = {key: value for key, value in headers.items() if key.lower() != 'referer'}
+            headers['Referer'] = f'https://www.bilibili.com{urlsplit(video_url).path}'
+        # A CDN never needs to read the session file. Only a concrete official
+        # caption URL may request a fresh, strictly scoped jar.
+        cookies = cookie_jar_for_url(selected_format['url']) if bili_source and is_bilibili_url(selected_format['url']) else None
+        with network.stream(selected_format['url'], purpose=OutboundPurpose.SUBTITLE,
+                headers=headers, cookies=cookies,
+                follow_redirects=not (bili_source or selected_format['ext'] == 'bilibili_json'),
+                max_bytes=settings.subtitle_max_bytes, phase_seconds=settings.subtitle_timeout_seconds,
+                io_timeout=settings.subtitle_timeout_seconds) as response:
+            response.raise_for_status()
+            content = response.read()
+            # Preserve HTTPX's declared charset selection without exposing its
+            # raw transport/request or using an HTTPX client for source I/O.
+            encoding = httpx.Response(200, headers=response.headers, content=content).encoding
+        return _build_document(payload, selected, tracks,
+            content.decode(encoding or 'utf-8', errors='replace'), selected_format['ext'])
     owns_client = client is None
     bili_source = is_bilibili_url(video_url)
     try:

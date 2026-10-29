@@ -61,3 +61,30 @@ def test_cleanup_expired_removes_file(tmp_path):
     assert n == 1
     assert not (tmp_path / "old.mp4").exists()
     assert (tmp_path / "new.mp4").exists()
+
+
+def test_cleanup_expired_ignores_durable_v2_jobs(tmp_path):
+    # C2 review minor: the in-process legacy cleaner must never delete v2 (lease-fenced) media or
+    # rows; their lifecycle belongs to C5 (expired -> deleting -> deleted with tombstones).
+    init_db()
+    from sqlmodel import Session
+
+    durable = Job(
+        url="https://example.com/v2-durable",
+        status=JobStatus.queued,
+        file_path=str(tmp_path / "durable.mp4"),
+        expires_at=datetime.now(timezone.utc) - timedelta(seconds=10),
+        execution_version=2,
+        internal_state="queued",
+        run_deadline_at=datetime.now(timezone.utc) + timedelta(minutes=30),
+    )
+    (tmp_path / "durable.mp4").write_bytes(b"z")
+    with Session(engine) as s:
+        s.add(durable)
+        s.commit()
+        durable_id = durable.id
+
+    JobManager(max_workers=1).cleanup_expired()
+    assert (tmp_path / "durable.mp4").exists()
+    with Session(engine) as s:
+        assert s.get(Job, durable_id) is not None

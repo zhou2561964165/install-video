@@ -1,0 +1,206 @@
+﻿[
+    {
+        "sha256":  "6fb0756f69972388fa3008c029696a2430ada87b7979d9e381ae24a1a20531dd",
+        "path":  {
+                     "value":  "LICENSE",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  1
+                 }
+    },
+    {
+        "sha256":  "6babc9fce241bbc37569dd18a23bb235000c9c7495e3aebce6768d3598c36282",
+        "path":  {
+                     "value":  "package.json",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  2
+                 }
+    },
+    {
+        "sha256":  "d29ebd82fa9ffc4271b6a203878e9af11bb895205f701980422ce9d761dda8ea",
+        "path":  {
+                     "value":  "tsconfig.json",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  3
+                 }
+    },
+    {
+        "sha256":  "19052a4b5e8a9b5ad7387cc5427a33cc828e644be537cf97b49a10d1de0669a1",
+        "path":  {
+                     "value":  ".gitignore",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  4
+                 }
+    },
+    {
+        "sha256":  "2d2a164460fb5bcd1d8e4b4bab8dfd4b05680863a3f3af56aa4b2b016ef843cc",
+        "path":  {
+                     "value":  ".npmrc",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  5
+                 }
+    },
+    {
+        "sha256":  "4eea147ef3f8bf2bed29bf14ceadab148cefac98d7715cd897200c739a51082c",
+        "path":  {
+                     "value":  "config/config.ts",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  6
+                 }
+    },
+    {
+        "sha256":  "c1b3c3cb30de5e8393559356698f12fd7858510f34f44df0566bf7b4f0811a27",
+        "path":  {
+                     "value":  "config/defaultSettings.ts",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  7
+                 }
+    },
+    {
+        "sha256":  "262b35fae6a8dd2eee91dce5947105cbd26df362f657bfc4febd9c30a08f69ef",
+        "path":  {
+                     "value":  "config/routes.ts",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  8
+                 }
+    },
+    {
+        "sha256":  "d04baf60183c16062537745ae96525b6c25490b0034f74b3c5f7e663cf67e931",
+        "path":  {
+                     "value":  "config/proxy.ts",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  9
+                 }
+    },
+    {
+        "sha256":  "f0f514637f019347c77a350bf39e033766debcd15af91b87e3910b39f9356491",
+        "path":  {
+                     "value":  "src/app.tsx",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  10
+                 }
+    },
+    {
+        "sha256":  "aa30b72f379973395acdd5e9f226c0453f0e9bfa4d0382441d493f728f3ad8e7",
+        "path":  {
+                     "value":  "src/access.ts",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  11
+                 }
+    },
+    {
+        "sha256":  "f50f46a779cdafb7806f4ae5fc601b6a6df3748fafca365a8a402914a62bce29",
+        "path":  {
+                     "value":  "src/requestErrorConfig.ts",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  12
+                 }
+    },
+    {
+        "sha256":  "e0a23f3f8ea4c7306549bd7f857f6ebc2a04df91c46797abe2cedcf5e908d0ff",
+        "path":  {
+                     "value":  "src/typings.d.ts",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  13
+                 }
+    },
+    {
+        "sha256":  "353a6863bbf18825e1b3bec2f0a4ca838ccea9514a86687119e4c74441483f4b",
+        "path":  {
+                     "value":  "src/loading.tsx",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  14
+                 }
+    },
+    {
+        "sha256":  "67cac5e32bd35bd66f5d57e0dd36fd3e0804f3737cc7ec17c67d2d20ae45a2cc",
+        "path":  {
+                     "value":  "src/pages/user/login/index.tsx",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  15
+                 }
+    },
+    {
+        "sha256":  "64b05d21e142c9cf5c82fb628b2aca149decf216ff261a37e73b2575104df1e4",
+        "path":  {
+                     "value":  "src/pages/exception/404/index.tsx",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  16
+                 }
+    },
+    {
+        "sha256":  "76f974d2754aef631d3ecba91aa1e630e422a18d03ab8dd14968a8d3a6858b54",
+        "path":  {
+                     "value":  "public/logo.svg",
+                     "PSPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream\\copied-files.txt",
+                     "PSParentPath":  "C:\\Users\\zxk\\.codex\\worktrees\\52fd\\install_video\\admin\\upstream",
+                     "PSChildName":  "copied-files.txt",
+                     "PSDrive":  "C",
+                     "PSProvider":  "Microsoft.PowerShell.Core\\FileSystem",
+                     "ReadCount":  17
+                 }
+    }
+]

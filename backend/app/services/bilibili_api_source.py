@@ -8,12 +8,14 @@ import json
 import math
 import re
 import time
+from contextlib import nullcontext
 from urllib.parse import parse_qs, urlsplit, urlunsplit
 
 import httpx
 
-from .bilibili_session import cookie_jar_for_url
-from .bilibili_subtitle_source import apply_session_cookies
+from .bilibili_session import apply_session_cookies, cookie_jar_for_url
+from .outbound_policy import OutboundError, OutboundPurpose, OutboundUnavailableError
+from .source_network import current_source_network
 
 _MAX_BYTES = 1024 * 1024
 _SOCKET_SECONDS = 8
@@ -62,23 +64,49 @@ def safe_media_url(value):
         return None
 
 
-def _get(client, path, params):
+def _get(client, path, params, *, cookies=None, deadline=None):
     # A socket wait is <=8s. The 16s phase guard is checked after every streamed
     # chunk, so even a stalled last read remains bounded by one socket interval.
-    deadline = time.monotonic() + _PHASE_SECONDS
+    network = current_source_network()
+    operation_deadline = deadline
+    if deadline is None and network is None:
+        deadline = time.monotonic() + _PHASE_SECONDS
+    phase_seconds = _PHASE_SECONDS
+    if operation_deadline is not None:
+        phase_seconds = min(phase_seconds, operation_deadline - time.monotonic())
+        if phase_seconds <= 0:
+            raise OutboundError('source_timeout', 'deadline') from None
     try:
-        with client.stream('GET', 'https://api.bilibili.com' + path, params=params) as response:
+        endpoint = 'https://api.bilibili.com' + path
+        context = (network.stream(str(httpx.URL(endpoint, params=params)), purpose=OutboundPurpose.METADATA,
+            cookies=cookies, headers={'User-Agent': 'Mozilla/5.0', 'Referer': 'https://www.bilibili.com/'},
+            follow_redirects=False, max_bytes=_MAX_BYTES, phase_seconds=phase_seconds,
+            io_timeout=min(_SOCKET_SECONDS, phase_seconds), identity_only=True) if network is not None
+            else client.stream('GET', endpoint, params=params))
+        with context as response:
+            if operation_deadline is not None and time.monotonic() >= operation_deadline:
+                raise OutboundError('source_timeout', 'deadline') from None
             if response.status_code != 200:
+                if network is not None:
+                    response.raise_for_status()
+                    # Non-redirect 1xx/3xx cannot become a normal API result.
+                    raise OutboundUnavailableError() from None
                 raise BilibiliApiError('verification_required' if response.status_code == 412 else 'network')
             if response.headers.get('Content-Encoding', '').strip().lower() not in {'', 'identity'}:
+                if network is not None:
+                    raise OutboundUnavailableError() from None
                 raise BilibiliApiError('network')
             body = bytearray()
             # Do not coalesce small transport chunks: that would postpone the
             # phase guard indefinitely on a peer trickling a short response.
             for chunk in response.iter_bytes():
-                if time.monotonic() > deadline or len(body) + len(chunk) > _MAX_BYTES:
+                if operation_deadline is not None and time.monotonic() >= operation_deadline:
+                    raise OutboundError('source_timeout', 'deadline') from None
+                if (deadline is not None and time.monotonic() > deadline) or len(body) + len(chunk) > _MAX_BYTES:
                     raise BilibiliApiError('network')
                 body.extend(chunk)
+        if operation_deadline is not None and time.monotonic() >= operation_deadline:
+            raise OutboundError('source_timeout', 'deadline') from None
         payload = json.loads(body)
         if not isinstance(payload, dict) or type(payload.get('code')) is not int:
             raise BilibiliApiError()
@@ -166,16 +194,21 @@ def _clean_play(play):
     return {'dash': cleaned, 'timelength': play.get('timelength')}
 
 
-def extract_api_video(url):
+def extract_api_video(url, *, deadline=None):
+    if deadline is not None and (type(deadline) not in (int, float) or not math.isfinite(deadline)):
+        raise ValueError('Invalid source deadline') from None
     identity, part = video_identity(url)
     cookies = cookie_jar_for_url(url)
-    with httpx.Client(timeout=httpx.Timeout(_SOCKET_SECONDS), trust_env=False,
+    network = current_source_network()
+    context = nullcontext(None) if network is not None else httpx.Client(timeout=httpx.Timeout(_SOCKET_SECONDS), trust_env=False,
                       follow_redirects=False, headers={'User-Agent': 'Mozilla/5.0',
                           'Accept-Encoding': 'identity',
                           'Referer': 'https://www.bilibili.com/'},
-                      event_hooks={'request': [lambda request: apply_session_cookies(request, cookies)]}) as client:
+                      event_hooks={'request': [lambda request: apply_session_cookies(request, cookies)]})
+    with context as client:
         view = _get(client, '/x/web-interface/view',
-                    {'bvid': identity} if identity.startswith('BV') else {'aid': int(identity[2:])})
+                    {'bvid': identity} if identity.startswith('BV') else {'aid': int(identity[2:])},
+                    cookies=cookies, deadline=deadline)
         bvid, aid = view.get('bvid'), view.get('aid')
         if (not isinstance(bvid, str) or not _BVID.fullmatch(bvid) or not _positive(aid)
                 or (identity.startswith('BV') and identity != bvid)
@@ -198,7 +231,7 @@ def extract_api_video(url):
         if page is None or not _duration(page.get('duration')):
             raise BilibiliApiError()
         play = _get(client, '/x/player/playurl', {'bvid': bvid, 'avid': aid, 'cid': page['cid'],
-            'qn': 80, 'fnver': 0, 'fnval': 16, 'fourk': 0, 'otype': 'json'})
+            'qn': 80, 'fnver': 0, 'fnval': 16, 'fourk': 0, 'otype': 'json'}, cookies=cookies, deadline=deadline)
     for key, expected in (('bvid', bvid), ('aid', aid), ('cid', page['cid'])):
         if key in play and (type(play[key]) is not type(expected) or play[key] != expected):
             raise BilibiliApiError()

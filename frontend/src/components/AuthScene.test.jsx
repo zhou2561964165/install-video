@@ -62,6 +62,40 @@ describe('AuthScene', () => {
     expect(onLogin).not.toHaveBeenCalled();
   });
 
+  it('注册前本地校验邮箱与密码长度，不发请求并聚焦第一个错误字段', async () => {
+    const onRegister = vi.fn();
+    render(<AuthScene loading={false} onLogin={vi.fn()} onRegister={onRegister} />);
+    await userEvent.click(screen.getByRole('button', { name: '注册' }));
+    await userEvent.type(screen.getByLabelText('邮箱'), 'invalid-email');
+    await userEvent.type(screen.getByLabelText('密码'), '1');
+    await userEvent.click(screen.getByRole('button', { name: '立即注册' }));
+    expect(onRegister).not.toHaveBeenCalled();
+    expect(screen.getByText('请输入有效的邮箱地址，例如 you@example.com')).toBeInTheDocument();
+    expect(screen.getByText('密码至少 8 位')).toBeInTheDocument();
+    expect(screen.getByLabelText('邮箱')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByLabelText('邮箱')).toHaveFocus();
+    expect(screen.getByRole('button', { name: '立即注册' })).not.toHaveTextContent('注册中');
+  });
+
+  it('注册字段失焦即提示，修正后提示消失', async () => {
+    render(<AuthScene loading={false} onLogin={vi.fn()} onRegister={vi.fn()} />);
+    await userEvent.click(screen.getByRole('button', { name: '注册' }));
+    await userEvent.type(screen.getByLabelText('邮箱'), 'a@b');
+    await userEvent.tab();
+    expect(screen.getByText('请输入有效的邮箱地址，例如 you@example.com')).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('邮箱'), '.com');
+    expect(screen.queryByText('请输入有效的邮箱地址，例如 you@example.com')).toBeNull();
+  });
+
+  it('登录不做长度校验（已有账号按服务端判断）', async () => {
+    const onLogin = vi.fn().mockResolvedValue({});
+    render(<AuthScene loading={false} onLogin={onLogin} onRegister={vi.fn()} />);
+    await userEvent.type(screen.getByLabelText('邮箱'), 'a@b.com');
+    await userEvent.type(screen.getByLabelText('密码'), '1');
+    await userEvent.click(screen.getByRole('button', { name: '立即登录' }));
+    expect(onLogin).toHaveBeenCalledWith('a@b.com', '1');
+  });
+
   it('登录失败就近展示错误', async () => {
     const onLogin = vi.fn().mockRejectedValue({ error: '邮箱或密码错误' });
     render(<AuthScene loading={false} onLogin={onLogin} onRegister={vi.fn()} />);

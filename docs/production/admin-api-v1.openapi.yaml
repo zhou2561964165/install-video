@@ -1,0 +1,3234 @@
+openapi: 3.1.0
+info:
+  title: Install Video Admin API
+  version: 1.0.0-proposal.20261028.3
+  description: 独立前端工作树中的契约对齐候选，尚未联调验收，不要求Claude接收或修改代码；共享正式文档保持原修订。配套 admin-integration-plan-2026-10-26.md；M1管理认证与只读，M2账号启停；.3 仅新增客服工单与审核后补发（Claude 维护，2026-10-28）。默认值可配置，服务端安全边界与版本契约集中维护。候选约定所有管理响应含X-Request-ID，错误体request_id与其一致；外层限流429也遵循本错误形状。
+servers:
+- url: /api/admin/v1
+  description: 规范API前缀；外层部署前缀由ADMIN_API_BASE提供。
+security:
+- AdminCookie: []
+tags:
+- name: Auth
+- name: Overview
+- name: Users
+- name: Jobs
+- name: Memberships
+- name: Billing
+- name: Audit
+- name: System
+- name: Support
+paths:
+  /auth/login:
+    post:
+      operationId: adminLogin
+      tags:
+      - Auth
+      x-phase: M1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreated'
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+            Set-Cookie:
+              schema:
+                type: string
+              description: iv_admin_session=<opaque>; HttpOnly; Secure; SameSite=Strict; Path=<显式ADMIN_COOKIE_PATH>; Max-Age=<配置TTL>。Path不从请求推断，配置缺失503；默认TTL900秒，明确dev
+                HTTP可Secure=false。
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      summary: 管理员登录
+      description: JSON邮箱/密码校验现有密码及AdminGrant/AccountControl；不存在用户也校验固定哑哈希，统一401。ADMIN_ALLOWED_ORIGINS为空拒绝写方法；限流429含约定JSON及X-Request-ID，包括外层中间件。替换当前浏览器旧管理会话，不接受普通Bearer。
+  /auth/me:
+    get:
+      operationId: adminMe
+      tags:
+      - Auth
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminMe'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      summary: 当前会话与开放权限集合
+      description: 实时校验session/AccountControl/AdminGrant，返回开放permission字符串。CSRF确定派生，GET不旋转，禁止日志。
+  /auth/logout:
+    post:
+      operationId: adminLogout
+      tags:
+      - Auth
+      x-phase: M1
+      responses:
+        '204':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+            Set-Cookie:
+              schema:
+                type: string
+              description: 同名、相同部署Path cookie Max-Age=0；服务端同时撤销。
+          description: 会话已撤销并清相同Path的cookie，无响应体。
+        '401':
+          description: 会话过期或已撤销；返回统一错误并清同名、相同ADMIN_COOKIE_PATH的cookie，不修改其他状态。
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+            Set-Cookie:
+              schema:
+                type: string
+              description: iv_admin_session=; Max-Age=0；Path与显式ADMIN_COOKIE_PATH相同，保留HttpOnly/Secure/SameSite属性。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/Csrf'
+      summary: 撤销当前管理会话
+      description: 校验实时会话、Origin和X-CSRF-Token后服务器撤销并清cookie；重复使用已撤销或过期会话401也用相同ADMIN_COOKIE_PATH清cookie。客户端遇到任何401清内存会话、permissions、meta与CSRF并转登录。
+  /overview:
+    get:
+      operationId: adminOverview
+      tags:
+      - Overview
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Overview'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      x-permission: overview:read
+      summary: 有明确统计口径的真实概览
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /users:
+    get:
+      operationId: adminListUsers
+      tags:
+      - Users
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPage'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - created_at:asc
+          - created_at:desc
+          - email:asc
+          - email:desc
+          default: created_at:desc
+        description: 受控字段方向枚举，追加实体主键ASC稳定排序、NULLS LAST；Membership主键user_id、Payment主键payment_intent映射id。
+      - name: email
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 254
+      - name: enabled
+        in: query
+        required: false
+        description: ''
+        schema:
+          type: boolean
+      - name: effective_vip
+        in: query
+        required: false
+        description: ''
+        schema:
+          type: boolean
+      x-permission: users:read
+      summary: 用户与权益列表
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /users/{user_id}:
+    get:
+      operationId: adminGetUser
+      tags:
+      - Users
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 不透明路径ID；不存在404。
+      x-permission: users:read
+      summary: 用户、会员与UTC当日额度
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /users/{user_id}/access:
+    patch:
+      operationId: adminSetUserAccess
+      tags:
+      - Users
+      x-phase: M2
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessResult'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 不透明路径ID；不存在404。
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      x-permission: users:access:write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessPatch'
+      summary: 账号启停（M2）
+      description: M1 feature未就绪返回503。M2同事务按稳定user_id顺序锁操作者/目标控制行及所需授权行，实时复核权限和自身/有效AdminGrant保护后才查幂等。CLI授撤目标管理员也先锁同目标控制行。保留期同actor/key/body重放在revision比较前返回原结果，异输入/结果过期409且墓碑阻止执行；新请求比expected_revision。真实enabled变更才增revision/auth_revision并撤销会话、同事务审计；no-op只审计。普通JWT新ar与实时控制检查先上线，无ar旧token拒绝，恢复后旧token不复活；未知结果禁止自动重发新key。
+        幂等固定operation=users.access，唯一(actor_user_id,operation,key)，请求指纹含规范化method/path/target_user_id/body；audit.action是结果，不参与scope。
+        指纹body只含规范化enabled、trim后reason、expected_revision；method/path/target同样参与，跨target重用同key为409，不是新操作。审计action区分users.access_enabled/disabled/noop/denied。
+  /jobs:
+    get:
+      operationId: adminListJobs
+      tags:
+      - Jobs
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobPage'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - created_at:asc
+          - created_at:desc
+          - updated_at:asc
+          - updated_at:desc
+          default: created_at:desc
+        description: 受控字段方向枚举，追加实体主键ASC稳定排序、NULLS LAST；Membership主键user_id、Payment主键payment_intent映射id。
+      - name: user_id
+        in: query
+        required: false
+        description: ''
+        schema:
+          $ref: '#/components/schemas/Id'
+      - name: public_status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - queued
+          - downloading
+          - merging
+          - done
+          - error
+      - name: internal_state
+        in: query
+        required: false
+        description: legacy_unset仅为查询伪值，匹配Job.internal_state IS NULL；response仍为null，不新增或写回业务状态。枚举与meta允许值取交集。
+        schema:
+          type: string
+          enum:
+          - queued
+          - running
+          - retry_wait
+          - succeeded
+          - failed
+          - needs_review
+          - legacy_hold
+          - legacy_unset
+      - name: execution_version
+        in: query
+        required: false
+        description: ''
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+      x-permission: jobs:read
+      summary: 当前保留server Job列表
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /jobs/{job_id}:
+    get:
+      operationId: adminGetJob
+      tags:
+      - Jobs
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDetail'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 不透明路径ID；不存在404。
+      x-permission: jobs:read
+      summary: Job与安全成品详情
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /memberships:
+    get:
+      operationId: adminListMemberships
+      tags:
+      - Memberships
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipPage'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - expires_at:asc
+          - expires_at:desc
+          - user_id:asc
+          default: user_id:asc
+        description: 受控字段方向枚举，追加实体主键ASC稳定排序、NULLS LAST；Membership主键user_id、Payment主键payment_intent映射id。
+      - name: user_id
+        in: query
+        required: false
+        description: ''
+        schema:
+          $ref: '#/components/schemas/Id'
+      - name: effective
+        in: query
+        required: false
+        description: ''
+        schema:
+          type: boolean
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - free
+          - active
+          - expired
+      x-permission: memberships:read
+      summary: 持久会员行列表
+      description: 只列实际Membership行，effective由现有domain计算；用户详情无行另外投影free，不写行；主键user_id稳定排序。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /billing/checkouts:
+    get:
+      operationId: adminListCheckouts
+      tags:
+      - Billing
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutPage'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - created_at:asc
+          - created_at:desc
+          default: created_at:desc
+        description: 受控字段方向枚举，追加实体主键ASC稳定排序、NULLS LAST；Membership主键user_id、Payment主键payment_intent映射id。
+      - name: user_id
+        in: query
+        required: false
+        description: ''
+        schema:
+          $ref: '#/components/schemas/Id'
+      - name: state
+        in: query
+        required: false
+        description: 已知枚举与meta允许值交集；response仍为开放字符串，未来新增状态需契约修订后才能作为过滤值。
+        schema:
+          type: string
+          enum:
+          - pending
+          - open
+          - paid
+          - expired
+          - failed
+      - name: reconciliation
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - not_started
+          - unknown
+          - verified
+          - needs_review
+          - closed
+      - name: fulfilled
+        in: query
+        required: false
+        description: ''
+        schema:
+          type: boolean
+      - name: provider_account_scope
+        in: query
+        required: false
+        description: ''
+        schema:
+          type: string
+          maxLength: 128
+      - name: livemode
+        in: query
+        required: false
+        description: ''
+        schema:
+          type: boolean
+      x-permission: billing:read
+      summary: Checkout状态列表
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /billing/checkouts/{checkout_id}:
+    get:
+      operationId: adminGetCheckout
+      tags:
+      - Billing
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutDetail'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: checkout_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 不透明路径ID；不存在404。
+      x-permission: billing:read
+      summary: Checkout逐事实详情
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /billing/payments:
+    get:
+      operationId: adminListPayments
+      tags:
+      - Billing
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentPage'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - id:asc
+          - id:desc
+          default: id:asc
+        description: 受控字段方向枚举，追加实体主键ASC稳定排序、NULLS LAST；Membership主键user_id、Payment主键payment_intent映射id。
+      - name: user_id
+        in: query
+        required: false
+        description: ''
+        schema:
+          $ref: '#/components/schemas/Id'
+      - name: revoked
+        in: query
+        required: false
+        description: ''
+        schema:
+          type: boolean
+      - name: payment_id
+        in: query
+        required: false
+        description: ''
+        schema:
+          $ref: '#/components/schemas/Id'
+      x-permission: billing:read
+      summary: Payment绑定与墓碑列表
+      description: id映射PI，不存在created_at/paid_at/amount。M1 billing_amounts.ready=false；future投影须已审同scope/livemode/PI绑定且所有可用verified
+        amount_total/currency一致才known，否则unknown/conflicting且money=null；禁止按latest observed_at挑值或累加快照。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /billing/payments/{payment_id}:
+    get:
+      operationId: adminGetPayment
+      tags:
+      - Billing
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetail'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: payment_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 不透明路径ID；不存在404。
+      x-permission: billing:read
+      summary: Payment可靠关联逐事实详情
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /audit/logs:
+    get:
+      operationId: adminListAuditLogs
+      tags:
+      - Audit
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditPage'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - recorded_at:asc
+          - recorded_at:desc
+          default: recorded_at:desc
+        description: 受控字段方向枚举，追加实体主键ASC稳定排序、NULLS LAST；Membership主键user_id、Payment主键payment_intent映射id。
+      - name: actor_user_id
+        in: query
+        required: false
+        description: ''
+        schema:
+          $ref: '#/components/schemas/Id'
+      - name: target_user_id
+        in: query
+        required: false
+        description: ''
+        schema:
+          $ref: '#/components/schemas/Id'
+      - name: action
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 64
+      - name: outcome
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - succeeded
+          - denied
+          - failed
+      - name: recorded_from
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+          pattern: Z$
+      - name: recorded_before
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+          pattern: Z$
+      x-permission: audit:read
+      summary: 只读不可变审计
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /system/status:
+    get:
+      operationId: adminSystemStatus
+      tags:
+      - System
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatus'
+          description: 成功安全投影。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      x-permission: system:read
+      summary: 安全系统状态
+      description: 只读安全投影；每请求强鉴权，permission在服务端执行；基础只读不依赖可选feature，不调用第三方、不修复数据。 基础只读按x-permission授权，billing_amounts不影响支付记录页面；只有金额列另查该feature。
+  /meta:
+    get:
+      operationId: adminMeta
+      tags:
+      - System
+      summary: 安全元数据、集中策略与功能能力
+      description: 任何有效管理会话可读，无额外业务权限。features与auth/me capabilities及system capabilities同一投影；能力在请求时仍强制检查，不能信任前端缓存。
+      x-phase: M1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          description: 安全元数据。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+  /support/tickets:
+    get:
+      operationId: adminListSupportTickets
+      tags:
+      - Support
+      x-phase: S1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketPage'
+          description: 工单分页；默认优先工单在前、再按提交时间升序。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PageSize'
+      - name: sort
+        in: query
+        schema:
+          type: string
+          enum:
+          - priority:desc
+          - created_at:asc
+          - created_at:desc
+          default: priority:desc
+      - name: state
+        in: query
+        schema:
+          type: string
+          enum:
+          - open
+          - resolved
+          - rejected
+      - name: category
+        in: query
+        schema:
+          type: string
+          enum:
+          - membership_not_credited
+          - download_failing
+          - login_problem
+          - other
+      - name: priority
+        in: query
+        schema:
+          type: string
+          enum:
+          - priority
+          - normal
+      - name: user_id
+        in: query
+        schema:
+          $ref: '#/components/schemas/Id'
+      x-permission: support:read
+      summary: 客服工单列表
+      description: 会员用户的工单与“会员付款后未到账”工单为priority；默认priority:desc即优先在前、同级按created_at升序、id兜底。
+  /support/tickets/{ticket_id}:
+    get:
+      operationId: adminGetSupportTicket
+      tags:
+      - Support
+      x-phase: S1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketDetail'
+          description: 工单详情：用户说明、勾选订单与会员投影、最近核实结果与可用操作及不可用原因。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 工单ID；不存在404。
+      x-permission: support:read
+      summary: 客服工单详情
+  /support/tickets/{ticket_id}/reply:
+    post:
+      operationId: adminReplySupportTicket
+      tags:
+      - Support
+      x-phase: S1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketState'
+          description: 以固定话术（可补一句）回复并结单。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 工单ID；不存在404。
+      - $ref: '#/components/parameters/Csrf'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportReply'
+      x-permission: support:write
+      summary: 回复并结单
+      description: template_id只能是手选模板（不含reissued）；已结单409 ticket_closed。
+  /support/tickets/{ticket_id}/reject:
+    post:
+      operationId: adminRejectSupportTicket
+      tags:
+      - Support
+      x-phase: S1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketState'
+          description: 以固定话术驳回并结单。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 工单ID；不存在404。
+      - $ref: '#/components/parameters/Csrf'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportReply'
+      x-permission: support:write
+      summary: 驳回并结单
+  /support/tickets/{ticket_id}/verify-payment:
+    post:
+      operationId: adminVerifySupportPayment
+      tags:
+      - Support
+      x-phase: S1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCheck'
+          description: 以只读受限key向支付平台核实该订单付款并记录结果（不修改订单或会员）。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 工单ID；不存在404。
+      - $ref: '#/components/parameters/Csrf'
+      x-permission: support:write
+      x-capability: support_reissue
+      summary: 向支付平台核实付款
+      description: 仅membership_not_credited；需订单有stripe会话、未履行、未超核实次数；支付平台不可达503 payment_provider_unavailable且不记录。
+  /support/tickets/{ticket_id}/reissue:
+    post:
+      operationId: adminReissueMembership
+      tags:
+      - Support
+      x-phase: S1
+      responses:
+        '200':
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReissueResult'
+          description: 补发成功：按订单天数延长会员、订单标记已履行、工单结单并自动回复。
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '503':
+          $ref: '#/components/responses/Unavailable'
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+        description: 工单ID；不存在404。
+      - $ref: '#/components/parameters/Csrf'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      x-permission: support:reissue
+      x-capability: support_reissue
+      summary: 审核通过并补发会员
+      description: 同一事务行锁内复核：工单open且类型匹配、订单属于该用户且未履行、新鲜期内verified核实、付款未绑定他人或撤销、该订单未补发过。失败409（ticket_closed/not_reissuable_category/checkout_mismatch/already_fulfilled/not_verified/verification_stale/payment_conflict/membership_active/subscription_active/already_reissued）；会员仍由另一笔付款生效或绑定订阅时拒绝叠加补发。同key同工单重放返回原结果。
+components:
+  securitySchemes:
+    AdminCookie:
+      type: apiKey
+      in: cookie
+      name: iv_admin_session
+      description: 独立opaque服务端会话，TTL默认900秒、配置范围300..3600秒，绝对期限不滑动。生产HttpOnly/Secure/SameSite=Strict、Path为显式ADMIN_COOKIE_PATH，不从请求推断；缺失配置503。每请求实时检查授权与账号。
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: 页码，默认1。
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: page_size
+      in: query
+      required: false
+      description: 默认20、运行上限默认100，以meta为准；协议硬上限1000，超运行上限422。
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 20
+    Csrf:
+      name: X-CSRF-Token
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 32
+      description: 已认证写操作必须带由独立ADMIN_CSRF_SECRET确定派生的会话CSRF token，同时验证ADMIN_ALLOWED_ORIGINS；Origin配置为空拒绝写，secret缺失或过短后台整体503 admin_unavailable。
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+        pattern: ^[A-Za-z0-9._:-]+$
+      description: actor_user_id+固定operation=users.access作用域；16..128 ASCII字符。指纹含规范化method/path/target_user_id/body；与审计结果action独立。默认保留结果30天至少7天，之后墓碑不可复用，不自动更换。
+        跨target复用key冲突，body规范化enabled/reason/expected_revision。
+  headers:
+    RequestId:
+      description: Backend generated request UUID; identical to error detail.request_id and audit request_id.
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Unauthorized:
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: 401：未认证、过期或撤销；login统一失败。客户端清内存会话、permissions、meta与CSRF后转登录；logout额外清同Path cookie。
+    Forbidden:
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: 403：权限/Origin/CSRF不符或protected_account。
+    NotFound:
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: 404：资源不存在。
+    Conflict:
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: 409：revision_changed、idempotency_conflict或idempotency_result_expired；不重复执行。
+    ValidationError:
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: 422：输入/过滤器/运行限制不合法，安全field_errors。
+    TooManyRequests:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        Retry-After:
+          schema:
+            type: integer
+            minimum: 1
+          description: 可选等待秒数；不是自动重发写请求的许可。
+      description: 429：限流；按Retry-After等待，不自动重发写操作。包括在admin子应用之前生效的全局中间件，也须返回本JSON错误形状与X-Request-ID。
+    Unavailable:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/RequestId'
+        Retry-After:
+          schema:
+            type: integer
+            minimum: 1
+          description: 可选等待秒数；不是自动重发写请求的许可。
+      description: 503：服务/能力未就绪，写结果可能未知，不自动更换key。
+  schemas:
+    Id:
+      type: string
+      minLength: 1
+      maxLength: 256
+      pattern: ^[A-Za-z0-9_.:-]+$
+      description: 不透明非空ID，字符串传输；禁止写死实际用户ID、邮箱或供应商对象ID。
+    Decimal:
+      type: string
+      pattern: ^(0|[1-9][0-9]*)$
+    UtcTime:
+      type: string
+      format: date-time
+      pattern: Z$
+    NullableUtcTime:
+      type:
+      - string
+      - 'null'
+      format: date-time
+      pattern: Z$
+    Error:
+      type: object
+      additionalProperties: true
+      required:
+      - detail
+      properties:
+        detail:
+          type: object
+          additionalProperties: true
+          required:
+          - error_type
+          - error
+          - request_id
+          properties:
+            error_type:
+              type: string
+            error:
+              type: string
+            request_id:
+              type: string
+            field_errors:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+                required:
+                - field
+                - message
+                properties:
+                  field:
+                    type: string
+                  message:
+                    type: string
+          description: 安全投影字段 detail；精确语义见所属DTO说明。
+      description: admin独立异常形状，不改变普通API。detail含安全error_type/error/request_id，request_id为后台生成并与X-Request-ID响应头一致，审计记录沿用；422可有field_errors。不泄露堆栈或原始供应商响应，外层429也适配此形状。
+    Permission:
+      type: string
+      minLength: 1
+      description: 开放权限字符串集合；前端按已支持permission key判断，未知值不自动授权；服务端deny by default。
+      x-known-values:
+      - overview:read
+      - users:read
+      - memberships:read
+      - jobs:read
+      - billing:read
+      - audit:read
+      - system:read
+      - users:access:write
+      - support:read
+      - support:write
+      - support:reissue
+    Capability:
+      type: object
+      additionalProperties: true
+      required:
+      - ready
+      - reason
+      properties:
+        ready:
+          type: boolean
+          description: 安全投影字段 ready；精确语义见所属DTO说明。
+        reason:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 reason；精确语义见所属DTO说明。
+    Capabilities:
+      type: object
+      additionalProperties: true
+      required:
+      - account_access_write
+      - billing_amounts
+      - support_reissue
+      properties:
+        account_access_write:
+          $ref: '#/components/schemas/Capability'
+        billing_amounts:
+          $ref: '#/components/schemas/Capability'
+        support_reissue:
+          $ref: '#/components/schemas/Capability'
+      description: 仅可选能力key：account_access_write控制M2启停，billing_amounts控制金额列，不控制billing页面。基础只读菜单/GET只按各自permission；未知可选能力默认关闭。M1两能力ready=false。
+    SessionCreated:
+      type: object
+      additionalProperties: true
+      required:
+      - session_expires_at
+      properties:
+        session_expires_at:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 session_expires_at；精确语义见所属DTO说明。
+      description: 仅返回实际会话到期时间；token由HttpOnly cookie管理，随后GET me获取permissions/CSRF。不返回普通JWT。
+    AdminMe:
+      type: object
+      additionalProperties: true
+      required:
+      - user_id
+      - email
+      - role
+      - permissions
+      - session_expires_at
+      - csrf_token
+      - capabilities
+      properties:
+        user_id:
+          $ref: '#/components/schemas/Id'
+        email:
+          type: string
+          format: email
+          description: 安全投影字段 email；精确语义见所属DTO说明。
+        role:
+          type: string
+          minLength: 1
+          x-known-values:
+          - admin
+          - viewer
+          description: 仅展示角色标识，初始seed可扩展；禁止前端以role判断权限。
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+          description: 安全投影字段 permissions；精确语义见所属DTO说明。
+        session_expires_at:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 session_expires_at；精确语义见所属DTO说明。
+        csrf_token:
+          type: string
+          minLength: 32
+          description: 仅客户端内存保存，禁止日志；确定派生而非不可恢复的hash；配置密钥不输出。
+        capabilities:
+          $ref: '#/components/schemas/Capabilities'
+      description: 每请求实时读取权限；CSRF由独立服务端密钥HMAC(session_id+token_hash+固定版本上下文)确定派生，GET不旋转，可重建、恒时验证，多标签页有效。
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - email
+      - password
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          minLength: 1
+          maxLength: 1024
+          writeOnly: true
+    AccessControl:
+      type: object
+      additionalProperties: true
+      required:
+      - enabled
+      - revision
+      - protected_account
+      properties:
+        enabled:
+          type: boolean
+          description: 安全投影字段 enabled；精确语义见所属DTO说明。
+        revision:
+          type: string
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 revision；精确语义见所属DTO说明。
+        protected_account:
+          type: boolean
+          description: 安全投影字段 protected_account；精确语义见所属DTO说明。
+      description: 新增AccountControl安全投影；revision为账号控制版本，非会员版本；protected_account含当前操作者与任何有效AdminGrant账号。
+    Quota:
+      type: object
+      additionalProperties: true
+      required:
+      - quota_day
+      - used
+      - limit
+      - remaining
+      - unlimited
+      properties:
+        quota_day:
+          type: string
+          format: date
+          description: 安全投影字段 quota_day；精确语义见所属DTO说明。
+        used:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 used；精确语义见所属DTO说明。
+        limit:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          description: 安全投影字段 limit；精确语义见所属DTO说明。
+        remaining:
+          type:
+          - integer
+          - 'null'
+          description: 安全投影字段 remaining；精确语义见所属DTO说明。
+        unlimited:
+          type: boolean
+          description: 安全投影字段 unlimited；精确语义见所属DTO说明。
+      description: 沿现有额度domain读取；quota_day为请求事务DB时钟as_of的UTC日，unlimited仍计实际used，limit/remaining不限时null；不修改Quota/QuotaCharge。remaining=limit-used可为负，UI显示超出额度X并明示统计日，不截成0或修改used。
+    Membership:
+      type: object
+      additionalProperties: true
+      required:
+      - user_id
+      - status
+      - effective
+      - expires_at
+      - revision
+      - entitlement_source
+      - cancel_at_period_end
+      properties:
+        user_id:
+          $ref: '#/components/schemas/Id'
+        status:
+          type: string
+          x-known-values:
+          - free
+          - active
+          - expired
+          description: 安全投影字段 status；精确语义见所属DTO说明。
+        effective:
+          type: boolean
+          description: 安全投影字段 effective；精确语义见所属DTO说明。
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 expires_at；精确语义见所属DTO说明。
+        revision:
+          type:
+          - string
+          - 'null'
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 revision；精确语义见所属DTO说明。
+        entitlement_source:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 entitlement_source；精确语义见所属DTO说明。
+        cancel_at_period_end:
+          type: boolean
+          description: 安全投影字段 cancel_at_period_end；精确语义见所属DTO说明。
+      description: effective由唯一membership domain纯函数以请求事务DB时钟as_of计算：原status=active且expires_at>as_of；列表SQL同口径，不复用用户侧派生status。用户详情无行时free/false且expires_at/revision/source=null；列表仅实际会员行；expires_at原纪元秒0转null。
+    UserSummary:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - email
+      - created_at
+      - access
+      - membership
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        email:
+          type: string
+          format: email
+          description: 安全投影字段 email；精确语义见所属DTO说明。
+        created_at:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 created_at；精确语义见所属DTO说明。
+        access:
+          $ref: '#/components/schemas/AccessControl'
+        membership:
+          $ref: '#/components/schemas/Membership'
+      description: 用户只读摘要；没有password_hash/token/cookie。会员沿domain服务投影，账号控制是本提案新增表，不冒充当前能力。
+    UserDetail:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - email
+      - created_at
+      - access
+      - membership
+      - quota
+      - as_of
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        email:
+          type: string
+          format: email
+          description: 安全投影字段 email；精确语义见所属DTO说明。
+        created_at:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 created_at；精确语义见所属DTO说明。
+        access:
+          $ref: '#/components/schemas/AccessControl'
+        membership:
+          $ref: '#/components/schemas/Membership'
+        quota:
+          $ref: '#/components/schemas/Quota'
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+    AccessPatch:
+      type: object
+      additionalProperties: false
+      required:
+      - enabled
+      - reason
+      - expected_revision
+      properties:
+        enabled:
+          type: boolean
+        reason:
+          type: string
+          minLength: 10
+          maxLength: 2000
+          description: trim后Unicode码点计数；协议范围10..2000，运行默认10..500，由meta.limits给出，超运行边界422。
+        expected_revision:
+          type: string
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 非负十进制字符串，防止JS大整数精度损失。
+    AccessResult:
+      type: object
+      additionalProperties: true
+      required:
+      - user_id
+      - enabled
+      - revision
+      - audit_id
+      - changed
+      - recorded_at
+      properties:
+        user_id:
+          $ref: '#/components/schemas/Id'
+        enabled:
+          type: boolean
+          description: 安全投影字段 enabled；精确语义见所属DTO说明。
+        revision:
+          type: string
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 revision；精确语义见所属DTO说明。
+        audit_id:
+          $ref: '#/components/schemas/Id'
+        changed:
+          type: boolean
+          description: 安全投影字段 changed；精确语义见所属DTO说明。
+        recorded_at:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 recorded_at；精确语义见所属DTO说明。
+      description: 成功审计结果；原key/body在结果保留期重放原结果。no-op changed=false，不递增revision/auth_revision、不撤销会话。真实变更才递增并撤销。
+    ArtifactSummary:
+      type: object
+      additionalProperties: true
+      required:
+      - media_state
+      - byte_size
+      - media_format
+      - media_check
+      - completed_at
+      properties:
+        media_state:
+          type:
+          - string
+          - 'null'
+          x-known-values:
+          - available
+          - expired
+          - deleting
+          - deleted
+          - missing
+          - corrupt
+          description: 安全投影字段 media_state；精确语义见所属DTO说明。
+        byte_size:
+          type:
+          - string
+          - 'null'
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 byte_size；精确语义见所属DTO说明。
+        media_format:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 media_format；精确语义见所属DTO说明。
+        media_check:
+          type:
+          - string
+          - 'null'
+          x-known-values:
+          - verified
+          description: 安全投影字段 media_check；精确语义见所属DTO说明。
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 completed_at；精确语义见所属DTO说明。
+      description: legacy无manifest的字段保留null，不伪造verified；byte_size十进制字符串，不包含路径或下载URL。
+    JobSummary:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - user_id
+      - title
+      - source_host
+      - execution_version
+      - public_status
+      - internal_state
+      - progress
+      - attempts_used
+      - attempts_limit
+      - created_at
+      - updated_at
+      properties:
+        id: &id001
+          $ref: '#/components/schemas/Id'
+        user_id: &id002
+          anyOf:
+          - $ref: '#/components/schemas/Id'
+          - type: 'null'
+          description: 安全投影字段 user_id；精确语义见所属DTO说明。
+        title: &id003
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 title；精确语义见所属DTO说明。
+        source_host: &id004
+          type:
+          - string
+          - 'null'
+          description: 由Job.url经urlsplit().hostname投影为小写hostname；不含userinfo、端口、路径或query，无法可靠提取时null。
+        execution_version: &id005
+          type: integer
+          enum:
+          - 1
+          - 2
+          description: 安全投影字段 execution_version；精确语义见所属DTO说明。
+        public_status: &id006
+          type: string
+          x-known-values:
+          - queued
+          - downloading
+          - merging
+          - done
+          - error
+          description: 安全投影字段 public_status；精确语义见所属DTO说明。
+        internal_state: &id007
+          type:
+          - string
+          - 'null'
+          x-known-values:
+          - queued
+          - running
+          - retry_wait
+          - succeeded
+          - failed
+          - needs_review
+          - legacy_hold
+          description: 持久业务状态，legacy的NULL仍返回null；legacy_unset仅是列表查询伪值和overview分组名，不能作为response业务值。
+        progress: &id008
+          type: number
+          minimum: 0
+          maximum: 100
+          description: 安全投影字段 progress；精确语义见所属DTO说明。
+        attempts_used: &id009
+          type: integer
+          minimum: 0
+          maximum: 3
+          description: 安全投影字段 attempts_used；精确语义见所属DTO说明。
+        attempts_limit: &id010
+          type: integer
+          minimum: 1
+          maximum: 3
+          description: 安全投影字段 attempts_limit；精确语义见所属DTO说明。
+        created_at: &id011
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 created_at；精确语义见所属DTO说明。
+        updated_at: &id012
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 updated_at；精确语义见所属DTO说明。
+      description: 当前保留server Job安全投影；public_status与internal_state分开。来源仅host，不返回完整URL、query或凭据；不代表全部下载历史。
+    AttemptSummary:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - attempt_index
+      - state
+      - started_at
+      - ended_at
+      - error_code
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        attempt_index:
+          type: integer
+          minimum: 1
+          maximum: 3
+          description: 安全投影字段 attempt_index；精确语义见所属DTO说明。
+        state:
+          type: string
+          x-known-values:
+          - running
+          - lost
+          - failed
+          - succeeded
+          description: 安全投影字段 state；精确语义见所属DTO说明。
+        started_at:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 started_at；精确语义见所属DTO说明。
+        ended_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 ended_at；精确语义见所属DTO说明。
+        error_code:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 error_code；精确语义见所属DTO说明。
+    JobDetail:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - user_id
+      - title
+      - source_host
+      - execution_version
+      - public_status
+      - internal_state
+      - progress
+      - attempts_used
+      - attempts_limit
+      - created_at
+      - updated_at
+      - expires_at
+      - run_deadline_at
+      - next_run_at
+      - error_type
+      - error_message
+      - artifact
+      - attempts
+      - as_of
+      properties:
+        id: *id001
+        user_id: *id002
+        title: *id003
+        source_host: *id004
+        execution_version: *id005
+        public_status: *id006
+        internal_state: *id007
+        progress: *id008
+        attempts_used: *id009
+        attempts_limit: *id010
+        created_at: *id011
+        updated_at: *id012
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 expires_at；精确语义见所属DTO说明。
+        run_deadline_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 run_deadline_at；精确语义见所属DTO说明。
+        next_run_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 next_run_at；精确语义见所属DTO说明。
+        error_type:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 error_type；精确语义见所属DTO说明。
+        error_message:
+          type:
+          - string
+          - 'null'
+          description: 仅由error_type映射固定安全文案；未知类型用通用文案，无错误时可null。永不透传Job.error或原始异常文本。
+        artifact:
+          $ref: '#/components/schemas/ArtifactSummary'
+        attempts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttemptSummary'
+          description: 安全投影字段 attempts；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+      description: 只读Job与尝试安全摘要；无取消/重试。error_message仅由error_type固定安全映射，未知类型通用文案，永不透传Job.error。成品不返回绝对路径、签名URL、owner或lease token。
+    Money:
+      type: object
+      additionalProperties: true
+      required:
+      - amount_minor
+      - currency
+      - currency_exponent
+      properties:
+        amount_minor:
+          type:
+          - string
+          - 'null'
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 amount_minor；精确语义见所属DTO说明。
+        currency:
+          type:
+          - string
+          - 'null'
+          pattern: ^[a-z]{3}$
+          description: 安全投影字段 currency；精确语义见所属DTO说明。
+        currency_exponent:
+          type:
+          - integer
+          - 'null'
+          minimum: 0
+          maximum: 9
+          description: 来自权威币种元数据；M1无权威来源恒为null，不默认2。
+      description: 非负最小货币单位十进制字符串；currency仅保留原事实符合小写三字母正则的值，不改大小写修复事实，不合规时外层money=null。历史未知金额/币种/指数保留null，不按9.9、当前Price或latest observed_at回填，不改事实；不是营收投影。
+    BillingFactSnapshot:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - provider_account_scope
+      - livemode
+      - reconciliation
+      - provider_status
+      - money
+      - amount_refunded_minor
+      - observed_at
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        provider_account_scope:
+          type: string
+          description: 安全投影字段 provider_account_scope；精确语义见所属DTO说明。
+        livemode:
+          type:
+          - boolean
+          - 'null'
+          description: 安全投影字段 livemode；精确语义见所属DTO说明。
+        reconciliation:
+          type: string
+          const: verified
+          description: 安全投影字段 reconciliation；精确语义见所属DTO说明。
+        provider_status:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 provider_status；精确语义见所属DTO说明。
+        money:
+          anyOf:
+          - $ref: '#/components/schemas/Money'
+          - type: 'null'
+          description: 原事实币种不符合小写三字母正则时null；未知字段保持null，M1 currency_exponent恒null，不回填历史事实。
+        amount_refunded_minor:
+          type:
+          - string
+          - 'null'
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 amount_refunded_minor；精确语义见所属DTO说明。
+        observed_at:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 observed_at；精确语义见所属DTO说明。
+      description: 仅verified逐事件快照，observed_at不是付款时间；同一付款多快照不能相加。历史金额/币种/指数未知保留null，不取latest或现价补齐，不修改事实；amount_refunded_minor只表示此事实，不代表当前累计退款。
+    CheckoutSummary:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - user_id
+      - state
+      - reconciliation
+      - fulfilled
+      - provider_account_scope
+      - livemode
+      - created_at
+      - expires_at
+      - revision
+      properties:
+        id: &id013
+          $ref: '#/components/schemas/Id'
+        user_id: &id014
+          $ref: '#/components/schemas/Id'
+        state:
+          type: string
+          x-known-values: &id015
+          - pending
+          - open
+          - paid
+          - expired
+          - failed
+          description: 当前源码已知pending/open/paid/expired/failed；paid不是fulfilled/reconciliation同义词；未知值中性显示，不能改名completed。
+        reconciliation: &id016
+          type:
+          - string
+          - 'null'
+          x-known-values:
+          - not_started
+          - unknown
+          - verified
+          - needs_review
+          - closed
+          description: 安全投影字段 reconciliation；精确语义见所属DTO说明。
+        fulfilled: &id017
+          type: boolean
+          description: 安全投影字段 fulfilled；精确语义见所属DTO说明。
+        provider_account_scope: &id018
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 provider_account_scope；精确语义见所属DTO说明。
+        livemode: &id019
+          type:
+          - boolean
+          - 'null'
+          description: 安全投影字段 livemode；精确语义见所属DTO说明。
+        created_at: &id020
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 created_at；精确语义见所属DTO说明。
+        expires_at: &id021
+          type:
+          - string
+          - 'null'
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 expires_at；精确语义见所属DTO说明。
+        revision: &id022
+          type: string
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 revision；精确语义见所属DTO说明。
+      description: Checkout state/reconciliation/fulfilled独立，不等于付款成功；不返回url/create_payload/供应商原始载荷。
+    CheckoutDetail:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - user_id
+      - state
+      - reconciliation
+      - fulfilled
+      - provider_account_scope
+      - livemode
+      - created_at
+      - expires_at
+      - revision
+      - price_id
+      - mode
+      - duration_days
+      - reconcile_attempts
+      - verified_facts
+      - facts_state
+      - as_of
+      properties:
+        id: *id013
+        user_id: *id014
+        state:
+          type: string
+          x-known-values: *id015
+          description: 当前源码已知pending/open/paid/expired/failed；paid不是fulfilled/reconciliation同义词；未知值中性显示，不能改名completed。
+        reconciliation: *id016
+        fulfilled: *id017
+        provider_account_scope: *id018
+        livemode: *id019
+        created_at: *id020
+        expires_at: *id021
+        revision: *id022
+        price_id:
+          type: string
+          description: 安全投影字段 price_id；精确语义见所属DTO说明。
+        mode:
+          type: string
+          description: 安全投影字段 mode；精确语义见所属DTO说明。
+        duration_days:
+          type: integer
+          minimum: 1
+          description: 安全投影字段 duration_days；精确语义见所属DTO说明。
+        reconcile_attempts:
+          type: integer
+          minimum: 0
+          maximum: 3
+          description: 安全投影字段 reconcile_attempts；精确语义见所属DTO说明。
+        verified_facts:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingFactSnapshot'
+          description: 安全投影字段 verified_facts；精确语义见所属DTO说明。
+        facts_state:
+          type: string
+          enum:
+          - available
+          - none
+          - ambiguous
+          description: 安全投影字段 facts_state；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+      description: 只查checkout_id且scope/livemode匹配的verified事实。scope未知或关联歧义不联接，不触发对账或外部GET。
+    PaymentSummary:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - user_id
+      - source_id
+      - revoked
+      - money
+      - amount_state
+      - amount_source
+      properties:
+        id: &id023
+          $ref: '#/components/schemas/Id'
+        user_id: &id024
+          anyOf:
+          - $ref: '#/components/schemas/Id'
+          - type: 'null'
+          description: 安全投影字段 user_id；精确语义见所属DTO说明。
+        source_id: &id025
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 source_id；精确语义见所属DTO说明。
+        revoked: &id026
+          type: boolean
+          description: 安全投影字段 revoked；精确语义见所属DTO说明。
+        money: &id027
+          anyOf:
+          - $ref: '#/components/schemas/Money'
+          - type: 'null'
+        amount_state: &id028
+          type: string
+          x-known-values:
+          - unknown
+          - known
+          - conflicting
+          description: M1为unknown；能力关闭时不展示金额列。未来已审权威投影才可known，冲突conflicting且money=null。
+        amount_source: &id029
+          type:
+          - string
+          - 'null'
+          x-known-values:
+          - verified_facts_consensus
+          description: M1为null；未来已审可靠来源标识，不能由客户端猜测。
+      description: id映射BillingPayment.payment_intent，现表只有PI绑定/source_id/user_id/revoked。M1 billing_amounts.ready=false，money与amount_source=null且amount_state=unknown；DTO预留以后经审金额投影，无paid_at/created_at猜测。
+    PaymentDetail:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - user_id
+      - source_id
+      - revoked
+      - money
+      - amount_state
+      - verified_facts
+      - facts_state
+      - facts_reason
+      - as_of
+      - amount_source
+      properties:
+        id: *id023
+        user_id: *id024
+        source_id: *id025
+        revoked: *id026
+        money: *id027
+        amount_state: *id028
+        verified_facts:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillingFactSnapshot'
+          description: 安全投影字段 verified_facts；精确语义见所属DTO说明。
+        facts_state:
+          type: string
+          enum:
+          - available
+          - none
+          - ambiguous
+          description: 安全投影字段 facts_state；精确语义见所属DTO说明。
+        facts_reason:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 facts_reason；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+        amount_source: *id029
+      description: 先检查所有同payment_intent候选事实，不先过滤掉跨user或跨scope/livemode冲突。仅Payment.user_id非空、所有候选user_id与之相等、且候选只构成唯一且明确的(provider_account_scope,livemode)组，并有reconciliation=verified事实时available，只列该组verified事实。无同PI候选或无verified为none；存在候选但user为空/不一致、跨组或组信息不明为ambiguous且优先于none，此时verified_facts=[]并给安全原因。裸PI不足，不选latest observed_at、不累加、不推paid_at或营收；退款只逐事实展示。
+    AuditEntry:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - actor_user_id
+      - target_user_id
+      - action
+      - outcome
+      - reason
+      - request_id
+      - recorded_at
+      - change
+      - operation
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        actor_user_id:
+          anyOf:
+          - $ref: '#/components/schemas/Id'
+          - type: 'null'
+          description: 安全投影字段 actor_user_id；精确语义见所属DTO说明。
+        target_user_id:
+          anyOf:
+          - $ref: '#/components/schemas/Id'
+          - type: 'null'
+          description: 安全投影字段 target_user_id；精确语义见所属DTO说明。
+        action:
+          type: string
+          x-known-values:
+          - auth.login
+          - auth.login_failed
+          - auth.logout
+          - users.access_enabled
+          - users.access_disabled
+          - users.access_noop
+          - users.access_denied
+          description: 安全投影字段 action；精确语义见所属DTO说明。
+        outcome:
+          type: string
+          x-known-values:
+          - succeeded
+          - denied
+          - failed
+          description: 安全投影字段 outcome；精确语义见所属DTO说明。
+        reason:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 reason；精确语义见所属DTO说明。
+        request_id:
+          type: string
+          description: 安全投影字段 request_id；精确语义见所属DTO说明。
+        recorded_at:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 recorded_at；精确语义见所属DTO说明。
+        change:
+          anyOf:
+          - $ref: '#/components/schemas/AuditChange'
+          - type: 'null'
+          description: 安全投影字段 change；精确语义见所属DTO说明。
+        operation:
+          type:
+          - string
+          - 'null'
+          x-known-values:
+          - users.access
+          description: 幂等操作标识，启停固定users.access；登录/退出等非该操作为null。与结果action分离。
+      description: append-only安全审计，不输出password/token/cookie/完整请求/原始IP/指纹。启停固定幂等operation=users.access；唯一(actor_user_id,operation,key)，跨target同key冲突。action单独表达enabled/disabled/noop/denied结果，不参与幂等scope。
+    AuditChange:
+      type: object
+      additionalProperties: true
+      required:
+      - enabled_before
+      - enabled_after
+      - revision_before
+      - revision_after
+      properties:
+        enabled_before:
+          type: boolean
+          description: 安全投影字段 enabled_before；精确语义见所属DTO说明。
+        enabled_after:
+          type: boolean
+          description: 安全投影字段 enabled_after；精确语义见所属DTO说明。
+        revision_before:
+          type: string
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 revision_before；精确语义见所属DTO说明。
+        revision_after:
+          type: string
+          pattern: ^(0|[1-9][0-9]*)$
+          description: 安全投影字段 revision_after；精确语义见所属DTO说明。
+    StateCount:
+      type: object
+      additionalProperties: true
+      required:
+      - state
+      - count
+      properties:
+        state:
+          type: string
+          description: 安全投影字段 state；精确语义见所属DTO说明。
+        count:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 count；精确语义见所属DTO说明。
+    Overview:
+      type: object
+      additionalProperties: true
+      required:
+      - as_of
+      - users_total
+      - effective_vip_total
+      - retained_server_jobs_total
+      - jobs_by_public_status
+      - jobs_by_internal_state
+      - scope
+      properties:
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+        users_total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 users_total；精确语义见所属DTO说明。
+        effective_vip_total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 effective_vip_total；精确语义见所属DTO说明。
+        retained_server_jobs_total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 retained_server_jobs_total；精确语义见所属DTO说明。
+        jobs_by_public_status:
+          type: array
+          items:
+            $ref: '#/components/schemas/StateCount'
+          description: 安全投影字段 jobs_by_public_status；精确语义见所属DTO说明。
+        jobs_by_internal_state:
+          type: array
+          items:
+            $ref: '#/components/schemas/StateCount'
+          description: 安全投影字段 jobs_by_internal_state；精确语义见所属DTO说明。
+        scope:
+          type: object
+          additionalProperties: true
+          required:
+          - users
+          - effective_vip
+          - jobs
+          properties:
+            users:
+              type: string
+            effective_vip:
+              type: string
+            jobs:
+              type: string
+          description: 安全投影字段 scope；精确语义见所属DTO说明。
+      description: 只统计所有用户、有效VIP、当前保留server Job；不是全部下载次数或营收。legacy internal_state=null以legacy_unset分组，仅显示不写回。
+    ComponentStatus:
+      type: object
+      additionalProperties: true
+      required:
+      - component
+      - status
+      - reason_code
+      - checked_at
+      properties:
+        component:
+          type: string
+          enum:
+          - database
+          - download_worker
+          - billing_worker
+          - artifact_store
+          description: 安全投影字段 component；精确语义见所属DTO说明。
+        status:
+          type: string
+          enum:
+          - ok
+          - degraded
+          - unavailable
+          - unknown
+          description: 安全投影字段 status；精确语义见所属DTO说明。
+        reason_code:
+          type:
+          - string
+          - 'null'
+          description: 安全投影字段 reason_code；精确语义见所属DTO说明。
+        checked_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 checked_at；精确语义见所属DTO说明。
+      description: 当前M1无可靠采样的download_worker/billing_worker/artifact_store仅unknown、reason_code=no_reliable_sample、checked_at=null；database仅可据本次只读查询成功为ok。不由HTTP200或进程存在猜健康，不返回地址、路径、配置或key。
+    SystemStatus:
+      type: object
+      additionalProperties: true
+      required:
+      - as_of
+      - components
+      - capabilities
+      - download_submission_ready
+      properties:
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentStatus'
+          description: 安全投影字段 components；精确语义见所属DTO说明。
+        capabilities:
+          $ref: '#/components/schemas/Capabilities'
+        download_submission_ready:
+          $ref: '#/components/schemas/Capability'
+      description: 只读现有安全采样；不探测第三方/编辑配置/重启。PG普通download仍503时download_submission_ready.ready=false。
+    UserPage:
+      type: object
+      additionalProperties: true
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - as_of
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSummary'
+          description: 安全投影字段 items；精确语义见所属DTO说明。
+        total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 total；精确语义见所属DTO说明。
+        page:
+          type: integer
+          minimum: 1
+          description: 安全投影字段 page；精确语义见所属DTO说明。
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: 安全投影字段 page_size；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+      example:
+        items:
+        - id: usr_example_01
+          email: synthetic-admin@example.invalid
+          created_at: '2026-10-01T00:00:00Z'
+          access:
+            enabled: true
+            revision: '0'
+            protected_account: false
+          membership:
+            user_id: usr_example_01
+            status: free
+            effective: false
+            expires_at: null
+            revision: null
+            entitlement_source: null
+            cancel_at_period_end: false
+        total: 1
+        page: 1
+        page_size: 20
+        as_of: '2026-10-26T00:00:00Z'
+      description: 分页安全投影；items/total同一只读一致快照，as_of为UTC；超范围页items为空，跨页非冻结。响应可新增可选字段，客户端pick已支持字段。 example完全虚构，不是实际账号或验收证据。
+    JobPage:
+      type: object
+      additionalProperties: true
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - as_of
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobSummary'
+          description: 安全投影字段 items；精确语义见所属DTO说明。
+        total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 total；精确语义见所属DTO说明。
+        page:
+          type: integer
+          minimum: 1
+          description: 安全投影字段 page；精确语义见所属DTO说明。
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: 安全投影字段 page_size；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+      description: 分页安全投影；items/total同一只读一致快照，as_of为UTC；超范围页items为空，跨页非冻结。响应可新增可选字段，客户端pick已支持字段。
+    MembershipPage:
+      type: object
+      additionalProperties: true
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - as_of
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Membership'
+          description: 安全投影字段 items；精确语义见所属DTO说明。
+        total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 total；精确语义见所属DTO说明。
+        page:
+          type: integer
+          minimum: 1
+          description: 安全投影字段 page；精确语义见所属DTO说明。
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: 安全投影字段 page_size；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+      description: 分页安全投影；items/total同一只读一致快照，as_of为UTC；超范围页items为空，跨页非冻结。响应可新增可选字段，客户端pick已支持字段。
+    CheckoutPage:
+      type: object
+      additionalProperties: true
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - as_of
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckoutSummary'
+          description: 安全投影字段 items；精确语义见所属DTO说明。
+        total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 total；精确语义见所属DTO说明。
+        page:
+          type: integer
+          minimum: 1
+          description: 安全投影字段 page；精确语义见所属DTO说明。
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: 安全投影字段 page_size；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+      description: 分页安全投影；items/total同一只读一致快照，as_of为UTC；超范围页items为空，跨页非冻结。响应可新增可选字段，客户端pick已支持字段。
+    PaymentPage:
+      type: object
+      additionalProperties: true
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - as_of
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentSummary'
+          description: 安全投影字段 items；精确语义见所属DTO说明。
+        total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 total；精确语义见所属DTO说明。
+        page:
+          type: integer
+          minimum: 1
+          description: 安全投影字段 page；精确语义见所属DTO说明。
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: 安全投影字段 page_size；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+      description: 分页安全投影；items/total同一只读一致快照，as_of为UTC；超范围页items为空，跨页非冻结。响应可新增可选字段，客户端pick已支持字段。
+    AuditPage:
+      type: object
+      additionalProperties: true
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - as_of
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditEntry'
+          description: 安全投影字段 items；精确语义见所属DTO说明。
+        total:
+          type: integer
+          minimum: 0
+          description: 安全投影字段 total；精确语义见所属DTO说明。
+        page:
+          type: integer
+          minimum: 1
+          description: 安全投影字段 page；精确语义见所属DTO说明。
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: 安全投影字段 page_size；精确语义见所属DTO说明。
+        as_of:
+          type: string
+          format: date-time
+          pattern: Z$
+          description: 安全投影字段 as_of；精确语义见所属DTO说明。
+      description: 分页安全投影；items/total同一只读一致快照，as_of为UTC；超范围页items为空，跨页非冻结。响应可新增可选字段，客户端pick已支持字段。
+    PolicyLimits:
+      type: object
+      additionalProperties: true
+      required:
+      - session_ttl_seconds
+      - reason_min_length
+      - reason_max_length
+      - idempotency_replay_retention_seconds
+      - refresh_interval_seconds
+      properties:
+        session_ttl_seconds:
+          type: integer
+          minimum: 300
+          maximum: 3600
+          default: 900
+        reason_min_length:
+          type: integer
+          minimum: 10
+          maximum: 2000
+          default: 10
+        reason_max_length:
+          type: integer
+          minimum: 10
+          maximum: 2000
+          default: 500
+        idempotency_replay_retention_seconds:
+          type: integer
+          minimum: 604800
+          default: 2592000
+        refresh_interval_seconds:
+          anyOf:
+          - type: integer
+            const: 0
+          - type: integer
+            minimum: 15
+            maximum: 300
+          default: 0
+          description: 0为手动；非零15..300秒，隐藏页面暂停，不自动重发写操作。
+      description: 服务端配置的运行值；reason_min<=reason_max；刷新0或15..300，隐藏页暂停；幂等结果至少7天默认30天，之后保留不可复用key墓碑。安全约束不可由前端放宽。
+    PaginationPolicy:
+      type: object
+      additionalProperties: true
+      required:
+      - default_page
+      - default_page_size
+      - max_page_size
+      properties:
+        default_page:
+          type: integer
+          minimum: 1
+          const: 1
+        default_page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 20
+        max_page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+      description: default_page_size<=max_page_size，所有列表运行最大值由此投影。协议上限1000，超运行值422；前端不能自行放宽。
+    StateDisplay:
+      type: object
+      additionalProperties: true
+      required:
+      - value
+      - label
+      - tone
+      properties:
+        value:
+          type: string
+        label:
+          type: string
+        tone:
+          type: string
+          enum:
+          - neutral
+          - info
+          - success
+          - warning
+          - error
+      description: 只为显示提供安全标签；客户端只接受预定义tone，不执行返回内容。未知value中性回退。
+    StateDictionary:
+      type: object
+      additionalProperties: true
+      required:
+      - domain
+      - values
+      properties:
+        domain:
+          type: string
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/StateDisplay'
+      description: 仅预定义领域键，如job.public_status、job.internal_state、membership.status、checkout.state。开放value用于兼容状态扩展，不改业务状态语义。
+    FilterDescriptor:
+      type: object
+      additionalProperties: true
+      required:
+      - name
+      - kind
+      properties:
+        name:
+          type: string
+        allowed_values:
+          type: array
+          items:
+            type: string
+          description: 仅kind=enum时必须提供，客户端取契约枚举与此值交集；其他kind不提供，禁止列真实账号/ID白名单。
+        kind:
+          type: string
+          enum:
+          - enum
+          - boolean
+          - text
+          - id
+          - datetime
+      description: name必须是该resource契约已支持的查询参数；enum按allowed_values交集，boolean/text/id/datetime按契约schema校验，无有限值白名单。不得生成任意SQL。
+      allOf:
+      - if:
+          properties:
+            kind:
+              const: enum
+          required:
+          - kind
+        then:
+          required:
+          - allowed_values
+        else:
+          not:
+            required:
+            - allowed_values
+    ResourceQuery:
+      type: object
+      additionalProperties: true
+      required:
+      - resource
+      - sort_values
+      - filters
+      properties:
+        resource:
+          type: string
+        sort_values:
+          type: array
+          items:
+            type: string
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/FilterDescriptor'
+      description: resource为受支持列表operationId；sort_values取契约与服务器交集，filters为安全参数白名单，不含分页/sort。未知name/kind不自动渲染，服务端校验失败422。
+    AdminMeta:
+      type: object
+      additionalProperties: true
+      required:
+      - api_version
+      - contract_version
+      - as_of
+      - features
+      - pagination
+      - display_timezone
+      - quota_day_timezone
+      - quota_day_semantics
+      - limits
+      - queries
+      - state_dictionaries
+      properties:
+        api_version:
+          type: string
+          description: 当前主版本，例如v1；破坏性变更走v2。
+        contract_version:
+          type: string
+          description: 对应冻结契约修订版本。
+        as_of:
+          $ref: '#/components/schemas/UtcTime'
+          description: 请求只读事务DB时钟的UTC ISO8601时间，非空且以Z结尾。
+        features:
+          $ref: '#/components/schemas/Capabilities'
+        pagination:
+          $ref: '#/components/schemas/PaginationPolicy'
+        display_timezone:
+          type: string
+          description: 服务端安全配置的IANA显示时区；存储/接口仍UTC，不影响quota_day。
+        quota_day_timezone:
+          type: string
+          const: UTC
+        quota_day_semantics:
+          type: string
+          const: accepted_at_utc_date
+          description: PG受理扣额以DownloadOperation.accepted_at的UTC日期冻结，重放不移日；用户今日额度投影取请求事务DB时钟as_of的UTC日期。
+        limits:
+          $ref: '#/components/schemas/PolicyLimits'
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceQuery'
+        state_dictionaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/StateDictionary'
+      description: 所有有效管理会话可读，不额外要求业务权限。基础只读菜单/GET按permission；仅启停和金额列额外按features。只返回安全显示元数据，不返回密钥、账号/ID白名单或动态规则。 example完全合成、不是运行配置或验收证据；实际queries列出所有受支持resource/filters/sorts。
+      example:
+        api_version: v1
+        contract_version: 1.0.0-proposal.20261026.2
+        as_of: '2026-10-26T00:00:00Z'
+        features:
+          account_access_write:
+            ready: false
+            reason: M2尚未实施
+          billing_amounts:
+            ready: false
+            reason: 金额投影尚未验收
+        pagination:
+          default_page: 1
+          default_page_size: 20
+          max_page_size: 100
+        display_timezone: Asia/Singapore
+        quota_day_timezone: UTC
+        quota_day_semantics: accepted_at_utc_date
+        limits:
+          session_ttl_seconds: 900
+          reason_min_length: 10
+          reason_max_length: 500
+          idempotency_replay_retention_seconds: 2592000
+          refresh_interval_seconds: 0
+        queries:
+        - resource: adminListUsers
+          sort_values:
+          - created_at:desc
+          - email:asc
+          filters:
+          - name: email
+            kind: text
+          - name: enabled
+            kind: boolean
+        - resource: adminListJobs
+          sort_values:
+          - created_at:desc
+          filters:
+          - name: user_id
+            kind: id
+          - name: public_status
+            kind: enum
+            allowed_values:
+            - queued
+            - downloading
+            - merging
+            - done
+            - error
+          - name: internal_state
+            kind: enum
+            allowed_values:
+            - queued
+            - running
+            - retry_wait
+            - succeeded
+            - failed
+            - needs_review
+            - legacy_hold
+            - legacy_unset
+        - resource: adminListCheckouts
+          sort_values:
+          - created_at:desc
+          filters:
+          - name: state
+            kind: enum
+            allowed_values:
+            - pending
+            - open
+            - paid
+            - expired
+            - failed
+        - resource: adminListAuditLogs
+          sort_values:
+          - recorded_at:desc
+          filters:
+          - name: recorded_from
+            kind: datetime
+        state_dictionaries:
+        - domain: job.public_status
+          values:
+          - value: done
+            label: 已完成
+            tone: success
+    SupportAction:
+      type: object
+      additionalProperties: true
+      required:
+      - allowed
+      - reason
+      properties:
+        allowed:
+          type: boolean
+        reason:
+          type:
+          - string
+          - 'null'
+    SupportActions:
+      type: object
+      additionalProperties: true
+      required:
+      - verify
+      - reissue
+      - reply
+      - reject
+      properties:
+        verify:
+          $ref: '#/components/schemas/SupportAction'
+        reissue:
+          $ref: '#/components/schemas/SupportAction'
+        reply:
+          $ref: '#/components/schemas/SupportAction'
+        reject:
+          $ref: '#/components/schemas/SupportAction'
+    PaymentCheck:
+      type: object
+      additionalProperties: true
+      required:
+      - result
+      - checked_at
+      - fresh
+      properties:
+        result:
+          type: string
+          x-known-values:
+          - verified
+          - session_incomplete
+          - not_paid
+          - user_mismatch
+          - mode_mismatch
+          - livemode_mismatch
+          - price_mismatch
+          - payment_not_succeeded
+          - refunded
+          - disputed
+        checked_at:
+          $ref: '#/components/schemas/UtcTime'
+        fresh:
+          type: boolean
+    SupportTicketSummary:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - user_id
+      - user_email
+      - category
+      - category_label
+      - priority
+      - state
+      - resolution
+      - checkout_id
+      - created_at
+      - resolved_at
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        user_id:
+          $ref: '#/components/schemas/Id'
+        user_email:
+          type: string
+        category:
+          type: string
+          x-known-values:
+          - membership_not_credited
+          - download_failing
+          - login_problem
+          - other
+        category_label:
+          type: string
+        priority:
+          type: string
+          x-known-values:
+          - priority
+          - normal
+        state:
+          type: string
+          x-known-values:
+          - open
+          - resolved
+          - rejected
+        resolution:
+          type:
+          - string
+          - 'null'
+        checkout_id:
+          type:
+          - string
+          - 'null'
+        created_at:
+          $ref: '#/components/schemas/UtcTime'
+        resolved_at:
+          $ref: '#/components/schemas/NullableUtcTime'
+    SupportTicketDetail:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - user_id
+      - user_email
+      - category
+      - category_label
+      - priority
+      - state
+      - resolution
+      - checkout_id
+      - created_at
+      - resolved_at
+      - user_note
+      - reply_template
+      - reply_text
+      - reply_note
+      - resolved_by
+      - checkout
+      - membership
+      - latest_check
+      - actions
+      - as_of
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        user_id:
+          $ref: '#/components/schemas/Id'
+        user_email:
+          type: string
+        category:
+          type: string
+        category_label:
+          type: string
+        priority:
+          type: string
+        state:
+          type: string
+        resolution:
+          type:
+          - string
+          - 'null'
+        checkout_id:
+          type:
+          - string
+          - 'null'
+        created_at:
+          $ref: '#/components/schemas/UtcTime'
+        resolved_at:
+          $ref: '#/components/schemas/NullableUtcTime'
+        user_note:
+          type:
+          - string
+          - 'null'
+          description: 用户填写的纯文本，客户端必须按文本渲染。
+        reply_template:
+          type:
+          - string
+          - 'null'
+        reply_text:
+          type:
+          - string
+          - 'null'
+        reply_note:
+          type:
+          - string
+          - 'null'
+        resolved_by:
+          type:
+          - string
+          - 'null'
+        checkout:
+          anyOf:
+          - $ref: '#/components/schemas/CheckoutSummary'
+          - type: 'null'
+        membership:
+          $ref: '#/components/schemas/Membership'
+        latest_check:
+          anyOf:
+          - $ref: '#/components/schemas/PaymentCheck'
+          - type: 'null'
+        actions:
+          $ref: '#/components/schemas/SupportActions'
+        as_of:
+          $ref: '#/components/schemas/UtcTime'
+    SupportTicketPage:
+      type: object
+      additionalProperties: true
+      required:
+      - items
+      - total
+      - page
+      - page_size
+      - as_of
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportTicketSummary'
+        total:
+          type: integer
+          minimum: 0
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        as_of:
+          $ref: '#/components/schemas/UtcTime'
+    SupportReply:
+      type: object
+      additionalProperties: false
+      required:
+      - template_id
+      properties:
+        template_id:
+          type: string
+          x-known-values:
+          - not_paid
+          - already_active
+          - download_help
+          - login_help
+          - generic
+        note:
+          type:
+          - string
+          - 'null'
+          maxLength: 500
+    SupportTicketState:
+      type: object
+      additionalProperties: true
+      required:
+      - id
+      - state
+      - resolution
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        state:
+          type: string
+        resolution:
+          type:
+          - string
+          - 'null'
+    ReissueResult:
+      type: object
+      additionalProperties: true
+      required:
+      - ticket_id
+      - granted_days
+      - expires_at
+      - reply_text
+      properties:
+        ticket_id:
+          $ref: '#/components/schemas/Id'
+        granted_days:
+          type: integer
+          minimum: 1
+        expires_at:
+          $ref: '#/components/schemas/UtcTime'
+        reply_text:
+          type: string
+x-contract-status: isolated-frontend-candidate-not-shared-contract
+x-plan: admin-integration-plan-2026-10-26.md
+x-global-conventions:
+- UI使用ui-ux-pro-max/design-system与三层tokens，窄接口、单向依赖。
+- 只有ytdlp_service接触yt-dlp；GET不调用供应商、不修复数据。
+- response开放新增可选字段；客户端pick支持字段，未知状态中性显示；request对象封闭，enum过滤器取契约与meta允许值交集，自由输入按name/kind/schema。
+- 角色为可扩展标识，权限集合开放字符串；前端不按role判断，服务端deny-by-default。
+- 默认值服务端集中配置，前端按meta；安全边界与v1wire不任意放宽，破坏改动v2。

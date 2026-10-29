@@ -8,6 +8,8 @@ from ..models import User
 from ..services.auth import get_current_user
 from ..services import asr_service, ytdlp_service
 from ..services.asr_languages import LANGUAGE_CODES
+from ..services.outbound_httpx import ControlledHttpError
+from ..services.outbound_policy import OutboundError
 from ..services.request_cache import lookup_reused, reuse
 
 router = APIRouter()
@@ -49,6 +51,8 @@ def transcribe(req: TranscribeRequest, user: User = Depends(get_current_user)):
     def produce():
         try:
             return asdict(asr_service.transcribe_video(req.url, req.language))
+        except (OutboundError, ControlledHttpError) as exc:
+            raise HTTPException(exc.status_code, detail=exc.public_detail()) from None
         except asr_service.ASRError as exc:
             status = 503 if exc.error_type in {'transcription_unavailable', 'transcription_busy'} else 422
             raise HTTPException(status, detail={'error_type': exc.error_type, 'error': str(exc)}) from exc

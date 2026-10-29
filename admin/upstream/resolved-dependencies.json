@@ -1,0 +1,18 @@
+{
+  "node": "v24.16.0",
+  "npm": "11.13.0",
+  "lockfileVersion": 3,
+  "dependencies": {
+    "@ant-design/icons": "6.3.4",
+    "@ant-design/pro-components": "3.1.14-7",
+    "antd": "6.6.8",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@umijs/max": "4.7.28",
+    "cross-env": "10.1.0",
+    "typescript": "7.0.2"
+  }
+}

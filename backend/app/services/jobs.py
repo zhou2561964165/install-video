@@ -10,6 +10,8 @@ from sqlmodel import Session, select
 from ..config import settings
 from ..db import engine
 from ..models import Job, JobStatus
+from .outbound_httpx import ControlledHttpError
+from .outbound_policy import OutboundError
 from .ytdlp_service import DownloadQuotaError, classify_error, public_error_message
 from .ytdlp_service import download as _ytdlp_download
 
@@ -116,8 +118,12 @@ class JobManager:
             job = s.get(Job, job_id)
             if job:
                 job.status = JobStatus.error
-                job.error_type = classify_error(exc)
-                job.error = public_error_message(exc)
+                if isinstance(exc, (OutboundError, ControlledHttpError)):
+                    job.error_type = exc.code
+                    job.error = exc.message
+                else:
+                    job.error_type = classify_error(exc)
+                    job.error = public_error_message(exc)
                 job.updated_at = datetime.now(timezone.utc)
                 s.add(job)
                 s.commit()
@@ -128,7 +134,8 @@ class JobManager:
         with Session(engine) as s:
             jobs = s.exec(
                 select(Job).where(
-                    Job.expires_at.is_not(None), Job.expires_at < now
+                    # Legacy in-process jobs only; durable v2 media belongs to C5's lifecycle.
+                    Job.execution_version == 1, Job.expires_at.is_not(None), Job.expires_at < now
                 )
             ).all()
             for job in jobs:
