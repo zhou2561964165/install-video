@@ -4,7 +4,7 @@
 
 ## 配置与前置条件
 
-- 用 Alembic 升级到源码唯一 head `t1_0015`，为迁移身份和各运行职责分配独立数据库角色；运行身份不使用数据库超级用户或迁移凭据。
+- 用 Alembic 升级到源码唯一 head `mc_0016`，为迁移身份和各运行职责分配独立数据库角色；运行身份不使用数据库超级用户或迁移凭据。
 - 计费角色处理通知时需要对 `app.billingevent` 行锁；除SELECT/INSERT外须具备窄范围 `UPDATE(id)`。部署者可为自己的计费角色执行 `GRANT UPDATE (id) ON TABLE app.billingevent TO billing_runtime_role;`（替换角色名），随后用该实际LOGIN在事务内执行零行`SELECT id FROM app.billingevent LIMIT 0 FOR UPDATE`并回滚。无须授表级UPDATE或outcome列UPDATE；id列授权仍允许修改主键，应按真实权限评估。
 - API 仅在 `PG_BUSINESS_ENABLED=true`、迁移版本、媒体目录、持久化计费配置及 `SOURCE_BROKER_SOCKET` 检查通过后启动。`BILLING_INBOX_MODE=durable`；支付环境必须显式区分测试/正式模式，并固定账户命名空间。
 - `MEDIA_ROOT` 使用绝对路径；媒体发布、目录遍历、磁盘空间、清理权限和挂载选项必须由真实运行身份核对。
@@ -45,3 +45,13 @@ python -m app.admin_grant grant --user-id <已确认的账号ID> --role admin --
 本仓库保留产品测试源码。部分生产阶段测试依赖运维方单独提供的隔离 PostgreSQL、Linux 网络身份和私有验收 runner，部分默认测试路径对应原开发机；仅克隆仓库不能直接重跑所有阶段验收。管理端契约测试可用 `ADMIN_CONTRACT_PATH` 指向本仓库的 YAML。生产运行不依赖这些测试 runner，也不要为通过测试接入真实来源或支付服务。
 
 工程约定：按适用技能执行；UI 用 primitive→semantic→component 三层 token；只有 `ytdlp_service.py` 接触 yt-dlp；模块通过窄接口单向依赖；不做无关重构。
+
+## 管理员会员控制
+
+后台日常入口为概览、用户管理、支付订单、客服工单和下载记录；操作记录及系统诊断在高级管理。原深链接仍可访问。
+
+管理员会员设置优先于付款记录：可永久启用、指定独立的未来到期时间、停用或恢复自动。指定期限结束后权益失效，必须再次设置或恢复自动；不会自动回到付款权益。无手动设置时，沿用付款会员已启用且未到期的规则。页面以中文显示管理方式、有效期和实际生效原因。
+
+手动控制不改付款状态、流水、订阅或退款事实，支付通知不能覆盖管理员设置。手动管理期间关闭新购买入口，已有通知继续处理。免费功能与账号登录保持可用。只有admin拥有`memberships:write`及`membership_control_write`能力，viewer只读；写操作要求实时会话、Origin/CSRF、原因、预期控制版本和独立幂等键。操作记录与控制修改同事务保存。
+
+迁移`mc_0016`父版本为`t1_0015`，新增控制表和幂等操作表，不回填付款历史。Alembic必须传明确`b3b_runtime_roles`及其子集`mc_admin_roles`；只给管理角色控制表写入及幂等表SELECT/INSERT，其余运行角色只读控制表。新schema与六服务代码须在同一项目维护窗口协调更新，先备份、演练及真实运行角色探针，不能运行新代码配旧schema或回切旧SQLite。

@@ -1,9 +1,11 @@
 # Independent management frontend
 
+> 2026-10-29 增量：24 operations，用户管理合并会员，五个日常入口及高级管理。用户列表/详情共享会员控制弹窗，支持永久、独立期限、停用及恢复自动；需要 `memberships:write` 和 `membership_control_write.ready=true`。付款事实、账号启停和客服补发各自保留权限与保护；下方 M1 只读描述按历史阶段阅读。工程约定：适用 skills、三层 token、窄接口单向依赖、yt-dlp 唯一服务层、最小充分修改。
+
 
 Derived from official Ant Design Pro **6.0.3**, commit `42f2cb1d303380909ea04c73b5e60679d09c321a`; provenance and preserved MIT license are in `upstream/` and `LICENSE`. This package reuses Umi Max layout/router/request/access/initialState, LoginForm, ProTable, ProDescriptions and Drawer. Ordinary frontend and backend remain separate packages.
 
-The candidate targets local contract `1.0.0-proposal.20261028.3`, YAML SHA256 `5af2352ab3e5100f2bbd3044fa3e6d01c2e3beddb098b24e989905e8bae5a7e8`. **Mock success does not establish backend readiness, migrations, production authentication or deployment.** M1 is read only; account writes require a separate server feature plus permission.
+The candidate targets local contract `1.0.0-proposal.20261029.1`, YAML SHA256 `abb014bde928a0f68b78e83aa8db3067f4d392b03d99aa9024b705b63d9e8c4d`. **Mock success does not establish backend readiness, migrations, production authentication or deployment.** M1 is read only; account writes require a separate server feature plus permission.
 
 Use Node >=22, independently in this directory:
 

@@ -32,6 +32,7 @@ from .outbound_httpx import ControlledHttpError
 from .outbound_policy import OutboundError, OutboundPurpose, validate_url
 from .quota import charge_submission
 from .quota_policy import is_unlimited_user
+from .membership import entitlement
 from .resource_capacity import (CapacityDemand, lock_capacity_counters, release_capacity,
                                 release_receipt_entry, reserve_capacity, reserve_receipt_entry)
 
@@ -97,7 +98,7 @@ def _membership(session, user_id, now):
         cancel_at_period_end=False, revision=0).on_conflict_do_nothing(index_elements=['user_id']))
     row = session.exec(select(Membership).where(Membership.user_id == user_id).with_for_update()
                        .execution_options(populate_existing=True)).one()
-    height = None if (row.status == 'active' and row.expires_at > now.timestamp()) or is_unlimited_user(user_id) else settings.membership_free_max_height
+    height = None if entitlement(session, user_id, now).effective or is_unlimited_user(user_id) else settings.membership_free_max_height
     return AccessSnapshot(height, row.revision, '')
 
 
@@ -106,7 +107,7 @@ def read_access_snapshot(engine: Engine, user_id: str) -> AccessSnapshot:
     with Session(engine) as session:
         now = _now(session)
         row = session.get(Membership, user_id)
-        height = None if (row and row.status == 'active' and row.expires_at > now.timestamp()) or is_unlimited_user(user_id) else settings.membership_free_max_height
+        height = None if entitlement(session, user_id, now).effective or is_unlimited_user(user_id) else settings.membership_free_max_height
         return AccessSnapshot(height, row.revision if row else 0, '')
 
 

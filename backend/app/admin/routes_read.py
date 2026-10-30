@@ -14,7 +14,7 @@ from .schemas import (AccessPatch, AdminMeta, AuditPage, Capability, CheckoutDet
                       UserPage, capabilities, utc)
 
 router = APIRouter()
-CONTRACT_VERSION = '1.0.0-proposal.20261028.3'
+CONTRACT_VERSION = '1.0.0-proposal.20261029.1'
 
 
 def _download_readiness():
@@ -75,7 +75,8 @@ def admin_system_status(request: Request, _: AdminContext = Depends(require_perm
 # --- Users and memberships (Task 7) -------------------------------------------------------------
 
 def _membership(item: dict) -> dict:
-    return {**item, 'expires_at': utc(item['expires_at'])}
+    return {**item, **{name: utc(item[name]) for name in (
+        'expires_at', 'control_expires_at', 'effective_expires_at')}}
 
 
 def _user(item: dict) -> dict:

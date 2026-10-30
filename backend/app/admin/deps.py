@@ -22,16 +22,17 @@ READ_PERMISSIONS = frozenset({'overview:read', 'users:read', 'memberships:read',
                               'audit:read', 'system:read'})
 # Initial seed roles (integration plan §5). users:access:write stays unusable while its capability is not ready.
 ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
-    'admin': READ_PERMISSIONS | {'users:access:write', 'support:read', 'support:write', 'support:reissue'},
+    'admin': READ_PERMISSIONS | {'users:access:write', 'support:read', 'support:write', 'support:reissue', 'memberships:write'},
     'viewer': READ_PERMISSIONS | {'support:read'},
 }
 # A permission whose capability is not ready is not granted at all (integration plan §5: "M2 ready 后").
-GATED_PERMISSIONS = {'users:access:write': 'account_access_write', 'support:reissue': 'support_reissue'}
+GATED_PERMISSIONS = {'users:access:write': 'account_access_write', 'support:reissue': 'support_reissue',
+                     'memberships:write': 'membership_control_write'}
 
 
 def ready_capabilities(settings: AdminSettings) -> frozenset[str]:
     """account_access_write (M2) and billing_amounts stay closed; support_reissue needs the Stripe read key."""
-    return frozenset({'support_reissue'} if settings.stripe_read_key else set())
+    return frozenset({'membership_control_write'} | ({'support_reissue'} if settings.stripe_read_key else set()))
 
 
 def effective_permissions(role: str, ready: frozenset[str] = frozenset()) -> frozenset[str]:

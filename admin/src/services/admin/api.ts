@@ -45,6 +45,7 @@ export const adminApi = {
   adminListUsers: (query?: AdminQuery<'adminListUsers'>) => call<Schemas['UserPage']>('adminListUsers',{params:query}),
   adminGetUser: (id: string) => call<Schemas['UserDetail']>('adminGetUser',{id}),
   adminSetUserAccess: (id: string, body: Schemas['AccessPatch'], key: string) => call<Schemas['AccessResult']>('adminSetUserAccess',{id,data:body,key}),
+  adminSetUserMembership: (id: string, body: Schemas['MembershipPatch'], key: string) => call<Schemas['MembershipResult']>('adminSetUserMembership',{id,data:body,key}),
   adminListJobs: (query?: AdminQuery<'adminListJobs'>) => call<Schemas['JobPage']>('adminListJobs',{params:query}),
   adminGetJob: (id: string) => call<Schemas['JobDetail']>('adminGetJob',{id}),
   adminListMemberships: (query?: AdminQuery<'adminListMemberships'>) => call<Schemas['MembershipPage']>('adminListMemberships',{params:query}),

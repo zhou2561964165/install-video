@@ -51,7 +51,7 @@ def admin_get_support_ticket(ticket_id: str, request: Request,
     item = _times(item, 'created_at', 'resolved_at', 'as_of')
     if item['checkout']:
         item['checkout'] = _times(item['checkout'], 'created_at', 'expires_at')
-    item['membership'] = _times(item['membership'], 'expires_at')
+    item['membership'] = _times(item['membership'], 'expires_at', 'control_expires_at', 'effective_expires_at')
     if item['latest_check']:
         item['latest_check'] = _times(item['latest_check'], 'checked_at')
     return SupportTicketDetail(**item)

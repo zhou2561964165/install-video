@@ -42,7 +42,10 @@ def test_user_without_membership_is_free_with_nulls(case):
         login(client)
         detail = get(client, f'/users/{user}').json()
     assert detail['membership'] == {'user_id': user, 'status': 'free', 'effective': False, 'expires_at': None,
-                                    'revision': None, 'entitlement_source': None, 'cancel_at_period_end': False}
+                                    'revision': None, 'entitlement_source': None, 'cancel_at_period_end': False,
+                                    'control_mode': 'auto', 'control_revision': '0', 'control_expires_at': None,
+                                    'effective_reason': 'payment_inactive', 'effective_expires_at': None,
+                                    'effective_permanent': False}
 
 
 def test_missing_account_control_defaults_enabled(case):

@@ -81,7 +81,8 @@ def test_sqlite_init_still_explicitly_creates_schema(monkeypatch):
                 'billinginbox','billingfact','billingreconciliationtask','billingreconciliationaudit',
                 'jobattempt', 'artifactmanifest', 'filereadlease', 'cleanupintent', 'orphanobject', 'dataimport'}
     support = {'supportticket', 'supportpaymentcheck', 'membershipreissue'}  # T1 (t1_0015), user tickets work on SQLite dev
-    assert set(sa_inspect(engine).get_table_names()) == legacy | protocol | support
+    control = {'membershipcontrol', 'membershipcontroloperation'}
+    assert set(sa_inspect(engine).get_table_names()) == legacy | protocol | support | control
     engine.dispose()
 
 

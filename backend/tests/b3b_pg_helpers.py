@@ -113,6 +113,7 @@ class DisposableDatabase:
         config=db.migration_config()
         if runtime_roles is not None:
             config.attributes['b3b_runtime_roles']=runtime_roles
+            config.attributes['mc_admin_roles']=('pv_app',)  # explicit admin identity; never infer from runtime names
         with self.migration.begin() as connection:
             config.attributes['connection']=connection
             getattr(command,action)(config,target)

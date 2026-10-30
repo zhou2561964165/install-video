@@ -2,9 +2,9 @@
 import type { Schemas } from '../src/services/admin/types';
 import { resourceConfig } from '../src/config/resourceConfig';
 export const stamp='2026-10-26T00:00:00Z';
-export const capabilities: Schemas['Capabilities']={account_access_write:{ready:false,reason:'M1 演示不开放写入'},billing_amounts:{ready:false,reason:'金额权威来源尚未就绪'},support_reissue:{ready:false,reason:'stripe_read_key_missing'}};
+export const capabilities: Schemas['Capabilities']={membership_control_write:{ready:false,reason:'模拟环境不执行会员设置'},account_access_write:{ready:false,reason:'M1 演示不开放写入'},billing_amounts:{ready:false,reason:'金额权威来源尚未就绪'},support_reissue:{ready:false,reason:'stripe_read_key_missing'}};
 export function mockMeta(asOf:string):Schemas['AdminMeta'] {return {
- api_version:'v1',contract_version:'1.0.0-proposal.20261028.3',as_of:asOf,features:capabilities,
+ api_version:'v1',contract_version:'1.0.0-proposal.20261029.1',as_of:asOf,features:capabilities,
  pagination:{default_page:1,default_page_size:10,max_page_size:50},display_timezone:'Asia/Singapore',quota_day_timezone:'UTC',quota_day_semantics:'accepted_at_utc_date',
  limits:{session_ttl_seconds:900,reason_min_length:10,reason_max_length:500,idempotency_replay_retention_seconds:2592000,refresh_interval_seconds:0},
  queries:Object.entries(resourceConfig).map(([resource,spec])=>({resource,sort_values:[...spec.sortValues],filters:spec.filters.map(f=>({name:f.name,kind:f.kind,...(f.kind==='enum'?{allowed_values:f.schema.enum!.map(String)}:{})}))})),state_dictionaries:[],
@@ -12,7 +12,7 @@ export function mockMeta(asOf:string):Schemas['AdminMeta'] {return {
 export const users: Schemas['UserDetail'][]=Array.from({length:27},(_,i)=>{
  const id=`usr_demo_${String(i+1).padStart(2,'0')}`,active=i%3===0;
  return {id,email:`person${String(i+1).padStart(2,'0')}@example.invalid`,created_at:new Date(Date.UTC(2026,9,i+1)).toISOString(),access:{enabled:i%5!==0,revision:i===0?'9007199254740993':String(i),protected_account:i===0},
- membership:{user_id:id,status:active?'active':i%3===1?'expired':'free',effective:active,expires_at:active?'2099-01-01T00:00:00Z':null,revision:active?'9007199254740993':null,entitlement_source:active?'synthetic_demo':null,cancel_at_period_end:false},
+ membership:{control_mode:'auto',control_revision:'0',control_expires_at:null,effective_reason:active?'payment_active':i%3===1?'payment_expired':'payment_inactive',effective_expires_at:active?'2099-01-01T00:00:00Z':null,effective_permanent:false,user_id:id,status:active?'active':i%3===1?'expired':'free',effective:active,expires_at:active?'2099-01-01T00:00:00Z':null,revision:active?'9007199254740993':null,entitlement_source:active?'synthetic_demo':null,cancel_at_period_end:false},
  quota:{quota_day:'2026-10-26',used:i+3,limit:active?null:5,remaining:active?null:2-i,unlimited:active},as_of:stamp};
 });
 export const memberships: Schemas['Membership'][]=users.filter((_,i)=>i%3!==2).map(u=>u.membership);

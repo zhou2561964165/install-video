@@ -1,6 +1,6 @@
-"""Admin M1 Task 11: the admin app against contract 1.0.0-proposal.20261028.3 (offline).
+"""Admin app against contract 1.0.0-proposal.20261029.1 (offline).
 
-Routes (method + path) must equal the contract's 23 operations; every 200 response model must carry
+Routes (method + path) must equal the contract's 24 operations; every 200 response model must carry
 exactly the schema's property names (recursively through $ref) with all required ones; list query
 parameters must equal the contract's. Values/enums are covered by the PG tests.
 """
@@ -19,7 +19,7 @@ from app.services import admin_queries
 
 CONTRACT = Path(os.environ.get('ADMIN_CONTRACT_PATH', r'C:\Users\zxk\.codex\worktrees\52fd\install_video\docs\production'
                                r'\admin-api-v1.openapi.yaml'))
-SHA256 = '5af2352ab3e5100f2bbd3044fa3e6d01c2e3beddb098b24e989905e8bae5a7e8'
+SHA256 = 'abb014bde928a0f68b78e83aa8db3067f4d392b03d99aa9024b705b63d9e8c4d'
 pytestmark = pytest.mark.skipif(not CONTRACT.exists(), reason='contract file not available')
 
 
@@ -48,9 +48,9 @@ def test_contract_hash_pinned():
     assert hashlib.sha256(CONTRACT.read_bytes()).hexdigest() == SHA256
 
 
-def test_all_23_operations_routed(document, routes):
+def test_all_24_operations_routed(document, routes):
     expected = set(operations(document))
-    assert len(expected) == 23 and set(routes) == expected
+    assert len(expected) == 24 and set(routes) == expected
 
 
 def _ref(schema):
@@ -83,6 +83,18 @@ def _compare(name, contract_schema, model_schema, components, defs, seen, proble
         child = _ref(contract_prop)
         model_child = _ref(model_props.get(prop, {}))
         if child and child in components:
+            variants = components[child].get('anyOf', [])
+            if variants:
+                expected_variants = {_ref(option) for option in variants if _ref(option)}
+                actual_variants = {_ref(option) for option in model_props.get(prop, {}).get('anyOf', []) if _ref(option)}
+                if expected_variants != actual_variants:
+                    problems.append((name, prop, 'union variants mismatch'))
+                for variant in sorted(expected_variants):
+                    if variant not in defs:
+                        problems.append((name, prop, 'union model missing'))
+                    else:
+                        _compare(variant, components[variant], defs[variant], components, defs, seen, problems)
+                continue
             if not model_child or model_child not in defs:
                 if components[child].get('properties'):
                     problems.append((name, prop, 'nested model missing'))

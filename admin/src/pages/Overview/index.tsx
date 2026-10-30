@@ -1,5 +1,5 @@
 import { ProTable } from '@ant-design/pro-components';
-import { Alert, Card, Col, Row, Space, Statistic } from 'antd';
+import { Alert, Card, Col, Collapse, Row, Space, Statistic } from 'antd';
 import { AdminStateTag } from '@/components/AdminState';
 import { BusinessGuard, PageContainer, ReadState, Snapshot, useReadResource, type Schemas } from '@/components/business/BusinessShared';
 import { useAdminSession } from '@/hooks/useAdminSession';
@@ -16,14 +16,14 @@ function OverviewContent() {
   return <PageContainer title="概览" subTitle="用户、有效会员与当前保留的服务端任务快照。"><ReadState resource={resource}>{data && <Space className="admin-business" orientation="vertical" size="middle" style={{ width: '100%' }}>
     <Row gutter={[16, 16]}>
       {[
-        ['用户总数', data.users_total, data.scope.users],
-        ['有效 VIP', data.effective_vip_total, data.scope.effective_vip],
-        ['保留服务端任务', data.retained_server_jobs_total, data.scope.jobs],
+        ['用户总数', data.users_total, '已注册的全部用户'],
+        ['有效会员', data.effective_vip_total, '管理员设置优先；自动管理仅在原会员已启用、尚未到期时生效'],
+        ['保留下载记录', data.retained_server_jobs_total, '当前保留的服务端下载任务'],
       ].map(([title, value, scope]) => <Col key={String(title)} xs={24} md={8}><Card><Statistic title={title} value={value ?? '未知'} /><p>{scope}</p></Card></Col>)}
     </Row>
-    <Alert type="info" showIcon title="统计口径" description="任务数量只覆盖当前保留的 server Job，不等于全部下载历史、下载操作数或扣额数。此页不提供营收估算。" />
+    <Alert type="info" showIcon title="统计口径" description="以本页“数据截至”的查询时间为准。下载记录只含当前仍保留的服务端任务。" />
     {distribution('公开状态分布', 'job.public_status', data.jobs_by_public_status)}
-    {distribution('内部状态分布', 'job.internal_state', data.jobs_by_internal_state)}
+    <Collapse items={[{ key: 'advanced', label: '高级诊断：内部任务状态', children: distribution('内部状态分布', 'job.internal_state', data.jobs_by_internal_state) }]} />
     <Snapshot value={data.as_of} />
   </Space>}</ReadState></PageContainer>;
 }

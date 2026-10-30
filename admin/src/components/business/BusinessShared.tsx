@@ -1,5 +1,5 @@
 import { PageContainer, ProDescriptions, ProTable } from '@ant-design/pro-components';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import type { ActionType, ProColumns, ProFormInstance } from '@ant-design/pro-components';
 import { Alert, Button, Drawer, Empty, Grid, Result, Skeleton, Space, Typography } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { AdminError, AdminTimestamp } from '@/components/AdminState';
@@ -8,6 +8,7 @@ import { useAdminSession } from '@/hooks/useAdminSession';
 import { toProTableResult } from '@/services/admin/api';
 import type { operations, Schemas } from '@/services/admin/types';
 import { stateDisplay } from '@/utils/adminFormat';
+import { localInputToUtc, utcToLocalInput } from '@/utils/adminTime';
 import { checkedTableParams } from './BusinessPolicy';
 import { createTableReadController } from './TableReadController';
 import './business.less';
@@ -32,16 +33,20 @@ export function Snapshot({ value }: { value?: string | null }) {
 }
 
 /** Official table-list composition: ProTable request/actionRef, safe business columns only. */
-export function BusinessTable<T extends Record<string, unknown>, O extends ListOperation>({ resource, title, columns, load, rowKey = 'id', params, notice, enumText }: {
+export function BusinessTable<T extends Record<string, unknown>, O extends ListOperation>({ resource, title, columns, load, rowKey = 'id', params, notice, enumText, reloadKey }: {
   resource: O; title: string; columns: ProColumns<T>[]; load: (query: Query<O>) => Promise<ListPage<T>>;
   rowKey?: string; params?: Record<string, unknown>; notice?: React.ReactNode;
   /** Per-resource enum filter labels; overrides the shared state dictionaries for that field. */
   enumText?: Record<string, Record<string, string>>;
+  reloadKey?: number;
 }) {
   const { meta } = useAdminSession();
   const actionRef = useRef<ActionType | null>(null);
+  const formRef = useRef<ProFormInstance | undefined>(undefined);
   const [error, setError] = useState<unknown>();
   const [asOf, setAsOf] = useState<string>();
+  const [advanced, setAdvanced] = useState(false);
+  useEffect(() => { if (reloadKey) void actionRef.current?.reload(); }, [reloadKey]);
   const [reader] = useState(() => createTableReadController<T>({
     success: (value) => { setAsOf(value.asOf); setError(undefined); },
     failure: setError,
@@ -56,7 +61,8 @@ export function BusinessTable<T extends Record<string, unknown>, O extends ListO
     const field = typeof column.dataIndex === 'string' ? column.dataIndex : '';
     const definition = configured.filters.find((entry) => entry.name === field);
     const descriptor = queryMeta?.filters.find((entry) => entry.name === field && entry.kind === definition?.kind);
-    const result: ProColumns<T> = { ...column, search: column.search === false || !descriptor ? false : column.search };
+    const common = ['email','enabled','effective_vip','effective','status','state','public_status','revoked','outcome','recorded_from','recorded_before'];
+    const result: ProColumns<T> = { ...column, search: column.search === false || !descriptor || (!advanced && !common.includes(field)) ? false : column.search };
     if (column.sorter) result.sorter = Boolean(queryMeta?.sort_values.some((value) => value.startsWith(`${field}:`)));
     if (descriptor?.kind === 'enum') {
       result.valueType = 'select';
@@ -65,9 +71,17 @@ export function BusinessTable<T extends Record<string, unknown>, O extends ListO
       result.valueType = 'select'; result.valueEnum = column.valueEnum ?? booleanOptions;
     } else if (descriptor) {
       result.valueType = 'text';
-      if (descriptor.kind === 'datetime') result.fieldProps = { placeholder: 'UTC 时间，例如 2026-10-26T00:00:00Z' };
+      if (descriptor.kind === 'datetime') {
+        result.title = `${String(column.title)}（${Intl.DateTimeFormat().resolvedOptions().timeZone}）`;
+        result.fieldProps = { type: 'datetime-local', step: 1 };
+      }
     }
-    if (descriptor) result.formItemProps = { rules: [{ validator: async (_, value) => {
+    if (descriptor) result.formItemProps = {
+      ...(descriptor.kind === 'datetime' ? {
+        getValueFromEvent: (event: React.ChangeEvent<HTMLInputElement>) => localInputToUtc(event.target.value),
+        getValueProps: (value: unknown) => ({ value: utcToLocalInput(value) }),
+      } : {}),
+      rules: [{ validator: async (_, value) => {
       try { checkedTableParams(resource, { [field]: value }, meta); }
       catch { throw new Error(descriptor.kind === 'datetime' ? '请输入有效的 UTC 时间，以 Z 结尾。' : '此筛选值不符合接口约定，请检查后重试。'); }
     } }] };
@@ -85,8 +99,23 @@ export function BusinessTable<T extends Record<string, unknown>, O extends ListO
     <div key="notice">{notice}</div>
     <div key="request-state">{error !== undefined && <><AdminError error={error} onRetry={() => void actionRef.current?.reload()} />{reader.last().success && <Alert type="warning" title="刷新未完成，以下保留上次成功读取的数据。" showIcon />}</>}</div>
     <ProTable<T>
-      key="business-table" actionRef={actionRef} headerTitle={title} rowKey={rowKey} columns={safeColumns} form={{ initialValues: params, ignoreRules: false }}
+      key="business-table" actionRef={actionRef} formRef={formRef} headerTitle={title} rowKey={rowKey} columns={safeColumns} form={{ initialValues: params, ignoreRules: false, submitter: { resetButtonProps: {
+        // Reset means clear filters, including hidden values seeded by an old deep link.
+        preventDefault: true,
+        onClick: () => {
+          formRef.current?.setFieldsValue(Object.fromEntries(configured.filters.map(field => [field.name, undefined])));
+          formRef.current?.submit();
+        },
+      } } }}
+      beforeSearchSubmit={(values) => {
+        // ProForm submits registered fields only; collapsed advanced items are unmounted.
+        // Capture preserved contract fields on submit so reloads never apply an unsubmitted draft.
+        const stored = formRef.current?.getFieldsValue(true) ?? {};
+        const preserved = Object.fromEntries(configured.filters.filter(field => Object.hasOwn(stored, field.name)).map(field => [field.name, stored[field.name]]));
+        return { ...preserved, ...values };
+      }}
       scroll={{ x: 'max-content' }} search={{ labelWidth: 'auto', defaultCollapsed: false }}
+      toolBarRender={() => [<Button key="advanced-filters" aria-pressed={advanced} onClick={() => setAdvanced(value => !value)}>{advanced ? '收起高级筛选' : '高级筛选'}</Button>]}
       options={{ density: true, fullScreen: true, reload: true, setting: true }}
       pagination={{ defaultPageSize: pagination.default_page_size, showSizeChanger: true, pageSizeOptions: Array.from(new Set([pagination.default_page_size, 20, 50, 100].filter((size) => size <= pagination.max_page_size))), showTotal: (total) => `共 ${total} 条` }}
       locale={{ emptyText: <Empty description="没有符合当前条件的记录，可清空筛选后重试。" /> }}

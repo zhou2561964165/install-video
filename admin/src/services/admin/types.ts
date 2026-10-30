@@ -453,6 +453,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users/{user_id}/membership": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * 管理员设置会员权益
+         * @description 实时校验会话、Origin、CSRF、memberships:write及membership_control_write。独立users.membership操作回执空间，key唯一，指纹含actor、method、path、target及规范化body；同key同指纹返回原membership/changed/audit_id/as_of，同key异操作者、body或目标拒绝409。按user、membership、control依次锁定，同事务变更、版本及审计；未知提交不得换key重试。手动控制不改付款事实，回调不能覆盖。
+         */
+        patch: operations["adminSetUserMembership"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -493,11 +513,12 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /** @description 仅可选能力key：account_access_write控制M2启停，billing_amounts控制金额列，不控制billing页面。基础只读菜单/GET只按各自permission；未知可选能力默认关闭。M1两能力ready=false。 */
+        /** @description 可选能力按权限及ready共同判定；membership_control_write仅控制管理员会员设置，未知能力默认关闭。 */
         Capabilities: {
             account_access_write: components["schemas"]["Capability"];
             billing_amounts: components["schemas"]["Capability"];
             support_reissue: components["schemas"]["Capability"];
+            membership_control_write: components["schemas"]["Capability"];
         } & {
             [key: string]: unknown;
         };
@@ -568,7 +589,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /** @description effective由唯一membership domain纯函数以请求事务DB时钟as_of计算：原status=active且expires_at>as_of；列表SQL同口径，不复用用户侧派生status。用户详情无行时free/false且expires_at/revision/source=null；列表仅实际会员行；expires_at原纪元秒0转null。 */
+        /** @description status/revision/expires_at保留付款记录语义。effective由管理员控制优先的统一策略按事务as_of计算；auto按原active且付款期限未到期；enabled为永久或独立管理员期限，到期不回落付款记录；disabled始终无效。无控制行等同auto/control_revision=0，无付款行仍可显示及管理。 */
         Membership: {
             user_id: components["schemas"]["Id"];
             /** @description 安全投影字段 status；精确语义见所属DTO说明。 */
@@ -586,6 +607,16 @@ export interface components {
             entitlement_source: string | null;
             /** @description 安全投影字段 cancel_at_period_end；精确语义见所属DTO说明。 */
             cancel_at_period_end: boolean;
+            /** @enum {string} */
+            control_mode: "auto" | "enabled" | "disabled";
+            control_revision: string;
+            /** Format: date-time */
+            control_expires_at: string | null;
+            /** @enum {string} */
+            effective_reason: "payment_active" | "payment_expired" | "payment_inactive" | "admin_enabled" | "admin_expired" | "admin_disabled";
+            /** Format: date-time */
+            effective_expires_at: string | null;
+            effective_permanent: boolean;
         } & {
             [key: string]: unknown;
         };
@@ -985,18 +1016,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        AuditChange: {
-            /** @description 安全投影字段 enabled_before；精确语义见所属DTO说明。 */
-            enabled_before: boolean;
-            /** @description 安全投影字段 enabled_after；精确语义见所属DTO说明。 */
-            enabled_after: boolean;
-            /** @description 安全投影字段 revision_before；精确语义见所属DTO说明。 */
-            revision_before: string;
-            /** @description 安全投影字段 revision_after；精确语义见所属DTO说明。 */
-            revision_after: string;
-        } & {
-            [key: string]: unknown;
-        };
+        AuditChange: components["schemas"]["AccessAuditChange"] | components["schemas"]["MembershipAuditChange"];
         StateCount: {
             /** @description 安全投影字段 state；精确语义见所属DTO说明。 */
             state: string;
@@ -1089,7 +1109,13 @@ export interface components {
          *             "expires_at": null,
          *             "revision": null,
          *             "entitlement_source": null,
-         *             "cancel_at_period_end": false
+         *             "cancel_at_period_end": false,
+         *             "control_mode": "auto",
+         *             "control_revision": "0",
+         *             "control_expires_at": null,
+         *             "effective_reason": "payment_inactive",
+         *             "effective_expires_at": null,
+         *             "effective_permanent": false
          *           }
          *         }
          *       ],
@@ -1270,10 +1296,10 @@ export interface components {
             [key: string]: unknown;
         };
         /**
-         * @description 所有有效管理会话可读，不额外要求业务权限。基础只读菜单/GET按permission；仅启停和金额列额外按features。只返回安全显示元数据，不返回密钥、账号/ID白名单或动态规则。 example完全合成、不是运行配置或验收证据；实际queries列出所有受支持resource/filters/sorts。
+         * @description 所有有效管理会话可读，不额外要求业务权限。基础只读菜单/GET按permission；账号启停、会员设置与金额列额外按各自features。只返回安全显示元数据，不返回密钥、账号/ID白名单或动态规则。 example完全合成、不是运行配置或验收证据；实际queries列出所有受支持resource/filters/sorts。
          * @example {
          *       "api_version": "v1",
-         *       "contract_version": "1.0.0-proposal.20261026.2",
+         *       "contract_version": "1.0.0-proposal.20261029.1",
          *       "as_of": "2026-10-26T00:00:00Z",
          *       "features": {
          *         "account_access_write": {
@@ -1283,6 +1309,14 @@ export interface components {
          *         "billing_amounts": {
          *           "ready": false,
          *           "reason": "金额投影尚未验收"
+         *         },
+         *         "support_reissue": {
+         *           "ready": false,
+         *           "reason": "合成示例不开放支付核查"
+         *         },
+         *         "membership_control_write": {
+         *           "ready": false,
+         *           "reason": "合成示例不执行会员设置"
          *         }
          *       },
          *       "pagination": {
@@ -1515,6 +1549,50 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
+        /** @description 仅enabled允许期限，null表示永久；指定期限必须晚于事务时钟；auto/disabled要求null。原因trim后校验，expected_revision为独立control_revision。 */
+        MembershipPatch: {
+            /** @enum {string} */
+            mode: "auto" | "enabled" | "disabled";
+            /** Format: date-time */
+            expires_at: string | null;
+            reason: string;
+            expected_revision: string;
+        };
+        MembershipResult: {
+            membership: components["schemas"]["Membership"];
+            changed: boolean;
+            audit_id: components["schemas"]["Id"];
+            /** Format: date-time */
+            as_of: string;
+        } & {
+            [key: string]: unknown;
+        };
+        AccessAuditChange: {
+            /** @description 安全投影字段 enabled_before；精确语义见所属DTO说明。 */
+            enabled_before: boolean;
+            /** @description 安全投影字段 enabled_after；精确语义见所属DTO说明。 */
+            enabled_after: boolean;
+            /** @description 安全投影字段 revision_before；精确语义见所属DTO说明。 */
+            revision_before: string;
+            /** @description 安全投影字段 revision_after；精确语义见所属DTO说明。 */
+            revision_after: string;
+        } & {
+            [key: string]: unknown;
+        };
+        MembershipAuditChange: {
+            /** @enum {string} */
+            control_mode_before: "auto" | "enabled" | "disabled";
+            /** @enum {string} */
+            control_mode_after: "auto" | "enabled" | "disabled";
+            /** Format: date-time */
+            control_expires_at_before: string | null;
+            /** Format: date-time */
+            control_expires_at_after: string | null;
+            control_revision_before: string;
+            control_revision_after: string;
+        } & {
+            [key: string]: unknown;
+        };
     };
     responses: {
         /** @description 401：未认证、过期或撤销；login统一失败。客户端清内存会话、permissions、meta与CSRF后转登录；logout额外清同Path cookie。 */
@@ -1599,7 +1677,7 @@ export interface components {
         PageSize: number;
         /** @description 已认证写操作必须带由独立ADMIN_CSRF_SECRET确定派生的会话CSRF token，同时验证ADMIN_ALLOWED_ORIGINS；Origin配置为空拒绝写，secret缺失或过短后台整体503 admin_unavailable。 */
         Csrf: string;
-        /** @description actor_user_id+固定operation=users.access作用域；16..128 ASCII字符。指纹含规范化method/path/target_user_id/body；与审计结果action独立。默认保留结果30天至少7天，之后墓碑不可复用，不自动更换。 跨target复用key冲突，body规范化enabled/reason/expected_revision。 */
+        /** @description 16..128 ASCII字符，各operation使用独立幂等空间，具体作用域见operation说明。账号启停保留actor_user_id+users.access+key作用域；会员控制使用users.membership独立回执，key唯一且指纹包含操作者、method、path、target及规范化body，跨操作者、目标或body复用会员key均409。指纹与审计结果action独立。默认保留结果30天至少7天，之后墓碑不可复用，不自动更换。 */
         IdempotencyKey: string;
     };
     requestBodies: never;
@@ -1804,7 +1882,7 @@ export interface operations {
             header: {
                 /** @description 已认证写操作必须带由独立ADMIN_CSRF_SECRET确定派生的会话CSRF token，同时验证ADMIN_ALLOWED_ORIGINS；Origin配置为空拒绝写，secret缺失或过短后台整体503 admin_unavailable。 */
                 "X-CSRF-Token": components["parameters"]["Csrf"];
-                /** @description actor_user_id+固定operation=users.access作用域；16..128 ASCII字符。指纹含规范化method/path/target_user_id/body；与审计结果action独立。默认保留结果30天至少7天，之后墓碑不可复用，不自动更换。 跨target复用key冲突，body规范化enabled/reason/expected_revision。 */
+                /** @description 16..128 ASCII字符，各operation使用独立幂等空间，具体作用域见operation说明。账号启停保留actor_user_id+users.access+key作用域；会员控制使用users.membership独立回执，key唯一且指纹包含操作者、method、path、target及规范化body，跨操作者、目标或body复用会员key均409。指纹与审计结果action独立。默认保留结果30天至少7天，之后墓碑不可复用，不自动更换。 */
                 "Idempotency-Key": components["parameters"]["IdempotencyKey"];
             };
             path: {
@@ -2352,7 +2430,7 @@ export interface operations {
             header: {
                 /** @description 已认证写操作必须带由独立ADMIN_CSRF_SECRET确定派生的会话CSRF token，同时验证ADMIN_ALLOWED_ORIGINS；Origin配置为空拒绝写，secret缺失或过短后台整体503 admin_unavailable。 */
                 "X-CSRF-Token": components["parameters"]["Csrf"];
-                /** @description actor_user_id+固定operation=users.access作用域；16..128 ASCII字符。指纹含规范化method/path/target_user_id/body；与审计结果action独立。默认保留结果30天至少7天，之后墓碑不可复用，不自动更换。 跨target复用key冲突，body规范化enabled/reason/expected_revision。 */
+                /** @description 16..128 ASCII字符，各operation使用独立幂等空间，具体作用域见operation说明。账号启停保留actor_user_id+users.access+key作用域；会员控制使用users.membership独立回执，key唯一且指纹包含操作者、method、path、target及规范化body，跨操作者、目标或body复用会员key均409。指纹与审计结果action独立。默认保留结果30天至少7天，之后墓碑不可复用，不自动更换。 */
                 "Idempotency-Key": components["parameters"]["IdempotencyKey"];
             };
             path: {
@@ -2371,6 +2449,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReissueResult"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["ValidationError"];
+            429: components["responses"]["TooManyRequests"];
+            503: components["responses"]["Unavailable"];
+        };
+    };
+    adminSetUserMembership: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description 已认证写操作必须带由独立ADMIN_CSRF_SECRET确定派生的会话CSRF token，同时验证ADMIN_ALLOWED_ORIGINS；Origin配置为空拒绝写，secret缺失或过短后台整体503 admin_unavailable。 */
+                "X-CSRF-Token": components["parameters"]["Csrf"];
+                /** @description 16..128 ASCII字符，各operation使用独立幂等空间，具体作用域见operation说明。账号启停保留actor_user_id+users.access+key作用域；会员控制使用users.membership独立回执，key唯一且指纹包含操作者、method、path、target及规范化body，跨操作者、目标或body复用会员key均409。指纹与审计结果action独立。默认保留结果30天至少7天，之后墓碑不可复用，不自动更换。 */
+                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+            };
+            path: {
+                /** @description 不透明路径ID；不存在404。 */
+                user_id: components["schemas"]["Id"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MembershipPatch"];
+            };
+        };
+        responses: {
+            /** @description 成功安全投影。 */
+            200: {
+                headers: {
+                    "X-Request-ID": components["headers"]["RequestId"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MembershipResult"];
                 };
             };
             401: components["responses"]["Unauthorized"];

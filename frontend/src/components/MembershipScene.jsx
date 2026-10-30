@@ -14,11 +14,16 @@ function expiryLabel(value) {
 export default function MembershipScene({ membership, authed, authLoading, onLogin, onBack, onSupport, paymentReturn, loginIntent }) {
   const { plans, plansError, account, loading, error, busy, refresh, cancelAction, checkout, portal } = membership;
   const vip = authed && account?.plan === 'vip';
+  const manuallyManaged = authed && ['enabled', 'disabled'].includes(account?.control_mode);
+  const permanent = vip && account?.control_mode === 'enabled' && account?.effective_permanent === true;
+  const manualStatus = !manuallyManaged ? null : account.control_mode === 'disabled'
+    ? '管理员已停用会员权益' : permanent ? '管理员已启用，永久有效'
+      : vip ? '管理员已启用会员权益' : '管理员设置的会员期限已结束';
   const freeMaxHeight = Number.isInteger(plans?.free_max_height) && plans.free_max_height > 0 && plans.free_max_height <= 720 ? plans.free_max_height : 720;
   const freeFeatures = [FREE_FEATURES[0], `最高支持 ${freeMaxHeight}p 清晰度`, ...FREE_FEATURES.slice(1)];
-  const available = plans?.checkout_available && (!authed || account?.checkout_available);
-  const expiry = expiryLabel(account?.expires_at);
-  const checkoutLabel = vip ? '当前方案' : !plans?.checkout_available ? '暂未开放支付' : !authed ? '登录后开通 VIP' : loading ? '正在确认会员状态…' : available ? '通过 Stripe 开通 VIP' : '暂未开放支付';
+  const available = !manuallyManaged && plans?.checkout_available && (!authed || account?.checkout_available);
+  const expiry = expiryLabel(manuallyManaged ? account?.effective_expires_at ?? account?.control_expires_at : account?.expires_at);
+  const checkoutLabel = vip ? '当前方案' : manuallyManaged ? '管理员手动管理' : !plans?.checkout_available ? '暂未开放支付' : !authed ? '登录后开通 VIP' : loading ? '正在确认会员状态…' : available ? '通过 Stripe 开通 VIP' : '暂未开放支付';
 
   return <main className="membership-page" aria-labelledby="membership-title">
     <button type="button" className="video-back membership-back" onClick={onBack}><span aria-hidden="true">←</span> 返回下载</button>
@@ -32,9 +37,10 @@ export default function MembershipScene({ membership, authed, authLoading, onLog
       {paymentReturn === 'success' ? vip ? '服务器已确认当前 VIP 权益，请以下方有效期为准。' : '已从支付页面返回。支付结果正在由服务器确认，请刷新会员状态；确认前不会开通 VIP。' : paymentReturn === 'cancel' ? '已取消本次支付。会员权益以服务器显示的当前状态为准。' : '已从账单管理返回，请刷新会员状态查看最新权益。'}
     </div>}
     {authed && <section className="membership-account" aria-label="当前会员状态" data-follow-exclude="panel">
-      <div><strong>{loading ? '正在读取会员状态…' : account ? (vip ? STATUS[account.status] || 'VIP 已生效' : STATUS[account.status] || '免费版') : '会员状态暂不可用'}</strong>
-        {expiry && <p>{account.cancel_at_period_end ? '已取消续费，权益保留至' : '权益有效期至'} {expiry}</p>}
-        {vip && account.cancel_at_period_end && !expiry && <p>已取消续费，当前有效期内仍可使用 VIP。</p>}
+      <div><strong>{loading ? '正在读取会员状态…' : account ? manualStatus || (vip ? STATUS[account.status] || 'VIP 已生效' : STATUS[account.status] || '免费版') : '会员状态暂不可用'}</strong>
+        {expiry && !permanent && <p>{manuallyManaged ? vip ? '权益有效期至' : '管理员设置期限至' : account.cancel_at_period_end ? '已取消续费，权益保留至' : '权益有效期至'} {expiry}</p>}
+        {!manuallyManaged && vip && account.cancel_at_period_end && !expiry && <p>已取消续费，当前有效期内仍可使用 VIP。</p>}
+        {manuallyManaged && <p>会员由管理员手动管理，如需调整请联系客服。</p>}
       </div>
       <div className="membership-account__actions"><button type="button" onClick={refresh} disabled={loading || Boolean(busy)}>刷新会员状态</button>
         {account?.portal_available && <button type="button" onClick={portal} disabled={Boolean(busy)}>{busy === 'portal' ? '正在前往账单…' : '管理账单'}</button>}</div>

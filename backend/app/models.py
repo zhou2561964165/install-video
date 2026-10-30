@@ -226,3 +226,4 @@ from .models_operations import DownloadOperation, QuotaCharge, ResourceCounter, 
 from .models_billing import BillingInbox, BillingFact, BillingReconciliationTask, BillingReconciliationAudit  # noqa: E402,F401
 from .models_execution import ArtifactManifest, JobAttempt  # noqa: E402,F401
 from .models_support import MembershipReissue, SupportPaymentCheck, SupportTicket  # noqa: E402,F401
+from .models_membership_control import MembershipControl, MembershipControlOperation  # noqa: E402,F401

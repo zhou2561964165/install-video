@@ -37,7 +37,8 @@ def test_login_sets_strict_cookie_and_me_returns_permissions(case):
         me = client.get(BASE + '/auth/me').json()
     assert me['user_id'] == user_id and me['email'] == EMAIL and me['role'] == 'admin'
     # users:access:write only once account_access_write is ready (M2); support:reissue only with the Stripe read key.
-    assert sorted(me['permissions']) == sorted(READ + ['support:read', 'support:write'])
+    assert sorted(me['permissions']) == sorted(READ + ['support:read', 'support:write', 'memberships:write'])
+    assert me['capabilities']['membership_control_write']['ready'] is True
     assert me['capabilities']['account_access_write']['ready'] is False
     assert me['capabilities']['billing_amounts']['ready'] is False
     assert len(me['csrf_token']) >= 32 and me['session_expires_at'].endswith('Z')

@@ -14,7 +14,7 @@ from sqlmodel import Session, select
 
 from ..config import settings
 from ..models import BillingCheckout, BillingEvent, BillingPayment, Membership, User
-from .membership import is_vip
+from .membership import is_vip, require_checkout_auto
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +84,7 @@ def _write_lock(session):
 
 
 def checkout(session: Session, user: User) -> dict:
+    require_checkout_auto(session, user.id)
     if session.get_bind().dialect.name == 'postgresql' or settings.billing_inbox_mode != 'legacy_sync':
         from .billing_pg import BillingConfiguration, checkout as pg_checkout
         cfg = BillingConfiguration.configured(settings, session.get_bind().dialect.name)
@@ -96,6 +97,7 @@ def checkout(session: Session, user: User) -> dict:
         raise unavailable()
     user_id = user.id
     _write_lock(session)
+    require_checkout_auto(session, user_id)
     account = session.get(Membership, user_id)
     if account is None:
         account = Membership(user_id=user_id)
@@ -380,7 +382,8 @@ def apply_event(session: Session, event: dict):
                             session.add(BillingEvent(id=event_id))
                             session.commit()
                             return
-                        if (account.active_checkout_id != attempt.id or is_vip(session, account.user_id)):
+                        if (account.active_checkout_id != attempt.id or
+                                (account.status == 'active' and account.expires_at > time.time())):
                             raise ValueError("Superseded checkout")
                         if account.subscription_id:
                             old = context["subscriptions"][account.subscription_id]

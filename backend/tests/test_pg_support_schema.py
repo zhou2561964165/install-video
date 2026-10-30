@@ -31,7 +31,8 @@ def test_head_is_t1_0015():
     from app import db as app_db
     script = ScriptDirectory.from_config(app_db.migration_config())
     assert script.get_revision('t1_0015').down_revision == 'm1_0014'
-    assert script.get_heads() == ['t1_0015']
+    assert script.get_heads() == ['mc_0016']
+    assert script.get_revision('mc_0016').down_revision == 't1_0015'
 
 
 def test_ticket_category_checkout_pairing(case):

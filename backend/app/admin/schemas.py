@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_serializer
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_serializer, model_validator
 
 
 def utc(value: datetime | None) -> str | None:
@@ -34,12 +35,14 @@ class Capabilities(BaseModel):
     account_access_write: Capability
     billing_amounts: Capability
     support_reissue: Capability
+    membership_control_write: Capability
 
 
 def capabilities(settings) -> Capabilities:
     return Capabilities(
         account_access_write=Capability(ready=False, reason='m2_not_enabled'),
         billing_amounts=Capability(ready=False, reason='amount_source_unconfirmed'),
+        membership_control_write=Capability(ready=True, reason=None),
         support_reissue=Capability(ready=True, reason=None) if settings.stripe_read_key
         else Capability(ready=False, reason='stripe_read_key_missing'))
 
@@ -163,6 +166,50 @@ class MembershipOut(BaseModel):
     revision: str | None
     entitlement_source: str | None
     cancel_at_period_end: bool
+    control_mode: Literal['auto', 'enabled', 'disabled']
+    control_revision: str
+    control_expires_at: str | None
+    effective_reason: Literal['payment_active', 'payment_expired', 'payment_inactive', 'admin_enabled', 'admin_expired', 'admin_disabled']
+    effective_expires_at: str | None
+    effective_permanent: bool
+
+
+class MembershipPatch(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    mode: Literal['auto', 'enabled', 'disabled']
+    expires_at: str | None
+    reason: str = Field(min_length=10, max_length=500)
+    expected_revision: str = Field(pattern=r'^(0|[1-9][0-9]*)$', max_length=19)
+
+    @field_validator('reason', mode='before')
+    @classmethod
+    def trim_reason(cls, value):
+        return value.strip() if isinstance(value, str) else value
+
+    @field_validator('expires_at')
+    @classmethod
+    def utc_expiry(cls, value):
+        if value is not None:
+            import re
+            if not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?Z', value):
+                raise ValueError('UTC expiry required')
+            return utc(datetime.fromisoformat(value.replace('Z', '+00:00')))
+        return value
+
+    @model_validator(mode='after')
+    def consistent(self):
+        if self.mode != 'enabled' and self.expires_at is not None:
+            raise ValueError('Only enabled mode has an expiry')
+        if int(self.expected_revision) > 9223372036854775807:
+            raise ValueError('Revision out of range')
+        return self
+
+
+class MembershipResult(BaseModel):
+    membership: MembershipOut
+    changed: bool
+    audit_id: str
+    as_of: str
 
 
 class UserSummary(BaseModel):
@@ -318,11 +365,23 @@ class PaymentPage(BaseModel):
     as_of: str
 
 
-class AuditChange(BaseModel):
+class AccessAuditChange(BaseModel):
     enabled_before: bool
     enabled_after: bool
     revision_before: str
     revision_after: str
+
+
+class MembershipAuditChange(BaseModel):
+    control_mode_before: str
+    control_mode_after: str
+    control_expires_at_before: str | None
+    control_expires_at_after: str | None
+    control_revision_before: str
+    control_revision_after: str
+
+
+AuditChange = AccessAuditChange | MembershipAuditChange
 
 
 class AuditEntry(BaseModel):

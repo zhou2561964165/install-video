@@ -10,13 +10,13 @@ export function paginationPolicy(meta?: Schemas['AdminMeta']) {
 }
 export function refreshInterval(meta?: Schemas['AdminMeta']) { const seconds = meta?.limits?.refresh_interval_seconds; return typeof seconds==='number' && Number.isInteger(seconds) && seconds>=15 && seconds<=300 ? seconds : 0; }
 export function canUseFeature(permissions: readonly string[], meta: Schemas['AdminMeta']|undefined, permission: string, feature: keyof Schemas['Capabilities']) {
-  if(feature!=='account_access_write'&&feature!=='billing_amounts'&&feature!=='support_reissue')return false;
+  if(feature!=='account_access_write'&&feature!=='billing_amounts'&&feature!=='support_reissue'&&feature!=='membership_control_write')return false;
   return permissions.includes(permission) && meta?.features?.[feature]?.ready === true;
 }
 type QuerySchema = {type:string;enum?:readonly (string|number)[];format?:string;pattern?:string;maxLength?:number;minimum?:number;maximum?:number};
 type FilterConfig = {name:string;kind:'enum'|'text'|'id'|'datetime'|'boolean';label:string;schema:QuerySchema};
 const labels: Record<string,string> = {email:'邮箱',enabled:'账号可用',effective_vip:'有效会员',user_id:'用户 ID',public_status:'公开状态',internal_state:'内部状态',execution_version:'执行版本',effective:'当前生效',status:'原始状态',state:'状态',reconciliation:'核查状态',provider_account_scope:'供应商范围',livemode:'生产模式',revoked:'已撤销',actor_user_id:'操作者 ID',target_user_id:'目标用户 ID',action:'操作',outcome:'结果',recorded_from:'开始时间',recorded_before:'结束时间（不含）',category:'问题类型',priority:'优先级'};
-const resourceLabels: Record<ListOperation,string> = {adminListUsers:'用户与权益',adminListJobs:'下载任务',adminListMemberships:'会员列表',adminListCheckouts:'Checkout',adminListPayments:'Payment',adminListAuditLogs:'操作审计',adminListSupportTickets:'客服工单'};
+const resourceLabels: Record<ListOperation,string> = {adminListUsers:'用户管理',adminListJobs:'下载记录',adminListMemberships:'会员列表',adminListCheckouts:'支付订单',adminListPayments:'付款关联',adminListAuditLogs:'操作记录',adminListSupportTickets:'客服工单'};
 const listOperations = Object.keys(resourceLabels) as ListOperation[];
 export const resourceConfig = Object.fromEntries(listOperations.map(key=>{
   const spec = contractOperations[key];

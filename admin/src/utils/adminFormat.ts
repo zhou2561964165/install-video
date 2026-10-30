@@ -27,8 +27,8 @@ export function formatQuota(quota: Schemas['Quota']|null|undefined): string {
 const known: Record<string,Record<string,[string,Schemas['StateDisplay']['tone']]>>={
  'job.public_status':{queued:['排队中','neutral'],downloading:['下载中','info'],merging:['合并中','info'],done:['已完成','success'],error:['失败','error']},
  'job.internal_state':{queued:['排队中','neutral'],running:['执行中','info'],retry_wait:['等待重试','warning'],succeeded:['成功','success'],failed:['失败','error'],needs_review:['待复核','warning'],legacy_hold:['历史保留','neutral'],legacy_unset:['历史未设置','neutral']},
- 'membership.status':{free:['免费','neutral'],active:['原始有效','info'],expired:['已过期','neutral']},
- 'checkout.state':{pending:['待创建','neutral'],open:['已打开','info'],paid:['支付状态 paid','info'],expired:['已过期','neutral'],failed:['失败','error']},
+ 'membership.status':{free:['暂无付款会员','neutral'],active:['原会员记录已启用','info'],expired:['原会员记录已到期','neutral']},
+ 'checkout.state':{pending:['待创建','neutral'],open:['待完成付款','info'],paid:['订单标记已付款','info'],expired:['已过期','neutral'],failed:['失败','error']},
  'system.status':{ok:['正常','success'],degraded:['降级','warning'],unavailable:['不可用','error'],unknown:['未知 / 无可靠采样','neutral']},
  'reconciliation':{not_started:['未开始','neutral'],unknown:['未知','neutral'],verified:['已核查','success'],needs_review:['待复核','warning'],closed:['已关闭','neutral']},
  'job.attempt':{running:['执行中','info'],lost:['租约丢失','warning'],failed:['失败','error'],succeeded:['成功','success']},

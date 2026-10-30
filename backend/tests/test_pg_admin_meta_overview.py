@@ -93,7 +93,7 @@ def test_meta_lists_exact_filters_and_sorts(case):
     with admin_client(case) as client:
         login(client)
         meta = client.get(BASE + '/meta').json()
-    assert (meta['api_version'], meta['contract_version']) == ('v1', '1.0.0-proposal.20261028.3')
+    assert (meta['api_version'], meta['contract_version']) == ('v1', '1.0.0-proposal.20261029.1')
     assert meta['pagination'] == {'default_page': 1, 'default_page_size': 20, 'max_page_size': 100}
     assert (meta['quota_day_timezone'], meta['quota_day_semantics']) == ('UTC', 'accepted_at_utc_date')
     assert meta['limits']['session_ttl_seconds'] == 900 and meta['features']['account_access_write']['ready'] is False

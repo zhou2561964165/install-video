@@ -1,5 +1,5 @@
 import { Link, useParams } from '@umijs/max';
-import { Alert, Button, Card, Form, Input, Modal, Radio, Space, Tag, Typography } from 'antd';
+import { Alert, Button, Card, Collapse, Form, Input, Modal, Radio, Space, Tag, Typography } from 'antd';
 import { useId, useReducer, useState } from 'react';
 import { AdminStateTag, AdminTimestamp } from '@/components/AdminState';
 import { BusinessGuard, Details, PageContainer, ReadState, Snapshot, text, useReadResource, yesNo } from '@/components/business/BusinessShared';
@@ -8,6 +8,7 @@ import { adminApi } from '@/services/admin/api';
 import { AdminApiError } from '@/services/admin/errors';
 import { PriorityTag, TicketStateTag } from './SupportTags';
 import { actionViews, initialReissue, NOTE_MAX, reissueReducer, replyTemplates, supportErrorText, supportLabel } from './supportPolicy';
+import { MembershipSummary } from '@/components/business/MembershipControl';
 
 type ReplyMode = 'reply' | 'reject';
 const ACTION_TEXT = { verify: '向支付平台核实付款', reissue: '审核通过并补发会员', reply: '回复并结单', reject: '驳回并结单' } as const;
@@ -69,20 +70,21 @@ export function TicketRecord({ id }: { id: string }) {
       ['优先级', <PriorityTag key="priority" value={data.priority} />], ['状态', <TicketStateTag key="state" value={data.state} />],
       ['用户', session.can('users:read') ? <Link key="user" to={`/users/${encodeURIComponent(data.user_id)}`}>{data.user_email}</Link> : data.user_email],
       ['提交时间', time(data.created_at)], ['处理结果', data.resolution ? supportLabel('resolution', data.resolution) : '—'], ['结单时间', time(data.resolved_at)],
-      ['工单 ID', data.id], ['处理人', text(data.resolved_by ?? '—')],
     ]} /></Card>
     <Card title="用户说明">
       {/* Rendered as text: user input is never interpreted as markup. */}
       <Typography.Paragraph style={{ whiteSpace: 'pre-wrap' }}>{data.user_note ?? '（用户未填写补充说明）'}</Typography.Paragraph>
     </Card>
     {data.checkout && <Card><Details title="用户勾选的订单" rows={[
-      ['订单 ID', data.checkout.id], ['订单状态', <AdminStateTag key="state" domain="checkout.state" value={data.checkout.state} meta={session.meta} />],
+      ['订单状态', <AdminStateTag key="state" domain="checkout.state" value={data.checkout.state} meta={session.meta} />],
       ['已开通会员', yesNo(data.checkout.fulfilled)], ['创建时间', time(data.checkout.created_at)],
     ]} /></Card>}
-    <Card><Details title="用户当前会员" rows={[
-      ['原会员状态', <AdminStateTag key="status" domain="membership.status" value={data.membership.status} meta={session.meta} />],
-      ['当前生效', yesNo(data.membership.effective)], ['到期时间', time(data.membership.expires_at)], ['权益来源', text(data.membership.entitlement_source)],
-    ]} /></Card>
+    <Card title="用户当前会员"><MembershipSummary membership={data.membership} /></Card>
+    <Collapse items={[{ key: 'advanced', label: '高级详情：工单编号与原付款记录', children: <Details rows={[
+      ['工单编号', data.id], ['处理人编号', text(data.resolved_by)], ['订单编号', text(data.checkout_id)],
+      ['原会员记录状态', <AdminStateTag key="status" domain="membership.status" value={data.membership.status} meta={session.meta} />],
+      ['原付款有效期', time(data.membership.expires_at)], ['原付款权益来源', text(data.membership.entitlement_source)],
+    ]} /> }]} />
     {data.category === 'membership_not_credited' && <Card title="支付平台核实">
       {data.latest_check
         ? <Space wrap><Tag color={data.latest_check.result === 'verified' ? 'success' : 'warning'}>{supportLabel('check', data.latest_check.result)}</Tag>

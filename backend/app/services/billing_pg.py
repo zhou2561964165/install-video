@@ -12,6 +12,7 @@ from sqlmodel import select
 from ..models import Membership, BillingCheckout, BillingReconciliationTask
 from .db_transactions import CommitResolution, ResolutionState, lock_user, run_local_transaction
 from .billing_projection import digest, encode, reference, mapping, project_object, scalar
+from .membership import require_checkout_auto
 
 
 def unavailable():
@@ -115,6 +116,7 @@ def checkout(engine, user_id, cfg, settings, provider):
     # Existing subscription requires an authoritative preflight before a new intent.
     from sqlmodel import Session
     with Session(engine) as session:
+        require_checkout_auto(session, user_id)
         account = session.get(Membership, user_id)
         prior = (account.revision, account.subscription_id) if account else (None, None)
     old_sub = None
@@ -132,6 +134,7 @@ def checkout(engine, user_id, cfg, settings, provider):
 
     def prepare(session):
         account = lock_account(session, user_id)
+        require_checkout_auto(session, user_id)
         now = session.exec(select(func.clock_timestamp())).one()
         if account.status == 'active' and account.expires_at > now.timestamp():
             raise HTTPException(409, detail={'error_type': 'membership_active', 'error': '会员已生效，请使用会员管理'})

@@ -32,6 +32,10 @@ SAFE_TEXT = {
     'subscription_active': '用户绑定了订阅，不能补发一次性会员',
     'payment_provider_unavailable': '支付平台暂时无法访问，请稍后重试',
     'idempotency_key_required': '缺少幂等键',
+    'idempotency_conflict': '该请求标识已用于其他操作，请保留原请求并核对结果',
+    'revision_conflict': '会员设置已被修改，请刷新后重新确认',
+    'transaction_uncertain': '提交结果待核对，请保留原请求标识并使用原请求确认',
+    'database_unavailable': '数据库暂不可用，请保留原请求后重试',
 }
 
 

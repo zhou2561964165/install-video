@@ -10,6 +10,14 @@ const login=(email='operator@example.invalid')=>{
 const scenario=(cookie:string,name:string)=>send('/__admin_mock/scenario','POST',{scenario:name},cookie);
 beforeEach(()=>{time=Date.parse('2026-10-26T00:00:00Z');handle=createMockBackend(()=>time);});
 describe('independent development backend',()=>{
+ it('publishes the new membership contract but keeps mock writes disabled and viewer unauthorized',()=>{
+  const operator=login(),me=send('/auth/me','GET',undefined,operator).body as Payload;
+  expect(send('/meta','GET',undefined,operator).body).toMatchObject({contract_version:'1.0.0-proposal.20261029.1',features:{membership_control_write:{ready:false}}});
+  expect(send('/users/usr_demo_03','GET',undefined,operator).body).toMatchObject({membership:{control_mode:'auto',control_revision:'0',revision:null,effective_permanent:false}});
+  expect(send('/users/usr_demo_03/membership','PATCH',{},operator,undefined,{'x-csrf-token':me.csrf_token!}).status).toBe(503);
+  const viewer=login('viewer@example.invalid'),viewerMe=send('/auth/me','GET',undefined,viewer).body as Payload;
+  expect(send('/users/usr_demo_03/membership','PATCH',{},viewer,undefined,{'x-csrf-token':viewerMe.csrf_token!}).status).toBe(403);
+ });
  it('rejects anonymous access for every protected operation',()=>{for(const [name,operation]of Object.entries(contractOperations)){if(name==='adminLogin')continue;expect(send(operation.path.replace(/\{[^}]+\}/g,'synthetic'),operation.method).status).toBe(401);}});
  it('uses explicit dev accounts and uniform wrong-password failures',()=>{expect(send('/auth/login','POST',{email:'admin',password:'ant.design'}).status).toBe(401);expect(send('/auth/login','POST',{email:'viewer@example.invalid',password:'wrong'}).status).toBe(401);expect(send('/__admin_mock/help').body).toMatchObject({warning:expect.stringContaining('MOCK ONLY')});});
  it('issues HttpOnly cookie, does not return bearer, and requires CSRF to logout',()=>{

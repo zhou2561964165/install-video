@@ -61,7 +61,7 @@ def test_single_successor_and_exact_metadata():
     # C1 (c1_0005) is the single successor of b3b_0004; the b3b link itself is unchanged.
     assert len(script.get_heads())==1 and script.get_revision('c1_0005').down_revision=='b3b_0004'
     assert script.get_revision('b3b_0004').down_revision=='b1b_0003'
-    assert len(SQLModel.metadata.tables)==26 and {'jobattempt','artifactmanifest','filereadlease','cleanupintent','orphanobject','dataimport','supportticket','supportpaymentcheck','membershipreissue'} <= set(SQLModel.metadata.tables)
+    assert len(SQLModel.metadata.tables)==28 and {'jobattempt','artifactmanifest','filereadlease','cleanupintent','orphanobject','dataimport','supportticket','supportpaymentcheck','membershipreissue','membershipcontrol','membershipcontroloperation'} <= set(SQLModel.metadata.tables)
 
 
 def test_lifecycle_unique_cannot_depend_on_null_ordinal():
@@ -101,7 +101,7 @@ def test_existing_sqlite_initialization_still_compiles_all_metadata():
     engine=db.build_engine('sqlite://',role='api')
     try:
         SQLModel.metadata.create_all(engine)
-        assert len(inspect(engine).get_table_names())==26  # 17 B3b tables + C1 jobattempt + C2 artifactmanifest + C4 filereadlease + C5 cleanupintent + orphanobject + B6 dataimport + T1 three support tables
+        assert len(inspect(engine).get_table_names())==28  # prior 26 business tables + MC control/operation
     finally:
         engine.dispose()
 
@@ -118,8 +118,8 @@ def test_pg_new_tables_present(guarded_sockets):
 def test_pg_exact_reflection_and_named_constraints(schema_pg):
     with schema_pg.migration.connect() as connection:
         inspector=inspect(connection)
-        assert len(inspector.get_table_names(schema='app'))==32  # + C1 jobattempt + C2 artifactmanifest + C4 filereadlease + C5 cleanupintent + orphanobject + B6 dataimport + M1 five admin tables + T1 three support tables
-        assert connection.scalar(text('SELECT version_num FROM app.alembic_version'))=='t1_0015'
+        assert len(inspector.get_table_names(schema='app'))==34  # + MC two control tables + C1 jobattempt + C2 artifactmanifest + C4 filereadlease + C5 cleanupintent + orphanobject + B6 dataimport + M1 five admin tables + T1 three support tables
+        assert connection.scalar(text('SELECT version_num FROM app.alembic_version'))=='mc_0016'
         # Admin M1 tables live on their own MetaData (app.models_admin), checked by test_pg_admin_schema.
         business=MigrationContext.configure(connection,opts={'include_object':lambda obj,name,type_,reflected,compare_to:
             not (type_=='table' and name in ADMIN_TABLES)})
@@ -285,14 +285,14 @@ def test_nonempty_audit_downgrade_refused(schema_pg):
     with schema_pg.application.connect() as connection:
         assert connection.scalar(text('SELECT count(*) FROM app.billingreconciliationaudit'))==1
         # The whole multi-step downgrade rolls back, so the database stays at the current head.
-        assert connection.scalar(text('SELECT version_num FROM app.alembic_version'))=='t1_0015'
+        assert connection.scalar(text('SELECT version_num FROM app.alembic_version'))=='mc_0016'
 
 
 def test_empty_downgrade_and_upgrade_only_in_disposable_db(schema_pg):
     schema_pg.migrate('downgrade','b1b_0003')
     schema_pg.migrate()
     with schema_pg.application.connect() as connection:
-        assert len(inspect(connection).get_table_names(schema='app'))==32  # + C1/C2/C4/C5 tables + B6 dataimport + M1 admin + T1 support at head
+        assert len(inspect(connection).get_table_names(schema='app'))==34  # + MC two control tables + C1/C2/C4/C5 tables + B6 dataimport + M1 admin + T1 support at head
 
 
 def test_offline_preview_requires_explicit_roles_and_refuses_downgrade():

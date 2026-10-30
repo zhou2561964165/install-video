@@ -6,6 +6,36 @@ import MembershipScene from './MembershipScene.jsx';
 
 const fixture = (override = {}) => ({ plans: { checkout_available: false, price_label: null }, plansError: null, account: { plan: 'free', status: 'free', checkout_available: false }, loading: false, error: null, busy: null, refresh: vi.fn(), cancelAction: vi.fn(), checkout: vi.fn(), portal: vi.fn(), ...override });
 describe('MembershipScene', () => {
+  it('shows an administrator permanent entitlement without the former payment expiry', () => {
+    const account = { plan: 'vip', status: 'active', control_mode: 'enabled', effective_reason: 'admin_permanent',
+      effective_permanent: true, effective_expires_at: null, expires_at: '2020-01-01T00:00:00Z', checkout_available: false };
+    render(<MembershipScene membership={fixture({ account })} authed onBack={() => {}} />);
+    expect(screen.getByText('管理员已启用，永久有效')).toBeInTheDocument();
+    expect(screen.queryByText(/权益有效期至/)).toBeNull();
+    expect(screen.getByRole('button', { name: '当前方案', exact: true })).toBeDisabled();
+  });
+  it('explains an administrator-disabled entitlement and does not invite another purchase', () => {
+    const account = { plan: 'free', status: 'expired', control_mode: 'disabled', effective_reason: 'admin_disabled',
+      effective_permanent: false, effective_expires_at: null, checkout_available: false };
+    render(<MembershipScene membership={fixture({ account, plans: { checkout_available: true, price_label: '¥9.9 / 30天' } })} authed onBack={() => {}} />);
+    expect(screen.getByText('管理员已停用会员权益')).toBeInTheDocument();
+    expect(screen.getByText('会员由管理员手动管理，如需调整请联系客服。')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '管理员手动管理', exact: true })).toBeDisabled();
+  });
+  it('shows the administrator expiry rather than the underlying payment expiry', () => {
+    const account = { plan: 'vip', status: 'active', control_mode: 'enabled', effective_reason: 'admin_until',
+      effective_permanent: false, effective_expires_at: '2035-01-01T00:00:00Z', expires_at: '2020-01-01T00:00:00Z', checkout_available: false };
+    render(<MembershipScene membership={fixture({ account })} authed onBack={() => {}} />);
+    expect(screen.getByText('管理员已启用会员权益')).toBeInTheDocument();
+    expect(screen.getByText(/权益有效期至/)).toHaveTextContent('2035');
+    expect(screen.getByText(/权益有效期至/)).not.toHaveTextContent('2020');
+  });
+  it('keeps an expired administrator override distinct from an expired payment', () => {
+    const account = { plan: 'free', status: 'expired', control_mode: 'enabled', effective_reason: 'admin_expired',
+      effective_permanent: false, effective_expires_at: '2020-01-01T00:00:00Z', checkout_available: false };
+    render(<MembershipScene membership={fixture({ account })} authed onBack={() => {}} />);
+    expect(screen.getByText('管理员设置的会员期限已结束')).toBeInTheDocument();
+  });
   it('uses the configured free resolution instead of promising a higher limit', () => {
     render(<MembershipScene membership={fixture({ plans: { checkout_available: false, free_max_height: 480 } })} onBack={() => {}} />);
     expect(screen.getByText('最高支持 480p 清晰度')).toBeInTheDocument();

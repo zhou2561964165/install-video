@@ -38,7 +38,7 @@ from tools import production_db_export as export
 from tools.production_db_snapshot_profiles import SOURCE_PROFILES
 from tools.production_db_snapshot_schema import schema_fingerprint
 
-TARGET_HEAD = 't1_0015'  # admin M1 tables exist but stay empty at import time (grants come after import)
+TARGET_HEAD = 'mc_0016'  # admin/control tables stay empty at import time (grants and controls follow import)
 SCHEMA = 'app'
 _LEGACY_RUNNING = frozenset({'queued', 'downloading', 'merging'})
 # NOT NULL columns the migration chain backfilled for pre-existing rows, then dropped the default.

@@ -469,5 +469,11 @@ export const contractOperations = {
     "method": "POST",
     "permission": "support:reissue",
     "query": {}
+  },
+  "adminSetUserMembership": {
+    "path": "/users/{user_id}/membership",
+    "method": "PATCH",
+    "permission": "memberships:write",
+    "query": {}
   }
 } as const;

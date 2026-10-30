@@ -1,5 +1,5 @@
 import { Link, useParams } from '@umijs/max';
-import { Alert, Button, Card, Checkbox, Form, Input, Modal, Space, Tag, Typography } from 'antd';
+import { Alert, Button, Card, Checkbox, Collapse, Form, Input, Modal, Space, Tag, Typography } from 'antd';
 import { useId, useReducer, useRef, useState } from 'react';
 import { AdminError, AdminStateTag, AdminTimestamp } from '@/components/AdminState';
 import { BusinessGuard, Details, PageContainer, ReadState, Snapshot, text, useReadResource, yesNo, type Schemas } from '@/components/business/BusinessShared';
@@ -8,6 +8,7 @@ import { adminApi } from '@/services/admin/api';
 import { formatQuota } from '@/utils/adminFormat';
 import { accessFailureKind, canChangeAccess } from '@/components/business/BusinessPolicy';
 import { accessConfirmationReducer, initialAccessConfirmation } from './accessConfirmation';
+import MembershipControl, { MembershipSummary } from '@/components/business/MembershipControl';
 
 export function UserRecord({ id }: { id: string }) {
   const reasonInputId = useId();
@@ -53,21 +54,25 @@ export function UserRecord({ id }: { id: string }) {
   }
   return <ReadState resource={resource}>{data && <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
     <Card><Details title={data.email} rows={[
-      ['用户 ID', data.id], ['账号状态', <Tag key="access">{data.access.enabled ? '启用' : '停用'}</Tag>],
+      ['账号状态', <Tag key="access">{data.access.enabled ? '可登录' : '已停用'}</Tag>],
       ['创建时间', <AdminTimestamp key="created" value={data.created_at} timezone={session.meta?.display_timezone} />],
-      ['账号版本', data.access.revision], ['受保护账号', yesNo(data.access.protected_account)],
-      ['原会员状态', <AdminStateTag key="membership" domain="membership.status" value={data.membership.status} meta={session.meta} />],
-      ['会员当前生效', yesNo(data.membership.effective)], ['到期时间', <AdminTimestamp key="expires" value={data.membership.expires_at} timezone={session.meta?.display_timezone} />],
-      ['权益来源', text(data.membership.entitlement_source)], ['会员版本', text(data.membership.revision)],
-      ['期末取消标记', yesNo(data.membership.cancel_at_period_end)], ['当日额度', formatQuota(data.quota)],
+      ['会员权益', <MembershipSummary key="membership" membership={data.membership} />],
+      ['当日额度', formatQuota(data.quota)],
       ['额度统计日（UTC）', data.quota.quota_day], ['已使用次数', data.quota.used],
     ]} /></Card>
+    <MembershipControl userId={id} onChanged={resource.reload} />
+    <Collapse items={[{ key: 'advanced', label: '高级详情：原付款记录与技术信息', children: <Details rows={[
+      ['用户编号', data.id], ['账号版本', data.access.revision], ['受保护账号', yesNo(data.access.protected_account)],
+      ['原会员记录状态', data.membership.status === 'active' ? '原会员记录已启用' : data.membership.status === 'expired' ? '原会员记录已到期' : data.membership.status === 'free' ? '暂无付款会员记录' : '未知状态'],
+      ['原付款有效期', <AdminTimestamp key="original-expiry" value={data.membership.expires_at} timezone={session.meta?.display_timezone} />],
+      ['原付款权益来源', text(data.membership.entitlement_source)], ['付款记录版本', text(data.membership.revision)],
+      ['会员设置版本', data.membership.control_revision], ['期末取消标记', yesNo(data.membership.cancel_at_period_end)],
+    ]} /> }]} />
     <Space wrap>
       {session.can('jobs:read') && <Link to={`/jobs?user_id=${encodeURIComponent(id)}`}>查看关联下载任务</Link>}
       {session.can('billing:read') && <Link to={`/billing?user_id=${encodeURIComponent(id)}`}>查看关联支付记录</Link>}
       {session.can('audit:read') && <Link to={`/audit?target_user_id=${encodeURIComponent(id)}`}>查看账号操作审计</Link>}
     </Space>
-    {session.can('users:access:write') && !ready && <Alert showIcon type="info" title="账号启停暂不可用" description="账号鉴权改造完成并开放此功能后，才可进行启停操作。" />}
     {ready && (data.access.protected_account || data.id === session.me?.user_id) && <Alert showIcon type="info" title="此账号受保护，不能在这里启停。" />}
     {unknownOutcome && <Alert showIcon type="warning" title="上次操作的处理结果尚未确认" description="请查看账号最新状态与审计记录，再使用原请求确认结果。" />}
     {writable && <Button danger={data.access.enabled} onClick={() => { confirmation({ type: 'open' }); if (!pending.current && !conflict) { setWriteError(undefined); setReason(''); } }}>{unknownOutcome ? '继续核对启停结果' : data.access.enabled ? '停用账号' : '启用账号'}</Button>}

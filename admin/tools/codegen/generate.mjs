@@ -7,7 +7,7 @@ import openapiTS, { astToString } from './node_modules/openapi-typescript/dist/i
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const source = path.resolve(root, '../docs/production/admin-api-v1.openapi.yaml');
 const raw=fs.readFileSync(source,'utf8'),sha=createHash('sha256').update(raw).digest('hex');
-if(sha!=='5af2352ab3e5100f2bbd3044fa3e6d01c2e3beddb098b24e989905e8bae5a7e8')throw new Error('Frozen local contract hash changed; align the contract before codegen');
+if(sha!=='abb014bde928a0f68b78e83aa8db3067f4d392b03d99aa9024b705b63d9e8c4d')throw new Error('Frozen local contract hash changed; align the contract before codegen');
 const document = yaml.load(raw);
 const resolve = (value) => value?.$ref ? value.$ref.slice(2).split('/').reduce((o,k)=>o[k],document) : value;
 fs.mkdirSync(path.join(root,'src/services/admin'),{recursive:true});

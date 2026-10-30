@@ -70,10 +70,11 @@ def create_admin_app(settings: AdminSettings, engine: Engine, *, session_reader=
         _log.error('admin request failed: %s', type(exc).__name__)  # never the message (may carry data)
         return _error(request, 500, 'internal_error')
 
-    from . import routes_auth, routes_read, routes_support
+    from . import routes_auth, routes_read, routes_support, routes_membership
     app.include_router(routes_auth.router)
     app.include_router(routes_read.router)
     app.include_router(routes_support.router)
+    app.include_router(routes_membership.router)
     return app
 
 

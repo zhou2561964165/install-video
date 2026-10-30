@@ -6,7 +6,7 @@ import { clearSession, getSession, setSession, subscribeSession } from '../src/s
 import { mockMeta } from '../mock/fixtures';
 import type { Schemas } from '../src/services/admin/types';
 import { errorConfig } from '../src/requestErrorConfig';
-const me:Schemas['AdminMe']={user_id:'test_operator',email:'synthetic@example.invalid',role:'new_role',permissions:['users:read'],session_expires_at:'2099-01-01T00:00:00Z',csrf_token:'synthetic-memory-token',capabilities:{account_access_write:{ready:false,reason:null},billing_amounts:{ready:false,reason:null},support_reissue:{ready:false,reason:null}}};
+const me:Schemas['AdminMe']={user_id:'test_operator',email:'synthetic@example.invalid',role:'new_role',permissions:['users:read'],session_expires_at:'2099-01-01T00:00:00Z',csrf_token:'synthetic-memory-token',capabilities:{membership_control_write:{ready:false,reason:null},account_access_write:{ready:false,reason:null},billing_amounts:{ready:false,reason:null},support_reissue:{ready:false,reason:null}}};
 const deferred=<T,>()=>{let resolve!:(value:T)=>void,reject!:(value:unknown)=>void;const promise=new Promise<T>((yes,no)=>{resolve=yes;reject=no;});return {resolve,reject,promise};};
 beforeEach(()=>{clearSession();vi.mocked(request).mockReset();});
 describe('atomic bootstrap and request ordering',()=>{

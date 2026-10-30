@@ -9,12 +9,14 @@ from __future__ import annotations
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from types import SimpleNamespace
 import re
 
 from sqlalchemy import and_, case, func, select, text
 
 from ..admin.errors import AdminError
-from ..models import Job, Membership, User
+from ..models import Job, Membership, MembershipControl, User
+from .membership_policy import effective_sql, resolve
 
 _ID = re.compile(r'[A-Za-z0-9_.:-]{1,256}\Z')
 _PAGE = re.compile(r'[0-9]{1,9}\Z')       # ASCII only; str.isdigit accepts e.g. '\u00b2'
@@ -87,8 +89,8 @@ STATE_DICTIONARIES = (
                             ('succeeded', '成功', 'success'), ('failed', '失败', 'error'),
                             ('needs_review', '需人工复核', 'warning'), ('legacy_hold', '旧版保留', 'neutral'),
                             ('legacy_unset', '旧版未设置', 'neutral'))),
-    ('membership.status', (('free', '免费', 'neutral'), ('active', '有效', 'success'), ('expired', '已过期', 'warning'))),
-    ('checkout.state', (('pending', '待创建', 'neutral'), ('open', '待支付', 'info'), ('paid', '已支付', 'success'),
+    ('membership.status', (('free', '暂无付款会员', 'neutral'), ('active', '原会员记录已启用', 'success'), ('expired', '原会员记录已到期', 'warning'))),
+    ('checkout.state', (('pending', '待创建', 'neutral'), ('open', '待支付', 'info'), ('paid', '订单标记已付款', 'success'),
                         ('expired', '已过期', 'neutral'), ('failed', '失败', 'error'))),
     ('reconciliation', (('not_started', '未开始', 'neutral'), ('unknown', '待确认', 'warning'),
                         ('verified', '已核实', 'success'), ('needs_review', '需人工复核', 'warning'),
@@ -185,9 +187,7 @@ def paginate(connection, statement, query: ListQuery, sort_columns: dict, tiebre
 
 
 def effective_vip(as_of: datetime):
-    """The single effective-membership rule: original status 'active' and expires_at > as_of (DB clock)."""
-    membership = Membership.__table__
-    return and_(membership.c.status == 'active', membership.c.expires_at > as_of.timestamp())
+    return effective_sql(as_of, Membership.__table__, MembershipControl.__table__)
 
 
 def overview(connection, as_of: datetime) -> dict:
@@ -198,12 +198,14 @@ def overview(connection, as_of: datetime) -> dict:
     return {
         'as_of': as_of,
         'users_total': connection.scalar(select(func.count()).select_from(user)),
-        'effective_vip_total': connection.scalar(select(func.count()).select_from(membership).where(effective_vip(as_of))),
+        'effective_vip_total': connection.scalar(select(func.count()).select_from(
+            user.outerjoin(membership, membership.c.user_id == user.c.id)
+                .outerjoin(MembershipControl.__table__, MembershipControl.user_id == user.c.id)).where(effective_vip(as_of))),
         'retained_server_jobs_total': connection.scalar(select(func.count()).select_from(job)),
         'jobs_by_public_status': [{'state': getattr(state, 'value', state), 'count': count}
                                   for state, count in sorted(by_status, key=lambda item: str(item[0]))],
         'jobs_by_internal_state': [{'state': state, 'count': count} for state, count in sorted(by_internal)],
-        'scope': {'users': '全部注册用户', 'effective_vip': '原状态为active且到期时间晚于as_of的会员',
+        'scope': {'users': '全部注册用户', 'effective_vip': '管理员设置优先；自动管理按原会员记录已启用且在本次查询时间仍有效计算',
                   'jobs': '当前仍保留的服务端任务记录（不是全部下载次数，也不是营收）'},
     }
 
@@ -225,14 +227,26 @@ def _epoch_utc(value) -> datetime | None:
 
 
 def membership_projection(row, user_id: str, as_of: datetime) -> dict:
-    """Contract Membership; no row means free with nulls (never a derived user-side status)."""
-    if row is None or row.m_status is None:
-        return {'user_id': user_id, 'status': 'free', 'effective': False, 'expires_at': None, 'revision': None,
-                'entitlement_source': None, 'cancel_at_period_end': False}
-    return {'user_id': user_id, 'status': row.m_status,
-            'effective': row.m_status == 'active' and (row.m_expires_at or 0) > as_of.timestamp(),
-            'expires_at': _epoch_utc(row.m_expires_at), 'revision': str(row.m_revision),
-            'entitlement_source': row.m_source, 'cancel_at_period_end': bool(row.m_cancel)}
+    """Payment fields remain facts; effective fields follow the shared override policy."""
+    get = lambda key, default=None: getattr(row, key, default) if row is not None else default
+    payment = SimpleNamespace(status=get('m_status'), expires_at=get('m_expires_at', 0)) if get('m_status') else None
+    control = SimpleNamespace(mode=get('mc_mode', 'auto'), expires_at=get('mc_expires_at'))
+    actual = resolve(payment, control, as_of)
+    return {'user_id': user_id, 'status': get('m_status') or 'free', 'effective': actual.effective,
+            'expires_at': _epoch_utc(get('m_expires_at')), 'revision': str(get('m_revision')) if payment else None,
+            'entitlement_source': get('m_source'), 'cancel_at_period_end': bool(get('m_cancel')),
+            'control_mode': get('mc_mode') or 'auto', 'control_revision': str(get('mc_revision') or 0),
+            'control_expires_at': get('mc_expires_at'), 'effective_reason': actual.reason,
+            'effective_expires_at': actual.expires_at, 'effective_permanent': actual.permanent}
+
+
+def membership_columns():
+    membership, control = Membership.__table__, MembershipControl.__table__
+    return (membership.c.status.label('m_status'), membership.c.expires_at.label('m_expires_at'),
+            membership.c.revision.label('m_revision'), membership.c.entitlement_source.label('m_source'),
+            membership.c.cancel_at_period_end.label('m_cancel'), membership.c.subscription_id.label('m_subscription'),
+            control.c.mode.label('mc_mode'), control.c.revision.label('mc_revision'),
+            control.c.expires_at.label('mc_expires_at'))
 
 
 def _user_statement(operator_id: str):
@@ -244,12 +258,11 @@ def _user_statement(operator_id: str):
         user.c.id, user.c.email, user.c.created_at,
         func.coalesce(accountcontrol.c.enabled, True).label('enabled'),
         func.coalesce(accountcontrol.c.revision, 0).label('control_revision'), protected.label('protected'),
-        membership.c.status.label('m_status'), membership.c.expires_at.label('m_expires_at'),
-        membership.c.revision.label('m_revision'), membership.c.entitlement_source.label('m_source'),
-        membership.c.cancel_at_period_end.label('m_cancel'),
+        *membership_columns(),
     ).select_from(user.outerjoin(accountcontrol, accountcontrol.c.user_id == user.c.id)
                   .outerjoin(admingrant, admingrant.c.user_id == user.c.id)
-                  .outerjoin(membership, membership.c.user_id == user.c.id))
+                  .outerjoin(membership, membership.c.user_id == user.c.id)
+                  .outerjoin(MembershipControl.__table__, MembershipControl.user_id == user.c.id))
 
 
 def _user_summary(row, as_of: datetime) -> dict:
@@ -273,7 +286,7 @@ def list_users(connection, as_of: datetime, query: ListQuery, operator_id: str):
     if 'enabled' in filters:
         statement = statement.where(func.coalesce(accountcontrol.c.enabled, True).is_(filters['enabled']))
     if 'effective_vip' in filters:
-        condition = and_(membership.c.user_id.is_not(None), effective_vip(as_of))
+        condition = effective_vip(as_of)
         statement = statement.where(condition if filters['effective_vip'] else ~func.coalesce(condition, False))
     rows, total = paginate(connection, statement, query,
                            {'created_at': user.c.created_at, 'email': user.c.email}, user.c.id)
@@ -305,10 +318,8 @@ def user_detail(connection, as_of: datetime, user_id: str, operator_id: str) -> 
 
 def list_memberships(connection, as_of: datetime, query: ListQuery):
     membership = Membership.__table__
-    statement = select(membership.c.user_id, membership.c.status.label('m_status'),
-                       membership.c.expires_at.label('m_expires_at'), membership.c.revision.label('m_revision'),
-                       membership.c.entitlement_source.label('m_source'),
-                       membership.c.cancel_at_period_end.label('m_cancel'))
+    statement = select(membership.c.user_id, *membership_columns()).select_from(
+        membership.outerjoin(MembershipControl.__table__, MembershipControl.user_id == membership.c.user_id))
     filters = query.filters
     if 'user_id' in filters:
         statement = statement.where(membership.c.user_id == filters['user_id'])
@@ -536,13 +547,16 @@ def payment_detail(connection, as_of: datetime, payment_id: str) -> dict | None:
 # --- Audit (Task 10) -----------------------------------------------------------------------------
 
 _CHANGE_KEYS = ('enabled_before', 'enabled_after', 'revision_before', 'revision_after')
+_MEMBERSHIP_CHANGE_KEYS = ('control_mode_before', 'control_mode_after', 'control_expires_at_before',
+                           'control_expires_at_after', 'control_revision_before', 'control_revision_after')
 
 
 def _audit_change(action: str, changes) -> dict | None:
     """Only users.access results carry a contract AuditChange; anything else (e.g. CLI notes) is never exposed."""
-    if not action.startswith('users.access') or not isinstance(changes, dict) or set(changes) != set(_CHANGE_KEYS):
+    keys = _MEMBERSHIP_CHANGE_KEYS if action == 'users.membership' else _CHANGE_KEYS
+    if (not action.startswith('users.access') and action != 'users.membership') or not isinstance(changes, dict) or set(changes) != set(keys):
         return None
-    return {key: changes[key] for key in _CHANGE_KEYS}
+    return {key: changes[key] for key in keys}
 
 
 def list_audit(connection, as_of: datetime, query: ListQuery):
@@ -562,4 +576,5 @@ def list_audit(connection, as_of: datetime, query: ListQuery):
     return [{'id': row.event_id, 'actor_user_id': row.actor_user_id, 'target_user_id': row.target_user_id,
              'action': row.action, 'outcome': row.outcome, 'reason': row.reason, 'request_id': row.request_id,
              'recorded_at': row.recorded_at, 'change': _audit_change(row.action, row.changes),
-             'operation': 'users.access' if row.action.startswith('users.access') else None} for row in rows], total
+             'operation': 'users.access' if row.action.startswith('users.access') else (
+                 'users.membership' if row.action == 'users.membership' else None)} for row in rows], total

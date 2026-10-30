@@ -14,7 +14,7 @@ from ..models import BillingCheckout, Membership, User
 from ..models_support import MembershipReissue, SupportPaymentCheck, SupportTicket
 from . import admin_audit
 from . import support_catalog as catalog
-from .admin_queries import ListQuery, _checkout_columns, _checkout_summary, membership_projection, paginate
+from .admin_queries import ListQuery, _checkout_columns, _checkout_summary, membership_columns, membership_projection, paginate
 
 ticket_t, check_t, reissue_t = SupportTicket.__table__, SupportPaymentCheck.__table__, MembershipReissue.__table__
 
@@ -108,11 +108,9 @@ def ticket_detail(connection, as_of: datetime, ticket_id: str, settings) -> dict
     if ticket.checkout_id:
         checkout = connection.execute(select(*_checkout_columns(checkout_t), checkout_t.c.stripe_id, checkout_t.c.duration_days)
                                       .where(checkout_t.c.id == ticket.checkout_id)).first()
-    member = connection.execute(select(membership.c.status.label('m_status'), membership.c.expires_at.label('m_expires_at'),
-                                       membership.c.revision.label('m_revision'),
-                                       membership.c.entitlement_source.label('m_source'),
-                                       membership.c.cancel_at_period_end.label('m_cancel'),
-                                       membership.c.subscription_id.label('m_subscription'))
+    from ..models import MembershipControl
+    member = connection.execute(select(*membership_columns()).select_from(membership.outerjoin(
+                                       MembershipControl.__table__, MembershipControl.user_id == membership.c.user_id))
                                 .where(membership.c.user_id == ticket.user_id)).first()
     check = latest_check(connection, ticket, as_of, settings)
     reply = None

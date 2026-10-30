@@ -9,7 +9,7 @@ type Scenario='normal'|'empty'|'forbidden'|'unavailable'|'rate-limited'|'meta-un
 const scenarios:Scenario[]=['normal','empty','forbidden','unavailable','rate-limited','meta-unavailable','expired'];
 const permissions=['overview:read','users:read','memberships:read','jobs:read','billing:read','audit:read','system:read','support:read'];
 // These explicit demonstration accounts exist only in this dev mock source.
-const accounts=[{email:'operator@example.invalid',password:'LocalDemoOnly!26',permissions:[...permissions,'users:access:write','support:write'],role:'demo-operator'},
+const accounts=[{email:'operator@example.invalid',password:'LocalDemoOnly!26',permissions:[...permissions,'users:access:write','memberships:write','support:write'],role:'demo-operator'},
  {email:'viewer@example.invalid',password:'LocalDemoOnly!26',permissions,role:'demo-viewer'},
  {email:'limited@example.invalid',password:'LocalDemoOnly!26',permissions:['overview:read','users:read'],role:'demo-limited'}];
 type MockSession={account:typeof accounts[number];expires:number;csrf:string;scenario:Scenario};
@@ -48,6 +48,7 @@ export function createMockBackend(now:()=>number=Date.now) {
   if(session.scenario==='forbidden')return error(403,'permission_denied');
   if(session.scenario==='unavailable')return error(503,'admin_unavailable');
   if(session.scenario==='rate-limited')return error(429,'rate_limited');
+  if(operation==='adminSetUserMembership')return error(503,'mock_write_disabled');
   if(operation==='adminSetUserAccess')return error(503,'account_access_not_ready');
   // Support writes are never simulated: a mock success could be mistaken for a real reply or re-issue.
   if(['adminReplySupportTicket','adminRejectSupportTicket','adminVerifySupportPayment','adminReissueMembership'].includes(operation))return error(503,'mock_write_disabled');
