@@ -37,7 +37,7 @@ def sparse_composition():
 
 
 def test_captured_organization_contracts_six_fact_response_is_accepted():
-    report = ROOT / "docs" / "acceptance-reports" / "2026-10-07-grounded-summary-contracts" / "results"
+    report = ROOT / "backend/tests/fixtures/summary-regressions" / "2026-10-07-grounded-summary-contracts" / "results"
     response = json.loads((report / "responses" / "01.json").read_text(encoding="utf-8"))
     request = json.loads((report / "payloads" / "01.json").read_text(encoding="utf-8"))
     source_request = json.loads(request["messages"][1]["content"])["source"]

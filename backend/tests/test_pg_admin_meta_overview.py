@@ -10,8 +10,8 @@ from admin_pg_helpers import BASE, add_job, add_membership, admin_client, admin_
 from test_pg_job_repository import case  # noqa: F401  (fixture)
 
 pytestmark = pytest.mark.skipif(not os.environ.get('B3B_PG_OWNERSHIP'), reason='explicit owned PG window required')
-CONTRACT = Path(os.environ.get('ADMIN_CONTRACT_PATH', r'C:\Users\zxk\.codex\worktrees\52fd\install_video\docs\production'
-                               r'\admin-api-v1.openapi.yaml'))
+CONTRACT = Path(os.environ.get('ADMIN_CONTRACT_PATH',
+    str(Path(__file__).resolve().parents[2] / 'docs/production/admin-api-v1.openapi.yaml')))
 
 
 def contract_lists():

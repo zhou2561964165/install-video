@@ -13,8 +13,8 @@ from test_grounded_pipeline import composition_response, extraction_response
 
 
 PROJECT = Path(__file__).resolve().parents[2]
-EVIDENCE = PROJECT / "docs/acceptance-reports/2026-10-05-grounded-summary-evidence/results"
-CORPUS = PROJECT / "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus"
+EVIDENCE = PROJECT / "backend/tests/fixtures/summary-regressions/2026-10-05-grounded-summary-evidence/results"
+CORPUS = PROJECT / "backend/tests/fixtures/summary-regressions/2026-10-04-natural-subtitle-quality/corpus"
 
 
 @pytest.fixture

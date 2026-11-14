@@ -1,18 +1,10 @@
-# Keep frozen acceptance bytes and their recorded SHA-256 stable across checkouts.
-# Admin code generation pins the exact OpenAPI bytes, including CRLF.
+# Preserve the exact contract and frozen regression data bytes.
 docs/production/admin-api-v1.openapi.yaml -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-docs/acceptance-reports/2026-10-04-natural-subtitle-quality/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-docs/acceptance-reports/2026-10-04-public-mobile-gpu/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+backend/tests/fixtures/summary-regressions/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
-# These live sources are captured by the natural-quality provenance checks.
+# Stable source line endings.
 backend/app/config.py text eol=lf
 backend/app/services/llm_service.py text eol=lf
-
-# Preserve this continuation's evaluation and layout evidence without newline conversion.
-docs/acceptance-reports/2026-10-04-schema-summary-quality/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-docs/acceptance-reports/2026-10-04-responsive-mascot/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-
-# Preserve the source bytes captured by the responsive-browser evidence.
 frontend/src/App.jsx text eol=lf
 frontend/src/components/EntryScene.jsx text eol=lf
 frontend/src/components/ui/ExpressionMenu.jsx text eol=lf
@@ -20,17 +12,4 @@ frontend/src/pixi/mascot.js text eol=lf
 frontend/src/pixi/mascotConfig.js text eol=lf
 frontend/src/styles/global.css text eol=lf
 frontend/src/pixi/stage.js -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-
-# Fact-layer source and this round's frozen evaluation artifacts.
 backend/app/services/summary_facts.py text eol=lf
-docs/acceptance-reports/2026-10-05-grounded-summary/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-docs/acceptance-reports/2026-10-05-grounded-summary-evidence/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-docs/acceptance-reports/2026-10-07-grounded-summary-organization/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-docs/acceptance-reports/2026-10-07-grounded-summary-refined/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-
-# Preserve all acceptance snapshots/raw/receipts on personal GitHub unchanged.
-docs/acceptance-reports/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-
-# Preserve delivered exports and the independently frozen semantic-evaluation assets.
-exports/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-tools/semantic_eval/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

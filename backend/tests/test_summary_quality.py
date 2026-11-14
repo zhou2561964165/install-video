@@ -37,11 +37,11 @@ def reasons(report):
 
 def test_real_medium_compose_added_name_is_reported_without_changing_original():
     root = Path(__file__).resolve().parents[2]
-    results = root / "docs/acceptance-reports/2026-10-08-grounded-summary-clause/results"
+    results = root / "backend/tests/fixtures/summary-regressions/2026-10-08-grounded-summary-clause/results"
     paths = [results / "responses/04.json", results / "responses/05.json"]
     original = [path.read_bytes() for path in paths]
     extracted, composed = [json.loads(raw)["content"] for raw in original]
-    source = SourcePart("part1", (root / "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus/en-medium.txt").read_text(encoding="utf-8").strip())
+    source = SourcePart("part1", (root / "backend/tests/fixtures/summary-regressions/2026-10-04-natural-subtitle-quality/corpus/en-medium.txt").read_text(encoding="utf-8").strip())
     facts = parse_extraction(extracted, source, FactLimits(), "F1_")
     normalized = normalize_composition(composed, FactLimits())
     before = asdict(normalized)

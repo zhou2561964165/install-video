@@ -7,8 +7,8 @@ from app.services.summary_facts import FactLimits
 from app.services.summary_normalization import DraftItem, NormalizationError, ThemeHint, normalize_composition
 
 
-# Captured from docs/acceptance-reports/2026-10-07-grounded-summary-organization/
-# results/organization-slots-en-medium.json (the stored compose result).
+# Inline excerpt from the historical organization-slots-en-medium compose result.
+# Source course attribution and data license are in fixtures/summary-regressions/.
 SAVED_SUMMARY = (
     "讲者廖浩翔介绍日常评分系统：因人际互动会留下印象并受评价，且学生持续一致努力即可展现良好中文能力，"
     "故对每节课给予评价。课后通常就课堂表现提供书面反馈，涵盖语言与文化行为，借助Engrade网站录入成绩并"
@@ -181,7 +181,7 @@ def test_json_looking_text_is_not_reparsed_as_a_nested_object():
 
 def test_original_failed_compose_response_preserves_paragraph_five_points_themes_and_hints():
     artifact = (Path(__file__).resolve().parents[2]
-                / "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results/responses/02.json")
+                / "backend/tests/fixtures/summary-regressions/2026-10-08-grounded-summary-prefix/results/responses/02.json")
     envelope = json.loads(artifact.read_text(encoding="utf-8"))
     raw_content = envelope["content"]
     original = json.loads(raw_content)
@@ -215,7 +215,7 @@ def test_original_failed_compose_response_preserves_paragraph_five_points_themes
 
 def test_quality_final_scalar_theme_text_responses_preserve_all_text_and_hints():
     results = (Path(__file__).resolve().parents[2]
-               / "docs/acceptance-reports/2026-10-08-summary-quality-final/results/responses")
+               / "backend/tests/fixtures/summary-regressions/2026-10-08-summary-quality-final/results/responses")
 
     for ordinal in (2, 3):
         envelope = json.loads((results / f"{ordinal:02d}.json").read_text(encoding="utf-8"))
@@ -387,7 +387,7 @@ def test_real_extraction_transport_marker_is_normalized_without_changing_facts()
     from app.services import summary_normalization as normalization
     from app.services.summary_facts import SourcePart, parse_extraction
     assert hasattr(normalization, "normalize_extraction"), "Extraction envelope normalizer is missing"
-    results = Path(__file__).resolve().parents[2] / "docs/acceptance-reports/2026-10-08-grounded-summary-normalized/results"
+    results = Path(__file__).resolve().parents[2] / "backend/tests/fixtures/summary-regressions/2026-10-08-grounded-summary-normalized/results"
     trace = json.loads((results / "normalized-retries-en-long-trace.json").read_text(encoding="utf-8"))["events"][-1]
     source = trace["sources"][0]
     part = SourcePart(source["id"], source["text"], source["global_start"])

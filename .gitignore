@@ -60,3 +60,18 @@ backend/tmp/
 /*.png
 /verify/
 .planning/
+# Internal development files and generated research outputs
+AGENTS.md
+CLAUDE.md
+agents.md
+claude.md
+.claude/
+.agents/
+.codex/
+/docs/**
+!/docs/production/
+!/docs/production/admin-api-v1.openapi.yaml
+/exports/
+/reports/
+/research_notes/
+/tools/semantic_eval/

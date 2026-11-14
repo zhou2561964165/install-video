@@ -57,7 +57,7 @@ def test_real_marker_audit_positive_preparation_clause_keeps_its_source_associat
     from pathlib import Path
     from app.services.summary_facts import parse_extraction, prepare_audit_facts
     from app.services.summary_normalization import normalize_composition, normalize_extraction
-    directory = Path(__file__).resolve().parents[2] / "docs/acceptance-reports/2026-10-08-grounded-summary-marker/results"
+    directory = Path(__file__).resolve().parents[2] / "backend/tests/fixtures/summary-regressions/2026-10-08-grounded-summary-marker/results"
     paths = [directory / "normalized-marker-zh-short-trace.json", directory / "responses/01.json",
              directory / "responses/04.json"]
     originals = [path.read_bytes() for path in paths]
@@ -366,7 +366,7 @@ def test_saved_failed_paragraph_can_enter_association_without_changing_artifacts
     from app.services.summary_normalization import normalize_composition
 
     directory = (Path(__file__).resolve().parents[2]
-                 / "docs/acceptance-reports/2026-10-08-grounded-summary-prefix/results")
+                 / "backend/tests/fixtures/summary-regressions/2026-10-08-grounded-summary-prefix/results")
     paths = [directory / "responses/01.json", directory / "responses/02.json",
              directory / "organization-prefix-zh-short-trace.json"]
     originals = [path.read_bytes() for path in paths]

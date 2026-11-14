@@ -193,8 +193,8 @@ def test_array_string_point_is_preserved_as_unresolved_and_sent_to_audit():
 def test_saved_thirteen_fact_extraction_still_fails_without_truncation(monkeypatch):
     # The historical failed response is retained with all 13 facts, never turned into 12.
     project = Path(__file__).resolve().parents[2]
-    results = project / "docs/acceptance-reports/2026-10-07-grounded-summary-final/results/responses"
-    corpus = project / "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus"
+    results = project / "backend/tests/fixtures/summary-regressions/2026-10-07-grounded-summary-final/results/responses"
+    corpus = project / "backend/tests/fixtures/summary-regressions/2026-10-04-natural-subtitle-quality/corpus"
     manifest = json.loads((corpus / "manifest.json").read_text(encoding="utf-8"))
     sample = next(sample for sample in manifest["samples"] if sample["id"] == "en-long")
     source = (corpus / sample["file"]).read_text(encoding="utf-8")

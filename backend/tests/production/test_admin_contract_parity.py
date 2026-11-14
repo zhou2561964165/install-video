@@ -17,8 +17,8 @@ from app.admin.app import create_admin_app
 from app.admin.config import AdminSettings
 from app.services import admin_queries
 
-CONTRACT = Path(os.environ.get('ADMIN_CONTRACT_PATH', r'C:\Users\zxk\.codex\worktrees\52fd\install_video\docs\production'
-                               r'\admin-api-v1.openapi.yaml'))
+CONTRACT = Path(os.environ.get('ADMIN_CONTRACT_PATH',
+    str(Path(__file__).resolve().parents[3] / 'docs/production/admin-api-v1.openapi.yaml')))
 SHA256 = 'abb014bde928a0f68b78e83aa8db3067f4d392b03d99aa9024b705b63d9e8c4d'
 pytestmark = pytest.mark.skipif(not CONTRACT.exists(), reason='contract file not available')
 

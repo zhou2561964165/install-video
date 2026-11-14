@@ -5,7 +5,7 @@ never model correctness or semantic coverage. Historical evidence stays read-onl
 """
 import copy
 import hashlib
-import importlib.util
+import re
 import json
 from pathlib import Path
 
@@ -19,19 +19,19 @@ from test_grounded_pipeline import composition_response, extraction_response
 
 
 PROJECT = Path(__file__).resolve().parents[2]
-RESULTS = PROJECT / "docs/acceptance-reports/2026-10-07-grounded-summary-refined/results"
-CORPUS = PROJECT / "docs/acceptance-reports/2026-10-04-natural-subtitle-quality/corpus"
+RESULTS = PROJECT / "backend/tests/fixtures/summary-regressions/2026-10-07-grounded-summary-refined/results"
+CORPUS = PROJECT / "backend/tests/fixtures/summary-regressions/2026-10-04-natural-subtitle-quality/corpus"
+
+
+def cleaned(text):
+    return "\n".join(dict.fromkeys(line for line in (
+        re.sub(r"\s+", " ", line).strip() for line in text.splitlines()) if line))
 
 
 @pytest.fixture
 def refined(monkeypatch):
-    # Reuse the established historical caption preparation without changing
-    # production or replacing the frozen sources/facts expected by the guards.
-    script = PROJECT / "docs/acceptance-reports/2026-10-10-source-first-summary-live/scripts/evaluate.py"
-    spec = importlib.util.spec_from_file_location("refined_historical_preparation", script)
-    historical = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(historical)
-    monkeypatch.setattr(service, "_summary_input", historical.cleaned)
+    # Preserve the caption preparation used by the frozen sources and facts.
+    monkeypatch.setattr(service, "_summary_input", cleaned)
     for name, value in {
         "llm_base_url": "https://offline.invalid/v1", "llm_api_key": "offline-only",
         "llm_model": "offline-model", "llm_provider": "compatible",

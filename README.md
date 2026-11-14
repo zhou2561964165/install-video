@@ -144,7 +144,15 @@ npm run build
 - `tools/`、`deployment/` 含可选 Linux 会话维护脚本和模板，需按自己的目录、服务名及浏览器环境配置，不随本地启动自动运行。
 - 仓库保留装饰层源码和 Cubism Core 运行库，Live2D 模型包与语音模型权重不随仓库发布；缺少装饰模型不影响核心功能。
 
-管理端独立构建和接口契约见 [admin/README.md](admin/README.md)。生产配置、切换边界与首个管理员操作见 [生产说明](docs/production/README.md)。
+### PostgreSQL 生产配置
+
+- 使用 Alembic 升级到 `mc_0016`，明确传入 `b3b_runtime_roles` 及其子集 `mc_admin_roles`，为迁移、API、下载、计费、清理和管理职责分配独立数据库角色。运行进程不使用超级用户或迁移凭据。
+- 配置 `PG_BUSINESS_ENABLED=true`、`BILLING_INBOX_MODE=durable`、绝对路径的 `MEDIA_ROOT` 和受限的 `SOURCE_BROKER_SOCKET`；来源子进程还需独立 UID、网络命名空间、出口约束及防火墙预检。启动校验见 [配置模块](backend/app/config.py) 和 [数据库模块](backend/app/db.py)。
+- 计费角色处理通知需锁定 `app.billingevent` 行。除必要的读取和插入权限外，可授予窄范围 `UPDATE(id)`，并用真实运行角色在事务内执行零行 `SELECT id FROM app.billingevent LIMIT 0 FOR UPDATE` 后回滚核对；不需要为此授予整表更新权限。
+- 切换前备份、演练导入并运行 `tools/production_db_*.py` 的快照核对。停写后再正式导入，持久化写入承诺标记后才开放 API 和后台写进程；标记后新写入可能已发生，不能直接回指旧 SQLite。代码与数据库版本须协调更新。
+- Stripe 的站点 origin 不含子路径。Webhook 使用该端点独立的签名密钥；子路径部署需处理支付回跳地址。通知验签与处理成功应按真实事件检查，不能以浏览器回跳判断会员开通。
+
+管理端的启动、配置与权限说明见 [admin/README.md](admin/README.md)。
 
 ## 目录结构
 
@@ -157,7 +165,6 @@ frontend/
   src/          页面、组件、业务 Hook、状态与样式
   public/       公共静态资源
 admin/          独立管理端、开发 mock 与生产构建检查
-docs/production/ 管理 API 契约与生产配置说明
 tools/          可选维护脚本及独立工具
 deployment/     可选部署与会话维护模板
 pyproject.toml  Python 依赖与可选组件

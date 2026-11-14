@@ -12,7 +12,7 @@ from app.services.outbound_budget import (BudgetLimits, BudgetProfile, BudgetRea
     OutboundBudget, OutboundBudgetError, RequestLimits)
 from app.services.outbound_policy import OutboundPurpose
 
-RUNNER = Path(r'E:\install_video\.planning\2026-10-24-production-execution\run_b5_budget_group_offline.py')
+RUNNER = Path(__file__).resolve().parents[1] / 'helpers/outbound_budget_runner.py'
 
 class Clock:
     def __init__(self): self.value, self.calls = 100.0, 0

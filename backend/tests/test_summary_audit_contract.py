@@ -21,7 +21,7 @@ FLAGS = {
     "attribution_preserved": True,
     "scope_preserved": True,
 }
-RESULTS = Path(__file__).resolve().parents[2] / "docs/acceptance-reports/2026-10-08-grounded-summary-clause/results"
+RESULTS = Path(__file__).resolve().parents[2] / "backend/tests/fixtures/summary-regressions/2026-10-08-grounded-summary-clause/results"
 
 
 def contract():
